@@ -32,29 +32,11 @@ import axios from 'axios';
     methods:{
       showFile(){
         return "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/"+this.mess.fed_id+"/attachment";
-      },
-      posalji(){
-        var fd = new FormData();
-        console.log(this.mess.my);
-        console.log("prikaz filea");
-        fd.append("file",this.mess.my);//ili this.fileUpload.image umesto f
-        fd.append("tasid",1);//ili this.fileUpload.image umesto f
-
-        axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/insertattachment', fd, {
-                    // headers: { 'content-type': 'multipart/form-data' },
-                    onUploadProgress: progressEvent => {this.uploadProgress=Math.round(progressEvent.loaded/progressEvent.total*100)}
-        })
-        .then((res)=>{
-          console.log("Ovo je nazad");
-          console.log(res);
-        })
-        .catch((err)=>{
-          console.log("Eror");
-        });
       }
+
     },
     mounted: function(){
-      
+      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;//Uvek spusta na dno ekrana
 
     }
 
