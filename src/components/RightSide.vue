@@ -8,10 +8,9 @@
   <div class="input">
     <textarea v-model="feed" placeholder="Text..." @keyup.13="writeMessageFeed"></textarea>
 
-
     <div class="submit">
-      <button class="send" v-on:click="writeMessageFeed">Send</button>
-      <button class="attac" @click="uploadFile">&#x1f4ce;</button>
+      <button class="btn btn-warning send" v-on:click="writeMessageFeed">Send</button>
+      <button class="btn btn-warning attac" @click="uploadFile">&#x1f4ce;</button>
       <input type="file" id="file" v-on:change="changeFile" style="display:none;"></input>
     </div>
   </div>
@@ -29,9 +28,9 @@ export default {
   data: function() {
     return {
       messages: [],
-      feed: "",//ovo je tekst koji jos nije poslat
+      feed: "", //ovo je tekst koji jos nije poslat
       task_id: 1,
-      my_fed_id: -1,//napravio sam ga privremeno, kasnije cu ga vuci sa servera
+      my_fed_id: -1, //napravio sam ga privremeno, kasnije cu ga vuci sa servera
     }
   },
   methods: {
@@ -47,7 +46,7 @@ export default {
       var t = new Date();
       var date = t.getHours() + ":" + t.getMinutes() + "-" + t.getDay() + "-" + t.getMonth() + "-" + t.getFullYear();
       var text = this.feed;
-      this.messages.push({//treba srediti kao kod attachmenta
+      this.messages.push({ //treba srediti kao kod attachmenta
         fed_text: text,
         fed_time: date,
         fed_id: this.my_fed_id,
@@ -56,14 +55,14 @@ export default {
       this.my_fed_id--;
       this.feed = "";
     },
-    writeFileFeed(file){
+    writeFileFeed(file) {
       var t = new Date();
       var date = t.getHours() + ":" + t.getMinutes() + "-" + t.getDay() + "-" + t.getMonth() + "-" + t.getFullYear();
       var attach = {
-        fed_type : 'attachment',
+        fed_type: 'attachment',
         fed_time: 'date'
       };
-      attach.fed_id= this.my_fed_id;
+      attach.fed_id = this.my_fed_id;
       attach.right = true;
       attach.my = file;
       this.messages.push(attach);
@@ -74,7 +73,7 @@ export default {
     uploadFile() {
       document.getElementById("file").click();
     },
-    changeFile(e){
+    changeFile(e) {
       this.writeFileFeed(e.target.files[0]);
     },
     addUp: function() {
@@ -105,7 +104,7 @@ export default {
   },
   mounted: function() {
     var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.task_id + "/feeds";
-    axios.get(apiUrl,{
+    axios.get(apiUrl, {
       params: {
         fedid: 0,
         pravac: "start"
@@ -124,7 +123,7 @@ export default {
   border-radius: 4px;
   border: 2px solid #ccc;
   height: 100vh;
-  width:500px;
+  width: 500px;
 
 
   display: flex;
@@ -136,7 +135,7 @@ export default {
 .feed-back {
   overflow-y: auto;
   word-wrap: break-word;
-  max-height: 89vh;
+  flex: 1;
 }
 
 .feed-back .load {
@@ -187,8 +186,6 @@ export default {
 }
 
 
-
-
 .input button:hover {
   background-color: #c8c8c8;
 }
@@ -196,5 +193,4 @@ export default {
 .input button:active {
   background: linear-gradient(#f8f8f8, #c8c8c8 40%, #f8f8f8 90%)
 }
-
 </style>

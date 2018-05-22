@@ -23,10 +23,13 @@ export default {
   data() {
     return {
       activeTab: undefined,
+      sid: undefined,
     }
   },
   methods: {
     getMyProjects() {
+      // console.log(this.tabs);
+      // return;
       var array = [];
       var lastIndex = array.length;
       axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects').then(data => {
@@ -37,22 +40,20 @@ export default {
             id: lastIndex++,
             title: po.grp_name,
           });
-          // array.push({
-          //   id: lastIndex++,
-          //   title: po.grp_name,
-          // });
-          // array.push({
-          //   id: lastIndex++,
-          //   title: po.grp_name,
-          // });
         }
       })
-      bus.$emit('myProjects', array);
+      this.tabs[this.activeTab].data = array;
+      bus.$emit('fillActiveArray', array);
     },
     getMyTasks() {
       var array = [];
       var lastIndex = array.length;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/tasks').then(data => {
+      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/tasks', {
+        params: {
+          'sid': this.sid
+        }
+      }).then(data => {
+        console.log(data);
         var sviPodaci = data.data.data;
         for (var i in sviPodaci) {
           var po = sviPodaci[i];
@@ -64,12 +65,18 @@ export default {
           });
         }
       })
-      bus.$emit('myTasks', array);
+      this.tabs[this.activeTab].data = array;
+      bus.$emit('fillActiveArray', array);
     },
     getMyCreatedTasks() {
       var array = [];
       var lastIndex = array.length;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks').then(data => {
+      var sid = undefined;
+      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks', {
+        params: {
+          'sid': this.sid
+        }
+      }).then(data => {
         var sviPodaci = data.data.data;
         for (var i in sviPodaci) {
           var po = sviPodaci[i];
@@ -82,28 +89,11 @@ export default {
           });
         }
       })
-      bus.$emit('myCreatedTasks', array);
+      this.tabs[this.activeTab].data = array;
+      bus.$emit('fillActiveArray', array);
     },
-    getMyCreatedTasks() {
-      var array = [];
-      var lastIndex = array.length;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks').then(data => {
-        var sviPodaci = data.data.data;
-        for (var i in sviPodaci) {
-          var po = sviPodaci[i];
-          array.push({
-            id: lastIndex++,
-            par_id: po.par_id,
-            timecreated: po.par_timecreated,
-            title: po.par_title,
-            seen: po.haveUnseenFeed,
-          });
-        }
-      })
-      bus.$emit('myCreatedTasks', array);
-    },
-    getDebugTasks() {    },
-    getArchivedTasks() {    },
+    getDebugTasks() {},
+    getArchivedTasks() {},
     getTabData(e) {
       if (e != null) {
         this.tabTitle = e.target.title;
@@ -133,6 +123,9 @@ export default {
     },
   },
   mounted() {
+    bus.$on('sid', data => {
+      this.sid = data;
+    })
     this.getTabData(null, this.activeTab = 0);
   },
 }
@@ -141,7 +134,9 @@ export default {
 <style lang="css">
 
   /* TABS START */
-
+.tabs{
+  flex: 1;
+}
   .tablinks {
     width: 100%;
     text-align: center;

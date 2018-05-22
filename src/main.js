@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import {store} from './store/store'
 
 Vue.config.productionTip = false
 export const bus = new Vue();
@@ -11,6 +12,7 @@ export const bus = new Vue();
 new Vue({
   el: '#app',
   router,
+  store: store,
   components: { App },
   template: '<App/>'
 })

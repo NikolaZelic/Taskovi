@@ -1,15 +1,17 @@
 <template>
 <div>
   <aside id="left-sidebar">
-    <!-- <ul class="sidebar-nav mr-auto"> -->
     <div class="left-static">
-      <button class="navbar-toggler" @click="collapseSidebar">
-        <span class="oi oi-menu"></span>
-      </button>
+      <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
       <tabs :tabs="tabs"></tabs>
+      <span title="User Options" class="fas fa-users-cog"></span>
+      <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
+      <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
     </div>
 
-    <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
+    <login v-if="showSignIn" @close="showModal = false">
+    </login>
+    <div v-else class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
       <div class="sidebar-header">
         <a>{{ tabTitle }}<span class="oi oi-check"></span></a>
         <span title="Refresh" class="oi oi-reload" @click="refreshData"></span>
@@ -18,7 +20,7 @@
         <form class="form-block">
           <div class="search">
             <span class="oi oi-magnifying-glass"></span>
-            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchParentTasks" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
           </div>
         </form>
         <div class="task-list">
@@ -51,46 +53,42 @@ import {
   bus
 } from '../main';
 import tabs from "@/components/Tabs"
+import login from "@/components/Login"
 export default {
   components: {
     tabs,
+    login
   },
   name: 'left-sidebar',
   data() {
     return {
+      sid : undefined,
+      showSignIn: false,
       isCollapsedSidebar: false,
       activeTab: undefined,
-
-      // tabProjects: false,
-      // tabParentTasks: false,
-      // tabMyTasks: false,
-      // tabDebug: false,
-      // searchProjects: '',
-      searchParentTasks: '',
-      // searchMyTasks: '',
-      // searchDebug: '',
+      searchData: '',
       tabTitle: '',
       tabs: [{
         name: 'My Projects',
         icon: 'fas fa-project-diagram',
+        data: [],
       }, {
         name: 'My Created Tasks',
         icon: 'fa fa-user-check',
+        data: [],
       }, {
         name: 'My Tasks',
         icon: 'fas fa-tasks',
+        data: [],
       }, {
         name: 'Debug Tasks',
         icon: 'fas fa-bug',
+        data: [],
       }, {
         name: 'Archived Tasks',
         icon: 'fas fa-archive',
+        data: [],
       }, ],
-      myTasks: [],
-      myProjects: [],
-      myCreatedTasks: [],
-      debugTasks: [],
-      archivedTasks: [],
       activeArray: [], // IMPROVE IN FUTURE
     }
   },
@@ -104,25 +102,16 @@ export default {
         id: lastIndex++,
         title: st,
       })
-      this.searchParentTasks = '';
+      this.searchData = '';
     },
-    removeTask(title) {
-      console.log(title);
-      var index = title.id;
-      // console.log(this.filterTasks[0].title);
-      for (var variable in this.filterTasks) {
-        var tt = this.filterTasks[variable].title;
-        if (tt == title) {
-          console.log(title + this.filterTasks[variable].id);
-        }
-      }
-      // return;
-      this.myTasks.splice(index, 1);
+    removeTask(task) {
+      var index = this.activeArray.indexOf(task);
+      this.activeArray.splice(index, 1);
     },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },
-    refreshData(){
+    refreshData() {
       console.log(this.activeTab);
     }
   },
@@ -130,48 +119,60 @@ export default {
     filterTasks() {
       return this.activeArray.filter(it => {
         var item = it.title;
-        var searchItem = this.searchParentTasks;
+        var searchItem = this.searchData;
         return item == undefined || searchItem == undefined ? false : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1
       })
     },
   },
   created() {
-    bus.$on('myProjects', data => {
-      this.myProjects = data;
+    bus.$on('fillActiveArray', data => {
       this.activeArray = data;
-      console.log(this.activeArray);
-    });
-    bus.$on('myTasks', data => {
-      this.myTasks = data;
-      this.activeArray = data;
-      console.log(this.activeArray);
-    });
-    bus.$on('myCreatedTasks', data => {
-      this.myCreatedTasks = data;
-      this.activeArray = data;
-      console.log(this.activeArray);
     });
     bus.$on('activeTab', data => {
       this.tabTitle = this.tabs[data].name;
       this.activeTab = data;
     });
+    bus.$on('signin', data => {
+      this.sid = data;
+      bus.$emit('sid',data);
+      this.showSignIn = false;
+    })
   },
 }
 </script>
 
 <style scoped>
-
 #left-sidebar {
   min-width: 400px;
   max-width: 400px;
   min-height: 100vh;
-  font-family: "Roboto" !important;
   color: #eee;
   display: flex;
   flex-direction: row;
   align-items: stretch;
 }
 
+/* SIDEBAR STATIC */
+
+.left-static {
+  background: #24262d;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #444;
+}
+
+.left-static span {
+  padding: 20px;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+.left-static>span:hover {
+  color: #fff300;
+}
 
 /* TASK LIST START */
 
@@ -225,9 +226,18 @@ export default {
   background: rgba(128, 128, 128, 0.2);
 }
 
+.task-list tr:nth-child(even) {
+  background: #23232366;
+}
+
+.task-list tr:nth-child(even):hover {
+  background: #58585866;
+}
+
 .close {
   color: #fff;
   margin-right: 15px;
+  font-size: 1.8rem;
 }
 
 /* #addTask {
