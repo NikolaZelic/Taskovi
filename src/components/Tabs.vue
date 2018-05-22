@@ -33,6 +33,7 @@ export default {
       var array = [];
       var lastIndex = array.length;
       axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects').then(data => {
+        console.log(data);
         var sviPodaci = data.data.data;
         for (var i in sviPodaci) {
           var po = sviPodaci[i];
@@ -77,6 +78,7 @@ export default {
           'sid': this.sid
         }
       }).then(data => {
+        console.log(data);
         var sviPodaci = data.data.data;
         for (var i in sviPodaci) {
           var po = sviPodaci[i];

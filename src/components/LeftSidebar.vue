@@ -23,24 +23,22 @@
             <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
           </div>
         </form>
-        <div class="task-list">
+        <div class="item-list">
           <table>
             <tbody>
-              <tr v-for="ft in filterTasks">
-                <td>{{ ft.title }}</td>
+              <tr v-for="item in filterArray">
+                <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
+                <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
+                <td><span title="URGENT" v-if="item.urgent === 0" class="badge badge-danger badge-pill">U</span></td>
+                <td><span title="UNREAD" v-if="item.seen === 0" class="badge badge-success badge-pill">{{item.seen + 1 }}</span></td>
                 <td>
-                  <span title="URGENT" v-if="ft.urgent === 0" class="badge badge-danger badge-pill">U</span>
-                </td>
-                <td>
-                  <span title="UNREAD" v-if="ft.seen === 0" class="badge badge-success badge-pill">{{ft.seen + 1 }}</span></td>
-                <td>
-                  <button title="CLOSE" class="close" @click="removeTask(ft)">&times;</button>
+                  <button title="CLOSE" class="close" @click="removeItem(item)">&times;</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <button id="addTask" class="btn btn-block btn-warning" @click="addTask"><span class="fas fa-plus"></span> Add new task</button>
+        <button id="addItem" class="btn btn-block btn-warning" @click="addItem"><span class="fas fa-plus"></span> Add new <span>{{item}}</span></button>
       </div>
     </div>
   </aside>
@@ -62,7 +60,9 @@ export default {
   name: 'left-sidebar',
   data() {
     return {
-      sid : undefined,
+      sid: undefined,
+      item: "Task",
+      renamingItem: {},
       showSignIn: false,
       isCollapsedSidebar: false,
       activeTab: undefined,
@@ -93,8 +93,10 @@ export default {
     }
   },
   methods: {
-
-    addTask() {
+    collapseSidebar() {
+      this.isCollapsedSidebar = !this.isCollapsedSidebar;
+    },
+    addItem() {
       var st = prompt();
       if (st == null || st == "") return;
       var lastIndex = this.myTasks.length;
@@ -104,19 +106,25 @@ export default {
       })
       this.searchData = '';
     },
-    removeTask(task) {
-      var index = this.activeArray.indexOf(task);
+    removeItem(item) {
+      var index = this.activeArray.indexOf(item);
       this.activeArray.splice(index, 1);
     },
-    collapseSidebar() {
-      this.isCollapsedSidebar = !this.isCollapsedSidebar;
+    endEditing(item) {
+      this.renamingItem = {};
+      if (item.title.trim() === "") {
+        this.removeItem(item);
+      }
+    },
+    renameItem(item) {
+      this.renamingItem = item;
     },
     refreshData() {
       console.log(this.activeTab);
-    }
+    },
   },
   computed: {
-    filterTasks() {
+    filterArray() {
       return this.activeArray.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
@@ -134,7 +142,7 @@ export default {
     });
     bus.$on('signin', data => {
       this.sid = data;
-      bus.$emit('sid',data);
+      bus.$emit('sid', data);
       this.showSignIn = false;
     })
   },
@@ -176,14 +184,14 @@ export default {
 
 /* TASK LIST START */
 
-.task-list {
+.item-list {
   width: 100%;
   flex: 1 0px;
   overflow: auto;
   margin: 20px 0;
 }
 
-.task-list>table {
+.item-list>table {
   padding: 0;
   width: 100%;
   /* height: 77vh; */
@@ -193,44 +201,44 @@ export default {
     padding: 0; */
 }
 
-.task-list tr {
+.item-list tr {
   display: flex;
   line-height: 40px;
   text-decoration: none;
   color: #DDD;
 }
 
-.task-list td:first-child {
+.item-list td:first-child {
   flex: 1;
   padding-left: 10px;
 }
 
-.task-list td:last-child {
+.item-list td:last-child {
   margin: auto;
 }
 
-.task-list td {
+.item-list td {
   margin-right: 10px;
 }
 
-.task-list tr:hover {
+.item-list tr:hover {
   text-decoration: none;
   color: #fff;
   background: rgba(255, 255, 255, 0.2);
 }
 
-.task-list tr:active,
-.task-list tr:focus,
-.task-list tr.active {
+.item-list tr:active,
+.item-list tr:focus,
+.item-list tr.active {
   text-decoration: none;
   background: rgba(128, 128, 128, 0.2);
 }
 
-.task-list tr:nth-child(even) {
+.item-list tr:nth-child(even) {
   background: #23232366;
 }
 
-.task-list tr:nth-child(even):hover {
+.item-list tr:nth-child(even):hover {
   background: #58585866;
 }
 
@@ -240,7 +248,7 @@ export default {
   font-size: 1.8rem;
 }
 
-/* #addTask {
+/* #addItem {
   bottom: 15px;
   width: 90%;
   margin: 5px;
