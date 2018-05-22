@@ -54,7 +54,7 @@ import axios from 'axios';
       }
     },
     mounted: function(){
-      if(this.mess.fed_id<0)this.$emit('messCreate');//ovo je samo privremeno dok ne dobijem ime korisnika vezano za feed id
+      
 
     }
 

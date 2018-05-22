@@ -12,12 +12,15 @@ export const api={
     )
   },
   postMessage(tId,mess){
-    return axios.post('/:tasid/feeds',{
-        params:{
-          tasid:tId,
-          type:'text',
-          text:mess,
-        }
-    }
-  )}
+    return axios({
+          method:'post',
+          url: '/:tasid/feeds',
+
+          params:{
+            tasid:tId,
+            type:'text',
+            text:mess
+          }
+        });
+  }
 }

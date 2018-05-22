@@ -3,7 +3,7 @@
 
   <div id="all" v-on:scroll="handleScroll()" class="feed-back">
     <button class="load" v-on:click="addUp">Loading new feeds...</button>
-    <message v-for="(mess,i) in messages" :key="i" v-on:messCreate="scrollDown" :mess="mess"></message>
+    <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
   </div>
   <div class="progress" v-show="inProgress">
     <p>LOADING FILE {{uploadProgress}}</p>
@@ -33,7 +33,6 @@ export default {
       messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
       taskId: 1,
-      my_fed_id: -1,//napravio sam ga privremeno, kasnije cu ga vuci sa servera
       uploadProgress:50,
       inProgress:false
     }
@@ -49,17 +48,16 @@ export default {
         return;
       }
       var text = this.feed;
-      api.postMessage(taskId, text)
+      api.postMessage(this.taskId, text)
       .then(res=>{
-
+        api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
+        .then(res1=>{
+          this.messages = this.messages.concat(res1.data.data);
+        });
+      })
+      .catch((err)=>{
+        console.log(err);
       });
-      this.messages.push({//treba srediti kao kod attachmenta
-        fed_text: text,
-        fed_time: date,
-        fed_id: this.my_fed_id,
-        right: true
-      });
-      this.my_fed_id--;
       this.feed = "";
     },
     uploadFile() {
