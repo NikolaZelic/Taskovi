@@ -248,14 +248,6 @@ export default {
   font-size: 1.8rem;
 }
 
-/* #addItem {
-  bottom: 15px;
-  width: 90%;
-  margin: 5px;
-  margin: auto;
-  position: absolute;
-} */
-
 /* TASK LIST END */
 
 #btn-pocetak {

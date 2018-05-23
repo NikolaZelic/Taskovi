@@ -3,7 +3,7 @@
 
   <div id="all" v-on:scroll="handleScroll()" class="feed-back">
     <button class="load" v-on:click="addUp">Loading new feeds...</button>
-    <message v-for="(mess,i) in messages" :key="i" v-on:messCreate="scrollDown" :mess="mess"></message>
+    <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
   </div>
   <div class="progress" v-show="inProgress">
     <p>LOADING FILE {{uploadProgress}}</p>
@@ -33,7 +33,6 @@ export default {
       messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
       taskId: 1,
-      my_fed_id: -1,//napravio sam ga privremeno, kasnije cu ga vuci sa servera
       uploadProgress:50,
       inProgress:false
     }
@@ -49,51 +48,49 @@ export default {
         return;
       }
       var text = this.feed;
-      api.postMessage(taskId, text)
-        .then(res => {
-
+      api.postMessage(this.taskId, text)
+      .then(res=>{
+        api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
+        .then(res1=>{
+          this.messages = this.messages.concat(res1.data.data);
         });
-      this.messages.push({ //treba srediti kao kod attachmenta
-        fed_text: text,
-        fed_time: date,
-        fed_id: this.my_fed_id,
-        right: true
+      })
+      .catch((err)=>{
+        console.log(err);
       });
-      this.my_fed_id--;
       this.feed = "";
     },
     uploadFile() {
       document.getElementById("file").click();
     },
-    changeFile(e) {
-      var f = e.target.files[0]
+    changeFile(e){
+      var f =e.target.files[0]
       var fd = new FormData();
       console.log(f);
       console.log("prikaz filea");
-      fd.append("type", "file");
-      fd.append("file", f);
-      fd.append("tasid", 1);
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds', fd, {
-          headers: {
-            'content-type': 'multipart/form-data'
-          },
-          onUploadProgress: progressEvent => {
-            this.inProgress = true;
-            this.uploadProgress = Math.round(progressEvent.loaded / progressEvent.total * 100);
-          }
-        })
-        .then((res) => {
-          this.inProgress = false;
-          console.log(res);
-          console.log("prikaz vracenog statusa");
-          api.newFeed(this.taskId, this.messages[this.messages.length - 1].fed_id)
-            .then(res1 => {
-              this.messages = this.messages.concat(res1.data.data);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
+      fd.append("type","file");
+      fd.append("file",f);
+      fd.append("tasid",1);
+      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds', fd,
+      {
+        headers: { 'content-type': 'multipart/form-data' },
+        onUploadProgress: progressEvent => {
+          this.inProgress = true;
+          this.uploadProgress=Math.round(progressEvent.loaded/progressEvent.total*100);
+        }
+      })
+      .then((res)=>{
+        this.inProgress=false;
+        console.log(res);
+        console.log("prikaz vracenog statusa");
+        api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
+        .then(res1=>{
+          this.messages = this.messages.concat(res1.data.data);
         });
+      })
+      .catch((err)=>{
+        console.log(err);
+      });
 
     },
     addUp: function() {
@@ -124,7 +121,7 @@ export default {
   },
   mounted: function() {
     var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds";
-    axios.get(apiUrl, {
+    axios.get(apiUrl,{
       params: {
         fedid: 0,
         pravac: "start"

@@ -33,6 +33,7 @@ export default {
       var array = [];
       var lastIndex = array.length;
       axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects').then(data => {
+
         console.log(data);
         var sviPodaci = data.data.data;
         for (var i in sviPodaci) {
@@ -153,7 +154,6 @@ export default {
     color: black;
     background: white;
   }
-
   .tablinks.active {
     background: #2d3436;
   }
