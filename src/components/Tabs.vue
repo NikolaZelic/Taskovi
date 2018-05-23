@@ -149,6 +149,11 @@ export default {
     color: #fff;
   }
 
+  .tablinks[disabled]{
+    color: black;
+    background: white;
+  }
+
   .tablinks.active {
     background: #2d3436;
   }
