@@ -6,17 +6,15 @@
     <input v-model="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
     <input v-model="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <!-- <button type="button" name="button"></button> -->
+    <button class="btn btn-lg btn-primary btn-block" type="submit" @click='login()'>Sign in</button>
   </form>
 </div>
 </template>
 
 <script>
 import axios from 'axios';
-import {
-  bus
-} from '../main';
+import {api} from '@/api/index.js';
+
 export default {
   name: 'Login',
   data() {
@@ -27,18 +25,8 @@ export default {
   },
   methods: {
     login() {
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/auth/login', {
-          email: this.email,
-          pass: this.password
-        })
-        .then(response => {
-          var sid = response.data.sid;
-          if (sid != undefined || sid != null)
-            bus.$emit('signin', response.data.sid);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      console.log('click');
+      api.login(this.email, this.password);
     }
   }
 }
