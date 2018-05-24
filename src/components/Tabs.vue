@@ -1,15 +1,17 @@
 <template lang="html">
   <div class="tabs">
-    <button v-for="(tab,index) in tabs"
+    <button v-for="( tab, index ) in tabs"
       :title="tab.name" class="tablinks"
-      :class="[{active:activeTab == index}, tab.icon]"
-      @click="getTabData($event,activeTab = index)">
+      :class="[{active:activeTabIndex == index}, tab.icon]"
+      @click="getTabData($event,activeTabIndex = index)">
     </button>
   </div>
 </template>
 
 <script>
-import {store} from "@/store/store.js"
+import {
+  store
+} from "@/store/store.js"
 import {
   bus
 } from '../main';
@@ -22,87 +24,19 @@ export default {
   },
   data() {
     return {
-      activeTab: undefined,
+      activeTabIndex: undefined,
     }
   },
   methods: {
     getMyProjects() {
-        store.dispatch('getUserProjects');
+      store.dispatch('getUserProjects');
     },
-    getMyTasks() {
-      // var array = [];
-      // var lastIndex = array.length;
-      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/tasks', {
-      //   params: {
-      //     'sid': this.sid
-      //   }
-      // }).then(data => {
-      //   console.log(data);
-      //   var sviPodaci = data.data.data;
-      //   for (var i in sviPodaci) {
-      //     var po = sviPodaci[i];
-      //     array.push({
-      //       id: lastIndex++,
-      //       title: po.tsk_title,
-      //       seen: po.tsk_seen,
-      //       urgent: po.isUrgent,
-      //     });
-      //   }
-      // })
-      // this.tabs[this.activeTab].data = array;
-      // bus.$emit('fillActiveArray', array);
+    getTaskData(s,t,a) {
       store.dispatch('getUserTasks', {
-          index: this.activeTab,
-          state: 'assigned',
-          type: 'task',
-          archived: 'false'
-      });
-    },
-    getMyCreatedTasks() {
-      // var array = [];
-      // var lastIndex = array.length;
-      // var sid = undefined;
-      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks', {
-      //   params: {
-      //     'sid': this.sid
-      //   }
-      // }).then(data => {
-      //   console.log(data);
-      //   var sviPodaci = data.data.data;
-      //   for (var i in sviPodaci) {
-      //     var po = sviPodaci[i];
-      //     array.push({
-      //       id: lastIndex++,
-      //       par_id: po.par_id,
-      //       timecreated: po.par_timecreated,
-      //       title: po.par_title,
-      //       seen: po.haveUnseenFeed,
-      //     });
-      //   }
-      // })
-      // this.tabs[this.activeTab].data = array;
-      // bus.$emit('fillActiveArray', array);
-      store.dispatch('getUserTasks', {
-          index: this.activeTab,
-          state: 'created',
-          type: 'task',
-          archived: 'false'
-      });
-    },
-    getDebugTasks() {
-      store.dispatch('getUserTasks', {
-          index: this.activeTab,
-          state: 'assigned',
-          type: 'bugfix',
-          archived: 'false'
-      });
-    },
-    getArchivedTasks() {
-      store.dispatch('getUserTasks', {
-          index: this.activeTab,
-          state: 'created',
-          type: 'task',
-          archived: 'true'
+        index: this.activeTabIndex,
+        state: s,
+        type: t,
+        archived: a,
       });
     },
     getTabData(e) {
@@ -110,34 +44,35 @@ export default {
         this.tabTitle = e.target.title;
       }
       this.isCollapsedSidebar = false;
-      bus.$emit('activeTab', this.activeTab);
-      switch (this.activeTab) {
+      bus.$emit('activeTabIndex', this.activeTabIndex);
+      switch (this.activeTabIndex) {
         case 0:
           this.getMyProjects();
           break;
         case 1:
-          this.getMyCreatedTasks();
+          this.getTaskData('assigned','task','false');
           break;
         case 2:
-          this.getMyTasks();
+          this.getTaskData('created','task','false');
           break;
         case 3:
-          this.getDebugTasks();
+          this.getTaskData('assigned','bugfix','false');
           break;
         case 4:
-          this.getArchivedTasks();
+          this.getTaskData('created','task','true');
           break;
         default:
           break;
       }
-      // bus.$emit('')
+      // bus.$emit('netTabFilled',null);
+      // console.log("s");
     },
   },
   mounted() {
     bus.$on('sid', data => {
       this.sid = data;
     })
-    this.getTabData(null, this.activeTab = 0);
+    this.getTabData(null, this.activeTabIndex = 0);
   },
 
 }
@@ -146,9 +81,6 @@ export default {
 <style lang="css">
 
   /* TABS START */
-.tabs{
-  flex: 1;
-}
   .tablinks {
     width: 100%;
     text-align: center;

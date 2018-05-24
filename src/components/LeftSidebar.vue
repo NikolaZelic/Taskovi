@@ -3,10 +3,12 @@
   <aside id="left-sidebar">
     <div class="left-static">
       <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
-      <tabs :tabs="tabs" ></tabs>
-      <span title="User Options" class="fas fa-users-cog"></span>
-      <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
-      <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
+      <tabs :tabs="tabs"></tabs>
+      <div class="user-sidebar">
+        <span title="User Options" class="fas fa-user-cog"></span>
+        <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
+        <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
+      </div>
     </div>
 
     <login v-if="showSignIn" @close="showModal = false">
@@ -46,7 +48,6 @@
 </template>
 
 <script>
-
 import {
   bus
 } from '../main';
@@ -65,29 +66,29 @@ export default {
       renamingItem: {},
       showSignIn: false,
       isCollapsedSidebar: false,
-      activeTab: undefined,
+      activeTabIndex: undefined,
       searchData: '',
       tabTitle: '',
       tabs: [{
         name: 'My Projects',
         icon: 'fas fa-project-diagram',
-        data: this.$store.state.leftSideBarContent[0],
+        // data: this.$store.state.leftSideBarContent[0],
       }, {
         name: 'My Created Tasks',
         icon: 'fa fa-user-check',
-        data: this.$store.state.leftSideBarContent[1],
+        // data: this.$store.state.leftSideBarContent[1],
       }, {
-        name: 'My Tasks',
+        name: 'My Assigned Tasks',
         icon: 'fas fa-tasks',
-        data: this.$store.state.leftSideBarContent[2],
+        // data: this.$store.state.leftSideBarContent[2],
       }, {
         name: 'Debug Tasks',
         icon: 'fas fa-bug',
-        data: this.$store.state.leftSideBarContent[3],
+        // data: this.$store.state.leftSideBarContent[3],
       }, {
         name: 'Archived Tasks',
         icon: 'fas fa-archive',
-        data: this.$store.state.leftSideBarContent[4],
+        // data: this.$store.state.leftSideBarContent[4],
       }, ],
       activeArray: [], // IMPROVE IN FUTURE
     }
@@ -120,12 +121,12 @@ export default {
       this.renamingItem = item;
     },
     refreshData() {
-      console.log(this.activeTab);
+      console.log(this.activeTabIndex);
     },
   },
   computed: {
     filterArray() {
-      if( this.activeArray===undefined )
+      if (this.activeArray === undefined)
         return;
       return this.activeArray.filter(it => {
         var item = it.title;
@@ -135,19 +136,20 @@ export default {
     },
   },
   created() {
-    // bus.$on('fillActiveArray', data => {
-    //   this.activeArray = data;
-    // });
-    bus.$on('activeTab', data => {
+    bus.$on('activeTabIndex', data => {
       this.tabTitle = this.tabs[data].name;
-      this.activeTab = data;
-      this.activeArray = this.$store.state.leftSideBarContent[ this.activeTab ];
+      this.activeTabIndex = data;
+      this.activeArray = this.$store.state.leftSideBarContent[this.activeTabIndex];
     });
     bus.$on('signin', data => {
       this.sid = data;
       bus.$emit('sid', data);
       this.showSignIn = false;
-    })
+    });
+    // bus.$on('netTabFilled', () => {
+    //   console.log(this.activeTabIndex);
+    //   console.log(this.activeTabIndex);
+    // })
   },
 }
 </script>
@@ -159,7 +161,7 @@ export default {
   min-height: 100vh;
   color: #eee;
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   align-items: stretch;
 }
 
@@ -170,6 +172,7 @@ export default {
   width: 70px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   border-right: 1px solid #444;
 }
 

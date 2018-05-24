@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {api} from '@/api/index.js';
+import {
+  api
+} from '@/api/index.js';
 
 Vue.use(Vuex);
 
@@ -10,20 +12,20 @@ export const store = new Vuex.Store({
     // Left side bar
     leftSideBarContent: [ [],[],[],[],[] ]
   },
-  getters:{
+  getters: {
 
   },
-  mutations:{
-      setLeftSideBarContent: (state, params) => {
-          state.leftSideBarContent[params.index] = params.data;
-          console.log( state.leftSideBarContent );
-        }
+  mutations: {
+    setLeftSideBarContent: (state, params) => {
+      state.leftSideBarContent[params.index] = params.data;
+      console.log(state.leftSideBarContent);
+    }
   },
-  actions:{
-    getUserProjects(){
-        api.getUserProjects();
+  actions: {
+    getUserProjects() {
+      api.getUserProjects();
     },
-    getUserTasks(commit, params){
+    getUserTasks(commit, params) {
       api.getUserTasks(params.index, params.state, params.type, params.archived);
     }
   }
