@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import {store} from "@/store/store.js"
 import {
   bus
 } from '../main';
@@ -18,85 +18,93 @@ export default {
     tabs: {
       type: Array,
       required: true
-    }
+    },
   },
   data() {
     return {
       activeTab: undefined,
-      sid: undefined,
     }
   },
   methods: {
     getMyProjects() {
-      // console.log(this.tabs);
-      // return;
-      var array = [];
-      var lastIndex = array.length;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects').then(data => {
-
-        console.log(data);
-        var sviPodaci = data.data.data;
-        for (var i in sviPodaci) {
-          var po = sviPodaci[i];
-          array.push({
-            id: lastIndex++,
-            title: po.grp_name,
-          });
-        }
-      })
-      this.tabs[this.activeTab].data = array;
-      bus.$emit('fillActiveArray', array);
+        store.dispatch('getUserProjects');
     },
     getMyTasks() {
-      var array = [];
-      var lastIndex = array.length;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/tasks', {
-        params: {
-          'sid': this.sid
-        }
-      }).then(data => {
-        console.log(data);
-        var sviPodaci = data.data.data;
-        for (var i in sviPodaci) {
-          var po = sviPodaci[i];
-          array.push({
-            id: lastIndex++,
-            title: po.tsk_title,
-            seen: po.tsk_seen,
-            urgent: po.isUrgent,
-          });
-        }
-      })
-      this.tabs[this.activeTab].data = array;
-      bus.$emit('fillActiveArray', array);
+      // var array = [];
+      // var lastIndex = array.length;
+      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/tasks', {
+      //   params: {
+      //     'sid': this.sid
+      //   }
+      // }).then(data => {
+      //   console.log(data);
+      //   var sviPodaci = data.data.data;
+      //   for (var i in sviPodaci) {
+      //     var po = sviPodaci[i];
+      //     array.push({
+      //       id: lastIndex++,
+      //       title: po.tsk_title,
+      //       seen: po.tsk_seen,
+      //       urgent: po.isUrgent,
+      //     });
+      //   }
+      // })
+      // this.tabs[this.activeTab].data = array;
+      // bus.$emit('fillActiveArray', array);
+      store.dispatch('getUserTasks', {
+          index: this.activeTab,
+          state: 'assigned',
+          type: 'task',
+          archived: 'false'
+      });
     },
     getMyCreatedTasks() {
-      var array = [];
-      var lastIndex = array.length;
-      var sid = undefined;
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks', {
-        params: {
-          'sid': this.sid
-        }
-      }).then(data => {
-        console.log(data);
-        var sviPodaci = data.data.data;
-        for (var i in sviPodaci) {
-          var po = sviPodaci[i];
-          array.push({
-            id: lastIndex++,
-            par_id: po.par_id,
-            timecreated: po.par_timecreated,
-            title: po.par_title,
-            seen: po.haveUnseenFeed,
-          });
-        }
-      })
-      this.tabs[this.activeTab].data = array;
-      bus.$emit('fillActiveArray', array);
+      // var array = [];
+      // var lastIndex = array.length;
+      // var sid = undefined;
+      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/parenttasks', {
+      //   params: {
+      //     'sid': this.sid
+      //   }
+      // }).then(data => {
+      //   console.log(data);
+      //   var sviPodaci = data.data.data;
+      //   for (var i in sviPodaci) {
+      //     var po = sviPodaci[i];
+      //     array.push({
+      //       id: lastIndex++,
+      //       par_id: po.par_id,
+      //       timecreated: po.par_timecreated,
+      //       title: po.par_title,
+      //       seen: po.haveUnseenFeed,
+      //     });
+      //   }
+      // })
+      // this.tabs[this.activeTab].data = array;
+      // bus.$emit('fillActiveArray', array);
+      store.dispatch('getUserTasks', {
+          index: this.activeTab,
+          state: 'created',
+          type: 'task',
+          archived: 'false'
+      });
     },
-    getDebugTasks() {},
-    getArchivedTasks() {},
+    getDebugTasks() {
+      store.dispatch('getUserTasks', {
+          index: this.activeTab,
+          state: 'assigned',
+          type: 'bugfix',
+          archived: 'false'
+      });
+    },
+    getArchivedTasks() {
+      store.dispatch('getUserTasks', {
+          index: this.activeTab,
+          state: 'created',
+          type: 'task',
+          archived: 'true'
+      });
+    },
     getTabData(e) {
       if (e != null) {
         this.tabTitle = e.target.title;
@@ -131,6 +139,7 @@ export default {
     })
     this.getTabData(null, this.activeTab = 0);
   },
+
 }
 </script>
 
