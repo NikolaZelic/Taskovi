@@ -12,6 +12,7 @@ export default {
 
 <style>
 @import "./assets/sidebar.css";
+@import "./assets/StartPageWallpaper.jpg"
 *, *::before, *::after {
 	box-sizing: border-box;
 }

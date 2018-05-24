@@ -1,10 +1,12 @@
 <template>
-  <div class="app">
-      <h1>Welcome to our Menajment App</h1>
-      <button @click='signIn()'>Sign In</button><br>
-      <button @click=''>Sign Up</button>
-      <login v-if="showSignIn" @close="showModal = false"></login>
+<div class="start">
+  <h1>Welcome to our Task Management App</h1>
+  <div>
+    <login></login>
+    <button class="btn btn-warning" @click='signUp()'>Sign Up</button>
   </div>
+  <login v-if="showSignIn" @close="showModal = false"></login>
+</div>
 </template>
 
 <script>
@@ -14,7 +16,7 @@ export default {
   components: {
     login
   },
-  data () {
+  data() {
     return {
       showSignIn: false
     }
@@ -23,10 +25,23 @@ export default {
     signIn() {
       this.showSignIn = true;
     }
-  }
+  },
+  beforecreated: function() {
+    var sid = window.localStorage.getItem('sid');
+    if (sid !== undefined && sid !== null) {
+      alert(sid);
+    }
+  },
 }
 </script>
 
 <style scoped>
+.start {
+  text-align: center;
+  background: url("@/assets/StartPageWallpaper.jpg");
+}
 
+h1 {
+  color: #fff
+}
 </style>

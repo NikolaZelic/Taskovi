@@ -7,8 +7,8 @@ Vue.use(Router)
 export default new Router({
   routes: [{
     path: '/',
-    name: 'Merged',
-    component: Merged
+    name: 'StartPage',
+    component: StartPage
   }],
   mode: 'history',
 })
