@@ -38,7 +38,7 @@ export default {
 <style scoped>
 .start {
   text-align: center;
-  background: url("@/assets/StartPageWallpaper.jpg");
+  /* background: url("~assets/StartPageWallpaper.jpg"); */
 }
 
 h1 {
