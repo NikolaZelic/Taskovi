@@ -3,7 +3,7 @@
   <aside id="left-sidebar">
     <div class="left-static">
       <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
-      <tabs :tabs="tabs"></tabs>
+      <tabs :tabs="tabs" ></tabs>
       <span title="User Options" class="fas fa-users-cog"></span>
       <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import {
   bus
 } from '../main';
@@ -71,23 +71,23 @@ export default {
       tabs: [{
         name: 'My Projects',
         icon: 'fas fa-project-diagram',
-        data: [],
+        data: this.$store.state.leftSideBarContent[0],
       }, {
         name: 'My Created Tasks',
         icon: 'fa fa-user-check',
-        data: [],
+        data: this.$store.state.leftSideBarContent[1],
       }, {
         name: 'My Tasks',
         icon: 'fas fa-tasks',
-        data: [],
+        data: this.$store.state.leftSideBarContent[2],
       }, {
         name: 'Debug Tasks',
         icon: 'fas fa-bug',
-        data: [],
+        data: this.$store.state.leftSideBarContent[3],
       }, {
         name: 'Archived Tasks',
         icon: 'fas fa-archive',
-        data: [],
+        data: this.$store.state.leftSideBarContent[4],
       }, ],
       activeArray: [], // IMPROVE IN FUTURE
     }
@@ -125,6 +125,8 @@ export default {
   },
   computed: {
     filterArray() {
+      if( this.activeArray===undefined )
+        return;
       return this.activeArray.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
@@ -133,12 +135,13 @@ export default {
     },
   },
   created() {
-    bus.$on('fillActiveArray', data => {
-      this.activeArray = data;
-    });
+    // bus.$on('fillActiveArray', data => {
+    //   this.activeArray = data;
+    // });
     bus.$on('activeTab', data => {
       this.tabTitle = this.tabs[data].name;
       this.activeTab = data;
+      this.activeArray = this.$store.state.leftSideBarContent[ this.activeTab ];
     });
     bus.$on('signin', data => {
       this.sid = data;
