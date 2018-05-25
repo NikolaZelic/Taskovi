@@ -110,7 +110,7 @@ export default {
       //     // document.getElementById("all").scrollTop = 22;
       //
       //   })
-      store.dispatch('readeFeeds', {tasid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
+      store.dispatch('readeFeeds', {taskid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
     },
 
     handleScroll() {
@@ -133,7 +133,10 @@ export default {
   //   });
   // }
   mounted: function(){
-    store.dispatch('readeFeeds', {tasid:this.taskId,  direction:'start'} );
+    store.dispatch('readeFeeds', {taskid:this.taskId,  direction:'start'} );
+    setInterval(()=>{
+      store.dispatch('readeFeeds', {taskid:this.taskId, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
+    }, 5000);
   }
 
 }
