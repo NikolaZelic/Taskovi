@@ -29,7 +29,7 @@
           <table>
             <tbody>
               <tr v-for="item in filterArray">
-                <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
+                <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectTask(item.id)'>{{ item.title }}</td>
                 <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
                 <td><span title="URGENT" v-if="item.urgent === 0" class="badge badge-danger badge-pill">U</span></td>
                 <td><span title="UNREAD" v-if="item.seen === 0" class="badge badge-success badge-pill">{{item.seen + 1 }}</span></td>
@@ -56,6 +56,7 @@ import {
 } from 'vuex'
 import tabs from "@/components/Tabs"
 import login from "@/components/Login"
+import {store} from "@/store/store.js"
 export default {
   components: {
     tabs,
@@ -92,6 +93,9 @@ export default {
     }
   },
   methods: {
+    selectTask(tasid){
+       store.commit("changeLeftSideSelection", {selectedTaskID: tasid});
+    },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },

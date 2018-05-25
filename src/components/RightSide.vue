@@ -33,7 +33,7 @@ export default {
     return {
       // messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
-      taskId: 1,
+      // taskid: 1,
       uploadProgress:50,
       inProgress:false
     }
@@ -41,19 +41,44 @@ export default {
   computed:{
     messages: function(){
       return store.getters.getMessages;
+    },
+
+    taskid: function(){
+      var id = store.getters.selectedTaskID;
+      if( id===-1 ){
+         this.hideRightSide();
+      }
+      // console.log('Iz RightSide '+id);
+      return id;
     }
   },
+
+  watch: {
+    taskid: function(val){
+      // console.log('Obe je iz voca ' + val);
+      this.startFeed();
+    }
+  },
+
   methods: {
     writeMessageFeed: function() {
-      if (this.feed.trim() === "") {
+      if(this.taskid===-1)
+        return;
+      var text = this.feed.trim();
+      if (text === "") {
         this.feed = "";
         return;
       }
+-     store.dispatch( 'postMessage', {'taskid':this.taskid, 'text':text} );
       this.feed = "";
     },
+
     uploadFile() {
+      if(this.taskid==-1)
+        return -1;
       document.getElementById("file").click();
     },
+
     changeFile(e){
       var f =e.target.files[0]
       var fd = new FormData();
@@ -87,22 +112,38 @@ export default {
 
 
     addUp: function() {
-      store.dispatch('readeFeeds', {taskid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
+      if(this.taskid===-1)
+        return;
+      store.dispatch('readeFeeds', {taskid:this.taskid, fedid:this.messages[0].fed_id, direction:'up'} );
     },
 
     handleScroll() {
       if ( !document.getElementById("all").scrollTop ) {
         this.addUp();
       }
+    },
+
+    startFeed: function(){
+      if(this.taskid===-1)
+        return;
+      store.dispatch('readeFeeds', {taskid:this.taskid,  direction:'start'} );
+      // setInterval(()=>{
+      //   store.dispatch('readeFeeds', {taskid:this.taskid, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
+      // }, 20000);
+    },
+
+    hideRightSide: function(){
+      // Sveto ovde ti uleces !
+
     }
+
   },
 
   mounted: function(){
-    store.dispatch('readeFeeds', {taskid:this.taskId,  direction:'start'} );
-    // setInterval(()=>{
-    //   store.dispatch('readeFeeds', {taskid:this.taskId, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
-    // }, 5000);
-  }
+     this.startFeed();
+  },
+
+
 
 }
 </script>
