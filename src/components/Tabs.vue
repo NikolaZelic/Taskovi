@@ -74,7 +74,7 @@ export default {
     bus.$on('sid', data => {
       this.sid = data;
     })
-    this.getTabData(null, this.activeTabIndex = 0);
+    this.getTabData(null, this.activeTabIndex = 1);
   },
 
 }
@@ -102,7 +102,8 @@ export default {
   }
 
   .tablinks:hover {
-    color: #fff300;
+    background: #ccc;
+    color: #333;
   }
 
   /* TABS END */

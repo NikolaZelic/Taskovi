@@ -18,18 +18,15 @@
       <span title="Refresh" class="oi oi-reload" @click="refreshData"></span>
     </div>
     <div class="sidebar-body">
+      <form v-if="activeSubFilter()" class="btn-group" role="group" aria-label="Item Filter">
+        <button @click="getTabData('created', 'task', 'false')" type="button" class="btn btn-warning">Created</button>
+        <button @click="getTabData('assigned', 'task', 'false')" type="button" class="btn btn-warning">Assigned</button>
+        <button @click="getTabData('both', 'task', 'true')" type="button" class="btn btn-warning">Archived</button>
+      </form>
       <form class="form-block">
         <div class="search">
           <span class="oi oi-magnifying-glass"></span>
           <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
-        </div>
-      </form>
-      <form v-if="activeFilter()">
-        <div class="checkbox">
-          <label><input type="checkbox" name="" value="Created"> Created {{tabTitle}}</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="" value="Assigned"> Assigned {{tabTitle}}</label>
         </div>
       </form>
       <div class="item-list">
@@ -38,8 +35,8 @@
             <tr v-for="item in filterArray">
               <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
               <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
-              <td><span title="URGENT" v-if="item.urgent === 0" class="badge badge-danger badge-pill">U</span></td>
-              <td><span title="UNREAD" v-if="item.seen === 0" class="badge badge-success badge-pill">{{item.seen + 1 }}</span></td>
+              <td><span title="URGENT" v-if="item.isUrgent === 'urgent'" class="badge badge-danger badge-pill">U</span></td>
+              <td><span title="UNREAD" v-if="item.haveUnseenFeed ==='true'" class="badge badge-success badge-pill">1</span></td>
               <td>
                 <button title="CLOSE" class="close" @click="removeItem(item)">&times;</button>
               </td>
@@ -56,7 +53,10 @@
 <script>
 import {
   bus
-} from '../main';
+} from '../main'
+import {
+  store
+} from "@/store/store.js"
 import {
   mapGetters
 } from 'vuex'
@@ -100,9 +100,8 @@ export default {
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },
-    activeFilter(){
+    activeSubFilter() {
       let a = this.activeTabIndex;
-      console.log(a);
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
@@ -131,6 +130,17 @@ export default {
     },
     renameItem(item) {
       this.renamingItem = item;
+    },
+    getTabData(s, t, a) {
+      store.dispatch('getUserTasks', {
+        index: this.activeTabIndex,
+        state: s,
+        type: t,
+        archived: a,
+      });
+      var aa = this.getActiveArray(this.activeTabIndex);
+      // console.log(aa);
+      this.activeArray = aa;
     },
     refreshData() {
       console.log(this.activeTabIndex);
@@ -184,7 +194,6 @@ export default {
   min-height: 100vh;
   color: #eee;
   display: flex;
-  /* flex-direction: row; */
   align-items: stretch;
 }
 
@@ -207,8 +216,9 @@ export default {
   color: #fff;
 }
 
-.left-static>span:hover {
-  color: #fff300;
+.left-static span:hover {
+  background: #ccc;
+  color: #333;
 }
 
 /* TASK LIST START */
@@ -217,17 +227,14 @@ export default {
   width: 100%;
   flex: 1 0px;
   overflow: auto;
-  margin: 20px 0;
+  margin: 0 0 10px 0;
 }
 
 .item-list>table {
   padding: 0;
   width: 100%;
-  /* height: 77vh; */
   overflow: hidden;
   overflow-y: auto;
-  /* margin: 0 0 10px;
-    padding: 0; */
 }
 
 .item-list tr {
@@ -322,7 +329,7 @@ h2 {
 
 .search input {
   text-indent: 25px;
-  border: 1px solid #252627bf;
+  border: 1px solid #636567bf;
   border-radius: 0;
   color: #fff;
   background: #24262d;
@@ -338,35 +345,6 @@ h2 {
   color: gray;
   cursor: pointer;
 }
-
-/* .selected {
-  text-align: left;
-  padding: 21px;
-  font-size: 150%;
-  color: #f48a18;
-  border-bottom: 4px solid #f48a18;
-} */
-
-/* CHECKLATER=================================== */
-
-/* #content {
-  background-color: #e6e6e6;
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-/* .btn-circle {
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  margin: 8px;
-  padding: 6px 0;
-  font-size: 22px;
-  line-height: 1.42;
-  border-radius: 50%;
-  border: transparent;
-} */
 
 @media screen and (max-width: 1100px) {
   #left-sidebar,
@@ -392,6 +370,14 @@ h2 {
   margin-bottom: 10px;
 }
 
+.btn-group {
+  margin: 0 auto 10px;
+}
+
+.btn-group>* {
+  border: 1px solid #00000040;
+}
+
 @media(min-width:768px) {
   #leftWrapper {
     padding-left: 0;
@@ -414,8 +400,4 @@ h2 {
     margin-right: 0;
   }
 }
-
-
-
-/* AVATAR POPUP END */
 </style>

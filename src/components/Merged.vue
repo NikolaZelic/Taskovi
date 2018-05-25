@@ -3,10 +3,10 @@
    <left-sidebar/>
    <div class="main-content">
      <!-- <task-view></task-view> -->
-     <task-add></task-add>
+     <!-- <task-add></task-add> -->
      <!-- <project-add></project-add> -->
    </div>
-   <!-- <right-side/> -->
+   <right-side/>
   </div>
 </template>
 
@@ -35,5 +35,8 @@ export default {
 }
 .main-content{
   flex: 1;
-}
+  }
+  .fas{
+    font-size: 125%;
+  }
 </style>
