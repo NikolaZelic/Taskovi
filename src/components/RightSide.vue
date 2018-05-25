@@ -49,17 +49,6 @@ export default {
         this.feed = "";
         return;
       }
-      var text = this.feed;
-      store.dispatch( 'postMessage', {'taskId':this.taskId, 'text':text} );
-      // .then(res=>{
-      //   api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
-      //   .then(res1=>{
-      //     this.messages = this.messages.concat(res1.data.data);
-      //   });
-      // })
-      // .catch((err)=>{
-      //   console.log(err);
-      // });
       this.feed = "";
     },
     uploadFile() {
@@ -96,20 +85,8 @@ export default {
 
     },
 
+
     addUp: function() {
-      // var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds"
-      // axios.get(apiUrl, {
-      //     params: {
-      //       fedid: this.messages[0].fed_id,
-      //       pravac: "up"
-      //     }
-      //   })
-      //   .then(res => {
-      //     console.log(res.data.data);
-      //     this.messages = res.data.data.concat(this.messages);
-      //     // document.getElementById("all").scrollTop = 22;
-      //
-      //   })
       store.dispatch('readeFeeds', {taskid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
     },
 
@@ -119,24 +96,12 @@ export default {
       }
     }
   },
-  // mounted: function() {
-  //   var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds";
-  //   axios.get(apiUrl,{
-  //     params: {
-  //       fedid: 0,
-  //       pravac: "start"
-  //     }
-  //   }).then((res) => {
-  //     // console.log(res.data.data);
-  //     this.messages = res.data.data;
-  //
-  //   });
-  // }
+
   mounted: function(){
     store.dispatch('readeFeeds', {taskid:this.taskId,  direction:'start'} );
-    setInterval(()=>{
-      store.dispatch('readeFeeds', {taskid:this.taskId, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
-    }, 5000);
+    // setInterval(()=>{
+    //   store.dispatch('readeFeeds', {taskid:this.taskId, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
+    // }, 5000);
   }
 
 }
