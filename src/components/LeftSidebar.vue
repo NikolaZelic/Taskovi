@@ -96,10 +96,9 @@ export default {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },
     addItem() {
-      var a = this.getActiveArray(this.activeTabIndex);
-      this.activeArray = a;
+      var tabData = this.getActiveArray(this.activeTabIndex);
+      this.activeArray = tabData;
       return;
-      var tabData = this.$store.getters.currentTabArray[0];
       console.log('> ' + tabData);
       for (let i in tabData) {
         console.log(tabData[i].title);
@@ -153,8 +152,8 @@ export default {
       this.tabTitle = this.tabs[data].name;
       this.activeTabIndex = data;
       var aa = this.getActiveArray(this.activeTabIndex);
-      console.log('sss');
-      console.log(aa);
+      // console.log('sss');
+      // console.log(aa);
       this.activeArray = aa;
     });
     bus.$on('signin', data => {

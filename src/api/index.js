@@ -58,7 +58,7 @@ export const api = {
         sid: window.localStorage.getItem('sid')
       }
     }).then(r => {
-      store.commit('setLeftSideBarContent', {
+      store.commit('setLeftSidebarTabData', {
         index: 0,
         data: r.data.data
       });
@@ -76,7 +76,7 @@ export const api = {
         archived: archived,
       }
     }).then(r => {
-      store.commit('setLeftSideBarContent', {
+      store.commit('setLeftSidebarTabData', {
         index: index,
         data: r.data.data
       });

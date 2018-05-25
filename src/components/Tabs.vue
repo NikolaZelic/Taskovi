@@ -31,7 +31,7 @@ export default {
     getMyProjects() {
       store.dispatch('getUserProjects');
     },
-    getTaskData(s,t,a) {
+    getTaskData(s, t, a) {
       store.dispatch('getUserTasks', {
         index: this.activeTabIndex,
         state: s,
@@ -44,21 +44,23 @@ export default {
         this.tabTitle = e.target.title;
       }
       this.isCollapsedSidebar = false;
+      if (this.activeTabIndex === undefined)
+        return;
       switch (this.activeTabIndex) {
         case 0:
           this.getMyProjects();
           break;
         case 1:
-          this.getTaskData('assigned','task','false');
+          this.getTaskData('assigned', 'task', 'false');
           break;
         case 2:
-          this.getTaskData('created','task','false');
+          this.getTaskData('created', 'task', 'false');
           break;
         case 3:
-          this.getTaskData('assigned','bugfix','false');
+          this.getTaskData('assigned', 'bugfix', 'false');
           break;
         case 4:
-          this.getTaskData('created','task','true');
+          this.getTaskData('created', 'task', 'true');
           break;
         default:
           break;
