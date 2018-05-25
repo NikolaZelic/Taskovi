@@ -44,7 +44,6 @@ export default {
         this.tabTitle = e.target.title;
       }
       this.isCollapsedSidebar = false;
-      bus.$emit('activeTabIndex', this.activeTabIndex);
       switch (this.activeTabIndex) {
         case 0:
           this.getMyProjects();
@@ -64,6 +63,7 @@ export default {
         default:
           break;
       }
+      bus.$emit('activeTabIndex', this.activeTabIndex);
       // bus.$emit('netTabFilled',null);
       // console.log("s");
     },

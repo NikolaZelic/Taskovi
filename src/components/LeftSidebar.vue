@@ -51,6 +51,9 @@
 import {
   bus
 } from '../main';
+import {
+  mapGetters
+} from 'vuex'
 import tabs from "@/components/Tabs"
 import login from "@/components/Login"
 export default {
@@ -72,23 +75,18 @@ export default {
       tabs: [{
         name: 'My Projects',
         icon: 'fas fa-project-diagram',
-        // data: this.$store.state.leftSideBarContent[0],
       }, {
         name: 'My Created Tasks',
         icon: 'fa fa-user-check',
-        // data: this.$store.state.leftSideBarContent[1],
       }, {
         name: 'My Assigned Tasks',
         icon: 'fas fa-tasks',
-        // data: this.$store.state.leftSideBarContent[2],
       }, {
         name: 'Debug Tasks',
         icon: 'fas fa-bug',
-        // data: this.$store.state.leftSideBarContent[3],
       }, {
         name: 'Archived Tasks',
         icon: 'fas fa-archive',
-        // data: this.$store.state.leftSideBarContent[4],
       }, ],
       activeArray: [], // IMPROVE IN FUTURE
     }
@@ -98,18 +96,23 @@ export default {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },
     addItem() {
-      var st = prompt();
-      if (st == null || st == "") return;
-      var lastIndex = this.myTasks.length;
-      this.myTasks.push({
-        id: lastIndex++,
-        title: st,
-      })
-      this.searchData = '';
+      var a = this.getActiveArray(this.activeTabIndex);
+      this.activeArray = a;
+      return;
+      var tabData = this.$store.getters.currentTabArray[0];
+      console.log('> ' + tabData);
+      for (let i in tabData) {
+        console.log(tabData[i].title);
+      }
+      // var st = prompt();
+      // if (st == null || st == "") return;
+      // this.searchData = '';
     },
     removeItem(item) {
-      var index = this.activeArray.indexOf(item);
-      this.activeArray.splice(index, 1);
+      var aa = this.getActiveArray(this.activeTabIndex);
+      console.log(aa);
+      var index = aa.indexOf(item);
+      console.log(index+ '  |  ' + aa.splice(index, 1));
     },
     endEditing(item) {
       this.renamingItem = {};
@@ -125,10 +128,20 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      getActiveArray: 'currentTabArray',
+    }),
     filterArray() {
-      if (this.activeArray === undefined)
+      //var tabData = this.getActiveArray(this.activeTabIndex);
+      // this.activeArray = a;
+       var tabData = this.activeArray;
+      // for (let i in tabData) {
+      //   console.log(tabData[i].title);
+      // }
+      if (tabData === undefined)
         return;
-      return this.activeArray.filter(it => {
+      console.log('DUZINA ============== ' + tabData.length);
+      return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
         return item == undefined || searchItem == undefined ? false : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1
@@ -139,7 +152,10 @@ export default {
     bus.$on('activeTabIndex', data => {
       this.tabTitle = this.tabs[data].name;
       this.activeTabIndex = data;
-      this.activeArray = this.$store.state.leftSideBarContent[this.activeTabIndex];
+      var aa = this.getActiveArray(this.activeTabIndex);
+      console.log('sss');
+      console.log(aa);
+      this.activeArray = aa;
     });
     bus.$on('signin', data => {
       this.sid = data;
