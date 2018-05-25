@@ -29,7 +29,8 @@ export const store = new Vuex.Store({
           params.data.forEach( e => state.messages.unshift(e) );
         }
         else if(params.direction==='down'){
-          params.data.forEach( e => state.messages.push(e) );
+          if(params.data!=undefined)
+            params.data.forEach( e => state.messages.push(e) );
         }
       },
   },
@@ -41,10 +42,10 @@ export const store = new Vuex.Store({
       api.getUserTasks(params.index, params.state, params.type, params.archived);
     },
     readeFeeds(commit, params){
-      api.readeFeeds(params.tasid, params.fedid, params.direction);
+      api.readeFeeds(params.taskid, params.fedid, params.direction);
     },
     postMessage(commit, params){
-      api.postMessage(params.taskId, params.text);
+      api.postMessage(params.taskid, params.text);
     }
   }
 })
