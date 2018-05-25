@@ -99,6 +99,7 @@ export default {
   }
   .tablinks.active {
     background: #212529;
+    color: yellow;
   }
 
   .tablinks:hover {

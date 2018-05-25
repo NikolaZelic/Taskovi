@@ -6,7 +6,7 @@
   max-width: 0;
 }
 
-.sidebar-content.collapsed .sidebar-header, .sidebar-content.collapsed .sidebar-body {
+.sidebar-content.collapsed * {
   display: none;
 }
 
