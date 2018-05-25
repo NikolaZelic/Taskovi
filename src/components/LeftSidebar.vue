@@ -1,5 +1,5 @@
 <template>
-<aside id="left-sidebar">
+<div id="left-sidebar">
   <div class="left-static">
     <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
     <tabs :tabs="tabs"></tabs>
@@ -18,9 +18,9 @@
     </div>
     <div class="sidebar-body">
       <form v-if="activeSubFilter()" class="btn-group" role="group" aria-label="Item Filter">
-        <button @click="getTabData('created', 'task', 'false')" type="button" class="btn btn-warning">Created</button>
-        <button @click="getTabData('assigned', 'task', 'false')" type="button" class="btn btn-warning">Assigned</button>
-        <button @click="getTabData('both', 'task', 'true')" type="button" class="btn btn-warning">Archived</button>
+        <button @click="getTabData('cr')" type="button" class="btn btn-warning">Created</button>
+        <button @click="getTabData('as')" type="button" class="btn btn-warning">Assigned</button>
+        <button @click="getTabData('ar')" type="button" class="btn btn-warning">Archived</button>
       </form>
       <form class="form-block">
         <div class="search">
@@ -46,13 +46,19 @@
       <button id="addItem" class="btn btn-block btn-warning" @click="addItem"><span class="fas fa-plus"></span> Add New</button>
     </div>
   </div>
-</aside>
+</div>
 </template>
 
 <script>
-import {bus} from '../main'
-import {store} from "@/store/store.js"
-import {mapGetters} from 'vuex'
+import {
+  bus
+} from '../main'
+import {
+  store
+} from "@/store/store.js"
+import {
+  mapGetters
+} from 'vuex'
 import tabs from "@/components/Tabs"
 import login from "@/components/Login"
 export default {
@@ -74,10 +80,13 @@ export default {
         name: 'Projects',
         icon: 'fas fa-project-diagram',
       }, {
+        name: 'Parent Tasks',
+        icon: 'fa fa-tasks',
+      }, {
         name: 'Tasks',
         icon: 'fa fa-tasks',
       }, {
-        name: 'Debug Tasks',
+        name: 'BugFix Tasks',
         icon: 'fas fa-bug',
       }, {
         name: 'Companies',
@@ -100,7 +109,7 @@ export default {
     },
     activeSubFilter() {
       let a = this.activeTabIndex;
-      return a === 0 || a === 1 || a === 2;
+      return a === 0 || a === 1 || a === 2 || a === 3;
     },
     addItem() {
       var tabData = this.getActiveArray(this.activeTabIndex);
@@ -129,7 +138,37 @@ export default {
     renameItem(item) {
       this.renamingItem = item;
     },
-    getTabData(s, t, a) {
+    getTabData(type) {
+      let ax = this.activeTabIndex;
+      switch (ax) {
+        case 0:
+          this.getProjectData;
+          break;
+        case 1:
+        case 2:
+        case 3:
+          this.getTaskData;
+          break;
+        case 4:
+        case 5:
+          this.getPeopleData;
+          break;
+      }
+      let s = "both";
+      let t = "task";
+      let a = "false";
+      switch (type) {
+        case "cr":
+          s = "created";
+          break;
+        case "as":
+          s = "assigned";
+          break;
+        case "ar":
+          a = "true";
+          break;
+      }
+      if (ax === 3) t = "bugfix";
       store.dispatch('getUserTasks', {
         index: this.activeTabIndex,
         state: s,
@@ -341,13 +380,6 @@ h2 {
 }
 
 @media screen and (max-width: 1100px) {
-  #left-sidebar,
-  #left-sidebar.active {
-    margin-left: var(--left-sidebar-no-width);
-  }
-  /* #rightSidebar, #rightSidebar.active {
-    margin-right: -350px;
-  } */
 }
 
 /* SIDEBAR BODY */

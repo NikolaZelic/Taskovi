@@ -15,8 +15,8 @@
 /* SIDEBAR CONTENT */
 
 .sidebar-content {
-  min-width: 330px;
-  max-width: 330px;
+  min-width: 650px;
+  max-width: 650px;
   background: #24262d;
   transition: all 0.5s ease;
   flex-direction: column;

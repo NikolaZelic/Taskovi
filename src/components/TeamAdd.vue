@@ -1,7 +1,7 @@
 <template>
 <div>
-  <div class="row task-add-section">
-    <div class="col-md-8 offset-md-2 pad">
+  <!-- <div class="row task-add-section"> -->
+    <!-- <div class="col-md-8 offset-md-2 pad"> -->
 
       <h1 class="display-4">Create team:</h1><br>
 
@@ -35,8 +35,8 @@
 
 
 
-    </div>
-  </div>
+    <!-- </div> -->
+  <!-- </div> -->
 </div>
 </template>
 

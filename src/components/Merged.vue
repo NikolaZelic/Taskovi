@@ -2,19 +2,21 @@
   <div id="wrapper">
    <left-sidebar/>
    <div class="main-content">
-     <!-- <task-view></task-view> -->
-     <!-- <task-add></task-add> -->
-     <!-- <project-add></project-add> -->
-     <!-- <project-view></project-view> -->
-     <team-add></team-add>
+     <div class="dynamic-center">
+      <!-- <task-view></task-view> -->
+      <!-- <task-add></task-add> -->
+      <!-- <project-add></project-add> -->
+      <!-- <project-view></project-view> -->
+      <team-add></team-add>
+     </div>
+     <chat/>
    </div>
-   <right-side/>
   </div>
 </template>
 
 <script>
 import LeftSidebar from "@/components/LeftSidebar"
-import RightSide from "@/components/RightSide"
+import Chat from "@/components/Chat"
 import TaskView from "@/components/TaskView"
 import TaskAdd from "@/components/TaskAdd"
 import ProjectAdd from "@/components/ProjectAdd"
@@ -25,12 +27,12 @@ import TeamAdd from "@/components/TeamAdd"
 export default {
   components: {
     LeftSidebar,
-    RightSide,
+    Chat,
     TaskView,
     TaskAdd,
     ProjectAdd,
     ProjectView,
-    TeamAdd
+    TeamAdd,
   },
 }
 </script>
@@ -42,8 +44,13 @@ export default {
 }
 .main-content{
   flex: 1;
+  display: flex;
+  flex-direction: column;
   }
   .fas{
     font-size: 125%;
+  }
+  .dynamic-center {
+      padding: 0 30px 0;
   }
 </style>
