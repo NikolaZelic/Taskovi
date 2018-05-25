@@ -2,10 +2,11 @@
 
 .sidebar-content.collapsed {
   width: 0;
+  min-width: 0;
+  max-width: 0;
 }
 
-.sidebar-content.collapsed .sidebar-header,
-.sidebar-content.collapsed .sidebar-body {
+.sidebar-content.collapsed .sidebar-header, .sidebar-content.collapsed .sidebar-body {
   display: none;
 }
 
@@ -14,6 +15,8 @@
 /* SIDEBAR CONTENT */
 
 .sidebar-content {
+  min-width: 330px;
+  max-width: 330px;
   background: #2d3436;
   transition: all 0.5s ease;
   flex-direction: column;

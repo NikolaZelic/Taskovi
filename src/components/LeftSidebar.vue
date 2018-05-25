@@ -1,50 +1,56 @@
 <template>
-<div>
-  <aside id="left-sidebar">
-    <div class="left-static">
-      <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
-      <tabs :tabs="tabs"></tabs>
-      <div class="user-sidebar">
-        <span title="User Options" class="fas fa-user-cog"></span>
-        <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
-        <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
-      </div>
+<aside id="left-sidebar">
+  <div class="left-static">
+    <span title="Collapse Sidebar" class="oi oi-menu" @click="collapseSidebar"></span>
+    <tabs :tabs="tabs"></tabs>
+    <div class="user-sidebar">
+      <span title="User Options" class="fas fa-user-cog"></span>
+      <span title="Sign In" class="fas fa-sign-in-alt" @click="showSignIn = true"></span>
+      <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
     </div>
+  </div>
 
-    <login v-if="showSignIn" @close="showModal = false">
-    </login>
-    <div v-else class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
-      <div class="sidebar-header">
-        <a>{{ tabTitle }}<span class="oi oi-check"></span></a>
-        <span title="Refresh" class="oi oi-reload" @click="refreshData"></span>
-      </div>
-      <div class="sidebar-body">
-        <form class="form-block">
-          <div class="search">
-            <span class="oi oi-magnifying-glass"></span>
-            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
-          </div>
-        </form>
-        <div class="item-list">
-          <table>
-            <tbody>
-              <tr v-for="item in filterArray">
-                <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
-                <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
-                <td><span title="URGENT" v-if="item.urgent === 0" class="badge badge-danger badge-pill">U</span></td>
-                <td><span title="UNREAD" v-if="item.seen === 0" class="badge badge-success badge-pill">{{item.seen + 1 }}</span></td>
-                <td>
-                  <button title="CLOSE" class="close" @click="removeItem(item)">&times;</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <button id="addItem" class="btn btn-block btn-warning" @click="addItem"><span class="fas fa-plus"></span> Add new <span>{{item}}</span></button>
-      </div>
+  <login v-if="showSignIn" @close="showModal = false">
+  </login>
+  <div v-else class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
+    <div class="sidebar-header">
+      <a>{{ tabTitle }}<span class="oi oi-check"></span></a>
+      <span title="Refresh" class="oi oi-reload" @click="refreshData"></span>
     </div>
-  </aside>
-</div>
+    <div class="sidebar-body">
+      <form class="form-block">
+        <div class="search">
+          <span class="oi oi-magnifying-glass"></span>
+          <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+        </div>
+      </form>
+      <form v-if="activeFilter()">
+        <div class="checkbox">
+          <label><input type="checkbox" name="" value="Created"> Created {{tabTitle}}</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="" value="Assigned"> Assigned {{tabTitle}}</label>
+        </div>
+      </form>
+      <div class="item-list">
+        <table>
+          <tbody>
+            <tr v-for="item in filterArray">
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
+              <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
+              <td><span title="URGENT" v-if="item.urgent === 0" class="badge badge-danger badge-pill">U</span></td>
+              <td><span title="UNREAD" v-if="item.seen === 0" class="badge badge-success badge-pill">{{item.seen + 1 }}</span></td>
+              <td>
+                <button title="CLOSE" class="close" @click="removeItem(item)">&times;</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button id="addItem" class="btn btn-block btn-warning" @click="addItem"><span class="fas fa-plus"></span> Add New</button>
+    </div>
+  </div>
+</aside>
 </template>
 
 <script>
@@ -65,7 +71,6 @@ export default {
   data() {
     return {
       sid: undefined,
-      item: "Task",
       renamingItem: {},
       showSignIn: false,
       isCollapsedSidebar: false,
@@ -73,20 +78,20 @@ export default {
       searchData: '',
       tabTitle: '',
       tabs: [{
-        name: 'My Projects',
+        name: 'Projects',
         icon: 'fas fa-project-diagram',
       }, {
-        name: 'My Created Tasks',
-        icon: 'fa fa-user-check',
-      }, {
-        name: 'My Assigned Tasks',
-        icon: 'fas fa-tasks',
+        name: 'Tasks',
+        icon: 'fa fa-tasks',
       }, {
         name: 'Debug Tasks',
         icon: 'fas fa-bug',
       }, {
-        name: 'Archived Tasks',
-        icon: 'fas fa-archive',
+        name: 'Companies',
+        icon: 'fas fa-building',
+      }, {
+        name: 'Teams',
+        icon: 'fas fa-users',
       }, ],
       activeArray: [], // IMPROVE IN FUTURE
     }
@@ -94,6 +99,11 @@ export default {
   methods: {
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
+    },
+    activeFilter(){
+      let a = this.activeTabIndex;
+      console.log(a);
+      return a === 0 || a === 1 || a === 2;
     },
     addItem() {
       var tabData = this.getActiveArray(this.activeTabIndex);
@@ -111,7 +121,7 @@ export default {
       var aa = this.getActiveArray(this.activeTabIndex);
       console.log(aa);
       var index = aa.indexOf(item);
-      console.log(index+ '  |  ' + aa.splice(index, 1));
+      console.log(index + '  |  ' + aa.splice(index, 1));
     },
     endEditing(item) {
       this.renamingItem = {};
@@ -133,7 +143,7 @@ export default {
     filterArray() {
       //var tabData = this.getActiveArray(this.activeTabIndex);
       // this.activeArray = a;
-       var tabData = this.activeArray;
+      var tabData = this.activeArray;
       // for (let i in tabData) {
       //   console.log(tabData[i].title);
       // }
@@ -171,8 +181,6 @@ export default {
 
 <style scoped>
 #left-sidebar {
-  min-width: 400px;
-  max-width: 400px;
   min-height: 100vh;
   color: #eee;
   display: flex;
@@ -378,6 +386,10 @@ h2 {
   display: flex;
   flex-direction: column;
   padding: 20px;
+}
+
+.sidebar-body>form {
+  margin-bottom: 10px;
 }
 
 @media(min-width:768px) {

@@ -6,7 +6,7 @@
      <task-add></task-add>
      <!-- <project-add></project-add> -->
    </div>
-   <right-side/>
+   <!-- <right-side/> -->
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
 <style lang="css">
 #wrapper{
   display: flex;
+  align-items: stretch;
 }
 .main-content{
   flex: 1;
