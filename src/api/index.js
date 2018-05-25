@@ -10,7 +10,8 @@ export const api = {
     axios.get('/tasks/'+tasid+'/feeds', {
       params: {
         fedid: fedid,
-        pravac: direction
+        pravac: direction,
+        sid: window.localStorage.getItem('sid')
       }
     })
     .then(function(response){
@@ -26,7 +27,7 @@ export const api = {
     var fd = new FormData();
     fd.append('type','text');
     fd.append('text', mess);
-    axios.post('/tasks/'+tasid+'/feeds',fd )
+    axios.post('/tasks/'+tasid+'/feeds?sid='+window.localStorage.getItem('sid'), fd )
     .then(response =>{
         var msg = store.state.messages;
         if( msg.length===0 ){
