@@ -133,9 +133,15 @@ export default {
       if(this.taskid===-1)
         return;
       store.dispatch('readeFeeds', {taskid:this.taskid,  direction:'start'} );
-      // setInterval(()=>{
-      //   store.dispatch('readeFeeds', {taskid:this.taskid, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
-      // }, 20000);
+      setInterval(()=>{
+        var msg = store.state.messages;
+        if( msg.length > 0){
+          store.dispatch('readeFeeds', {taskid:this.taskid, fedid:msg[msg.length-1].fed_id, direction:'down'} );
+        }
+        else {
+          store.dispatch('readeFeeds', {taskid:this.taskid, fedid:0, direction:'start'});
+        }
+      }, 5000);
     },
 
     hideRightSide: function(){
