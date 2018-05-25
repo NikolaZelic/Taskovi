@@ -98,7 +98,7 @@ export default {
     background: white;
   }
   .tablinks.active {
-    background: #2d3436;
+    background: #212529;
   }
 
   .tablinks:hover {

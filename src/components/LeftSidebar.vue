@@ -33,10 +33,10 @@
         <table>
           <tbody>
             <tr v-for="item in filterArray">
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)">{{ item.title }}</td>
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectTask(item.id)'>{{ item.title }}</td>
               <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title"></input>
-              <td><span title="URGENT" v-if="item.isUrgent === 'urgent'" class="badge badge-danger badge-pill">U</span></td>
-              <td><span title="UNREAD" v-if="item.haveUnseenFeed ==='true'" class="badge badge-success badge-pill">1</span></td>
+              <td v-if="item.isUrgent === 'urgent'"><span title="URGENT" class="badge badge-danger badge-pill">U</span></td>
+              <td v-if="item.haveUnseenFeed ==='true'"><span title="UNREAD" class="badge badge-primary badge-pill">1</span></td>
               <td>
                 <button title="CLOSE" class="close" @click="removeItem(item)">&times;</button>
               </td>
@@ -97,6 +97,9 @@ export default {
     }
   },
   methods: {
+    selectTask(tasid){
+       store.commit("changeLeftSideSelection", {selectedTaskID: tasid});
+    },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
     },
@@ -200,7 +203,7 @@ export default {
 /* SIDEBAR STATIC */
 
 .left-static {
-  background: #24262d;
+  background: #2d3436;
   width: 70px;
   display: flex;
   flex-direction: column;
@@ -260,7 +263,7 @@ export default {
 .item-list tr:hover {
   text-decoration: none;
   color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  background: #8e8e8e66 !important;
 }
 
 .item-list tr:active,
@@ -271,11 +274,7 @@ export default {
 }
 
 .item-list tr:nth-child(even) {
-  background: #23232366;
-}
-
-.item-list tr:nth-child(even):hover {
-  background: #58585866;
+  background: #44444466
 }
 
 .close {
@@ -332,7 +331,7 @@ h2 {
   border: 1px solid #636567bf;
   border-radius: 0;
   color: #fff;
-  background: #24262d;
+  background: #2d3436;
 }
 
 .search ::placeholder {
@@ -367,7 +366,7 @@ h2 {
 }
 
 .sidebar-body>form {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .btn-group {
