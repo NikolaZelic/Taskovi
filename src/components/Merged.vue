@@ -3,8 +3,10 @@
    <left-sidebar/>
    <div class="main-content">
      <!-- <task-view></task-view> -->
-     <task-add></task-add>
+     <!-- <task-add></task-add> -->
      <!-- <project-add></project-add> -->
+     <!-- <project-view></project-view> -->
+     <team-add></team-add>
    </div>
    <right-side/>
   </div>
@@ -16,6 +18,9 @@ import RightSide from "@/components/RightSide"
 import TaskView from "@/components/TaskView"
 import TaskAdd from "@/components/TaskAdd"
 import ProjectAdd from "@/components/ProjectAdd"
+import ProjectView from "@/components/ProjectView"
+import TeamAdd from "@/components/TeamAdd"
+
 
 export default {
   components: {
@@ -23,7 +28,9 @@ export default {
     RightSide,
     TaskView,
     TaskAdd,
-    ProjectAdd
+    ProjectAdd,
+    ProjectView,
+    TeamAdd
   },
 }
 </script>
