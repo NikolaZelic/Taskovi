@@ -9,7 +9,6 @@
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="showSignIn = false"></span>
     </div>
   </div>
-
   <login v-if="showSignIn" @close="showModal = false">
   </login>
   <div v-else class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
@@ -51,15 +50,9 @@
 </template>
 
 <script>
-import {
-  bus
-} from '../main'
-import {
-  store
-} from "@/store/store.js"
-import {
-  mapGetters
-} from 'vuex'
+import {bus} from '../main'
+import {store} from "@/store/store.js"
+import {mapGetters} from 'vuex'
 import tabs from "@/components/Tabs"
 import login from "@/components/Login"
 export default {
@@ -97,8 +90,10 @@ export default {
     }
   },
   methods: {
-    selectTask(tasid){
-       store.commit("changeLeftSideSelection", {selectedTaskID: tasid});
+    selectTask(tasid) {
+      store.commit("changeLeftSideSelection", {
+        selectedTaskID: tasid
+      });
     },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;

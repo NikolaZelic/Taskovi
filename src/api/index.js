@@ -21,13 +21,20 @@ export const api = {
   },
 
   postMessage(tasid, mess) {
-    console.log('Ovo se desava');
+    // console.log('Ovo se desava');
+    var msg = store.state.messages;
     var fd = new FormData();
     fd.append('type','text');
     fd.append('text', mess);
     axios.post('/tasks/'+tasid+'/feeds',fd )
     .then(response =>{
-        this.readeFeeds(tasid, store.state.messages[store.state.messages.length-1].fed_id, 'down');
+        var msg = store.state.messages;
+        if( msg.length===0 ){
+          this.readeFeeds(tasid, 0, 'start');
+        }
+        else{
+          this.readeFeeds(tasid, msg[msg.length-1].fed_id, 'down');
+        }
     });
   },
 

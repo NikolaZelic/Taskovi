@@ -1,22 +1,27 @@
 <template>
 <div class="right">
-
-  <div id="all" v-on:scroll="handleScroll()" class="feed-back">
-    <button class="load" v-on:click="addUp">Loading new feeds...</button>
-    <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
+  <div class="trans">
+    <button class="btn" v-on:click="showFeeds=!showFeeds">X</button>
   </div>
-  <div class="progress" v-show="inProgress">
-    <p>LOADING FILE {{uploadProgress}}</p>
-    <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
-  </div>
-  <div class="input">
-    <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
-    <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-    <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-    <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
-    <input type="file" id="file" v-on:change="changeFile" style="display:none;"></input>
-  </div>
-
+  <transition name="fade">
+    <div class="feed-all" v-show="showFeeds">
+      <div id="all" v-on:scroll="handleScroll()" class="feed-back">
+        <button class="load" v-on:click="addUp">Loading new feeds...</button>
+        <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
+      </div>
+      <div class="progress" v-show="inProgress">
+        <p>LOADING FILE {{uploadProgress}}</p>
+        <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
+      </div>
+      <div class="input">
+        <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
+        <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+        <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+        <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
+        <input type="file" id="file" v-on:change="changeFile" style="display:none;"></input>
+      </div>
+    </div>
+  </transition>
 </div>
 </template>
 <script>
@@ -31,9 +36,10 @@ export default {
   },
   data: function() {
     return {
+      showFeeds:true,
       // messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
-      taskId: 1,
+      // taskid: 1,
       uploadProgress:50,
       inProgress:false
     }
@@ -41,19 +47,44 @@ export default {
   computed:{
     messages: function(){
       return store.getters.getMessages;
+    },
+
+    taskid: function(){
+      var id = store.getters.selectedTaskID;
+      if( id===-1 ){
+         this.hideRightSide();
+      }
+      // console.log('Iz RightSide '+id);
+      return id;
     }
   },
+
+  watch: {
+    taskid: function(val){
+      // console.log('Obe je iz voca ' + val);
+      this.startFeed();
+    }
+  },
+
   methods: {
     writeMessageFeed: function() {
-      if (this.feed.trim() === "") {
+      if(this.taskid===-1)
+        return;
+      var text = this.feed.trim();
+      if (text === "") {
         this.feed = "";
         return;
       }
+-     store.dispatch( 'postMessage', {'taskid':this.taskid, 'text':text} );
       this.feed = "";
     },
+
     uploadFile() {
+      if(this.taskid==-1)
+        return -1;
       document.getElementById("file").click();
     },
+
     changeFile(e){
       var f =e.target.files[0]
       var fd = new FormData();
@@ -87,38 +118,63 @@ export default {
 
 
     addUp: function() {
-      store.dispatch('readeFeeds', {taskid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
+      if(this.taskid===-1)
+        return;
+      store.dispatch('readeFeeds', {taskid:this.taskid, fedid:this.messages[0].fed_id, direction:'up'} );
     },
 
     handleScroll() {
       if ( !document.getElementById("all").scrollTop ) {
         this.addUp();
       }
+    },
+
+    startFeed: function(){
+      if(this.taskid===-1)
+        return;
+      store.dispatch('readeFeeds', {taskid:this.taskid,  direction:'start'} );
+      // setInterval(()=>{
+      //   store.dispatch('readeFeeds', {taskid:this.taskid, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
+      // }, 20000);
+    },
+
+    hideRightSide: function(){
+      // Sveto ovde ti uleces !
+
     }
+
   },
 
   mounted: function(){
-    store.dispatch('readeFeeds', {taskid:this.taskId,  direction:'start'} );
-    // setInterval(()=>{
-    //   store.dispatch('readeFeeds', {taskid:this.taskId, fedid:store.state.messages[store.state.messages.length-1].fed_id, direction:'down'})
-    // }, 5000);
-  }
+     this.startFeed();
+  },
+
+
 
 }
 </script>
 <style scoped>
-.right {
+.right{
+  display: flex;
+}
+.trans{
+  flex: 0 0 30px;
+  background-color:
+}
+.trans .btn{
+  width:100%;
+  height:100%;
+}
+.feed-all {
   background: #ebedf1;
   border-radius: 4px;
   border: 2px solid #ccc;
   height: 100vh;
-  width: 500px;
-
+  width: 400px;
 
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
-
 }
 
 .feed-back {
@@ -179,6 +235,14 @@ export default {
 .progress .in-progress {
   background-color: #0a0;
   height: 100%;
+  width: 0;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+  transition: width .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   width: 0;
 }
 </style>
