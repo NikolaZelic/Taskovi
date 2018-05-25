@@ -20,9 +20,10 @@
 </div>
 </template>
 <script>
-import {api} from '@/api/index.js'
-import axios from 'axios';
+
 import Message from './Message';
+import {store} from "@/store/store.js";
+
 export default {
   components: {
     'message': Message,
@@ -30,34 +31,35 @@ export default {
   },
   data: function() {
     return {
-      messages: [],
+      // messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
       taskId: 1,
       uploadProgress:50,
       inProgress:false
     }
   },
+  computed:{
+    messages: function(){
+      return store.getters.getMessages;
+    }
+  },
   methods: {
-    scrollDown: function() {
-      var mess = this.messages;
-      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
-    },
     writeMessageFeed: function() {
       if (this.feed.trim() === "") {
         this.feed = "";
         return;
       }
       var text = this.feed;
-      api.postMessage(this.taskId, text)
-      .then(res=>{
-        api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
-        .then(res1=>{
-          this.messages = this.messages.concat(res1.data.data);
-        });
-      })
-      .catch((err)=>{
-        console.log(err);
-      });
+      store.dispatch( 'postMessage', {'taskId':this.taskId, 'text':text} );
+      // .then(res=>{
+      //   api.newFeed(this.taskId,this.messages[this.messages.length-1].fed_id)
+      //   .then(res1=>{
+      //     this.messages = this.messages.concat(res1.data.data);
+      //   });
+      // })
+      // .catch((err)=>{
+      //   console.log(err);
+      // });
       this.feed = "";
     },
     uploadFile() {
@@ -93,44 +95,45 @@ export default {
       });
 
     },
+
     addUp: function() {
-
-      var d = this.messages[0].fed_time;
-      var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds"
-      axios.get(apiUrl, {
-          params: {
-            fedid: this.messages[0].fed_id,
-            pravac: "up"
-          }
-        })
-        .then(res => {
-          console.log(res.data.data);
-          this.messages = res.data.data.concat(this.messages);
-          document.getElementById("all").scrollTop = 22;
-
-        })
-        .catch();
+      // var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds"
+      // axios.get(apiUrl, {
+      //     params: {
+      //       fedid: this.messages[0].fed_id,
+      //       pravac: "up"
+      //     }
+      //   })
+      //   .then(res => {
+      //     console.log(res.data.data);
+      //     this.messages = res.data.data.concat(this.messages);
+      //     // document.getElementById("all").scrollTop = 22;
+      //
+      //   })
+      store.dispatch('readeFeeds', {tasid:this.taskId, fedid:this.messages[0].fed_id, direction:'up'} );
     },
+
     handleScroll() {
-      if (!document.getElementById("all").scrollTop) {
-
+      if ( !document.getElementById("all").scrollTop ) {
         this.addUp();
-
       }
     }
   },
-  mounted: function() {
-    var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds";
-    axios.get(apiUrl,{
-      params: {
-        fedid: 0,
-        pravac: "start"
-      }
-    }).then((res) => {
-      // console.log(res.data.data);
-      this.messages = res.data.data;
-
-    });
+  // mounted: function() {
+  //   var apiUrl = "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/" + this.taskId + "/feeds";
+  //   axios.get(apiUrl,{
+  //     params: {
+  //       fedid: 0,
+  //       pravac: "start"
+  //     }
+  //   }).then((res) => {
+  //     // console.log(res.data.data);
+  //     this.messages = res.data.data;
+  //
+  //   });
+  // }
+  mounted: function(){
+    store.dispatch('readeFeeds', {tasid:this.taskId,  direction:'start'} );
   }
 
 }

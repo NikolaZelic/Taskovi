@@ -6,26 +6,28 @@ import {
 } from '@/store/store.js';
 
 export const api = {
-  newFeed(tId, fId) {
-    return axios.get('/task/:tasid/feeds', {
+  readeFeeds(tasid, fedid, direction) {
+    axios.get('/tasks/'+tasid+'/feeds', {
       params: {
-        tasid: tId,
-        fedid: fId,
-        pravac: 'down'
+        fedid: fedid,
+        pravac: direction
       }
     })
+    .then(function(response){
+      // console.log('Ovo je iz APIja');
+      // console.log(response.data.data);
+       store.commit('addMessages',{'direction':direction, 'data':response.data.data})
+    });
   },
 
-  postMessage(tId, mess) {
-    return axios({
-      method: 'post',
-      url: '/task/:tasid/feeds',
-
-      params: {
-        tasid: tId,
-        type: 'text',
-        text: mess
-      }
+  postMessage(tasid, mess) {
+    console.log('Ovo se desava');
+    var fd = new FormData();
+    fd.append('type','text');
+    fd.append('text', mess);
+    axios.post('/tasks/'+tasid+'/feeds',fd )
+    .then(response =>{
+        this.readeFeeds(tasid, store.state.messages[store.state.messages.length-1].fed_id, 'down');
     });
   },
 
