@@ -34,6 +34,7 @@ export const store = new Vuex.Store({
       return state.leftSideSelection.selectedTaskID;
     }
   },
+
   mutations: {
     setLeftSidebarTabData: (state, params) => {
       state.leftSidebarTabData[params.index] = params.data;
@@ -59,16 +60,20 @@ export const store = new Vuex.Store({
         }
     }
   },
+
   actions: {
     getUserProjects() {
       api.getUserProjects();
     },
+
     getUserTasks(commit, params) {
       api.getUserTasks(params.index, params.state, params.type, params.archived);
     },
+
     readeFeeds(commit, params) {
       api.readeFeeds(params.taskid, params.fedid, params.direction);
     },
+
     postMessage(commit, params) {
       api.postMessage(params.taskid, params.text);
     }
