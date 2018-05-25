@@ -1,22 +1,27 @@
 <template>
 <div class="right">
-
-  <div id="all" v-on:scroll="handleScroll()" class="feed-back">
-    <button class="load" v-on:click="addUp">Loading new feeds...</button>
-    <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
+  <div class="trans">
+    <button class="btn" v-on:click="showFeeds=!showFeeds">X</button>
   </div>
-  <div class="progress" v-show="inProgress">
-    <p>LOADING FILE {{uploadProgress}}</p>
-    <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
-  </div>
-  <div class="input">
-    <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
-    <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-    <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-    <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
-    <input type="file" id="file" v-on:change="changeFile" style="display:none;"></input>
-  </div>
-
+  <transition name="fade">
+    <div class="feed-all" v-show="showFeeds">
+      <div id="all" v-on:scroll="handleScroll()" class="feed-back">
+        <button class="load" v-on:click="addUp">Loading new feeds...</button>
+        <message v-for="(mess,i) in messages" :key="i"  :mess="mess"></message>
+      </div>
+      <div class="progress" v-show="inProgress">
+        <p>LOADING FILE {{uploadProgress}}</p>
+        <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
+      </div>
+      <div class="input">
+        <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
+        <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+        <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+        <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
+        <input type="file" id="file" v-on:change="changeFile" style="display:none;"></input>
+      </div>
+    </div>
+  </transition>
 </div>
 </template>
 <script>
@@ -31,6 +36,7 @@ export default {
   },
   data: function() {
     return {
+      showFeeds:true,
       // messages: [],
       feed: "",//ovo je tekst koji jos nije poslat
       taskId: 1,
@@ -107,18 +113,27 @@ export default {
 }
 </script>
 <style scoped>
-.right {
+.right{
+  display: flex;
+}
+.trans{
+  flex: 0 0 30px;
+  background-color:
+}
+.trans .btn{
+  width:100%;
+  height:100%;
+}
+.feed-all {
   background: #ebedf1;
   border-radius: 4px;
   border: 2px solid #ccc;
   height: 100vh;
-  width: 500px;
-
+  width: 400px;
 
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
-
 }
 
 .feed-back {
@@ -179,6 +194,14 @@ export default {
 .progress .in-progress {
   background-color: #0a0;
   height: 100%;
+  width: 0;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+  transition: width .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   width: 0;
 }
 </style>
