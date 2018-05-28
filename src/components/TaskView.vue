@@ -2,10 +2,10 @@
 <div>
 
   <!-- Prikaz podataka pojedinacnog taska -->
-  <div class="row task-view-section">
+  <!-- <div class="row task-view-section"> -->
 
     <!-- Kolona na sredini Bootstrap sirine md-4 -->
-    <div class="col-md-8 offset-md-2 pad">
+    <!-- <div class="col-md-8 offset-md-2 pad"> -->
       <div class="card">
 
         <!-- Prikaz imena parent taska -->
@@ -52,18 +52,18 @@
       </div>
     </div>
 
-  </div>
-</div>
+  <!-- </div> -->
+<!-- </div> -->
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   data() {
     return {
       tasks: []
-    }
+    };
   },
 
   mounted() {
@@ -72,9 +72,9 @@ export default {
       url: "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/2"
     }).then(response => {
       this.tasks = response.data.Data[0];
-    })
+    });
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

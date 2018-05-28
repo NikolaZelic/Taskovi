@@ -7,36 +7,38 @@ import {
 
 export const api = {
   readeFeeds(tasid, fedid, direction) {
-    axios.get('/tasks/'+tasid+'/feeds', {
-      params: {
-        fedid: fedid,
-        pravac: direction,
-        sid: window.localStorage.getItem('sid')
-      }
-    })
-    .then(function(response){
-      // console.log('Ovo je iz APIja');
-      // console.log(response.data.data);
-       store.commit('addMessages',{'direction':direction, 'data':response.data.data})
-    });
+    axios.get('/tasks/' + tasid + '/feeds', {
+        params: {
+          fedid: fedid,
+          pravac: direction,
+          sid: window.localStorage.getItem('sid')
+        }
+      })
+      .then(response => {
+        // console.log('Ovo je iz APIja');
+        // console.log(response.data.data);
+        store.commit('addMessages', {
+          'direction': direction,
+          'data': response.data.data
+        })
+      });
   },
 
   postMessage(tasid, mess) {
     // console.log('Ovo se desava');
     var msg = store.state.messages;
     var fd = new FormData();
-    fd.append('type','text');
+    fd.append('type', 'text');
     fd.append('text', mess);
-    axios.post('/tasks/'+tasid+'/feeds?sid='+window.localStorage.getItem('sid'), fd )
-    .then(response =>{
+    axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.getItem('sid'), fd)
+      .then(response => {
         var msg = store.state.messages;
-        if( msg.length===0 ){
+        if (msg.length === 0) {
           this.readeFeeds(tasid, 0, 'start');
+        } else {
+          this.readeFeeds(tasid, msg[msg.length - 1].fed_id, 'down');
         }
-        else{
-          this.readeFeeds(tasid, msg[msg.length-1].fed_id, 'down');
-        }
-    });
+      });
   },
 
   login(email, password) {
@@ -53,7 +55,7 @@ export const api = {
           window.localStorage.setItem('surname', response.data.surname);
         }
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
   },
@@ -66,7 +68,7 @@ export const api = {
         sid: window.localStorage.getItem('sid')
       }
     }).then(r => {
-      store.commit('setLeftSidebarTabData', {
+      store.commit('setSidebarData', {
         index: 0,
         data: r.data.data
       });
@@ -84,7 +86,7 @@ export const api = {
         archived: archived,
       }
     }).then(r => {
-      store.commit('setLeftSidebarTabData', {
+      store.commit('setSidebarData', {
         index: index,
         data: r.data.data
       });

@@ -1,7 +1,7 @@
 s<template>
 <div>
-  <div class="row task-add-section">
-    <div class="col-md-8 offset-md-2 pad">
+  <!-- <div class="row task-add-section">
+    <div class="col-md-8 offset-md-2 pad"> -->
 
       <h1 class="display-4">Adding task:</h1><br>
 
@@ -82,9 +82,6 @@ s<template>
           <button type="submit" class="btn btn-success">Add task</button>
         </div>
 
-
-
-
         <!-- <div class="form-group">
           <label for="exampleInputPassword1">Password</label>
           <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
@@ -96,22 +93,13 @@ s<template>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button> -->
 
-
-
-
-
-
-
-
-
-
       </form>
 
 
 
     </div>
-  </div>
-</div>
+  <!-- </div>
+</div> -->
 </template>
 
 <script>
@@ -120,10 +108,10 @@ s<template>
 export default {
   data() {
     return {
-      working: ''
-    }
+      working: ""
+    };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

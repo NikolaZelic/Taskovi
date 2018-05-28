@@ -46,10 +46,10 @@
 export default {
   data() {
     return {
-      working: ''
-    }
+      working: ""
+    };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -9,12 +9,14 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   strict: true,
   state: {
-// LEFT SIDE BAR CONTENT
-    leftSidebarTabData:  [ [],[],[],[],[] ],
-// RIGHT SIDE BAR CONTENT
+    user: {
+      name: "Peraaa",
+      surname: "Perrric"
+    },
+    sidebarTabData: [ [],[],[],[],[] ],
     messages: [],
-// COMMUNICATION
-    leftSideSelection: {
+    // COMMUNICATION
+    sidebarSelection: {
       selectedTaskID: 1,
     },
 
@@ -25,20 +27,20 @@ export const store = new Vuex.Store({
     },
 
     currentTabArray: state => index => {
-      // console.log(state.leftSidebarTabData.filter(tab => true));
-      return state.leftSidebarTabData[index];
-      // return state.leftSidebarTabData.filter(tab => state.leftSidebarTabData.indexOf(tab) === 0);
+      // console.log(state.sidebarTabData.filter(tab => true));
+      return state.sidebarTabData[index];
+      // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
     },
 
     selectedTaskID: state => {
-      return state.leftSideSelection.selectedTaskID;
+      return state.sidebarSelection.selectedTaskID;
     }
   },
 
   mutations: {
-    setLeftSidebarTabData: (state, params) => {
-      state.leftSidebarTabData[params.index] = params.data;
-      // console.log( state.leftSideBarContent );
+    setSidebarData: (state, params) => {
+      state.sidebarTabData[params.index] = params.data;
+      // console.log( state.sideBarContent );
     },
 
     addMessages: (state, params) => {
@@ -52,12 +54,12 @@ export const store = new Vuex.Store({
       }
     },
 
-    changeLeftSideSelection: (state, params) => {
-        // console.log(params.selectedTaskID);
-        if( params.selectedTaskID !== undefined ){
-          state.leftSideSelection.selectedTaskID = params.selectedTaskID;
-          // console.log('id u storu '+state.leftSideSelection.selectedTaskID);
-        }
+    changeSidebarSelection: (state, params) => {
+      // console.log(params.selectedTaskID);
+      if (params.selectedTaskID !== undefined) {
+        state.sidebarSelection.selectedTaskID = params.selectedTaskID;
+        // console.log('id u storu '+state.sidebarSelection.selectedTaskID);
+      }
     }
   },
 
