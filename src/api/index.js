@@ -92,4 +92,33 @@ export const api = {
       });
     });
   },
+
+  getUserCompanies(index) {
+    axios({
+      method: 'get',
+      url: '/users/companies',
+      params: {
+        sid: window.localStorage.getItem('sid'),
+      }
+    }).then(r => {
+      store.commit('setSidebarData', {
+        index: index,
+        data: r.data.data
+      });
+    });
+  },
+  getUserTeams(index) {
+    axios({
+      method: 'get',
+      url: '/users/teams',
+      params: {
+        sid: window.localStorage.getItem('sid'),
+      }
+    }).then(r => {
+      store.commit('setSidebarData', {
+        index: index,
+        data: r.data.data
+      });
+    });
+  },
 }

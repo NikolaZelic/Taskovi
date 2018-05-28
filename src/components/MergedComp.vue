@@ -65,7 +65,7 @@ export default {
   flex: 1;
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 1500px) {
   .main-content {
     flex-direction: row;
   }

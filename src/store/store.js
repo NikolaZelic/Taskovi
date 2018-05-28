@@ -9,11 +9,17 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   strict: true,
   state: {
-    user: {
-      name: "Peraaa",
-      surname: "Perrric"
-    },
-    sidebarTabData: [ [],[],[],[],[] ],
+    // user: {
+    //   name: "Peraaa",
+    //   surname: "Perrric"
+    // },
+    sidebarTabData: [
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
     messages: [],
     // COMMUNICATION
     sidebarSelection: {
@@ -70,6 +76,14 @@ export const store = new Vuex.Store({
 
     getUserTasks(commit, params) {
       api.getUserTasks(params.index, params.state, params.type, params.archived);
+    },
+
+    getUserCompanies(commit, params) {
+      api.getUserCompanies(params.index);
+    },
+
+    getUserTeams(commit, params) {
+      api.getUserTeams(params.index);
     },
 
     readeFeeds(commit, params) {

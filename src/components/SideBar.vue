@@ -47,7 +47,7 @@
                   <span title="Urgent" class="badge badge-danger badge-pill">U</span>
                 </td>
                 <td v-if="item.deadline !== undefined || item.deadline !== null">
-                  <span title="Deadline" class="badge badge-success badge-pill">
+                  <span title="Deadline" class="badge badge-deadline badge-pill">
                     {{ deadlineSplit(item.deadline)}}
                   </span>
                 </td>
@@ -86,10 +86,10 @@ export default {
           name: "Projects",
           icon: "fas fa-project-diagram"
         },
-        {
-          name: "Parent Tasks",
-          icon: "fa fa-tasks"
-        },
+        // {
+        //   name: "Parent Tasks",
+        //   icon: "fa fa-tasks"
+        // },
         {
           name: "Tasks",
           icon: "fa fa-tasks"
@@ -121,7 +121,7 @@ export default {
     },
     activeSubFilter() {
       let a = this.currentTabIndex;
-      return a === 0 || a === 1 || a === 2 || a === 3;
+      return a === 0 || a === 1 || a === 2;
     },
     addItem() {
       var tabData = this.getActiveArray(this.currentTabIndex);
@@ -151,14 +151,15 @@ export default {
       this.renamingItem = item;
     },
     deadlineSplit(dateTime){
-      return dateTime.split(" ")[0];
+      console.log(dateTime);
+      return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
     getTabData(type) {
       let cTab = this.currentTabIndex;
       this.isCollapsedSidebar = false;
       this.tabTitle = this.tabs[cTab].name;
       let s = "both";
-      let t = cTab === 3 ? "bugfix" : "task";
+      let t = cTab === 2 ? "bugfix" : "task";
       let a = "false";
       switch (type) {
         case "cr":
@@ -177,12 +178,12 @@ export default {
           break;
         case 1:
         case 2:
-        case 3:
           this.getTaskData(s, t, a);
           break;
+        case 3:
+          this.getCompanyData();
         case 4:
-        case 5:
-          this.getPeopleData(s, t, a);
+          this.getTeamData();
           break;
       }
       var aa = this.getActiveArray(cTab);
@@ -193,12 +194,9 @@ export default {
       console.log(this.currentTabIndex);
     },
     getProjectData() {
-      // store.dispatch("getUserProjects", {
-      //   index: this.currentTabIndex,
-      //   state: s,
-      //   type: t,
-      //   archived: a
-      // });
+      store.dispatch("getUserProjects", {
+        index: this.currentTabIndex,
+      });
     },
     getTaskData(s, t, a) {
       store.dispatch("getUserTasks", {
@@ -208,14 +206,16 @@ export default {
         archived: a
       });
     },
-    getPeopleData() {
-      // store.dispatch("getUserTasks", {
-      //   index: this.currentTabIndex,
-      //   state: s,
-      //   type: t,
-      //   archived: a
-      // });
-    }
+    getCompanyData() {
+      store.dispatch("getUserCompanies", {
+        index: this.currentTabIndex
+      });
+    },
+    getTeamData() {
+      store.dispatch("getUserTeams", {
+        index: this.currentTabIndex
+      });
+    },
   },
   computed: {
     ...mapGetters({
@@ -516,5 +516,9 @@ h2 {
 
 .btn-group > * {
   border: 1px solid #00000040;
+}
+
+.badge-deadline{
+  background: #8c28a7;
 }
 </style>
