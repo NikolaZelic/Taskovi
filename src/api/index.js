@@ -60,6 +60,18 @@ export const api = {
       });
   },
 
+  register(email, password, name, surname, description) {
+    axios.post('auth/singup', {
+        email: email,
+        pass: password,
+        name: name,
+        surname: surname,
+        description: description
+      }).catch(error => {
+        console.log(error);
+      });
+  },
+
   getUserProjects() {
     axios({
       method: 'get',

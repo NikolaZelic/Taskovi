@@ -8,7 +8,10 @@
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
           <!-- <project-view></project-view> -->
-          <team-add></team-add>
+          <!-- <team-add></team-add> -->
+          <!-- <company-add></company-add> -->
+          <!-- <company-edit></company-edit> -->
+          <registration></registration>
         </keep-alive>
       </div>
       <chat-element/>
@@ -24,6 +27,9 @@ import TaskAdd from "@/components/TaskAdd";
 import ProjectAdd from "@/components/ProjectAdd";
 import ProjectView from "@/components/ProjectView";
 import TeamAdd from "@/components/TeamAdd";
+import CompanyAdd from "@/components/CompanyAdd";
+import CompanyEdit from "@/components/CompanyEdit";
+import Registration from "@/components/Registration";
 import { api } from "@/api/index.js";
 
 export default {
@@ -34,7 +40,10 @@ export default {
     TaskAdd,
     ProjectAdd,
     ProjectView,
-    TeamAdd
+    TeamAdd,
+    CompanyAdd,
+    CompanyEdit,
+    Registration
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
