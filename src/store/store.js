@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {
-  api
-} from '@/api/index.js';
+import {api} from '@/api/index.js';
 
 Vue.use(Vuex);
 
@@ -26,7 +24,10 @@ export const store = new Vuex.Store({
       selectedTaskID: 1,
     },
 
+    selectedTask: {},
+
   },
+
   getters: {
     getMessages: state => {
       return state.messages;
@@ -40,7 +41,12 @@ export const store = new Vuex.Store({
 
     selectedTaskID: state => {
       return state.sidebarSelection.selectedTaskID;
-    }
+    },
+
+    getSelectedTask: state => {
+      return state.selectedTask;
+    },
+
   },
 
   mutations: {
@@ -63,9 +69,15 @@ export const store = new Vuex.Store({
     changeSidebarSelection: (state, params) => {
       // console.log(params.selectedTaskID);
       if (params.selectedTaskID !== undefined) {
-        state.sidebarSelection.selectedTaskID = params.selectedTaskID;
-        // console.log('id u storu '+state.sidebarSelection.selectedTaskID);
+         state.sidebarSelection.selectedTaskID = params.selectedTaskID;
+         // Pozivamo API koji ce skinuta podatke o tasku
+         api.selectTask(params.selectedTaskID);
       }
+    },
+
+    changeSelectedTask: (state, params) => {
+      state.selectedTask = params.selectedTask;
+      // console.log(state.selectedTask);
     }
   },
 

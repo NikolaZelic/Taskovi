@@ -4,14 +4,14 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
-          <!-- <task-view></task-view> -->
+          <task-view></task-view>
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
           <!-- <project-view></project-view> -->
           <!-- <team-add></team-add> -->
           <!-- <company-add></company-add> -->
           <!-- <company-edit></company-edit> -->
-          <registration></registration>
+          <!-- <registration></registration> -->
         </keep-alive>
       </div>
       <chat-element/>

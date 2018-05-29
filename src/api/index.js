@@ -119,6 +119,7 @@ export const api = {
       });
     });
   },
+
   getUserTeams(index) {
     axios({
       method: 'get',
@@ -133,4 +134,17 @@ export const api = {
       });
     });
   },
+
+  selectTask(id){
+    console.log('API Selected Task');
+    axios({
+      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+      url: "/tasks/"+id
+    }).
+    then( response => {
+      // console.log(response);
+       store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
+    });
+  }
+
 }
