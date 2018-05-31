@@ -92,7 +92,7 @@ export const api = {
   },
 
   selectTask(id){
-    console.log('API Selected Task');
+    // console.log('API Selected Task');
     axios({
       // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
       url: "/tasks/"+id

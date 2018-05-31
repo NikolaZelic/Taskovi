@@ -31,6 +31,23 @@ export const store = new Vuex.Store({
       selectedCompanyID: undefined,
       selectedTeamsID: undefined,
     },
+
+    suggestedUsers: [{
+        name: 'Nikola',
+        surname: "Zelic",
+        email: "nzelic@ymail.com"
+      },
+      {
+        name: 'Pera',
+        surname: "Peric",
+        email: "nzelic@ymail.com"
+      },
+      {
+        name: 'Nikola',
+        surname: "Zelic",
+        email: "nzelic@ymail.com"
+      }
+    ],
   },
   getters: {
     getMessages: state => {
@@ -59,5 +76,10 @@ export const store = new Vuex.Store({
     selectedTeamsID: state => {
       return state.sidebarSelection.selectedTeamsID;
     },
+
+    getSuggestedUsers: state => {
+      return state.suggestedUsers;
+    }
+
   },
 })
