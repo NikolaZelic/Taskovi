@@ -43,7 +43,7 @@ export default {
     TeamAdd,
     CompanyAdd,
     CompanyEdit,
-    Registration
+    Registration,
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
