@@ -29,9 +29,9 @@
       </form>
       <form v-if="activeSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <!-- <label><input type="checkbox" name="check" @click="getTabData('cr')"> <span class="label-text">Created</span></label> -->
-        <label><input type="checkbox" name="check" value="getTabData('cs')" v-model="filterType"> <span class="label-text">Created</span></label>
-        <label><input type="checkbox" name="check" value="getTabData('as')" v-model="filterType"> <span class="label-text">Assigned</span></label>
-        <label><input type="checkbox" name="check" value="getTabData('ar')" v-model="filterType"> <span class="label-text">Archived</span></label>
+        <label><input type="radio" name="check" value="cs" v-model="invokeFilterType"> <span class="label-text">Created</span></label>
+        <label><input type="radio" name="check" value="as" v-model="invokeFilterType"> <span class="label-text">Assigned</span></label>
+        <label><input type="radio" name="check" value="ar" v-model="invokeFilterType"> <span class="label-text">Archived</span></label>
         <!-- <label><input type="checkbox" name="check" @click="getTabData('as')" checked> <span class="label-text">Assigned</span></label> -->
         <!-- <label><input type="checkbox" name="check" @click="getTabData('ar')"> <span class="label-text">Archived</span></label> -->
       </form>
@@ -76,7 +76,7 @@ import {
 import {
   mapGetters
 } from "vuex";
-import axios from 'axios';
+// import axios from 'axios';
 export default {
   data() {
     return {
@@ -107,21 +107,55 @@ export default {
         }
       ],
       activeArray: [], // IMPROVE IN FUTURE
-      filterType: [],
+      invokeFilterType: undefined,
     };
   },
   watch: {
-    filterType(val) {
-      // axios.all(val)
-      //   .then(axios.spread(function(a, b,c) {
-      //     console.log(a);
-      //     console.log(b);
-      //     console.log(c);
-      //   }));
-      // console.log(val);
-    }
+    invokeFilterType(val) {
+      this.getTabData(val);
+    },
+    // currentTabArray(val,vass){
+    //   console.log("lolz");
+    // },
   },
   methods: {
+    getTabData(type) {
+      let cTab = this.currentTabIndex;
+      this.isCollapsedSidebar = false;
+      this.tabTitle = this.tabs[cTab].name;
+      let s = "both"; // DEFAULT
+      if (type === null) s = "assigned";
+      let t = cTab === 2 ? "bugfix" : "task";
+      let a = "false";
+      switch (type) {
+        case "cr":
+          s = "created";
+          break;
+        case "as":
+          s = "assigned";
+          break;
+        case "ar":
+          a = "true";
+          break;
+      }
+      switch (cTab) {
+        case 0:
+          this.getProjectData(s, t, a);
+          break;
+        case 1:
+        case 2:
+          this.getTaskData(s, t, a);
+          break;
+        case 3:
+          this.getCompanyData();
+        case 4:
+          this.getTeamData();
+          break;
+      }
+      var aa = this.getActiveArray(cTab);
+      // console.log(aa);
+      this.activeArray = aa;
+    },
     selectItem(id_item) {
       let ob = undefined;
       switch (this.currentTabIndex) {
@@ -170,9 +204,6 @@ export default {
       for (let i in tabData) {
         console.log(tabData[i].title);
       }
-      // var st = prompt();
-      // if (st == null || st == "") return;
-      // this.searchData = '';
     },
     removeItem(item) {
       var aa = this.getActiveArray(this.currentTabIndex);
@@ -191,42 +222,6 @@ export default {
     },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
-    },
-    getTabData(type) {
-      let cTab = this.currentTabIndex;
-      this.isCollapsedSidebar = false;
-      this.tabTitle = this.tabs[cTab].name;
-      let s = "assigned"; // DEFAULT
-      let t = cTab === 2 ? "bugfix" : "task";
-      let a = "false";
-      switch (type) {
-        case "cr":
-          s = "created";
-          break;
-        case "as":
-          s = "assigned";
-          break;
-        case "ar":
-          a = "true";
-          break;
-      }
-      switch (cTab) {
-        case 0:
-          this.getProjectData(s, t, a);
-          break;
-        case 1:
-        case 2:
-          this.getTaskData(s, t, a);
-          break;
-        case 3:
-          this.getCompanyData();
-        case 4:
-          this.getTeamData();
-          break;
-      }
-      var aa = this.getActiveArray(cTab);
-      // console.log(aa);
-      this.activeArray = aa;
     },
     refreshData() {
       console.log(this.currentTabIndex);
@@ -261,8 +256,9 @@ export default {
     }),
     filterArray() {
       var tabData = this.activeArray;
+      // console.log(tabData);
       if (tabData === undefined) return;
-      console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
+      // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
