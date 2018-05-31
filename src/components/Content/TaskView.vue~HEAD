@@ -9,25 +9,25 @@
       <div class="card">
 
         <!-- Prikaz imena parent taska -->
-        <ul class="list-group list-group-flush lead"><li class="list-group-item">{{task["parenttask-tittle"]}}</li></ul>
+        <ul class="list-group list-group-flush lead"><li class="list-group-item">{{tasks["parenttask-tittle"]}}</li></ul>
 
         <!-- Prikaz imena datog taska -->
-        <div class="card-header"><h1 class="display-4">{{task["task-tittle"]}}</h1></div>
+        <div class="card-header"><h1 class="display-4">{{tasks["task-tittle"]}}</h1></div>
 
         <!-- Prikaz podataka o datom tasku -->
         <ul class="list-group list-group-flush lead">
 
           <!-- Opis taska i eventualna URGENT labela u slucaju da postoji -->
-          <li class="list-group-item"><span class="badge badge-danger">Urgent</span> {{task["task-description"]}}</li>
+          <li class="list-group-item"><span class="badge badge-danger">Urgent</span> {{tasks["task-description"]}}</li>
 
           <!-- Prikaz vremena kreiranja taksa i informacija o USER-u koji ga je napravio -->
-          <li class="list-group-item"><strong>Created: </strong> {{task["time-created"]}} by {{task["user-created"]}}</li>
+          <li class="list-group-item"><strong>Created: </strong> {{tasks["time-created"]}} by {{tasks["user-created"]}}</li>
 
           <!-- Prikaz informacije kome je dati task dodeljen -->
-          <li class="list-group-item"><strong>Assgned to: </strong>{{task["user-working"]}} {{task["group-working"]}}</li>
+          <li class="list-group-item"><strong>Assgned to: </strong>{{tasks["user-working"]}} {{tasks["group-working"]}}</li>
 
           <!-- Rok za zavrsavanje datog taska -->
-          <li class="list-group-item"><strong>Deadline: </strong>{{task["task-deadline"]}}</li>
+          <li class="list-group-item"><strong>Deadline: </strong>{{tasks["task-deadline"]}}</li>
 
           <!-- Red sa akcijama za task -->
           <li class="list-group-item text-center">
@@ -57,24 +57,23 @@
 </template>
 
 <script>
-import { store } from "@/store/index.js";
+import axios from "axios";
 
 export default {
-
   data() {
     return {
-
+      tasks: []
     };
-
   },
 
-  computed: {
-    task: function() {
-      // console.log('Computed '+store.getters.getSelectedTask);
-      return store.getters.getSelectedTask;
-    },
-  },
-
+  mounted() {
+    axios({
+      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+      url: "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/2"
+    }).then(response => {
+      this.tasks = response.data.Data[0];
+    });
+  }
 };
 </script>
 
