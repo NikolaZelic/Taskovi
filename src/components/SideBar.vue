@@ -114,22 +114,16 @@ export default {
     invokeFilterType(val) {
       this.getTabData(val);
     },
-    // getActiveArray: function(val,oldVal){
-    //   console.log(val + ' stara je   ' + oldVal);
-    // },
-    www(d, a) {
-      console.log("1");
-      console.log(d);
-      console.log("2");
-      console.log(a);
-    }
+    currentTabIndex(val) {
+      store.commit("setCurrentTabIndex", val);
+    },
+    getActiveArray: function(val, oldVal) {
+      console.log(val + ' stara je   ' + oldVal);
+    },
   },
   methods: {
     getTabData(type) {
       let index = this.currentTabIndex;
-      if (index === undefined || index === null)
-        console.log(index + "  q");
-      store.commit("setCurrentTabIndex", index);
       this.isCollapsedSidebar = false;
       this.tabTitle = this.tabs[index].name;
       let s = "both"; // DEFAULT
@@ -161,6 +155,7 @@ export default {
           this.getTeamData();
           break;
       }
+      this.setActiveArray();
     },
     selectItem(id_item) {
       let ob = undefined;
