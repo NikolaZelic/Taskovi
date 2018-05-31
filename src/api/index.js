@@ -3,7 +3,7 @@ import {
 } from './config.js'
 import {
   store
-} from '@/store/store.js';
+} from '@/store/index.js';
 
 export const api = {
   readeFeeds(tasid, fedid, direction) {

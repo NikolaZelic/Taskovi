@@ -69,7 +69,7 @@ import {
 } from "../main";
 import {
   store
-} from "@/store/store.js";
+} from "@/store/index.js";
 import {
   mapGetters
 } from "vuex";
