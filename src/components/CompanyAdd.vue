@@ -3,8 +3,8 @@
   <div class="row add-section">
     <div class="col-md-8 offset-md-2 pad">
 
-      <h1 class="display-4">Adding company:</h1><br>
-      <input type="text" class="form-control" id="com_name" name="companyname" v-model="company" placeholder="Enter the name of the company you're creating">
+      <h4>Adding company:</h4>
+      <input type="text" class="form-control mb-3" id="com_name" name="companyname" v-model="company" placeholder="Enter the name of the company you're creating">
       <button @click="addCompany()" class="btn btn-success">Add company</button>
 
       <!-- <form method="post" action="http://671n121.mars-t.mars-hosting.com/mngapi/companies"> -->

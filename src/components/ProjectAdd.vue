@@ -1,48 +1,92 @@
 <template>
-  <div>
-    <!-- <div class="row task-add-section">
-      <div class="col-md-8 offset-md-2 pad"> -->
-        <h1 class="display-4">Adding project:</h1>
-        <br>
-        <form>
-          <div class="form-group">
-            <label for="tsk_title">Project title</label>
-            <input type="text" class="form-control" id="pro_title" placeholder="Enter the name of the project you're creating">
-          </div>
+<div class="top-padding col-md-8 offset-md-2">
 
-          <label for="pro_leader">Project leader</label>
-          <div class="form-group input-group">
-            <input type="text" class="form-control" id="pro_leader" placeholder="Search for user who will be this project leader">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button">Search</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-success">Add project</button>
-          </div>
-        </form>
-      <!-- </div>
-    </div> -->
-  </div>
+  <h4>Adding project:</h4>
+
+  <label for="projectname" class="mt-3">Project name</label>
+  <input type="text" class="form-control mb-3" id="projectname" name="projectname" v-model="projectName" placeholder="Enter project name">
+
+  <label for="description">Description</label>
+  <textarea class="form-control mb-3" id="description" rows="3" name="description" v-model='projecDescription' placeholder="Tell us a little something about your project..." spellcheck="false"></textarea>
+
+  <multiselect v-model="value" :options="options" placeholder="Select one" label="title" track-by="id"></multiselect>
+  <small class="form-text text-muted mb-3">It's not mandatory to choose company; projects can exist without one.</small>
+
+  <button @click="addProject()" class="btn btn-success">Create project</button>
+
+
+<!-- <br><br><br><br><br> -->
+
+<!-- <multiselect  :options="users" placeholder="Search for user you want to add..." label="name"></multiselect> -->
+
+
+
+</div>
 </template>
 
 <script>
-  // import axios from 'axios'
+import axios from 'axios'
+import Multiselect from 'vue-multiselect'
 
-  export default {
-    data() {
-      return {
-        working: ""
-      };
+export default {
+  components: {
+    Multiselect
+  },
+
+  data() {
+    return {
+      projectName: '',
+      projecDescription: '',
+
+      value: {
+        title: 'Which company this project will be a part of?',
+        id: 0
+      },
+      options: [],
+      users: []
+    };
+  },
+
+  methods: {
+    addProject() {
+      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/projects', {
+        grpname: this.projectName,
+        grpdesc: this.projecDescription,
+        grporigin: this.value.id,
+        sid: window.localStorage.getItem('sid')
+      })
+    },
+
+    getAdminCompanies() {
+      let self = this
+
+      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies', {
+        params: {
+          isadmin: 1,
+          sid: window.localStorage.getItem('sid')
+        }
+      }).then(function(response) {
+        self.options = response.data.data;
+      })
+    },
+
+    getUsers() {
+      let self = this
+
+      axios.get('http://671n121.mars-t.mars-hosting.com/testUsers').then(function(response) {
+// console.log(response.data.Result);
+        self.users = response.data.Result;
+      })
     }
-  };
+  },
 
+  mounted() {
+    this.getAdminCompanies();
+    this.getUsers();
+  }
+}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .task-add-section {
-    padding-top: 50px;
-  }
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
+</style><style scoped>
 </style>

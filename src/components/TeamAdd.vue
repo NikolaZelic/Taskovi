@@ -1,9 +1,19 @@
 <template>
-<div>
-  <!-- <div class="row task-add-section"> -->
-    <!-- <div class="col-md-8 offset-md-2 pad"> -->
+<div class="top-padding col-md-8 offset-md-2">
 
-      <h1 class="display-4">Create team:</h1><br>
+  <h4>Adding team:</h4>
+  <input type="text" class="form-control mb-3" id="team" name="team" v-model="team" placeholder="Enter the name of the team you're creating">
+  <button @click="addCompany()" class="btn btn-success">Add team</button>
+
+
+
+
+
+
+  <!-- <div class="row task-add-section"> -->
+  <!-- <div class="col-md-8 offset-md-2 pad"> -->
+
+  <!-- <h1 class="display-4">Create team:</h1><br>
 
       <form>
         <div class="form-group">
@@ -31,11 +41,11 @@
           <button type="submit" class="btn btn-success">Create team</button>
         </div>
 
-      </form>
+      </form> -->
 
 
 
-    <!-- </div> -->
+  <!-- </div> -->
   <!-- </div> -->
 </div>
 </template>
@@ -54,7 +64,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.task-add-section {
+.top-padding {
   padding-top: 50px;
 }
 </style>

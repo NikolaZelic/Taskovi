@@ -1,20 +1,24 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar/>
+      <side-bar/>
+
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
           <!-- <task-view></task-view> -->
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
+          <project-edit></project-edit>
           <!-- <project-view></project-view> -->
           <!-- <team-add></team-add> -->
+          <!-- <team-edit></team-edit> -->
           <!-- <company-add></company-add> -->
           <!-- <company-edit></company-edit> -->
-          <registration></registration>
+          <!-- <company-view></company-view> -->
+          <!-- <registration></registration> -->
         </keep-alive>
       </div>
-      <chat-element/>
+      <!-- <chat-element/> -->
     </div>
   </div>
 </template>
@@ -25,12 +29,17 @@ import ChatElement from "@/components/ChatElement";
 import TaskView from "@/components/TaskView";
 import TaskAdd from "@/components/TaskAdd";
 import ProjectAdd from "@/components/ProjectAdd";
+import ProjectEdit from "@/components/ProjectEdit";
 import ProjectView from "@/components/ProjectView";
 import TeamAdd from "@/components/TeamAdd";
+import TeamEdit from "@/components/TeamEdit";
 import CompanyAdd from "@/components/CompanyAdd";
 import CompanyEdit from "@/components/CompanyEdit";
+import CompanyView from "@/components/CompanyView";
 import Registration from "@/components/Registration";
-import { api } from "@/api/index.js";
+import {
+  api
+} from "@/api/index.js";
 
 export default {
   components: {
@@ -40,14 +49,19 @@ export default {
     TaskAdd,
     ProjectAdd,
     ProjectView,
+    ProjectEdit,
     TeamAdd,
     CompanyAdd,
     CompanyEdit,
-    Registration
+    Registration,
+    CompanyView,
+    TeamEdit
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    api.login("email1@gmail.com", "pass123");
+    // api.login("email1@gmail.com", "pass123");
+    api.login("admin2@gmail.com", "admin222");
+    // api.login("email2@yahoo.com", "pass111");
   }
 };
 </script>
@@ -58,6 +72,10 @@ export default {
   align-items: stretch;
   flex-direction: column;
 }
+/*
+.levi{
+  flex: 0.4;
+} */
 
 .main-content {
   flex: 1;
@@ -70,7 +88,7 @@ export default {
 }
 
 .dynamic-center {
-  padding: 0 30px 0;
+  padding: 50px 30px 0;
   flex: 1;
 }
 
