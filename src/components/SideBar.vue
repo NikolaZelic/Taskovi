@@ -117,7 +117,7 @@ export default {
     currentTabIndex(val) {
       store.commit("setCurrentTabIndex", val);
     },
-    getActiveArray: function(val, oldVal) {
+    'getActiveArray': function(val, oldVal) {
       console.log(val + ' stara je   ' + oldVal);
     },
   },
@@ -143,16 +143,16 @@ export default {
       }
       switch (index) {
         case 0:
-          this.getProjectData(s, t, a);
+          this.actionTabDataMain('getUserProjects',s, t, a);
           break;
         case 1:
         case 2:
-          this.getTaskData(s, t, a);
+          this.actionTabDataMain('getUserTasks',s, t, a);
           break;
         case 3:
-          this.getCompanyData();
+          this.actionTabDataSub('getUserCompanies');
         case 4:
-          this.getTeamData();
+          this.actionTabDataSub('getUserTeams');
           break;
       }
       this.setActiveArray();
@@ -223,32 +223,19 @@ export default {
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
-    getProjectData() {
-      store.dispatch("getUserProjects", {
-        index: this.currentTabIndex,
-      });
-    },
-    getTaskData(s, t, a) {
-      store.dispatch("getUserTasks", {
+    actionTabDataMain(name, s, t, a) {
+      store.dispatch(name, {
         index: this.currentTabIndex,
         state: s,
         type: t,
         archived: a
       });
     },
-    getCompanyData() {
-      store.dispatch("getUserCompanies", {
-        index: this.currentTabIndex
+    actionTabDataSub(name){
+      store.dispatch(name, {
+        index: this.currentTabIndex,
       });
     },
-    getTeamData() {
-      store.dispatch("getUserTeams", {
-        index: this.currentTabIndex
-      });
-    },
-    // getGetter(){
-    //     return this.getActiveArray;
-    // },
     setActiveArray() {
       const data = this.getActiveArray;
       this.activeArray = data;
