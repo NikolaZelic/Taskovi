@@ -4,7 +4,7 @@
     <span title="Collapse Sidebar" class="fas fa-bars" @click="collapseSidebar"></span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex == index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
         </button>
     </div>
 
@@ -18,7 +18,7 @@
       <a>{{ tabTitle }}
           <span class="fas fa-check"></span>
         </a>
-      <span title="Refresh" class="fas fa-sync-alt" @click="refreshData"></span>
+      <span title="Refresh" class="fas fa-sync-alt"></span>
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -67,9 +67,9 @@
 </template>
 
 <script>
-import {
-  bus
-} from "../main";
+// import {
+//   bus
+// } from "../main";
 import {
   store
 } from "@/store/index.js";
@@ -82,7 +82,7 @@ export default {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
-      currentTabIndex: undefined,
+      currentTabIndex: 1,
       searchData: "",
       tabTitle: "",
       tabs: [{
@@ -114,18 +114,27 @@ export default {
     invokeFilterType(val) {
       this.getTabData(val);
     },
-    // currentTabArray(val,vass){
-    //   console.log("lolz");
+    // getActiveArray: function(val,oldVal){
+    //   console.log(val + ' stara je   ' + oldVal);
     // },
+    www(d, a) {
+      console.log("1");
+      console.log(d);
+      console.log("2");
+      console.log(a);
+    }
   },
   methods: {
     getTabData(type) {
-      let cTab = this.currentTabIndex;
+      let index = this.currentTabIndex;
+      if (index === undefined || index === null)
+        console.log(index + "  q");
+      store.commit("setCurrentTabIndex", index);
       this.isCollapsedSidebar = false;
-      this.tabTitle = this.tabs[cTab].name;
+      this.tabTitle = this.tabs[index].name;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
-      let t = cTab === 2 ? "bugfix" : "task";
+      let t = index === 2 ? "bugfix" : "task";
       let a = "false";
       switch (type) {
         case "cr":
@@ -138,7 +147,7 @@ export default {
           a = "true";
           break;
       }
-      switch (cTab) {
+      switch (index) {
         case 0:
           this.getProjectData(s, t, a);
           break;
@@ -152,9 +161,6 @@ export default {
           this.getTeamData();
           break;
       }
-      var aa = this.getActiveArray(cTab);
-      // console.log(aa);
-      this.activeArray = aa;
     },
     selectItem(id_item) {
       let ob = undefined;
@@ -195,8 +201,7 @@ export default {
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
-      var tabData = this.getActiveArray(this.currentTabIndex);
-      console.log(tabData);
+      this.setActiveArray();
       return;
       this.activeArray = tabData;
       return;
@@ -223,9 +228,6 @@ export default {
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
-    refreshData() {
-      console.log(this.currentTabIndex);
-    },
     getProjectData() {
       store.dispatch("getUserProjects", {
         index: this.currentTabIndex,
@@ -249,16 +251,32 @@ export default {
         index: this.currentTabIndex
       });
     },
+    // getGetter(){
+    //     return this.getActiveArray;
+    // },
+    setActiveArray() {
+      const data = this.getActiveArray;
+      this.activeArray = data;
+    },
   },
   computed: {
-    ...mapGetters({
-      getActiveArray: "currentTabArray",
-    }),
+    ...mapGetters([{
+        getActiveArray: 'currentTabArray'
+      },
+      'getTabIndex',
+    ]),
+    // www() {
+    //   let s = this.currentTabIndex;
+    //   console.log(s);
+    //   return this.$store.getters.currentTabArray;
+    // },
     filterArray() {
+      // console.log(this.getGetter());
+      return;
       var tabData = this.activeArray;
-      // console.log(tabData);
+      console.log(tabData);
       if (tabData === undefined) return;
-      // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
+      console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
@@ -268,16 +286,12 @@ export default {
       });
     }
   },
-  created() {
-    bus.$on("activeTabIndex", data => {
-      // this.currentTabIndex = data;
-      console.log("DO I FIRE?>");
-      // var aa = this.getActiveArray(this.currentTabIndex);
-      // this.activeArray = aa;
-    });
-  },
   mounted() {
-    this.getTabData(null, (this.currentTabIndex = 1));
+    // this.currentTabIndex = 1;
+    // store.commit("setCurrentTabIndex", 1);
+    this.getTabData(null
+      //, this.currentTabIndex = 1
+    );
   }
 };
 </script>

@@ -1,10 +1,14 @@
 import {
   store
 } from './index';
+
 const mutations = {
   setSidebarData: (state, params) => {
     store.state.sidebarTabData[params.index] = params.data;
-    // console.log( state.sideBarContent );
+  },
+
+  setCurrentTabIndex: (state, params) => {
+    store.state.currentTabIndex = params;
   },
 
   addMessages: (state, params) => {

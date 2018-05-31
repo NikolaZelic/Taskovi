@@ -9,12 +9,13 @@ import {
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-  modules:{
+  modules: {
     mutations,
     actions,
   },
   strict: true,
   state: {
+    currentTabIndex: undefined,
     sidebarTabData: [
       [],
       [],
@@ -33,13 +34,23 @@ export const store = new Vuex.Store({
     },
   },
   getters: {
+    getTabIndex: state => {
+      return state.currentTabIndex;
+    },
+
     getMessages: state => {
       return state.messages;
     },
 
-    currentTabArray: state => index => {
+    currentTabArray: state => {
+      let i = state.currentTabIndex;
+      // if (state.sidebarTabData[i].length === 0) {
+      //   console.log("NULLL");
+      //   return null;
+      // }
+      console.log(state.sidebarTabData[i]);
       // console.log(state.sidebarTabData.filter(tab => true));
-      return state.sidebarTabData[index];
+      return state.sidebarTabData[i];
       // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
     },
 
