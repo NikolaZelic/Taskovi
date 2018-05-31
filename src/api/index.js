@@ -3,40 +3,26 @@ import {
 } from './config.js'
 import {
   store
-} from '@/store/store.js';
+} from '@/store/index.js';
 
 export const api = {
   readeFeeds(tasid, fedid, direction) {
-    axios.get('/tasks/'+tasid+'/feeds', {
-      params: {
-        fedid: fedid,
-        pravac: direction,
-        sid: window.localStorage.getItem('sid')
-      }
-    })
-    .then(function(response){
-      // console.log('Ovo je iz APIja');
-      // console.log(response.data.data);
-       store.commit('addMessages',{'direction':direction, 'data':response.data.data})
-    });
+    return axios.get('/tasks/' + tasid + '/feeds', {
+        params: {
+          fedid: fedid,
+          pravac: direction,
+          sid: window.localStorage.sid,
+        }
+      })
   },
 
   postMessage(tasid, mess) {
     // console.log('Ovo se desava');
     var msg = store.state.messages;
     var fd = new FormData();
-    fd.append('type','text');
+    fd.append('type', 'text');
     fd.append('text', mess);
-    axios.post('/tasks/'+tasid+'/feeds?sid='+window.localStorage.getItem('sid'), fd )
-    .then(response =>{
-        var msg = store.state.messages;
-        if( msg.length===0 ){
-          this.readeFeeds(tasid, 0, 'start');
-        }
-        else{
-          this.readeFeeds(tasid, msg[msg.length-1].fed_id, 'down');
-        }
-    });
+    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
   },
 
   login(email, password) {
@@ -53,41 +39,68 @@ export const api = {
           window.localStorage.setItem('surname', response.data.surname);
         }
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
       });
   },
 
+  register(email, password, name, surname, description) {
+    axios.post('auth/singup', {
+      email: email,
+      pass: password,
+      name: name,
+      surname: surname,
+      description: description
+    }).catch(error => {
+      console.log(error);
+    });
+  },
+
   getUserProjects() {
-    axios({
-      method: 'get',
-      url: '/users/projects',
+    return axios.get('/users/projects', {
       params: {
-        sid: window.localStorage.getItem('sid')
+        sid: window.localStorage.sid,
       }
-    }).then(r => {
-      store.commit('setLeftSidebarTabData', {
-        index: 0,
-        data: r.data.data
-      });
     });
   },
 
   getUserTasks(index, state, type, archived) {
-    axios({
-      method: 'get',
-      url: '/users/tasks',
+    return axios.get('/users/tasks', {
       params: {
-        sid: window.localStorage.getItem('sid'),
+        sid: window.localStorage.sid,
         state: state,
         type: type,
         archived: archived,
       }
-    }).then(r => {
-      store.commit('setLeftSidebarTabData', {
-        index: index,
-        data: r.data.data
-      });
     });
   },
+
+  getUserCompanies(index) {
+    return axios.get('/users/companies', {
+      params: {
+        sid: window.localStorage.sid,
+      }
+    });
+  },
+
+  getUserTeams(index) {
+    return axios.get('/users/teams', {
+      params: {
+        sid: window.localStorage.sid,
+      }
+    });
+  },
+
+  selectTask(id){
+    // console.log('API Selected Task');
+    axios({
+      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+      url: "/tasks/"+id
+    }).
+    then( response => {
+      // console.log(response);
+       store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
+    });
+  }
+
 }

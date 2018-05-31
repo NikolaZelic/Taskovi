@@ -2,46 +2,48 @@
 <div class="start">
   <h1>Welcome to our Task Management App</h1>
   <div>
-    <login></login>
-    <button class="btn btn-warning" @click='signUp()'>Sign Up</button>
+    <login-page/>
+    <button class="btn btn-warning" @click='signUp()'>
+       <span class="fas fa-sign-up-alt"></span> Sign Up
+    </button>
   </div>
   <login v-if="showSignIn" @close="showModal = false"></login>
 </div>
 </template>
 
 <script>
-import login from "@/components/Login";
+import LoginPage from "@/components/Auth/LoginPage";
 
 export default {
   components: {
-    login
+    LoginPage
   },
   data() {
     return {
       showSignIn: false
-    }
+    };
   },
   methods: {
     signIn() {
       this.showSignIn = true;
     }
   },
-  beforecreated: function() {
-    var sid = window.localStorage.getItem('sid');
+  beforecreated() {
+    var sid = window.localStorage.sid;
     if (sid !== undefined && sid !== null) {
       alert(sid);
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>
 .start {
   text-align: center;
-  /* background: url("~assets/StartPageWallpaper.jpg"); */
+  background: #000 url(~@/assets/StartPageWallpaper.jpg);
 }
 
 h1 {
-  color: #fff
+  color: #fff;
 }
 </style>

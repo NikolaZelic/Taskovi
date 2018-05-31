@@ -6,19 +6,24 @@
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style>
-@import "./assets/sidebar.css";
-/* @import "./assets/StartPageWallpaper.jpg"; */
-*, *::before, *::after {
-	box-sizing: border-box;
-}
-#app {
+@import "./assets/css/bootstrap.min.css";
+body {
   margin: 0;
   padding: 0;
-  font-family: "Raleway" !important;
+  font-family: "Raleway";
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: Raleway;
+  src: url(~./assets/fonts/Raleway.ttf);
 }
 </style>
