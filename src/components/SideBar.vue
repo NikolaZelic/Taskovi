@@ -27,10 +27,13 @@
           <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
         </div>
       </form>
-      <form v-if="activeSubFilter()" class="btn-group" role="group" aria-label="Item Filter">
-        <button @click="getTabData('cr')" type="button" class="btn btn-warning">Created</button>
-        <button @click="getTabData('as')" type="button" class="btn btn-warning">Assigned</button>
-        <button @click="getTabData('ar')" type="button" class="btn btn-warning">Archived</button>
+      <form v-if="activeSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
+        <!-- <label><input type="checkbox" name="check" @click="getTabData('cr')"> <span class="label-text">Created</span></label> -->
+        <label><input type="checkbox" name="check" value="getTabData('cs')" v-model="filterType"> <span class="label-text">Created</span></label>
+        <label><input type="checkbox" name="check" value="getTabData('as')" v-model="filterType"> <span class="label-text">Assigned</span></label>
+        <label><input type="checkbox" name="check" value="getTabData('ar')" v-model="filterType"> <span class="label-text">Archived</span></label>
+        <!-- <label><input type="checkbox" name="check" @click="getTabData('as')" checked> <span class="label-text">Assigned</span></label> -->
+        <!-- <label><input type="checkbox" name="check" @click="getTabData('ar')"> <span class="label-text">Archived</span></label> -->
       </form>
       <div class="item-list">
         <table>
@@ -73,11 +76,8 @@ import {
 import {
   mapGetters
 } from "vuex";
-// import LoginPage from "@/components/LoginPage";
+import axios from 'axios';
 export default {
-  // components: {
-  //   LoginPage
-  // },
   data() {
     return {
       renamingItem: {},
@@ -89,10 +89,6 @@ export default {
           name: "Projects",
           icon: "fas fa-project-diagram"
         },
-        // {
-        //   name: "Parent Tasks",
-        //   icon: "fa fa-tasks"
-        // },
         {
           name: "Tasks",
           icon: "fa fa-tasks"
@@ -110,22 +106,49 @@ export default {
           icon: "fas fa-users"
         }
       ],
-      activeArray: [] // IMPROVE IN FUTURE
+      activeArray: [], // IMPROVE IN FUTURE
+      filterType: [],
     };
+  },
+  watch: {
+    filterType(val) {
+      // axios.all(val)
+      //   .then(axios.spread(function(a, b,c) {
+      //     console.log(a);
+      //     console.log(b);
+      //     console.log(c);
+      //   }));
+      // console.log(val);
+    }
   },
   methods: {
     selectItem(id_item) {
       let ob = undefined;
-      switch (this.activeTabIndex) {
-        case 0: ob = { selectedProjectID: id_item };
+      switch (this.currentTabIndex) {
+        case 0:
+          ob = {
+            selectedProjectID: id_item
+          };
           break;
-        case 1: ob = { selectedTaskID: id_item };
+        case 1:
+          ob = {
+            selectedTaskID: id_item
+          };
           break;
-        case 2: ob = { selectedBugFixID: id_item };
+        case 2:
+          ob = {
+            selectedBugFixID: id_item
+          };
           break;
-        case 3: ob = { selectedCompanyID: id_item };
+        case 3:
+          ob = {
+            selectedCompanyID: id_item
+          };
           break;
-        case 4: ob = { selectedTeamsID: id_item };
+        case 4:
+          ob = {
+            selectedTeamsID: id_item
+          };
           break;
       }
       store.commit("changeSidebarSelection", ob);
@@ -139,6 +162,8 @@ export default {
     },
     addItem() {
       var tabData = this.getActiveArray(this.currentTabIndex);
+      console.log(tabData);
+      return;
       this.activeArray = tabData;
       return;
       console.log("> " + tabData);
@@ -165,14 +190,13 @@ export default {
       this.renamingItem = item;
     },
     deadlineSplit(dateTime) {
-      console.log(dateTime);
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
     getTabData(type) {
       let cTab = this.currentTabIndex;
       this.isCollapsedSidebar = false;
       this.tabTitle = this.tabs[cTab].name;
-      let s = "both";
+      let s = "assigned"; // DEFAULT
       let t = cTab === 2 ? "bugfix" : "task";
       let a = "false";
       switch (type) {
@@ -233,7 +257,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getActiveArray: "currentTabArray"
+      getActiveArray: "currentTabArray",
     }),
     filterArray() {
       var tabData = this.activeArray;
@@ -250,10 +274,10 @@ export default {
   },
   created() {
     bus.$on("activeTabIndex", data => {
-      this.currentTabIndex = data;
-      console.log("do i fire?>");
-      var aa = this.getActiveArray(this.currentTabIndex);
-      this.activeArray = aa;
+      // this.currentTabIndex = data;
+      console.log("DO I FIRE?>");
+      // var aa = this.getActiveArray(this.currentTabIndex);
+      // this.activeArray = aa;
     });
   },
   mounted() {
@@ -515,12 +539,13 @@ h2 {
   margin-bottom: 15px;
 }
 
-.btn-group {
-  margin: 0 auto 10px;
+.item-filter {
+  display: flex;
+  justify-content: space-around;
 }
 
-.btn-group>* {
-  border: 1px solid #00000040;
+.item-filter>* {
+  color: white;
 }
 
 .badge-deadline {

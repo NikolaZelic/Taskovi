@@ -19,8 +19,20 @@ const mutations = {
   },
 
   changeSidebarSelection: (state, params) => {
+    if (params.selectedProjectID !== undefined) {
+      store.state.sidebarSelection.selectedProjectID = params.selectedProjectID;
+    }
     if (params.selectedTaskID !== undefined) {
       store.state.sidebarSelection.selectedTaskID = params.selectedTaskID;
+    }
+    if (params.selectedBugFixID !== undefined) {
+      store.state.sidebarSelection.selectedBugFixID = params.selectedBugFixID;
+    }
+    if (params.selectedCompanyID !== undefined) {
+      store.state.sidebarSelection.selectedCompanyID = params.selectedCompanyID;
+    }
+    if (params.selectedTeamsID !== undefined) {
+      store.state.sidebarSelection.selectedTeamsID = params.selectedTeamsID;
     }
   },
 }

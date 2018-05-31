@@ -92,10 +92,10 @@ export default {
     min-height: 100vh;
   }
   #wrapper > aside{
-    width: 40%;
+    width: 45%;
   }
   #wrapper > div{
-    width: 60%;
+    width: 55%;
   }
 }
 </style>

@@ -23,7 +23,7 @@ const actions = {
   getUserCompanies(commit, params) {
     api.getUserCompanies(params.index).then(r => {
       store.commit('setSidebarData', {
-        index: index,
+        index: params.index,
         data: r.data.data
       });
     });
@@ -32,7 +32,7 @@ const actions = {
   getUserTeams(commit, params) {
     api.getUserTeams(params.index).then(r => {
       store.commit('setSidebarData', {
-        index: index,
+        index: params.index,
         data: r.data.data
       });
     });
