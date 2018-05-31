@@ -28,7 +28,7 @@ export const store = new Vuex.Store({
       selectedProjectID: undefined,
       selectedTaskID: undefined,
       selectedBugFixID: undefined,
-      selectedCompanyID: undefined,
+      selectedCompanyID: -1,
       selectedTeamsID: undefined,
     },
   },
