@@ -14,22 +14,22 @@
           <registration></registration>
         </keep-alive>
       </div>
-      <chat-element/>
+      <!-- <chat-element/> -->
     </div>
   </div>
 </template>
 
 <script>
 import SideBar from "@/components/SideBar";
-import ChatElement from "@/components/ChatElement";
-import TaskView from "@/components/TaskView";
-import TaskAdd from "@/components/TaskAdd";
-import ProjectAdd from "@/components/ProjectAdd";
-import ProjectView from "@/components/ProjectView";
-import TeamAdd from "@/components/TeamAdd";
-import CompanyAdd from "@/components/CompanyAdd";
-import CompanyEdit from "@/components/CompanyEdit";
-import Registration from "@/components/Registration";
+import ChatElement from "@/components/Chat/ChatElement";
+import TaskView from "@/components/Content/TaskView";
+import TaskAdd from "@/components/Content/TaskAdd";
+import ProjectAdd from "@/components/Content/ProjectAdd";
+import ProjectView from "@/components/Content/ProjectView";
+import TeamAdd from "@/components/Content/TeamAdd";
+import CompanyAdd from "@/components/Content/CompanyAdd";
+import CompanyEdit from "@/components/Content/CompanyEdit";
+import Registration from "@/components/Auth/Registration";
 import { api } from "@/api/index.js";
 
 export default {
@@ -59,6 +59,10 @@ export default {
   flex-direction: column;
 }
 
+/* #wrapper > *{
+  width: 100%;
+} */
+
 .main-content {
   flex: 1;
   display: flex;
@@ -84,9 +88,15 @@ export default {
   #wrapper {
     flex-direction: row;
   }
-  #wrapper > * {
-    width: 50%;
+    /* width: 50%; */
+   #wrapper > * {
     min-height: 100vh;
+  }
+  #wrapper > aside{
+    width: 40%;
+  }
+  #wrapper > div{
+    width: 60%;
   }
 }
 </style>

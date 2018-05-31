@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import LoginPage from "@/components/LoginPage";
+import LoginPage from "@/components/Auth/LoginPage";
 
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
     }
   },
   beforecreated() {
-    var sid = window.localStorage.getItem("sid");
+    var sid = window.localStorage.sid;
     if (sid !== undefined && sid !== null) {
       alert(sid);
     }
