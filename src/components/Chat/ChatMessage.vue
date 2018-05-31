@@ -9,8 +9,6 @@
     <p class="message">{{mess.fed_text}}</p>
     <div class="attachment"></div>
     <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'">Show file</a>
-    <!-- samo za attachment -->
-
   </div>
 </div>
 </template>
@@ -37,9 +35,7 @@ export default {
     }
   },
   mounted() {
-    document.getElementById("all").scrollTop = document.getElementById(
-      "all"
-    ).scrollHeight; //Uvek spusta na dno ekrana
+    document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight; //Uvek spusta na dno ekrana
   }
 };
 </script>
@@ -52,9 +48,7 @@ export default {
 }
 
 .cont img {
-  /* width: 7%; */
   height: 30px;
-  /* padding: 3px; */
   border-radius: 50%;
   margin: auto 0;
 }
@@ -81,7 +75,6 @@ export default {
 .right-con {
   border-color: #ccc;
   background-color: #e6e5bb;
-  /* text-align: right; */
   margin-left: 20px;
   display: flex;
 }
@@ -108,8 +101,6 @@ export default {
   display: inline;
   text-align: left;
 }
-
-/* attachment */
 
 .progress {
   margin: 0 auto;
