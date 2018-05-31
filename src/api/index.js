@@ -3,25 +3,17 @@ import {
 } from './config.js'
 import {
   store
-} from '@/store/store.js';
+} from '@/store/index.js';
 
 export const api = {
   readeFeeds(tasid, fedid, direction) {
-    axios.get('/tasks/' + tasid + '/feeds', {
+    return axios.get('/tasks/' + tasid + '/feeds', {
         params: {
           fedid: fedid,
           pravac: direction,
-          sid: window.localStorage.getItem('sid')
+          sid: window.localStorage.sid,
         }
       })
-      .then(response => {
-        // console.log('Ovo je iz APIja');
-        // console.log(response.data.data);
-        store.commit('addMessages', {
-          'direction': direction,
-          'data': response.data.data
-        })
-      });
   },
 
   postMessage(tasid, mess) {
@@ -30,15 +22,7 @@ export const api = {
     var fd = new FormData();
     fd.append('type', 'text');
     fd.append('text', mess);
-    axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.getItem('sid'), fd)
-      .then(response => {
-        var msg = store.state.messages;
-        if (msg.length === 0) {
-          this.readeFeeds(tasid, 0, 'start');
-        } else {
-          this.readeFeeds(tasid, msg[msg.length - 1].fed_id, 'down');
-        }
-      });
+    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
   },
 
   login(email, password) {
@@ -62,75 +46,48 @@ export const api = {
 
   register(email, password, name, surname, description) {
     axios.post('auth/singup', {
-        email: email,
-        pass: password,
-        name: name,
-        surname: surname,
-        description: description
-      }).catch(error => {
-        console.log(error);
-      });
+      email: email,
+      pass: password,
+      name: name,
+      surname: surname,
+      description: description
+    }).catch(error => {
+      console.log(error);
+    });
   },
 
   getUserProjects() {
-    axios({
-      method: 'get',
-      url: '/users/projects',
+    return axios.get('/users/projects', {
       params: {
-        sid: window.localStorage.getItem('sid')
+        sid: window.localStorage.sid,
       }
-    }).then(r => {
-      store.commit('setSidebarData', {
-        index: 0,
-        data: r.data.data
-      });
     });
   },
 
   getUserTasks(index, state, type, archived) {
-    axios({
-      method: 'get',
-      url: '/users/tasks',
+    return axios.get('/users/tasks', {
       params: {
-        sid: window.localStorage.getItem('sid'),
+        sid: window.localStorage.sid,
         state: state,
         type: type,
         archived: archived,
       }
-    }).then(r => {
-      store.commit('setSidebarData', {
-        index: index,
-        data: r.data.data
-      });
     });
   },
 
   getUserCompanies(index) {
-    axios({
-      method: 'get',
-      url: '/users/companies',
+    return axios.get('/users/companies', {
       params: {
-        sid: window.localStorage.getItem('sid'),
+        sid: window.localStorage.sid,
       }
-    }).then(r => {
-      store.commit('setSidebarData', {
-        index: index,
-        data: r.data.data
-      });
     });
   },
+
   getUserTeams(index) {
-    axios({
-      method: 'get',
-      url: '/users/teams',
+    return axios.get('/users/teams', {
       params: {
-        sid: window.localStorage.getItem('sid'),
+        sid: window.localStorage.sid,
       }
-    }).then(r => {
-      store.commit('setSidebarData', {
-        index: index,
-        data: r.data.data
-      });
     });
   },
 }

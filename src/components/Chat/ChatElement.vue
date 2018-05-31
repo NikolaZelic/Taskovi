@@ -28,7 +28,7 @@
 </template>
 <script>
 import ChatMessage from "./ChatMessage";
-import { store } from "@/store/store.js";
+import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {

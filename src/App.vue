@@ -12,6 +12,7 @@ export default {
 
 <style>
 @import "./assets/css/bootstrap.min.css";
+@import "./assets/css/CustomToggles.css";
 body {
   margin: 0;
   padding: 0;
