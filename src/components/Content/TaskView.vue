@@ -71,6 +71,8 @@ export default {
   computed: {
     task: function() {
       // console.log('Computed '+store.getters.getSelectedTask);
+      console.log('Coputed iz taskvjua');
+      console.log(store.getters.getSelectedTask);
       return store.getters.getSelectedTask;
     },
   },

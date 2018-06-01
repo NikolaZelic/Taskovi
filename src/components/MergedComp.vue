@@ -5,7 +5,7 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
-          <task-view></task-view>
+          <!-- <task-view></task-view> -->
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
           <!-- <project-edit></project-edit> -->
@@ -13,7 +13,7 @@
           <!-- <team-add></team-add> -->
           <!-- <team-edit></team-edit> -->
           <!-- <company-add></company-add> -->
-          <!-- <company-edit></company-edit> -->
+          <company-edit></company-edit>
 
           <!-- <company-view></company-view> -->
           <!-- <registration></registration> -->
@@ -61,11 +61,9 @@ export default {
     CompanyAdd,
     CompanyEdit,
     Registration,
-<<<<<<< HEAD
     CompanyView,
     TeamEdit
-=======
->>>>>>> zelic
+
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL

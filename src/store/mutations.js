@@ -24,6 +24,10 @@ const mutations = {
     }
     if (params.selectedTaskID !== undefined) {
       store.state.sidebarSelection.selectedTaskID = params.selectedTaskID;
+      // by nzelic
+      // Selektovanje taska
+      console.log('Side bar selection');
+       store.dispatch('selectTask', {id: params.selectedTaskID})
     }
     if (params.selectedBugFixID !== undefined) {
       store.state.sidebarSelection.selectedBugFixID = params.selectedBugFixID;
@@ -35,6 +39,14 @@ const mutations = {
       store.state.sidebarSelection.selectedTeamsID = params.selectedTeamsID;
     }
   },
+
+  // by nzelic
+  changeSelectedTask: (state, params) => {
+    console.log('Change selected task');
+    console.log(params.selectedTask);
+    store.state.selectedTask = params.selectedTask;
+      // console.log(state.selectedTask);
+    },
 }
 
 export default {

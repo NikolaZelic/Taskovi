@@ -2,6 +2,12 @@
 import {api} from '@/api/index.js';
 import {store} from './index';
 const actions = {
+
+  selectTask(commit, params){
+    console.log('Select task');
+    api.selectTask(params.id);
+  },
+
   getUserProjects() {
     api.getUserProjects().then(r => {
       store.commit('setSidebarData', {

@@ -14,11 +14,8 @@
     "lodash": "^4.17.10",
     "npm": "^6.0.1",
     "vue": "^2.5.2",
-<<<<<<< HEAD
     "vue-multiselect": "^2.1.0",
-=======
     "vue-autosuggest": "^1.4.2-1",
->>>>>>> zelic
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

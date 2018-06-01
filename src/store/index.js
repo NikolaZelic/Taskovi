@@ -26,12 +26,12 @@ export const store = new Vuex.Store({
     // COMMUNICATION
     sidebarSelection: {
       selectedProjectID: undefined,
-      selectedTaskID: undefined,
+      selectedTaskID: -1,
       selectedBugFixID: undefined,
       selectedCompanyID: -1,
       selectedTeamsID: undefined,
     },
-
+    selectedTask: {},
     suggestedUsers: [{
         name: 'Nikola',
         surname: "Zelic",
@@ -50,6 +50,9 @@ export const store = new Vuex.Store({
     ],
   },
   getters: {
+    getSelectedTask: state => {
+       return state.selectedTask;
+    },
     getMessages: state => {
       return state.messages;
     },
