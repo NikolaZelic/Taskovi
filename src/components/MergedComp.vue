@@ -15,7 +15,9 @@
 
           <!-- <company-add></company-add> -->
           <!-- <company-edit></company-edit> -->
+
           <company-view></company-view>
+
 
           <!-- <registration></registration> -->
 
@@ -111,7 +113,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 800px) {
   #wrapper {
     flex-direction: row;
   }

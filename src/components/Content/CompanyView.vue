@@ -38,8 +38,12 @@
 
 <script>
 import axios from 'axios'
-import {store} from "@/store/index.js"
-import {mapGetters} from "vuex"
+import {
+  store
+} from "@/store/index.js"
+import {
+  mapGetters
+} from "vuex"
 
 export default {
   data() {
@@ -86,9 +90,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      selectedCompanyID: "selectedCompanyID",
-    })
+    selectedCompanyID() {
+      var a = store.getters.selectedItemID;
+      if (a === undefined) return 0;
+      else return a;
+    }
   },
 
   watch: {
