@@ -18,7 +18,7 @@
       <a>{{ tabTitle }}
           <span class="fas fa-check"></span>
         </a>
-      <span title="Refresh" class="fas fa-sync-alt"></span>
+      <!-- <span title="Refresh" class="fas fa-sync-alt"></span> -->
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -30,7 +30,7 @@
       <form v-if="activeSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <!-- <label><input type="checkbox" name="check" @click="getTabData('cr')"> <span class="label-text">Created</span></label> -->
         <label><input type="radio" name="check" value="cs" v-model="invokeFilterType"> <span class="label-text">Created</span></label>
-        <label><input type="radio" name="check" value="as" v-model="invokeFilterType"> <span class="label-text">Assigned</span></label>
+        <label><input type="radio" name="check" value="as" v-model="invokeFilterType" checked> <span class="label-text">Assigned</span></label>
         <label><input type="radio" name="check" value="ar" v-model="invokeFilterType"> <span class="label-text">Archived</span></label>
         <!-- <label><input type="checkbox" name="check" @click="getTabData('as')" checked> <span class="label-text">Assigned</span></label> -->
         <!-- <label><input type="checkbox" name="check" @click="getTabData('ar')"> <span class="label-text">Archived</span></label> -->
@@ -38,8 +38,8 @@
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="item in filterArray" :key='item.id'>
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id)'>{{ item.title }}</td>
+            <tr v-for="item in filterArray" :key='item.id' :class="{ active: currentItemIndex === item.id}">
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, currentItemIndex = item.id)'>{{ item.title }}</td>
               <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" />
               <td v-if="item.haveUnseenFeed ==='true'">
                 <span title="Unread" class="badge badge-primary badge-pill">1</span>
@@ -67,22 +67,19 @@
 </template>
 
 <script>
-// import {
-//   bus
-// } from "../main";
 import {
   store
 } from "@/store/index.js";
 import {
   mapGetters
 } from "vuex";
-// import axios from 'axios';
 export default {
   data() {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
       currentTabIndex: 1,
+      currentItemIndex: 0,
       searchData: "",
       tabTitle: "",
       tabs: [{
@@ -419,14 +416,17 @@ export default {
 }
 
 .item-list tr:active,
-.item-list tr:focus,
-.item-list tr.active {
+.item-list tr:focus {
   text-decoration: none;
   background: rgba(128, 128, 128, 0.2);
 }
 
 .item-list tr:nth-child(even) {
-  background: #44444466;
+  background-color: #44444466;
+}
+
+.item-list tr.active {
+  background-color: #6d4444;
 }
 
 .item-list tr>input {
