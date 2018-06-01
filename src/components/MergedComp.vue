@@ -67,11 +67,7 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-<<<<<<< HEAD
     api.login("email1@gmail.com", "pass123");
-=======
-    // api.login("email1@gmail.com", "pass123");
->>>>>>> 073a0704942eb5263190f3d4671f9b131c425713
     // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
   }
