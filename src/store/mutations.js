@@ -4,7 +4,10 @@ import {
 
 const mutations = {
   setSidebarData: (state, params) => {
-    store.state.sidebarTabData[params.index] = params.data;
+    if (params.data !== undefined)
+      store.state.sidebarTabData[params.index] = params.data;
+    store.state.currentTabIndex = -1;
+    store.state.currentTabIndex = params.index;
   },
 
   setCurrentTabIndex: (state, params) => {
@@ -23,21 +26,8 @@ const mutations = {
   },
 
   changeSidebarSelection: (state, params) => {
-    if (params.selectedProjectID !== undefined) {
-      store.state.sidebarSelection.selectedProjectID = params.selectedProjectID;
-    }
-    if (params.selectedTaskID !== undefined) {
-      store.state.sidebarSelection.selectedTaskID = params.selectedTaskID;
-    }
-    if (params.selectedBugFixID !== undefined) {
-      store.state.sidebarSelection.selectedBugFixID = params.selectedBugFixID;
-    }
-    if (params.selectedCompanyID !== undefined) {
-      store.state.sidebarSelection.selectedCompanyID = params.selectedCompanyID;
-    }
-    if (params.selectedTeamsID !== undefined) {
-      store.state.sidebarSelection.selectedTeamsID = params.selectedTeamsID;
-    }
+    console.log(params);
+    store.state.sidebarSelection[params.index] = params.id;
   },
 }
 

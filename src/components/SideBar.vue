@@ -108,6 +108,7 @@ export default {
       ],
       activeArray: [], // IMPROVE IN FUTURE
       invokeFilterType: undefined,
+      // sss : getActiveArray,
     };
   },
   watch: {
@@ -115,10 +116,17 @@ export default {
       this.getTabData(val);
     },
     currentTabIndex(val) {
-      store.commit("setCurrentTabIndex", val);
+      // RECHECK LATER IF NEEDED
+      // store.commit("setSidebarData", {
+      //   index: val
+      // });
     },
     'getActiveArray': function(val, oldVal) {
-      console.log(val + ' stara je   ' + oldVal);
+      // console.log(":))))");
+      // console.log(val);
+      //   console.log(":(((");
+      // console.log(oldVal);
+      this.activeArray = val;
     },
   },
   methods: {
@@ -143,50 +151,54 @@ export default {
       }
       switch (index) {
         case 0:
-          this.actionTabDataMain('getUserProjects',s, t, a);
-          break;
         case 1:
         case 2:
-          this.actionTabDataMain('getUserTasks',s, t, a);
+          this.actionTabDataWork('getUserWork', s, t, a);
           break;
         case 3:
-          this.actionTabDataSub('getUserCompanies');
+          this.actionTabDataPeople('getUserCompanies');
+          break;
         case 4:
-          this.actionTabDataSub('getUserTeams');
+          this.actionTabDataPeople('getUserTeams');
           break;
       }
+      // console.log("filter changed");
       this.setActiveArray();
     },
     selectItem(id_item) {
-      let ob = undefined;
-      switch (this.currentTabIndex) {
-        case 0:
-          ob = {
-            selectedProjectID: id_item
-          };
-          break;
-        case 1:
-          ob = {
-            selectedTaskID: id_item
-          };
-          break;
-        case 2:
-          ob = {
-            selectedBugFixID: id_item
-          };
-          break;
-        case 3:
-          ob = {
-            selectedCompanyID: id_item
-          };
-          break;
-        case 4:
-          ob = {
-            selectedTeamsID: id_item
-          };
-          break;
-      }
-      store.commit("changeSidebarSelection", ob);
+      // let ob = undefined;
+      // switch (this.currentTabIndex) {
+      //   case 0:
+      //     ob = {
+      //       selectedProjectID: id_item
+      //     };
+      //     break;
+      //   case 1:
+      //     ob = {
+      //       selectedTaskID: id_item
+      //     };
+      //     break;
+      //   case 2:
+      //     ob = {
+      //       selectedBugFixID: id_item
+      //     };
+      //     break;
+      //   case 3:
+      //     ob = {
+      //       selectedCompanyID: id_item
+      //     };
+      //     break;
+      //   case 4:
+      //     ob = {
+      //       selectedTeamsID: id_item
+      //     };
+      //     break;
+      // }
+      // store.commit("changeSidebarSelection", ob);
+      store.commit("changeSidebarSelection", {
+        index: this.currentTabIndex,
+        id: id_item,
+      })
     },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
@@ -223,7 +235,7 @@ export default {
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
-    actionTabDataMain(name, s, t, a) {
+    actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
         index: this.currentTabIndex,
         state: s,
@@ -231,30 +243,32 @@ export default {
         archived: a
       });
     },
-    actionTabDataSub(name){
+    actionTabDataPeople(name) {
       store.dispatch(name, {
         index: this.currentTabIndex,
       });
     },
     setActiveArray() {
-      const data = this.getActiveArray;
+      var data = this.getActiveArray;
       this.activeArray = data;
     },
   },
   computed: {
-    ...mapGetters([{
-        getActiveArray: 'currentTabArray'
-      },
+    ...mapGetters([
+      // {
+      // getActiveArray: 'currentTabArray'
+      // },
       'getTabIndex',
     ]),
+    getActiveArray() {
+      return store.getters.currentTabArray;
+    },
     // www() {
     //   let s = this.currentTabIndex;
     //   console.log(s);
     //   return this.$store.getters.currentTabArray;
     // },
     filterArray() {
-      // console.log(this.getGetter());
-      return;
       var tabData = this.activeArray;
       console.log(tabData);
       if (tabData === undefined) return;
@@ -269,11 +283,10 @@ export default {
     }
   },
   mounted() {
-    // this.currentTabIndex = 1;
-    // store.commit("setCurrentTabIndex", 1);
-    this.getTabData(null
-      //, this.currentTabIndex = 1
-    );
+    store.commit("setSidebarData", {
+      index: this.currentTabIndex
+    });
+    this.getTabData(null);
   }
 };
 </script>

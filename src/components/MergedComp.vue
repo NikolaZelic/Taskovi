@@ -83,7 +83,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 800px) {
   #wrapper {
     flex-direction: row;
   }

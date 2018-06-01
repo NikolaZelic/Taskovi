@@ -56,16 +56,18 @@ export const api = {
     });
   },
 
-  getUserProjects() {
-    return axios.get('/users/projects', {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getUserProjects() {
+  //   return axios.get('/users/projects', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
-  getUserTasks(index, state, type, archived) {
-    return axios.get('/users/tasks', {
+  getUserWork(index, state, type, archived) {
+    let link = '/users/tasks'
+    if(index === 0) link = '/users/projects';
+    return axios.get(link, {
       params: {
         sid: window.localStorage.sid,
         state: state,
