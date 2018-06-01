@@ -26,12 +26,14 @@ const mutations = {
   },
 
   changeSidebarSelection: (state, params) => {
-    console.log(params);
+    // console.log(params);
     store.state.sidebarSelection[params.index] = params.id;
-    if (params.id === 1) {
+    store.state.currentTabIndex = -1;
+    store.state.currentTabIndex = params.index;
+    if (params.index === 1) {
       console.log('Side bar selection');
       store.dispatch('selectTask', {
-        id: params.selectedTaskID
+        id: params.id
       })
     }
   },

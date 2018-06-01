@@ -23,7 +23,8 @@ export const store = new Vuex.Store({
       [],
       []
     ],
-    messages: [],  sidebarSelection: new Array(5),
+    messages: [],
+    sidebarSelection: [],
     // COMMUNICATION
     selectedTask: {},
     suggestedUsers: [{
@@ -45,52 +46,35 @@ export const store = new Vuex.Store({
   },
   getters: {
     getSelectedTask: state => {
-       return state.selectedTask;
+      return state.selectedTask;
     },
-      getTabIndex: state => {
-        return state.currentTabIndex;
-      },
+    getTabIndex: state => {
+      return state.currentTabIndex;
+    },
 
-  getMessages: state => {
-    return state.messages;
-  },
+    getMessages: state => {
+      return state.messages;
+    },
 
-  currentTabArray: state => {
-    let i = state.currentTabIndex;
-    // if (state.sidebarTabData[i].length === 0) {
-    //   console.log("NULLL");
-    //   return null;
-    // }
-    console.log(state.sidebarTabData[i]);
-    // console.log(state.sidebarTabData.filter(tab => true));
-    return state.sidebarTabData[i];
-    // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
-  },
+    currentTabArray: state => {
+      let i = state.currentTabIndex;
+      // if (state.sidebarTabData[i].length === 0) {
+      //   console.log("NULLL");
+      //   return null;
+      // }
+      // console.log(state.sidebarTabData[i]);
+      // console.log(state.sidebarTabData.filter(tab => true));
+      return state.sidebarTabData[i];
+      // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
+    },
 
     getSuggestedUsers: state => {
       return state.suggestedUsers;
     },
+
+    selectedItemID: state => {
+      return state.sidebarSelection[state.currentTabIndex];
+    },
   },
 
-  selectedItemID: state => {
-    return state.sidebarSelection[state.currentTabIndex];
-  }
-
-  // selectedProjectID: state => {
-  //   return state.sidebarSelection.selectedProjectID;
-  // },
-  //
-  // selectedTaskID: state => {
-  //   return state.sidebarSelection.selectedTaskID;
-  // },
-  // selectedBugFixID: state => {
-  //   return state.sidebarSelection.selectedBugFixID;
-  // },
-  // selectedCompanyID: state => {
-  //   return state.sidebarSelection.selectedCompanyID;
-  // },
-  // selectedTeamsID: state => {
-  //   return state.sidebarSelection.selectedTeamsID;
-  // },
-},
 })

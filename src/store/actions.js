@@ -4,7 +4,7 @@ import {store} from './index';
 const actions = {
 
   selectTask(commit, params){
-    console.log('Select task');
+    console.log('Select task = ' + params.id);
     api.selectTask(params.id);
   },
 

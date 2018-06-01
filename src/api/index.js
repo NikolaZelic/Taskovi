@@ -8,27 +8,29 @@ import {
 export const api = {
 
   // by Zelic
-    selectTask(id){
-        console.log('API Selected Task');
-        axios({
-         // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
-          url: "/tasks/"+id
-        }).
-        then( response => {
-          // console.log(response);
-          cosole.log('API response');
-         store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
-        });
+  selectTask(id) {
+    console.log('API Selected Task');
+    axios({
+      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+      url: "/tasks/" + id
+    }).
+    then(response => {
+      // console.log(response);
+      cosole.log('API response');
+      store.commit('changeSelectedTask', {
+        selectedTask: response.data.Data[0]
+      });
+    });
   },
 
   readeFeeds(tasid, fedid, direction) {
     return axios.get('/tasks/' + tasid + '/feeds', {
-        params: {
-          fedid: fedid,
-          pravac: direction,
-          sid: window.localStorage.sid,
-        }
-      })
+      params: {
+        fedid: fedid,
+        pravac: direction,
+        sid: window.localStorage.sid,
+      }
+    })
   },
 
   postMessage(tasid, mess) {
@@ -81,7 +83,7 @@ export const api = {
 
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks'
-    if(index === 0) link = '/users/projects';
+    if (index === 0) link = '/users/projects';
     return axios.get(link, {
       params: {
         sid: window.localStorage.sid,
@@ -108,15 +110,17 @@ export const api = {
     });
   },
 
-  selectTask(id){
+  selectTask(id) {
     // console.log('API Selected Task');
     axios({
       // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
-      url: "/tasks/"+id
+      url: "/tasks/" + id
     }).
-    then( response => {
+    then(response => {
       // console.log(response);
-       store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
+      store.commit('changeSelectedTask', {
+        selectedTask: response.data.Data[0]
+      });
     });
   }
 

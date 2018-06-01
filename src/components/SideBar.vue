@@ -166,35 +166,6 @@ export default {
       this.setActiveArray();
     },
     selectItem(id_item) {
-      // let ob = undefined;
-      // switch (this.currentTabIndex) {
-      //   case 0:
-      //     ob = {
-      //       selectedProjectID: id_item
-      //     };
-      //     break;
-      //   case 1:
-      //     ob = {
-      //       selectedTaskID: id_item
-      //     };
-      //     break;
-      //   case 2:
-      //     ob = {
-      //       selectedBugFixID: id_item
-      //     };
-      //     break;
-      //   case 3:
-      //     ob = {
-      //       selectedCompanyID: id_item
-      //     };
-      //     break;
-      //   case 4:
-      //     ob = {
-      //       selectedTeamsID: id_item
-      //     };
-      //     break;
-      // }
-      // store.commit("changeSidebarSelection", ob);
       store.commit("changeSidebarSelection", {
         index: this.currentTabIndex,
         id: id_item,
@@ -270,9 +241,8 @@ export default {
     // },
     filterArray() {
       var tabData = this.activeArray;
-      console.log(tabData);
       if (tabData === undefined) return;
-      console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
+      // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
