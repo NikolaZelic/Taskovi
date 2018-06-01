@@ -1,6 +1,6 @@
 <template>
 <div class="row">
-  <div class="col-md-8 offset-md-2 pad">
+  <div class="col-md-8 offset-md-2">
 
     <!-- Changing company name -->
     <h4>Change company name:</h4>

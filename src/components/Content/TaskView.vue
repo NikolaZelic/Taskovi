@@ -1,11 +1,17 @@
 <template>
-<div>
 
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+  <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
+  <template v-if="selectedItemID <= 0">
+    <h1>Select task first...</h1>
+  </template>
   <!-- Prikaz podataka pojedinacnog taska -->
   <!-- <div class="row task-view-section"> -->
 
     <!-- Kolona na sredini Bootstrap sirine md-4 -->
     <!-- <div class="col-md-8 offset-md-2 pad"> -->
+    <template v-else>
       <div class="card">
 
         <!-- Prikaz imena parent taska -->
@@ -50,6 +56,9 @@
         </ul>
 
       </div>
+    </template>
+
+    </div>
     </div>
 
   <!-- </div> -->
@@ -58,6 +67,7 @@
 
 <script>
 import { store } from "@/store/index.js";
+import {mapGetters} from "vuex"
 
 export default {
 
@@ -71,18 +81,30 @@ export default {
   computed: {
     task: function() {
       // console.log('Computed '+store.getters.getSelectedTask);
-      console.log('Coputed iz taskvjua');
-      console.log(store.getters.getSelectedTask);
+      // console.log('Coputed iz taskvjua');
+      // console.log(store.getters.getSelectedTask);
       return store.getters.getSelectedTask;
     },
+
+    selectedItemID() {
+      console.log(store.getters.selectedItemID);
+      var a = store.getters.selectedItemID;
+      if (a === undefined) return 0;
+      else return a;
+    }
   },
+
+
+  // watch: {
+  //   'selectedItemID': function(val, oldVal) {
+  //     this.getCompanyInfo(val);
+  //     this.loadAdmins(val);
+  //     this.loadEmployees(val);
+  //   }
+  // }
 
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.task-view-section {
-  padding-top: 50px;
-}
 </style>
