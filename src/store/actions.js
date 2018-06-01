@@ -4,21 +4,12 @@ import {store} from './index';
 const actions = {
 
   selectTask(commit, params){
-    console.log('Select task');
+    console.log('Select task = ' + params.id);
     api.selectTask(params.id);
   },
 
-  getUserProjects() {
-    api.getUserProjects().then(r => {
-      store.commit('setSidebarData', {
-        index: 0,
-        data: r.data.data
-      });
-    });
-  },
-
-  getUserTasks(commit, params) {
-    api.getUserTasks(params.index, params.state, params.type, params.archived).then(r => {
+  getUserWork(commit, params) {
+    api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data

@@ -143,7 +143,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      selectedCompanyID: "selectedCompanyID",
+      selectedCompanyID: "selectedItemID",
     })
   },
 

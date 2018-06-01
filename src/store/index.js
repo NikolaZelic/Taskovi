@@ -9,12 +9,13 @@ import {
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
-  modules:{
+  modules: {
     mutations,
     actions,
   },
   strict: true,
   state: {
+    currentTabIndex: undefined,
     sidebarTabData: [
       [],
       [],
@@ -23,14 +24,8 @@ export const store = new Vuex.Store({
       []
     ],
     messages: [],
+    sidebarSelection: [],
     // COMMUNICATION
-    sidebarSelection: {
-      selectedProjectID: undefined,
-      selectedTaskID: -1,
-      selectedBugFixID: undefined,
-      selectedCompanyID: -1,
-      selectedTeamsID: undefined,
-    },
     selectedTask: {},
     suggestedUsers: [{
         name: 'Nikola',
@@ -51,38 +46,35 @@ export const store = new Vuex.Store({
   },
   getters: {
     getSelectedTask: state => {
-       return state.selectedTask;
+      return state.selectedTask;
     },
+    getTabIndex: state => {
+      return state.currentTabIndex;
+    },
+
     getMessages: state => {
       return state.messages;
     },
 
-    currentTabArray: state => index => {
+    currentTabArray: state => {
+      let i = state.currentTabIndex;
+      // if (state.sidebarTabData[i].length === 0) {
+      //   console.log("NULLL");
+      //   return null;
+      // }
+      // console.log(state.sidebarTabData[i]);
       // console.log(state.sidebarTabData.filter(tab => true));
-      return state.sidebarTabData[index];
+      return state.sidebarTabData[i];
       // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
-    },
-
-    selectedProjectID: state => {
-      return state.sidebarSelection.selectedProjectID;
-    },
-
-    selectedTaskID: state => {
-      return state.sidebarSelection.selectedTaskID;
-    },
-    selectedBugFixID: state => {
-      return state.sidebarSelection.selectedBugFixID;
-    },
-    selectedCompanyID: state => {
-      return state.sidebarSelection.selectedCompanyID;
-    },
-    selectedTeamsID: state => {
-      return state.sidebarSelection.selectedTeamsID;
     },
 
     getSuggestedUsers: state => {
       return state.suggestedUsers;
-    }
+    },
 
+    selectedItemID: state => {
+      return state.sidebarSelection[state.currentTabIndex];
+    },
   },
+
 })
