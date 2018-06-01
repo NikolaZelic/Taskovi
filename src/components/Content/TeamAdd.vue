@@ -47,7 +47,6 @@
     <p>{{ errorMsg }}</p>
   </div>
 
-  <button @click='test' type="button" name="button">Test</button>
 </div>
 </template>
 
@@ -58,10 +57,10 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
-import lodash from 'lodash';
 import axios from 'axios';
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
+
+var interval;
+
 export default {
   components: {
     VueAutosuggest,
@@ -72,8 +71,8 @@ export default {
       userToAdd: null,
       addedMembers: [],
       errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
-      testbr: 1,
-      inputText: null,
+      inputText: '',
+      haveChange: 0,
     };
   },
   computed: {
@@ -81,26 +80,29 @@ export default {
       return store.getters.getSuggestedUsers;
     },
   },
+
+  created: function(){
+    interval = setInterval( ()=>{
+      if( this.haveChange===1 && this.inputText.length>0 ){
+        this.pozivapija();
+      }
+    }, 500);
+  },
+  destroy: function(){
+    clearInterval(interval);
+  },
+
   methods: {
-    test: function(){
-      this.testbr++;
-      source.cancel('Operation canceled by the user.');
-    },
     pozivapija: function(){
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test',
-      {
-       cancelToken: source.token
-      })
-      .catch(function(thrown) {
-       if (axios.isCancel(thrown)) {
-         console.log('Request canceled', thrown.message);
-       } else {
-         console.log('Error');
-       }
-     }).then( result => {
-       console.log(this.testbr);
-     } );
+      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
+      then( result => {
+        console.log(result.data['I have']);
+        this.haveChange = 0;
+      });
     },
+
+
+
     addUser: function(){
        if(this.userToAdd===null){
          this.errorMsg = 'You have to enter user';
@@ -127,6 +129,8 @@ export default {
         //   return;
     },
     onInputChange: function(text, oldText){
+      this.inputText = text;
+      this.haveChange = 1;
     },
     onSelected: function(item) {
        this.userToAdd = item.item;
