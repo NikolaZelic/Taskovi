@@ -4,7 +4,7 @@
     <span title="Collapse Sidebar" class="fas fa-bars" @click="collapseSidebar"></span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex == index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
         </button>
     </div>
 
@@ -18,7 +18,7 @@
       <a>{{ tabTitle }}
           <span class="fas fa-check"></span>
         </a>
-      <span title="Refresh" class="fas fa-sync-alt" @click="refreshData"></span>
+      <span title="Refresh" class="fas fa-sync-alt"></span>
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -67,9 +67,9 @@
 </template>
 
 <script>
-import {
-  bus
-} from "../main";
+// import {
+//   bus
+// } from "../main";
 import {
   store
 } from "@/store/index.js";
@@ -82,7 +82,7 @@ export default {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
-      currentTabIndex: undefined,
+      currentTabIndex: 1,
       searchData: "",
       tabTitle: "",
       tabs: [{
@@ -108,24 +108,35 @@ export default {
       ],
       activeArray: [], // IMPROVE IN FUTURE
       invokeFilterType: undefined,
+      // sss : getActiveArray,
     };
   },
   watch: {
     invokeFilterType(val) {
       this.getTabData(val);
     },
-    // currentTabArray(val,vass){
-    //   console.log("lolz");
-    // },
+    currentTabIndex(val) {
+      // RECHECK LATER IF NEEDED
+      // store.commit("setSidebarData", {
+      //   index: val
+      // });
+    },
+    'getActiveArray': function(val, oldVal) {
+      // console.log(":))))");
+      // console.log(val);
+      //   console.log(":(((");
+      // console.log(oldVal);
+      this.activeArray = val;
+    },
   },
   methods: {
     getTabData(type) {
-      let cTab = this.currentTabIndex;
+      let index = this.currentTabIndex;
       this.isCollapsedSidebar = false;
-      this.tabTitle = this.tabs[cTab].name;
+      this.tabTitle = this.tabs[index].name;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
-      let t = cTab === 2 ? "bugfix" : "task";
+      let t = index === 2 ? "bugfix" : "task";
       let a = "false";
       switch (type) {
         case "cr":
@@ -138,54 +149,27 @@ export default {
           a = "true";
           break;
       }
-      switch (cTab) {
+      switch (index) {
         case 0:
-          this.getProjectData(s, t, a);
-          break;
         case 1:
         case 2:
-          this.getTaskData(s, t, a);
+          this.actionTabDataWork('getUserWork', s, t, a);
           break;
         case 3:
-          this.getCompanyData();
+          this.actionTabDataPeople('getUserCompanies');
+          break;
         case 4:
-          this.getTeamData();
+          this.actionTabDataPeople('getUserTeams');
           break;
       }
-      var aa = this.getActiveArray(cTab);
-      // console.log(aa);
-      this.activeArray = aa;
+      // console.log("filter changed");
+      this.setActiveArray();
     },
     selectItem(id_item) {
-      let ob = undefined;
-      switch (this.currentTabIndex) {
-        case 0:
-          ob = {
-            selectedProjectID: id_item
-          };
-          break;
-        case 1:
-          ob = {
-            selectedTaskID: id_item
-          };
-          break;
-        case 2:
-          ob = {
-            selectedBugFixID: id_item
-          };
-          break;
-        case 3:
-          ob = {
-            selectedCompanyID: id_item
-          };
-          break;
-        case 4:
-          ob = {
-            selectedTeamsID: id_item
-          };
-          break;
-      }
-      store.commit("changeSidebarSelection", ob);
+      store.commit("changeSidebarSelection", {
+        index: this.currentTabIndex,
+        id: id_item,
+      })
     },
     collapseSidebar() {
       this.isCollapsedSidebar = !this.isCollapsedSidebar;
@@ -195,8 +179,7 @@ export default {
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
-      var tabData = this.getActiveArray(this.currentTabIndex);
-      console.log(tabData);
+      this.setActiveArray();
       return;
       this.activeArray = tabData;
       return;
@@ -223,40 +206,41 @@ export default {
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ? dateTime.split(" ")[0] : "";
     },
-    refreshData() {
-      console.log(this.currentTabIndex);
-    },
-    getProjectData() {
-      store.dispatch("getUserProjects", {
-        index: this.currentTabIndex,
-      });
-    },
-    getTaskData(s, t, a) {
-      store.dispatch("getUserTasks", {
+    actionTabDataWork(name, s, t, a) {
+      store.dispatch(name, {
         index: this.currentTabIndex,
         state: s,
         type: t,
         archived: a
       });
     },
-    getCompanyData() {
-      store.dispatch("getUserCompanies", {
-        index: this.currentTabIndex
+    actionTabDataPeople(name) {
+      store.dispatch(name, {
+        index: this.currentTabIndex,
       });
     },
-    getTeamData() {
-      store.dispatch("getUserTeams", {
-        index: this.currentTabIndex
-      });
+    setActiveArray() {
+      var data = this.getActiveArray;
+      this.activeArray = data;
     },
   },
   computed: {
-    ...mapGetters({
-      getActiveArray: "currentTabArray",
-    }),
+    ...mapGetters([
+      // {
+      // getActiveArray: 'currentTabArray'
+      // },
+      'getTabIndex',
+    ]),
+    getActiveArray() {
+      return store.getters.currentTabArray;
+    },
+    // www() {
+    //   let s = this.currentTabIndex;
+    //   console.log(s);
+    //   return this.$store.getters.currentTabArray;
+    // },
     filterArray() {
       var tabData = this.activeArray;
-      // console.log(tabData);
       if (tabData === undefined) return;
       // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
@@ -268,16 +252,11 @@ export default {
       });
     }
   },
-  created() {
-    bus.$on("activeTabIndex", data => {
-      // this.currentTabIndex = data;
-      console.log("DO I FIRE?>");
-      // var aa = this.getActiveArray(this.currentTabIndex);
-      // this.activeArray = aa;
-    });
-  },
   mounted() {
-    this.getTabData(null, (this.currentTabIndex = 1));
+    store.commit("setSidebarData", {
+      index: this.currentTabIndex
+    });
+    this.getTabData(null);
   }
 };
 </script>
