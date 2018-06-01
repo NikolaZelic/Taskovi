@@ -1,21 +1,3 @@
-Skip to content
-
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- @MilosPaunovic
-Sign out
-0
-0 0 NikolaZelic/Taskovi
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Insights
-Taskovi/src/components/Content/TeamAdd.vue
-c74fec5  14 minutes ago
-@NikolaZelic NikolaZelic Pre mergovanja sa Milosem
-
-257 lines (219 sloc)  6.47 KB
 <template>
 <div>
   <h1 class="display-4">Create team:</h1><br>
@@ -241,16 +223,3 @@ export default {
   background-color: #ddd
 }
 </style>
-© 2018 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
-Press h to open a hovercard with more details.
