@@ -7,6 +7,18 @@ import {
 
 export const api = {
 
+  // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
+  refreshSuggestions(searchText, comId){
+    return axios.get('users',
+    {
+      params:{
+        sid: window.localStorage.sid,
+        searchstring: searchText,
+        comid: comId,
+      }
+    });
+  },
+
   // by Zelic
   selectTask(id) {
     console.log('API Selected Task');

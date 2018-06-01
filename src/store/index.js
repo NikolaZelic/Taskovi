@@ -27,24 +27,23 @@ export const store = new Vuex.Store({
     sidebarSelection: [],
     // COMMUNICATION
     selectedTask: {},
-    suggestedUsers: [{
-        name: 'Nikola',
-        surname: "Zelic",
-        email: "nzelic@ymail.com"
-      },
-      {
-        name: 'Pera',
-        surname: "Peric",
-        email: "nzelic@ymail.com"
-      },
-      {
-        name: 'Nikola',
-        surname: "Zelic",
-        email: "nzelic@ymail.com"
-      }
-    ],
+    // by Zelic - korisceno u TeamAdd
+    suggestedUsers: [],
+    // by Zelic - korisceno u TeamAdd. Ovo bi moglo da se koristi i u drugim komponentama, mozda cak i u SideBar-u
+    usersCompanies: undefined,
   },
   getters: {
+
+    // by Zelic - korisceno u TeamAdd.
+    getUsersCompanies: state => {
+      return state.usersCompanies;
+    },
+
+    // by Zelic - korisceno u TeamAdd
+    getSuggestedUsers: state => {
+      return state.suggestedUsers;
+    },
+
     getSelectedTask: state => {
       return state.selectedTask;
     },

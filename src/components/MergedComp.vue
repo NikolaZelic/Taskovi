@@ -5,7 +5,7 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
-          <task-view></task-view>
+          <!-- <task-view></task-view> -->
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
           <!-- <project-edit></project-edit> -->
@@ -67,9 +67,10 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    api.login("email1@gmail.com", "pass123");
-    // api.login("admin2@gmail.com", "admin222");
+    // api.login("email1@gmail.com", "pass123");
+    api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
+    // api.login('email002@qqq.com','qqq');
   }
 };
 </script>

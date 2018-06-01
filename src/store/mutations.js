@@ -3,6 +3,18 @@ import {
 } from './index';
 
 const mutations = {
+
+  // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
+  setSuggestions: (state, params) => {
+    // console.log(params.data.data);
+    store.state.suggestedUsers = params.data.data;
+  },
+
+  // by Zelic - korisceno u TeamAdd.
+  setUSersCompanies: (state, params) => {
+     store.state.usersCompanies = params.r.data;
+  },
+
   setSidebarData: (state, params) => {
     if (params.data !== undefined)
       store.state.sidebarTabData[params.index] = params.data;

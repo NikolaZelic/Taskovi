@@ -1,6 +1,15 @@
 <template>
 <div>
   <h1 class="display-4">Create team:</h1><br>
+
+  <!-- IZBOR KOMPANIJE -->
+  <select v-if='usersCompanies!==undefined && usersCompanies.length>1'  v-model="choosenCompany">
+    <option value="" disabled selected>Choose company</option>
+    <option v-for='company in usersCompanies' v-bind:value="company">{{ company.title }}</option>
+  </select>
+  <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===1'>
+    <span>Company: </span><span>{{ choosenCompany.title }}</span>
+  </div>
   <!-- TEAM NAME -->
   <div class="form-group">
     <label for="team_name">Team name</label>
@@ -73,35 +82,54 @@ export default {
       errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
       inputText: '',
       haveChange: 0,
+      choosenCompany: '',
     };
   },
   computed: {
     suggestions: function() {
       return store.getters.getSuggestedUsers;
     },
+
+    usersCompanies: function(){
+      console.log('Computed za sugestije');
+      var a = store.getters.getUsersCompanies;
+      // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
+      if(a!==undefined){
+        if(a.length===1){
+          this.choosenCompany = a[0];
+        }
+      }
+      return a;
+    },
   },
 
   created: function(){
+    // Citanje userovih kompanije ako vec nisu procitane
+    if( this.usersCompanies===undefined ){
+      store.dispatch('selectUsersCompanies');
+    }
+
     interval = setInterval( ()=>{
-      if( this.haveChange===1 && this.inputText.length>0 ){
+      if( this.haveChange===1 && this.inputText.length>0 && this.choosenCompany.id!==undefined ){
         this.pozivapija();
+        this.haveChange = 0;
       }
     }, 500);
   },
+
   destroy: function(){
     clearInterval(interval);
   },
 
   methods: {
     pozivapija: function(){
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
-      then( result => {
-        console.log(result.data['I have']);
-        this.haveChange = 0;
-      });
+      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
+      // then( result => {
+      //   console.log(result.data['I have']);
+      //   this.haveChange = 0;
+      // });
+      store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
     },
-
-
 
     addUser: function(){
        if(this.userToAdd===null){
@@ -118,6 +146,10 @@ export default {
       }
       if (this.addedMembers.length == 0) {
         this.errorMsg = "You have to add user(s) to team.";
+        return;
+      }
+      if( this.choosenCompany.id===undefined ){
+        this.errorMsg = 'You have to choose company';
         return;
       }
     },
