@@ -28,6 +28,20 @@ const mutations = {
   changeSidebarSelection: (state, params) => {
     console.log(params);
     store.state.sidebarSelection[params.index] = params.id;
+    if (params.id === 1) {
+      console.log('Side bar selection');
+      store.dispatch('selectTask', {
+        id: params.selectedTaskID
+      })
+    }
+  },
+
+  // by nzelic
+  changeSelectedTask: (state, params) => {
+    console.log('Change selected task');
+    console.log(params.selectedTask);
+    store.state.selectedTask = params.selectedTask;
+    // console.log(state.selectedTask);
   },
 }
 

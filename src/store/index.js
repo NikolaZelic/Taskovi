@@ -23,20 +23,33 @@ export const store = new Vuex.Store({
       [],
       []
     ],
-    messages: [],
+    messages: [],  sidebarSelection: new Array(5),
     // COMMUNICATION
-    sidebarSelection: new Array(5),
-    // selectedProjectID: undefined,
-    // selectedTaskID: undefined,
-    // selectedBugFixID: undefined,
-    // selectedCompanyID: undefined,
-    // selectedTeamsID: undefined,
-  // },
-},
-getters: {
-  getTabIndex: state => {
-    return state.currentTabIndex;
+    selectedTask: {},
+    suggestedUsers: [{
+        name: 'Nikola',
+        surname: "Zelic",
+        email: "nzelic@ymail.com"
+      },
+      {
+        name: 'Pera',
+        surname: "Peric",
+        email: "nzelic@ymail.com"
+      },
+      {
+        name: 'Nikola',
+        surname: "Zelic",
+        email: "nzelic@ymail.com"
+      }
+    ],
   },
+  getters: {
+    getSelectedTask: state => {
+       return state.selectedTask;
+    },
+      getTabIndex: state => {
+        return state.currentTabIndex;
+      },
 
   getMessages: state => {
     return state.messages;
@@ -52,6 +65,11 @@ getters: {
     // console.log(state.sidebarTabData.filter(tab => true));
     return state.sidebarTabData[i];
     // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
+  },
+
+    getSuggestedUsers: state => {
+      return state.suggestedUsers;
+    },
   },
 
   selectedItemID: state => {

@@ -6,6 +6,21 @@ import {
 } from '@/store/index.js';
 
 export const api = {
+
+  // by Zelic
+    selectTask(id){
+        console.log('API Selected Task');
+        axios({
+         // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+          url: "/tasks/"+id
+        }).
+        then( response => {
+          // console.log(response);
+          cosole.log('API response');
+         store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
+        });
+  },
+
   readeFeeds(tasid, fedid, direction) {
     return axios.get('/tasks/' + tasid + '/feeds', {
         params: {
@@ -92,4 +107,17 @@ export const api = {
       }
     });
   },
+
+  selectTask(id){
+    // console.log('API Selected Task');
+    axios({
+      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
+      url: "/tasks/"+id
+    }).
+    then( response => {
+      // console.log(response);
+       store.commit('changeSelectedTask', {selectedTask: response.data.Data[0]} );
+    });
+  }
+
 }
