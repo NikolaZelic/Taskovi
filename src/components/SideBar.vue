@@ -1,7 +1,7 @@
 <template>
 <aside id="sidebar" :class="{ collapsed: isCollapsedSidebar }">
   <div class="static-side">
-    <span title="Collapse Sidebar" class="fas fa-bars" @click="collapseSidebar"></span>
+    <span title="Collapse Sidebar" class="fas fa-bars" @click="isCollapsedSidebar = !isCollapsedSidebar"></span>
 
     <div class="tabs">
       <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
@@ -15,10 +15,7 @@
   </div>
   <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
     <div class="sidebar-header">
-      <a>{{ tabTitle }}
-          <span class="fas fa-check"></span>
-        </a>
-      <!-- <span title="Refresh" class="fas fa-sync-alt"></span> -->
+      <a>{{ tabTitle }}<span class="fas fa-check"></span></a>
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -27,13 +24,10 @@
           <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
         </div>
       </form>
-      <form v-if="activeSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('cr')"> <span class="label-text">Created</span></label> -->
+      <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <label><input type="radio" name="check" value="cs" v-model="invokeFilterType"> <span class="label-text">Created</span></label>
         <label><input type="radio" name="check" value="as" v-model="invokeFilterType" checked> <span class="label-text">Assigned</span></label>
         <label><input type="radio" name="check" value="ar" v-model="invokeFilterType"> <span class="label-text">Archived</span></label>
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('as')" checked> <span class="label-text">Assigned</span></label> -->
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('ar')"> <span class="label-text">Archived</span></label> -->
       </form>
       <div class="item-list">
         <table>
@@ -49,8 +43,8 @@
               </td>
               <td v-if="item.deadline !== undefined && item.deadline !== null">
                 <span title="Deadline" class="badge badge-deadline badge-pill">
-                    {{ deadlineSplit(item.deadline)}}
-                  </span>
+                  {{ deadlineSplit(item.deadline)}}
+                </span>
               </td>
               <td>
                 <button title="Delete" class="close" @click="removeItem(item)">&times;</button>
@@ -79,7 +73,7 @@ export default {
       renamingItem: {},
       isCollapsedSidebar: false,
       currentTabIndex: 1,
-      currentItemIndex: 0,
+      currentItemIndex: -1,
       searchData: "",
       tabTitle: "",
       tabs: [{
@@ -91,7 +85,7 @@ export default {
           icon: "fa fa-tasks"
         },
         {
-          name: "BugFix Tasks",
+          name: "Issues",
           icon: "fas fa-bug"
         },
         {
@@ -103,26 +97,16 @@ export default {
           icon: "fas fa-users"
         }
       ],
-      activeArray: [], // IMPROVE IN FUTURE
+      activeArray: [],
       invokeFilterType: undefined,
-      // sss : getActiveArray,
     };
   },
   watch: {
     invokeFilterType(val) {
+      this.currentItemIndex = -1;
       this.getTabData(val);
     },
-    currentTabIndex(val) {
-      // RECHECK LATER IF NEEDED
-      // store.commit("setSidebarData", {
-      //   index: val
-      // });
-    },
     'getActiveArray': function(val, oldVal) {
-      // console.log(":))))");
-      // console.log(val);
-      //   console.log(":(((");
-      // console.log(oldVal);
       this.activeArray = val;
     },
   },
@@ -159,7 +143,6 @@ export default {
           this.actionTabDataPeople('getUserTeams');
           break;
       }
-      // console.log("filter changed");
       this.setActiveArray();
     },
     selectItem(id_item) {
@@ -168,22 +151,19 @@ export default {
         id: id_item,
       })
     },
-    collapseSidebar() {
-      this.isCollapsedSidebar = !this.isCollapsedSidebar;
-    },
-    activeSubFilter() {
+    showSubFilter() {
       let a = this.currentTabIndex;
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
-      this.setActiveArray();
-      return;
-      this.activeArray = tabData;
-      return;
-      console.log("> " + tabData);
-      for (let i in tabData) {
-        console.log(tabData[i].title);
-      }
+      // this.setActiveArray();
+      // return;
+      // this.activeArray = tabData;
+      // return;
+      // console.log("> " + tabData);
+      // for (let i in tabData) {
+      //   console.log(tabData[i].title);
+      // }
     },
     removeItem(item) {
       var aa = this.getActiveArray(this.currentTabIndex);
@@ -217,29 +197,21 @@ export default {
       });
     },
     setActiveArray() {
+      // console.log("setActiveArray RADII");
       var data = this.getActiveArray;
       this.activeArray = data;
     },
   },
   computed: {
     ...mapGetters([
-      // {
-      // getActiveArray: 'currentTabArray'
-      // },
       'getTabIndex',
     ]),
     getActiveArray() {
       return store.getters.currentTabArray;
     },
-    // www() {
-    //   let s = this.currentTabIndex;
-    //   console.log(s);
-    //   return this.$store.getters.currentTabArray;
-    // },
     filterArray() {
       var tabData = this.activeArray;
       if (tabData === undefined) return;
-      // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
@@ -311,6 +283,7 @@ export default {
 .tablinks.active {
   background: #212529;
   color: yellow;
+  border-left: 3px solid yellow;
 }
 
 .tablinks:hover {

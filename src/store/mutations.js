@@ -1,7 +1,4 @@
-import {
-  store
-} from './index';
-
+import {store} from './index';
 const mutations = {
   setSidebarData: (state, params) => {
     if (params.data !== undefined)
