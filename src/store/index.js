@@ -2,9 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import mutations from './mutations';
 import actions from './actions';
-import {
-  api
-} from '@/api/index.js';
+import getters from './getters';
+import {api} from '@/api/index.js';
 
 Vue.use(Vuex);
 
@@ -12,6 +11,7 @@ export const store = new Vuex.Store({
   modules: {
     mutations,
     actions,
+    getters,
   },
   strict: true,
   state: {
@@ -28,9 +28,9 @@ export const store = new Vuex.Store({
     // COMMUNICATION
     selectedTask: {},
     suggestedUsers: [{
-        name: 'Nikola',
-        surname: "Zelic",
-        email: "nzelic@ymail.com"
+        name: 'Zikola',
+        surname: "Nelic",
+        email: "nzelic@gmail.com"
       },
       {
         name: 'Pera',
@@ -44,37 +44,4 @@ export const store = new Vuex.Store({
       }
     ],
   },
-  getters: {
-    getSelectedTask: state => {
-      return state.selectedTask;
-    },
-    getTabIndex: state => {
-      return state.currentTabIndex;
-    },
-
-    getMessages: state => {
-      return state.messages;
-    },
-
-    currentTabArray: state => {
-      let i = state.currentTabIndex;
-      // if (state.sidebarTabData[i].length === 0) {
-      //   console.log("NULLL");
-      //   return null;
-      // }
-      // console.log(state.sidebarTabData[i]);
-      // console.log(state.sidebarTabData.filter(tab => true));
-      return state.sidebarTabData[i];
-      // return state.sidebarTabData.filter(tab => state.sidebarTabData.indexOf(tab) === 0);
-    },
-
-    getSuggestedUsers: state => {
-      return state.suggestedUsers;
-    },
-
-    selectedItemID: state => {
-      return state.sidebarSelection[state.currentTabIndex];
-    },
-  },
-
 })

@@ -1,10 +1,10 @@
 <template>
 <aside id="sidebar" :class="{ collapsed: isCollapsedSidebar }">
   <div class="static-side">
-    <span title="Collapse Sidebar" class="fas fa-bars" @click="collapseSidebar"></span>
+    <span title="Collapse Sidebar" class="fas fa-bars" @click="isCollapsedSidebar = !isCollapsedSidebar"></span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTab.index === index}, tab.icon]" @click="getTabData($event,currentTab.index = index)">
         </button>
     </div>
 
@@ -15,10 +15,7 @@
   </div>
   <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
     <div class="sidebar-header">
-      <a>{{ tabTitle }}
-          <span class="fas fa-check"></span>
-        </a>
-      <span title="Refresh" class="fas fa-sync-alt"></span>
+      <a><span :class="[currentTab.icon]"></span>{{ currentTab.title }}</a>
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -27,19 +24,16 @@
           <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
         </div>
       </form>
-      <form v-if="activeSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('cr')"> <span class="label-text">Created</span></label> -->
+      <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <label><input type="radio" name="check" value="cs" v-model="invokeFilterType"> <span class="label-text">Created</span></label>
-        <label><input type="radio" name="check" value="as" v-model="invokeFilterType"> <span class="label-text">Assigned</span></label>
+        <label><input type="radio" name="check" value="as" v-model="invokeFilterType" checked> <span class="label-text">Assigned</span></label>
         <label><input type="radio" name="check" value="ar" v-model="invokeFilterType"> <span class="label-text">Archived</span></label>
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('as')" checked> <span class="label-text">Assigned</span></label> -->
-        <!-- <label><input type="checkbox" name="check" @click="getTabData('ar')"> <span class="label-text">Archived</span></label> -->
       </form>
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="item in filterArray" :key='item.id'>
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id)'>{{ item.title }}</td>
+            <tr v-for="item in filterArray" :key='item.id' :class="{ active: currentItemIndex === item.id}">
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, currentItemIndex = item.id)'>{{ item.title }}</td>
               <input type="text" v-if="renamingItem === item" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" />
               <td v-if="item.haveUnseenFeed ==='true'">
                 <span title="Unread" class="badge badge-primary badge-pill">1</span>
@@ -49,12 +43,11 @@
               </td>
               <td v-if="item.deadline !== undefined && item.deadline !== null">
                 <span title="Deadline" class="badge badge-deadline badge-pill">
-                    {{ deadlineSplit(item.deadline)}}
-                  </span>
+                  {{ deadlineSplit(item.deadline)}}
+                </span>
               </td>
-              <td>
-                <button title="Delete" class="close" @click="removeItem(item)">&times;</button>
-              </td>
+              <td><span class="td-icons fas fa-edit" title="Edit" @click=""></span></td>
+              <td><span class="td-icons fas fa-check" title="Archive" @click="removeItem(item)"></span></td>
             </tr>
           </tbody>
         </table>
@@ -67,24 +60,24 @@
 </template>
 
 <script>
-// import {
-//   bus
-// } from "../main";
 import {
   store
 } from "@/store/index.js";
 import {
   mapGetters
 } from "vuex";
-// import axios from 'axios';
 export default {
   data() {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
-      currentTabIndex: 1,
+      currentItemIndex: -1,
       searchData: "",
-      tabTitle: "",
+      currentTab: {
+        index: 1,
+        title: undefined,
+        icon: undefined,
+      },
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram"
@@ -94,7 +87,7 @@ export default {
           icon: "fa fa-tasks"
         },
         {
-          name: "BugFix Tasks",
+          name: "Issues",
           icon: "fas fa-bug"
         },
         {
@@ -106,34 +99,25 @@ export default {
           icon: "fas fa-users"
         }
       ],
-      activeArray: [], // IMPROVE IN FUTURE
+      activeArray: [],
       invokeFilterType: undefined,
-      // sss : getActiveArray,
     };
   },
   watch: {
     invokeFilterType(val) {
+      this.currentItemIndex = -1;
       this.getTabData(val);
     },
-    currentTabIndex(val) {
-      // RECHECK LATER IF NEEDED
-      // store.commit("setSidebarData", {
-      //   index: val
-      // });
-    },
     'getActiveArray': function(val, oldVal) {
-      // console.log(":))))");
-      // console.log(val);
-      //   console.log(":(((");
-      // console.log(oldVal);
       this.activeArray = val;
     },
   },
   methods: {
     getTabData(type) {
-      let index = this.currentTabIndex;
+      let index = this.currentTab.index;
       this.isCollapsedSidebar = false;
-      this.tabTitle = this.tabs[index].name;
+      this.currentTab.title = this.tabs[index].name;
+      this.currentTab.icon = this.tabs[index].icon;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
       let t = index === 2 ? "bugfix" : "task";
@@ -162,34 +146,30 @@ export default {
           this.actionTabDataPeople('getUserTeams');
           break;
       }
-      // console.log("filter changed");
       this.setActiveArray();
     },
     selectItem(id_item) {
       store.commit("changeSidebarSelection", {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
         id: id_item,
       })
     },
-    collapseSidebar() {
-      this.isCollapsedSidebar = !this.isCollapsedSidebar;
-    },
-    activeSubFilter() {
-      let a = this.currentTabIndex;
+    showSubFilter() {
+      let a = this.currentTab.index;
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
-      this.setActiveArray();
-      return;
-      this.activeArray = tabData;
-      return;
-      console.log("> " + tabData);
-      for (let i in tabData) {
-        console.log(tabData[i].title);
-      }
+      // this.setActiveArray();
+      // return;
+      // this.activeArray = tabData;
+      // return;
+      // console.log("> " + tabData);
+      // for (let i in tabData) {
+      //   console.log(tabData[i].title);
+      // }
     },
     removeItem(item) {
-      var aa = this.getActiveArray(this.currentTabIndex);
+      var aa = this.getActiveArray(this.currentTab.index);
       console.log(aa);
       var index = aa.indexOf(item);
       console.log(index + "  |  " + aa.splice(index, 1));
@@ -208,7 +188,7 @@ export default {
     },
     actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
         state: s,
         type: t,
         archived: a
@@ -216,33 +196,25 @@ export default {
     },
     actionTabDataPeople(name) {
       store.dispatch(name, {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
       });
     },
     setActiveArray() {
+      // console.log("setActiveArray RADII");
       var data = this.getActiveArray;
       this.activeArray = data;
     },
   },
   computed: {
     ...mapGetters([
-      // {
-      // getActiveArray: 'currentTabArray'
-      // },
       'getTabIndex',
     ]),
     getActiveArray() {
       return store.getters.currentTabArray;
     },
-    // www() {
-    //   let s = this.currentTabIndex;
-    //   console.log(s);
-    //   return this.$store.getters.currentTabArray;
-    // },
     filterArray() {
       var tabData = this.activeArray;
       if (tabData === undefined) return;
-      // console.log("SIDEBAR DUZINA TEST ============== " + tabData.length);
       return tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
@@ -254,7 +226,7 @@ export default {
   },
   mounted() {
     store.commit("setSidebarData", {
-      index: this.currentTabIndex
+      index: this.currentTab.index
     });
     this.getTabData(null);
   }
@@ -266,7 +238,6 @@ export default {
   color: #eee;
   display: flex;
   align-items: stretch;
-  /* width: 45%; */
 }
 
 /* SIDEBAR STATIC */
@@ -314,6 +285,7 @@ export default {
 .tablinks.active {
   background: #212529;
   color: yellow;
+  border-left: 3px solid yellow;
 }
 
 .tablinks:hover {
@@ -356,7 +328,7 @@ export default {
 
 .sidebar-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   background: #5a5a5a66;
   padding: 5px 5px 3px;
   font-size: 18px;
@@ -372,8 +344,8 @@ export default {
   margin-left: 10px;
 }
 
-.sidebar-header>span {
-  cursor: pointer;
+.sidebar-header>a>span {
+  margin-right: 20px;
 }
 
 /* TASK LIST START */
@@ -404,9 +376,9 @@ export default {
   padding-left: 10px;
 }
 
-.item-list td:last-child {
+/* .item-list td:last-child {
   margin: auto;
-}
+} */
 
 .item-list td {
   margin-right: 10px;
@@ -419,24 +391,27 @@ export default {
 }
 
 .item-list tr:active,
-.item-list tr:focus,
-.item-list tr.active {
+.item-list tr:focus {
   text-decoration: none;
   background: rgba(128, 128, 128, 0.2);
 }
 
 .item-list tr:nth-child(even) {
-  background: #44444466;
+  background-color: #44444466;
+}
+
+.item-list tr.active {
+  background-color: #6d4444;
 }
 
 .item-list tr>input {
   flex: 1;
 }
 
-.close {
+.td-icons {
   color: #fff;
-  margin-right: 15px;
-  font-size: 1.8rem;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 /* TASK LIST END */

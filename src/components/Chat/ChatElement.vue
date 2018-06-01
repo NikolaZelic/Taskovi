@@ -1,35 +1,34 @@
 <template>
-<div class="right">
-  <!-- <div class="trans">
-    <button class="btn" v-on:click="showFeeds=!showFeeds">X</button>
-  </div> -->
-  <transition name="fade">
-    <div class="feed-all" v-show="showFeeds">
-      <div id="all" v-on:scroll="handleScroll()" class="feed-back">
-        <button class="load btn btn-primary" v-on:click="addUp">Loading new feeds...</button>
-        <div class="messages">
-          <chat-message v-for="(mess,i) in messages" :key="i"  :mess="mess"/>
-        </div>
-      </div>
-      <div class="progress" v-show="inProgress">
-        <p>LOADING FILE {{uploadProgress}}</p>
-        <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
-      </div>
-      <div class="input">
-        <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
-        <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-        <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-        <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
-        <input type="file" id="file" v-on:change="changeFile" style="display:none;"/>
+<div class="chat">
+  <div class="feed-all" v-show="showFeeds">
+    <div id="all" v-on:scroll="handleScroll()" class="feed-back">
+      <div class="messages">
+        <chat-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
     </div>
-  </transition>
+    <div class="progress" v-show="inProgress">
+      <p>LOADING FILE {{uploadProgress}}</p>
+      <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
+    </div>
+    <div class="input">
+      <button class="load btn btn-primary" v-on:click="addUp"><span class="fas fa-sync-alt"></span></button>
+      <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
+      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+      <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+      <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
+      <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
+    </div>
+  </div>
 </div>
 </template>
 <script>
 import ChatMessage from "./ChatMessage";
-import { store } from "@/store/index.js";
-import { api } from "@/api/index.js";
+import {
+  store
+} from "@/store/index.js";
+import {
+  api
+} from "@/api/index.js";
 
 export default {
   components: {
@@ -64,7 +63,10 @@ export default {
       if (this.fInterval) {
         clearInterval(this.fInterval);
       }
-      store.dispatch("readeFeeds", { taskid: this.taskid, direction: "start" });
+      store.dispatch("readeFeeds", {
+        taskid: this.taskid,
+        direction: "start"
+      });
       this.resetInterval(2000);
       console.log("Ovo je taks id: " + this.taskid);
     },
@@ -80,7 +82,10 @@ export default {
         this.feed = "";
         return;
       }
-      store.dispatch("postMessage", { taskid: this.taskid, text: text });
+      store.dispatch("postMessage", {
+        taskid: this.taskid,
+        text: text
+      });
       this.feed = "";
     },
     uploadFile() {
@@ -98,9 +103,10 @@ export default {
       axios
         .post(
           "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds",
-          fd,
-          {
-            headers: { "content-type": "multipart/form-data" },
+          fd, {
+            headers: {
+              "content-type": "multipart/form-data"
+            },
             onUploadProgress: progressEvent => {
               this.inProgress = true;
               this.uploadProgress = Math.round(
@@ -178,16 +184,20 @@ export default {
 };
 </script>
 <style scoped>
-.right {
+.chat {
   display: flex;
+  flex: 1;
 }
+
 .trans {
   flex: 0 0 30px;
 }
+
 .trans .btn {
   width: 100%;
   height: 100%;
 }
+
 .feed-all {
   background: #ebedf1;
   border: 1px solid #ccc;
@@ -261,9 +271,15 @@ export default {
 .fade-leave-active {
   transition: width 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+/* .fade-leave-active below version 2.1.8 */
+
+  {
   width: 0;
 }
+
 .messages {
   max-height: 350px;
 }

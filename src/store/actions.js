@@ -1,9 +1,7 @@
-
 import {api} from '@/api/index.js';
 import {store} from './index';
 const actions = {
-
-  selectTask(commit, params){
+  selectTask(commit, params) {
     console.log('Select task = ' + params.id);
     api.selectTask(params.id);
   },
