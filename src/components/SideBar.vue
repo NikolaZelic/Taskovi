@@ -4,7 +4,7 @@
     <span title="Collapse Sidebar" class="fas fa-bars" @click="isCollapsedSidebar = !isCollapsedSidebar"></span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTab.index === index}, tab.icon]" @click="getTabData($event,currentTab.index = index)">
         </button>
     </div>
 
@@ -15,7 +15,7 @@
   </div>
   <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
     <div class="sidebar-header">
-      <a>{{ tabTitle }}<span class="fas fa-check"></span></a>
+      <a><span :class="[currentTab.icon]"></span>{{ currentTab.title }}</a>
     </div>
     <div class="sidebar-body">
       <form class="form-block">
@@ -46,9 +46,8 @@
                   {{ deadlineSplit(item.deadline)}}
                 </span>
               </td>
-              <td>
-                <button title="Delete" class="close" @click="removeItem(item)">&times;</button>
-              </td>
+              <td><span class="td-icons fas fa-edit" title="Edit" @click=""></span></td>
+              <td><span class="td-icons fas fa-check" title="Archive" @click="removeItem(item)"></span></td>
             </tr>
           </tbody>
         </table>
@@ -72,10 +71,13 @@ export default {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
-      currentTabIndex: 1,
       currentItemIndex: -1,
       searchData: "",
-      tabTitle: "",
+      currentTab: {
+        index: 1,
+        title: undefined,
+        icon: undefined,
+      },
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram"
@@ -112,9 +114,10 @@ export default {
   },
   methods: {
     getTabData(type) {
-      let index = this.currentTabIndex;
+      let index = this.currentTab.index;
       this.isCollapsedSidebar = false;
-      this.tabTitle = this.tabs[index].name;
+      this.currentTab.title = this.tabs[index].name;
+      this.currentTab.icon = this.tabs[index].icon;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
       let t = index === 2 ? "bugfix" : "task";
@@ -147,12 +150,12 @@ export default {
     },
     selectItem(id_item) {
       store.commit("changeSidebarSelection", {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
         id: id_item,
       })
     },
     showSubFilter() {
-      let a = this.currentTabIndex;
+      let a = this.currentTab.index;
       return a === 0 || a === 1 || a === 2;
     },
     addItem() {
@@ -166,7 +169,7 @@ export default {
       // }
     },
     removeItem(item) {
-      var aa = this.getActiveArray(this.currentTabIndex);
+      var aa = this.getActiveArray(this.currentTab.index);
       console.log(aa);
       var index = aa.indexOf(item);
       console.log(index + "  |  " + aa.splice(index, 1));
@@ -185,7 +188,7 @@ export default {
     },
     actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
         state: s,
         type: t,
         archived: a
@@ -193,7 +196,7 @@ export default {
     },
     actionTabDataPeople(name) {
       store.dispatch(name, {
-        index: this.currentTabIndex,
+        index: this.currentTab.index,
       });
     },
     setActiveArray() {
@@ -223,7 +226,7 @@ export default {
   },
   mounted() {
     store.commit("setSidebarData", {
-      index: this.currentTabIndex
+      index: this.currentTab.index
     });
     this.getTabData(null);
   }
@@ -235,7 +238,6 @@ export default {
   color: #eee;
   display: flex;
   align-items: stretch;
-  /* width: 45%; */
 }
 
 /* SIDEBAR STATIC */
@@ -326,7 +328,7 @@ export default {
 
 .sidebar-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   background: #5a5a5a66;
   padding: 5px 5px 3px;
   font-size: 18px;
@@ -342,8 +344,8 @@ export default {
   margin-left: 10px;
 }
 
-.sidebar-header>span {
-  cursor: pointer;
+.sidebar-header>a>span {
+  margin-right: 20px;
 }
 
 /* TASK LIST START */
@@ -374,9 +376,9 @@ export default {
   padding-left: 10px;
 }
 
-.item-list td:last-child {
+/* .item-list td:last-child {
   margin: auto;
-}
+} */
 
 .item-list td {
   margin-right: 10px;
@@ -406,10 +408,10 @@ export default {
   flex: 1;
 }
 
-.close {
+.td-icons {
   color: #fff;
-  margin-right: 15px;
-  font-size: 1.8rem;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 /* TASK LIST END */

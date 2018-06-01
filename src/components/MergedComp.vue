@@ -45,7 +45,9 @@ import CompanyEdit from "@/components/Content/CompanyEdit";
 import CompanyView from "@/components/Content/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
-import { api } from "@/api/index.js";
+import {
+  api
+} from "@/api/index.js";
 
 
 export default {
@@ -80,19 +82,16 @@ export default {
   align-items: stretch;
   flex-direction: column;
 }
-/*
-.levi{
-  flex: 0.4;
-} */
-
-/* #wrapper > *{
-  width: 100%;
-} */
 
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.item-filter{
+  justify-content: unset;
+  flex-wrap: wrap;
 }
 
 .fas {
@@ -114,15 +113,21 @@ export default {
   #wrapper {
     flex-direction: row;
   }
-    /* width: 50%; */
-   #wrapper > * {
-    min-height: 100vh;
-  }
+  /* SIDEBAR */
   #wrapper > aside{
+    position: fixed;
+    height: 100vh;
     width: 45%;
   }
+
+  .item-filter{
+    justify-content: space-around;
+  }
+  /* MAIN CONTENT */
   #wrapper > div{
     width: 55%;
+    margin-left: 45%;
+    min-height: 100vh;
   }
 }
 </style>
