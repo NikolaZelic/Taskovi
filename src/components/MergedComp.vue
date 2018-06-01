@@ -12,10 +12,11 @@
           <!-- <project-view></project-view> -->
           <!-- <team-add></team-add> -->
           <!-- <team-edit></team-edit> -->
-          <!-- <company-add></company-add> -->
-          <company-edit></company-edit>
 
-          <!-- <company-view></company-view> -->
+          <!-- <company-add></company-add> -->
+          <!-- <company-edit></company-edit> -->
+          <company-view></company-view>
+
           <!-- <registration></registration> -->
 
         </keep-alive>
