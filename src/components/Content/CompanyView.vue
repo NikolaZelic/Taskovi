@@ -16,7 +16,7 @@
 
     <!-- Lista svih zaposlenih u kompaniji -->
     <h4 class="mt-5">Employees:</h4>
-    <ul class="list-group list-group-flush">
+    <ul class="list-group list-group-flush mb-5">
 
       <!-- Lista admina -->
       <li class="list-group-item" v-for="admin in admins">
@@ -30,6 +30,9 @@
     </li>
 
     </ul>
+
+    <!-- <button type="button" class="btn btn-outline-secondary">Edit company</button> -->
+
   </template>
 
   </div>
