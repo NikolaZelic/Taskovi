@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
+      <!-- <side-bar/> -->
 
     <div class="main-content">
       <div class="dynamic-center">

@@ -20,6 +20,7 @@
   <label for="pro_leader">Members</label>
   <div class="form-group input-group">
       <vue-autosuggest
+        ref="suggestionTag"
         :suggestions="[ { data: suggestions } ]"
         :renderSuggestion="renderSuggestion"
         @click="clickHandler" :onSelected="onSelected"
@@ -80,7 +81,7 @@ export default {
       userToAdd: null,
       addedMembers: [],
       errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
-      inputText: '',
+      // inputText: '',
       haveChange: 0,
       choosenCompany: '',
     };
@@ -91,7 +92,7 @@ export default {
     },
 
     usersCompanies(){
-      console.log('Computed za sugestije');
+      // console.log('Computed za sugestije');
       var a = store.getters.getUsersCompanies;
       // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
       if(a!==undefined){
@@ -101,6 +102,23 @@ export default {
       }
       return a;
     },
+
+    inputText(){
+      return this.$refs.suggestionTag.searchInput;
+    }
+  },
+
+  watch: {
+    choosenCompany: function(){
+      this.addedMembers = [];
+    },
+
+    errorMsg: function(){
+      if( this.errorMsg != '' )
+        setTimeout( () =>{
+            this.errorMsg = '';
+          } , 3000);
+    }
   },
 
   created(){
@@ -123,21 +141,37 @@ export default {
 
   methods: {
     pozivapija(){
-      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
-      // then( result => {
-      //   console.log(result.data['I have']);
-      //   this.haveChange = 0;
-      // });
       store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
     },
 
     addUser(){
        if(this.userToAdd===null){
+         if( this.inputText != null && this.inputText.length > 0 ){
+           this.errorMsg = 'Unknown user';
+           return;
+         }
          this.errorMsg = 'You have to enter user';
          return;
        }
+       // Provera da li je user vec dodat
+       var id = this.userToAdd.id;
+       var duplikat = false;
+       this.addedMembers.forEach( e => {
+          if( e.id == id )
+          {
+            this.errorMsg = 'User is already added';
+            this.userToAdd = null;
+            store.dispatch('cleanSuggestions');
+            duplikat = true;
+            this.$refs.suggestionTag.searchInput = "";
+          }
+       });
+       if( duplikat )
+        return;
        this.addedMembers.push(this.userToAdd);
        this.userToAdd = null;
+       store.dispatch('cleanSuggestions');
+       this.$refs.suggestionTag.searchInput = "";
     },
     createTeam() {
       if(this.teamName.length==0){
@@ -154,17 +188,18 @@ export default {
       }
     },
     // Metode za AutoSuggest komponentu, hendleri
-    poziv(text, oldText) {
-        // this.userToAdd = null;  // Za slucaj da je bio selektovan, pa se predomislio
-        // if( text===null ){
-        //   this.inputText = null;
-        //   return;
-    },
     onInputChange(text, oldText){
-      this.inputText = text;
+      // this.inputText = text;
+      if( text.length == 0 ){
+        store.dispatch('cleanSuggestions');
+        this.haveChange = 0;
+        return;
+      }
       this.haveChange = 1;
     },
     onSelected(item) {
+      if( item == null || item == undefined )
+        return;
        this.userToAdd = item.item;
     },
     clickHandler(item) {

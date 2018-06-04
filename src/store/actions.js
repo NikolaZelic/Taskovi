@@ -2,6 +2,11 @@ import {api} from '@/api/index.js';
 import {store} from './index';
 const actions = {
 
+  // by Zelic - koristi se u TeamAdd
+  cleanSuggestions(commit, params){
+    store.commit('cleanSuggestions');
+  },
+
   // by Zelic - poziva se u TeamAdd
   selectUsersCompanies(commit, params) {
     api.getUserCompanies().

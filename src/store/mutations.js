@@ -6,6 +6,11 @@ const mutations = {
     store.state.editItem = params.id;
   },
 
+  // by Zelic - koristi se u TeamAdd-u
+  cleanSuggestions: (state, params) => {
+    store.state.suggestedUsers = [];
+  },
+
   // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
   setSuggestions: (state, params) => {
     // console.log(params.data.data);
