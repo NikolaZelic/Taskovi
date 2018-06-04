@@ -1,5 +1,9 @@
-import {instance as axios} from './config.js'
-import {store} from '@/store/index.js';
+import {
+  instance as axios
+} from './config.js'
+import {
+  store
+} from '@/store/index.js';
 // KAD PRAVIS API OBAVEZN KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
 export const api = {
@@ -102,8 +106,9 @@ export const api = {
     });
   },
 
-  getUserTeams(index) {
-    return axios.get('/users/teams', {
+  getUserTeams(index, comid) {
+    console.log(comid);
+    return axios.get('/companies/' + comid + '/teams', {
       params: {
         sid: window.localStorage.sid,
       }

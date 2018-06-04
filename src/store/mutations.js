@@ -1,6 +1,4 @@
-import {
-  store
-} from './index';
+import {store} from './index';
 const mutations = {
   itemEditClick: (state, params) => {
     store.state.editItem = params.id;
