@@ -1,16 +1,9 @@
 <template>
-
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-  <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
+  <div>
   <template v-if="selectedItemID <= 0">
     <h1>Select task first...</h1>
   </template>
   <!-- Prikaz podataka pojedinacnog taska -->
-  <!-- <div class="row task-view-section"> -->
-
-    <!-- Kolona na sredini Bootstrap sirine md-4 -->
-    <!-- <div class="col-md-8 offset-md-2 pad"> -->
     <template v-else>
       <div class="card">
 
@@ -30,7 +23,7 @@
           <li class="list-group-item"><strong>Created: </strong> {{task["time-created"]}} by {{task["user-created"]}}</li>
 
           <!-- Prikaz informacije kome je dati task dodeljen -->
-          <li class="list-group-item"><strong>Assgned to: </strong>{{task["user-working"]}} {{task["group-working"]}}</li>
+          <li class="list-group-item"><strong>Assigned to: </strong>{{task["user-working"]}} {{task["group-working"]}}</li>
 
           <!-- Rok za zavrsavanje datog taska -->
           <li class="list-group-item"><strong>Deadline: </strong>{{task["task-deadline"]}}</li>
@@ -56,44 +49,29 @@
         </ul>
 
       </div>
-    </template>
-
-    </div>
-    </div>
-
-  <!-- </div> -->
-<!-- </div> -->
+    </template></div>
 </template>
 
 <script>
 import { store } from "@/store/index.js";
-import {mapGetters} from "vuex"
+import { mapGetters } from "vuex";
 
 export default {
-
   data() {
-    return {
-
-    };
-
+    return {};
   },
 
   computed: {
-    task: function() {
-      // console.log('Computed '+store.getters.getSelectedTask);
-      // console.log('Coputed iz taskvjua');
-      // console.log(store.getters.getSelectedTask);
+    task() {
       return store.getters.getSelectedTask;
     },
 
     selectedItemID() {
-      console.log(store.getters.selectedItemID);
       var a = store.getters.selectedItemID;
       if (a === undefined) return 0;
       else return a;
     }
-  },
-
+  }
 
   // watch: {
   //   'selectedItemID': function(val, oldVal) {
@@ -102,7 +80,6 @@ export default {
   //     this.loadEmployees(val);
   //   }
   // }
-
 };
 </script>
 

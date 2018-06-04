@@ -1,5 +1,17 @@
 import {store} from './index';
 const mutations = {
+
+  // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
+  setSuggestions: (state, params) => {
+    // console.log(params.data.data);
+    store.state.suggestedUsers = params.data.data;
+  },
+
+  // by Zelic - korisceno u TeamAdd.
+  setUsersCompanies: (state, params) => {
+     store.state.usersCompanies = params.r.data;
+  },
+
   setSidebarData: (state, params) => {
     if (params.data !== undefined)
       store.state.sidebarTabData[params.index] = params.data;
@@ -27,8 +39,8 @@ const mutations = {
     store.state.sidebarSelection[params.index] = params.id;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
+    // IMPROVE API - ZELIC
     if (params.index === 1) {
-      console.log('Side bar selection');
       store.dispatch('selectTask', {
         id: params.id
       })

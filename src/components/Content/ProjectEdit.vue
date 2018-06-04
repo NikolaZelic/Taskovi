@@ -1,5 +1,5 @@
 <template>
-<div class="top-padding col-md-8 offset-md-2">
+<div>
 
   <h4>Edit project:</h4>
 
@@ -15,27 +15,30 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   data() {
     return {
-      projectName: '',
-      projecDescription: '',
+      projectName: "",
+      projecDescription: ""
     };
   },
 
   methods: {
     changeProject() {
-      axios.put('http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid', {
-        grpname: this.projectName,
-        grpdesc: this.projecDescription,
-        proid: 50,
-        sid: window.localStorage.getItem('sid')
-      })
+      axios.put(
+        "http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid",
+        {
+          grpname: this.projectName,
+          grpdesc: this.projecDescription,
+          proid: 50,
+          sid: window.localStorage.getItem("sid")
+        }
+      );
     }
   }
-}
+};
 </script>
 
 <style scoped>

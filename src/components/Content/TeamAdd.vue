@@ -1,6 +1,15 @@
 <template>
 <div>
   <h1 class="display-4">Create team:</h1><br>
+
+  <!-- IZBOR KOMPANIJE -->
+  <select v-if='usersCompanies!==undefined && usersCompanies.length>1'  v-model="choosenCompany">
+    <option value="" disabled selected>Choose company</option>
+    <option v-for='company in usersCompanies' v-bind:value="company">{{ company.title }}</option>
+  </select>
+  <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===1'>
+    <span>Company: </span><span>{{ choosenCompany.title }}</span>
+  </div>
   <!-- TEAM NAME -->
   <div class="form-group">
     <label for="team_name">Team name</label>
@@ -47,7 +56,6 @@
     <p>{{ errorMsg }}</p>
   </div>
 
-  <button @click='test' type="button" name="button">Test</button>
 </div>
 </template>
 
@@ -58,10 +66,10 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
-import lodash from 'lodash';
 import axios from 'axios';
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
+
+var interval;
+
 export default {
   components: {
     VueAutosuggest,
@@ -72,36 +80,58 @@ export default {
       userToAdd: null,
       addedMembers: [],
       errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
-      testbr: 1,
-      inputText: null,
+      inputText: '',
+      haveChange: 0,
+      choosenCompany: '',
     };
   },
   computed: {
-    suggestions: function() {
+    suggestions() {
       return store.getters.getSuggestedUsers;
     },
+
+    usersCompanies(){
+      console.log('Computed za sugestije');
+      var a = store.getters.getUsersCompanies;
+      // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
+      if(a!==undefined){
+        if(a.length===1){
+          this.choosenCompany = a[0];
+        }
+      }
+      return a;
+    },
   },
+
+  created(){
+    // Citanje userovih kompanije ako vec nisu procitane
+    if( this.usersCompanies===undefined ){
+      store.dispatch('selectUsersCompanies');
+    }
+
+    interval = setInterval( ()=>{
+      if( this.haveChange===1 && this.inputText.length>0 && this.choosenCompany.id!==undefined ){
+        this.pozivapija();
+        this.haveChange = 0;
+      }
+    }, 500);
+  },
+
+  destroy(){
+    clearInterval(interval);
+  },
+
   methods: {
-    test: function(){
-      this.testbr++;
-      source.cancel('Operation canceled by the user.');
+    pozivapija(){
+      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
+      // then( result => {
+      //   console.log(result.data['I have']);
+      //   this.haveChange = 0;
+      // });
+      store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
     },
-    pozivapija: function(){
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test',
-      {
-       cancelToken: source.token
-      })
-      .catch(function(thrown) {
-       if (axios.isCancel(thrown)) {
-         console.log('Request canceled', thrown.message);
-       } else {
-         console.log('Error');
-       }
-     }).then( result => {
-       console.log(this.testbr);
-     } );
-    },
-    addUser: function(){
+
+    addUser(){
        if(this.userToAdd===null){
          this.errorMsg = 'You have to enter user';
          return;
@@ -109,7 +139,7 @@ export default {
        this.addedMembers.push(this.userToAdd);
        this.userToAdd = null;
     },
-    createTeam: function() {
+    createTeam() {
       if(this.teamName.length==0){
         this.errorMsg = "You have to enter team name";
         return;
@@ -118,26 +148,32 @@ export default {
         this.errorMsg = "You have to add user(s) to team.";
         return;
       }
+      if( this.choosenCompany.id===undefined ){
+        this.errorMsg = 'You have to choose company';
+        return;
+      }
     },
     // Metode za AutoSuggest komponentu, hendleri
-    poziv: function(text, oldText) {
+    poziv(text, oldText) {
         // this.userToAdd = null;  // Za slucaj da je bio selektovan, pa se predomislio
         // if( text===null ){
         //   this.inputText = null;
         //   return;
     },
-    onInputChange: function(text, oldText){
+    onInputChange(text, oldText){
+      this.inputText = text;
+      this.haveChange = 1;
     },
-    onSelected: function(item) {
+    onSelected(item) {
        this.userToAdd = item.item;
     },
-    clickHandler: function(item) {
+    clickHandler(item) {
     },
-    renderSuggestion: function(suggestion){
+    renderSuggestion(suggestion){
        var i = suggestion.item;
        return i.name+" "+i.surname+" "+i.email;
     },
-    getSuggestionValue: function(item){
+    getSuggestionValue(item){
         var i = item.item;
         return i.name+' '+i.surname+' '+i.email;
     }
@@ -145,7 +181,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .task-add-section {
   padding-top: 50px;

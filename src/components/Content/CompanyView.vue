@@ -1,7 +1,5 @@
 <template>
-<div class="row">
-  <div class="col-md-8 offset-md-2">
-
+<div >
     <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
     <template v-if="selectedCompanyID <= 0">
       <h1>Select company first...</h1>
@@ -34,19 +32,13 @@
     <!-- <button type="button" class="btn btn-outline-secondary">Edit company</button> -->
 
   </template>
-
-  </div>
 </div>
 </template>
 
 <script>
-import axios from 'axios'
-import {
-  store
-} from "@/store/index.js"
-import {
-  mapGetters
-} from "vuex"
+import axios from "axios";
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -54,41 +46,53 @@ export default {
       companyInfo: [],
       admins: [],
       employees: []
-    }
+    };
   },
 
   methods: {
     getCompanyInfo(compID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid', {
-        params: {
-          comid: compID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.companyInfo = response.data.data[0];
-      })
+      axios
+        .get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
+          params: {
+            comid: compID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          this.companyInfo = response.data.data[0];
+        });
     },
 
     loadAdmins(compID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins', {
-        params: {
-          comid: compID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.admins = response.data.data;
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
+          {
+            params: {
+              comid: compID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.admins = response.data.data;
+        });
     },
 
     loadEmployees(compID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users', {
-        params: {
-          comid: compID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.employees = response.data.data;
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
+          {
+            params: {
+              comid: compID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.employees = response.data.data;
+        });
     }
   },
 
@@ -101,13 +105,13 @@ export default {
   },
 
   watch: {
-    'selectedCompanyID': function(val, oldVal) {
+    selectedCompanyID: function(val, oldVal) {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
     }
   }
-}
+};
 </script>
 
 <style scoped>
