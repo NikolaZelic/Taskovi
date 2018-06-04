@@ -8,17 +8,17 @@
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
 
-          <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
-          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
+          <!-- <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit> -->
 
           <!-- <team-edit></team-edit> -->
 
 
-          <project-view v-if='selectedTab === 0'></project-view>
+          <!-- <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
-          <company-view v-else-if='selectedTab === 3'></company-view>
+          <company-view v-else-if='selectedTab === 3'></company-view> -->
 
-          <!-- <team-add></team-add> -->
+          <team-add></team-add>
 
           <!-- <company-add></company-add> -->
 
