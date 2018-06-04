@@ -73,8 +73,8 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    api.login("email1@gmail.com", "pass123");
-    // api.login("admin2@gmail.com", "admin222");
+    // api.login("email1@gmail.com", "pass123");
+    api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
