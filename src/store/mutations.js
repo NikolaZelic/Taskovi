@@ -1,4 +1,6 @@
-import {store} from './index';
+import {
+  store
+} from './index';
 const mutations = {
   itemEditClick: (state, params) => {
     store.state.editItem = params.id;
@@ -20,10 +22,7 @@ const mutations = {
       store.state.sidebarTabData[params.index] = params.data;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-  },
-
-  setCurrentTabIndex: (state, params) => {
-    store.state.currentTabIndex = params;
+    store.state.editItem = undefined;
   },
 
   addMessages: (state, params) => {
