@@ -24,8 +24,6 @@ body {
   box-sizing: border-box;
 }
 @font-face {
-  /* font-family: Raleway;
-  src: url(~./assets/fonts/Raleway.ttf); */
   font-family: TitilliumWeb;
   src: url(~./assets/fonts/TitilliumWeb.ttf);
 }
