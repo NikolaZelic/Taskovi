@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {store} from "@/store/index.js"
+import { store } from "@/store/index.js";
 
 import SideBar from "@/components/SideBar";
 
@@ -39,7 +39,6 @@ import TaskAdd from "@/components/Content/TaskAdd";
 import TeamAdd from "@/components/Content/TeamAdd";
 import TeamEdit from "@/components/Content/TeamEdit";
 
-
 import ProjectAdd from "@/components/Content/ProjectAdd";
 import ProjectView from "@/components/Content/ProjectView";
 import ProjectEdit from "@/components/Content/ProjectEdit";
@@ -49,10 +48,7 @@ import CompanyEdit from "@/components/Content/CompanyEdit";
 import CompanyView from "@/components/Content/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
-import {
-  api
-} from "@/api/index.js";
-
+import { api } from "@/api/index.js";
 
 export default {
   components: {
@@ -69,12 +65,11 @@ export default {
     Registration,
     CompanyView,
     TeamEdit
-
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
+    api.login("email1@gmail.com", "pass123");
+    // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
@@ -86,7 +81,6 @@ export default {
       return store.state.currentTabIndex;
     }
   }
-
 };
 </script>
 
@@ -103,7 +97,7 @@ export default {
   flex-direction: column;
 }
 
-.item-filter{
+.item-filter {
   justify-content: unset;
   flex-wrap: wrap;
 }
@@ -117,6 +111,10 @@ export default {
   flex: 1;
 }
 
+.dynamic-center h1 {
+  text-align: center;
+}
+
 @media only screen and (min-width: 1500px) {
   .main-content {
     flex-direction: row;
@@ -128,17 +126,17 @@ export default {
     flex-direction: row;
   }
   /* SIDEBAR */
-  #wrapper > aside{
+  #wrapper > aside {
     position: fixed;
     height: 100vh;
     width: 45%;
   }
 
-  .item-filter{
+  .item-filter {
     justify-content: space-around;
   }
   /* MAIN CONTENT */
-  #wrapper > div{
+  #wrapper > div {
     width: 55%;
     margin-left: 45%;
     min-height: 100vh;

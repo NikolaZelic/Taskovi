@@ -1,5 +1,6 @@
 import {store} from './index';
 const getters = {
+
   getSelectedTask: state => {
     return store.state.selectedTask;
   },
@@ -16,8 +17,14 @@ const getters = {
     return store.state.sidebarSelection[store.state.currentTabIndex];
   },
 
+  // by Zelic - korisceno u TeamAdd
   getSuggestedUsers: state => {
     return store.state.suggestedUsers;
+  },
+
+  // by Zelic - korisceno u TeamAdd.
+  getUsersCompanies: state => {
+    return store.state.usersCompanies;
   },
 
   getMessages: state => {

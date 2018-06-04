@@ -12,11 +12,11 @@
     </div>
     <div class="input">
       <button class="load btn btn-primary" v-on:click="addUp"><span class="fas fa-sync-alt"></span></button>
-      <button class="btn btn-warning attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
+      <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
+      <button class="btn attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
       <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-      <button class="btn btn-warning send" v-on:click="writeMessageFeed"><span class="fas fa-arrow-circle-right"></span></button>
-      <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
+      <button class="btn btn-success send" v-on:click="writeMessageFeed"><span class="fas fa-paper-plane"></span></button>
     </div>
   </div>
 </div>
@@ -223,26 +223,35 @@ export default {
 .input {
   bottom: 0px;
   display: flex;
+  align-items: center;
+}
+
+.input > * {
+  margin: 0 5px;
 }
 
 .input textarea {
-  padding: 5px;
+  padding: 5px 40px 5px 10px;
   flex: 1;
   background-color: #f8f8f8;
+  border-radius: 20px;
   font-size: 16px;
   resize: none;
 }
 
-.btn {
-  border-radius: 0;
+.input button {
+  position: relative;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
 }
 
-.input button:hover {
-  background-color: #c8c8c8;
+.input button:last-child {
+  right: 60px;
 }
 
-.input button:active {
-  background: linear-gradient(#f8f8f8, #c8c8c8 40%, #f8f8f8 90%);
+.input button>span {
+  font-size: 16px;
 }
 
 .progress {
@@ -264,19 +273,6 @@ export default {
 .progress .in-progress {
   background-color: #0a0;
   height: 100%;
-  width: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: width 0.5s;
-}
-
-.fade-enter,
-.fade-leave-to
-/* .fade-leave-active below version 2.1.8 */
-
-  {
   width: 0;
 }
 

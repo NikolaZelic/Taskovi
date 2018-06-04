@@ -1,11 +1,19 @@
-import {
-  instance as axios
-} from './config.js'
-import {
-  store
-} from '@/store/index.js';
+import {instance as axios} from './config.js'
+import {store} from '@/store/index.js';
+// KAD PRAVIS API OBAVEZN KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
 export const api = {
+
+  // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
+  refreshSuggestions(searchText, comId) {
+    return axios.get('users', {
+      params: {
+        sid: window.localStorage.sid,
+        searchstring: searchText,
+        comid: comId,
+      }
+    });
+  },
 
   // by Zelic
   selectTask(id) {
@@ -72,14 +80,6 @@ export const api = {
       console.log(error);
     });
   },
-
-  // getUserProjects() {
-  //   return axios.get('/users/projects', {
-  //     params: {
-  //       sid: window.localStorage.sid,
-  //     }
-  //   });
-  // },
 
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks'

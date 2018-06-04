@@ -1,6 +1,5 @@
 <template>
-<div class="row">
-  <div class="col-md-8 offset-md-2">
+<div>
 
     <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
     <template v-if="selectedProjectID <= 0">
@@ -44,18 +43,13 @@
 
   </template>
 
-  </div>
 </div>
 </template>
 
 <script>
-import axios from 'axios'
-import {
-  store
-} from "@/store/index.js"
-import {
-  mapGetters
-} from "vuex"
+import axios from "axios";
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -63,48 +57,60 @@ export default {
       projectInfo: [],
       parentTasks: [],
       ptask: 0,
-        tasksList: []
-    }
+      tasksList: []
+    };
   },
 
   methods: {
     getProjectInfo(proID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid', {
-        params: {
-          proid: proID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.projectInfo = response.data.data[0];
-        console.log(response.data.data);
-      })
+      axios
+        .get("http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid", {
+          params: {
+            proid: proID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          this.projectInfo = response.data.data[0];
+          console.log(response.data.data);
+        });
     },
 
     getParentTasks(proID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid/parenttasks', {
-        params: {
-          proid: proID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.parentTasks = response.data.data;
-        console.log(response.data.data);
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid/parenttasks",
+          {
+            params: {
+              proid: proID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.parentTasks = response.data.data;
+          console.log(response.data.data);
+        });
     },
 
-    tasks(ptaskID){
+    tasks(ptaskID) {
       console.log(ptaskID);
 
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid/parenttasks/:parid/tasks', {
-        params: {
-          proid: this.selectedProjectID,
-          parid:ptaskID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.tasksList = response.data.data;
-        console.log(response.data.data);
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid/parenttasks/:parid/tasks",
+          {
+            params: {
+              proid: this.selectedProjectID,
+              parid: ptaskID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.tasksList = response.data.data;
+          console.log(response.data.data);
+        });
     }
 
     // loadAdmins(compID) {
@@ -139,14 +145,14 @@ export default {
   },
 
   watch: {
-    'selectedProjectID': function(val, oldVal) {
+    selectedProjectID: function(val, oldVal) {
       this.getProjectInfo(val);
       this.getParentTasks(val);
       // this.loadAdmins(val);
       // this.loadEmployees(val);
     }
   }
-}
+};
 </script>
 
 <style scoped>
