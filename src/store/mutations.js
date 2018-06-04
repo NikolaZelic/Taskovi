@@ -1,7 +1,7 @@
 import {store} from './index';
 const mutations = {
   itemEditClick: (state, params) => {
-    store.state.editTask = params.id;
+    store.state.editItem = params.id;
   },
 
   // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
@@ -38,8 +38,8 @@ const mutations = {
   },
 
   changeSidebarSelection: (state, params) => {
-    // console.log(params);
     store.state.sidebarSelection[params.index] = params.id;
+    store.state.editItem = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     // IMPROVE API - ZELIC

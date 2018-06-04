@@ -17,8 +17,8 @@ const getters = {
     return store.state.sidebarSelection[store.state.currentTabIndex];
   },
 
-  getEditItemID: state=>{
-    return store.state.editTask;
+  getEditItemID: state => {
+    return store.state.editItem;
   },
 
   // by Zelic - korisceno u TeamAdd
