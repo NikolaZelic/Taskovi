@@ -17,7 +17,11 @@ const getters = {
     return store.state.sidebarSelection[store.state.currentTabIndex];
   },
 
+<<<<<<< HEAD
   getEditItemID: state => {
+=======
+  getEditItemID: state=>{
+>>>>>>> f7c90ce74621f42a8680b0ec9519c990d4219c5a
     return store.state.editItem;
   },
 
