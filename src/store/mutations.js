@@ -1,5 +1,8 @@
 import {store} from './index';
 const mutations = {
+  itemEditClick: (state, params) => {
+    store.state.editTask = params.id;
+  },
 
   // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
   setSuggestions: (state, params) => {
@@ -9,7 +12,7 @@ const mutations = {
 
   // by Zelic - korisceno u TeamAdd.
   setUsersCompanies: (state, params) => {
-     store.state.usersCompanies = params.r.data;
+    store.state.usersCompanies = params.r.data;
   },
 
   setSidebarData: (state, params) => {

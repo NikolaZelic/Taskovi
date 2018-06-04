@@ -206,7 +206,7 @@ export default {
       this.renamingItem = item;
     },
     editItem(item) {
-      console.log("Clicked Edit Item");
+      store.dispatch("itemEditClick",item);
     },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null

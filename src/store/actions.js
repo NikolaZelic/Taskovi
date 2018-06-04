@@ -3,7 +3,7 @@ import {store} from './index';
 const actions = {
 
   // by Zelic - poziva se u TeamAdd
-  selectUsersCompanies(comit, params) {
+  selectUsersCompanies(commit, params) {
     api.getUserCompanies().
     then(result => {
       store.commit('setUsersCompanies', {
@@ -24,6 +24,12 @@ const actions = {
 
   selectTask(commit, params) {
     api.selectTask(params.id);
+  },
+
+  itemEditClick(commit, params){
+    store.commit('itemEditClick',{
+      id: params.id,
+    });
   },
 
   getUserWork(commit, params) {
