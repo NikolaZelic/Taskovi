@@ -1,7 +1,7 @@
 import {store} from './index';
 const mutations = {
   itemEditClick: (state, params) => {
-    store.state.editTask = params.id;
+    store.state.editItem = params.id;
   },
 
   // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue

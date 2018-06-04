@@ -18,7 +18,7 @@ const getters = {
   },
 
   getEditItemID: state=>{
-    return store.state.editTask;
+    return store.state.editItem;
   },
 
   // by Zelic - korisceno u TeamAdd

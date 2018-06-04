@@ -25,7 +25,7 @@ export const store = new Vuex.Store({
     ],
     messages: [],
     sidebarSelection: [],
-    editTask: undefined,
+    editItem: undefined,
     // COMMUNICATION
     selectedTask: {},
     // by Zelic - korisceno u TeamAdd

@@ -7,16 +7,20 @@
         <keep-alive>
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
-          <!-- <project-edit></project-edit> -->
+
+          <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
+
+          <!-- <team-edit></team-edit> -->
+
+
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
 
           <!-- <team-add></team-add> -->
-          <!-- <team-edit></team-edit> -->
 
           <!-- <company-add></company-add> -->
-          <!-- <company-edit></company-edit> -->
 
           <!-- <registration></registration> -->
 
@@ -68,8 +72,8 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    api.login("email1@gmail.com", "pass123");
-    // api.login("admin2@gmail.com", "admin222");
+    // api.login("email1@gmail.com", "pass123");
+    api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
@@ -79,6 +83,10 @@ export default {
   computed: {
     selectedTab() {
       return store.state.currentTabIndex;
+    },
+
+    selectedItemEdit() {
+      return store.state.editItem;
     }
   }
 };
