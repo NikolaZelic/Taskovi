@@ -1,107 +1,118 @@
 <template>
-<div>
-  <div class="row add-section">
-    <div class="col-md-8 offset-md-2 pad">
-      <h1 class="display-4">COMPNAME</h1><br>
+<div >
+    <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
+    <template v-if="selectedCompanyID <= 0">
+      <h1>Select company first...</h1>
+    </template>
 
-      <h4>Employees:</h4>
-      <ul class="list-group list-group-flush mb-5">
-        <li class="list-group-item" v-for="admin in admins">
-          {{ admin.usr_name }} {{ admin.usr_surname }}
-        </li>
-      </ul>
+    <!-- Ako je konretna kompanija selektovana onda se prikazuje ovo -->
+    <template v-else>
 
-      <h4>Teams:</h4>
-      <ul class="list-group list-group-flush mb-3">
-        <li class="list-group-item" v-for="admin in admins">
-          {{ admin.usr_name }} {{ admin.usr_surname }}
-        </li>
-      </ul>
+    <!-- Osnovni podaci o kompaniji   -->
+    <h1>{{companyInfo.title}}</h1>
+    <span>{{companyInfo.description}}</span >
 
+    <!-- Lista svih zaposlenih u kompaniji -->
+    <h4 class="mt-5">Employees:</h4>
+    <ul class="list-group list-group-flush mb-5">
 
+      <!-- Lista admina -->
+      <li class="list-group-item" v-for="admin in admins">
+        {{ admin.usr_name }} {{ admin.usr_surname }} --- {{ admin.usr_email }}
+        <span class="badge badge-secondary">Admin</span>
+    </li>
 
+    <!-- Lista zaposlenih koji nisu admini -->
+    <li class="list-group-item" v-for="employee in employees">
+      {{ employee.name }} --- {{ employee.email }}
+    </li>
 
+    </ul>
 
+    <!-- <button type="button" class="btn btn-outline-secondary">Edit company</button> -->
 
-
-    </div>
-  </div>
+  </template>
 </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      company: '',
-      email: '',
-      add: false,
+      companyInfo: [],
       admins: [],
-      addEmployee: false,
-      employees: [],
-      notExisting: false,
-      message: 'prazno',
-      text: 'New...?'
-    }
+      employees: []
+    };
   },
 
   methods: {
-
-    changeCompanyName() {
-      axios.put('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/changename', {
-        comid: 31,
-        companyname: this.company,
-        sid: window.localStorage.getItem('sid')
-      })
+    getCompanyInfo(compID) {
+      axios
+        .get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
+          params: {
+            comid: compID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          this.companyInfo = response.data.data[0];
+        });
     },
 
-    addAdmin() {
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/addadmin', {
-        comid: 13,
-        email: this.email,
-        sid: window.localStorage.getItem('sid')
-      }).then(response => {
-        if (response.data.status === 'ERR') {
-          this.notExisting = true;
-          this.message = response.data.message;
-        } else {
-          this.notExisting = false;
-        }
-        this.loadAdmins();
-      })
-
-
+    loadAdmins(compID) {
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
+          {
+            params: {
+              comid: compID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.admins = response.data.data;
+        });
     },
 
-    loadAdmins() {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/admins', {
-        params: {
-          comid: 13,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.admins = response.data.data;
-        //console.log(response.data);
-      })
+    loadEmployees(compID) {
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
+          {
+            params: {
+              comid: compID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.employees = response.data.data;
+        });
     }
-
   },
 
-  mounted() {
+  computed: {
+    selectedCompanyID() {
+      var a = store.getters.selectedItemID;
+      if (a === undefined) return 0;
+      else return a;
+    }
+  },
 
-
-
-    this.loadAdmins();
-
+  watch: {
+    selectedCompanyID: function(val, oldVal) {
+      this.getCompanyInfo(val);
+      this.loadAdmins(val);
+      this.loadEmployees(val);
+    }
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.add-section {
-  padding-top: 50px;
-}
 </style>

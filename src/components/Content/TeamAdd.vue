@@ -86,7 +86,7 @@ export default {
     };
   },
   computed: {
-    suggestions: function() {
+    suggestions() {
       return store.getters.getSuggestedUsers;
     },
 
@@ -122,7 +122,7 @@ export default {
   },
 
   methods: {
-    pozivapija: function(){
+    pozivapija(){
       // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
       // then( result => {
       //   console.log(result.data['I have']);
@@ -131,7 +131,7 @@ export default {
       store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
     },
 
-    addUser: function(){
+    addUser(){
        if(this.userToAdd===null){
          this.errorMsg = 'You have to enter user';
          return;
@@ -139,7 +139,7 @@ export default {
        this.addedMembers.push(this.userToAdd);
        this.userToAdd = null;
     },
-    createTeam: function() {
+    createTeam() {
       if(this.teamName.length==0){
         this.errorMsg = "You have to enter team name";
         return;
@@ -154,7 +154,7 @@ export default {
       }
     },
     // Metode za AutoSuggest komponentu, hendleri
-    poziv: function(text, oldText) {
+    poziv(text, oldText) {
         // this.userToAdd = null;  // Za slucaj da je bio selektovan, pa se predomislio
         // if( text===null ){
         //   this.inputText = null;
@@ -164,16 +164,16 @@ export default {
       this.inputText = text;
       this.haveChange = 1;
     },
-    onSelected: function(item) {
+    onSelected(item) {
        this.userToAdd = item.item;
     },
-    clickHandler: function(item) {
+    clickHandler(item) {
     },
-    renderSuggestion: function(suggestion){
+    renderSuggestion(suggestion){
        var i = suggestion.item;
        return i.name+" "+i.surname+" "+i.email;
     },
-    getSuggestionValue: function(item){
+    getSuggestionValue(item){
         var i = item.item;
         return i.name+' '+i.surname+' '+i.email;
     }
@@ -181,7 +181,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .task-add-section {
   padding-top: 50px;

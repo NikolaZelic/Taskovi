@@ -1,11 +1,10 @@
 <template>
-<div>
-
+  <div>
+  <template v-if="selectedItemID <= 0">
+    <h1>Select task first...</h1>
+  </template>
   <!-- Prikaz podataka pojedinacnog taska -->
-  <!-- <div class="row task-view-section"> -->
-
-    <!-- Kolona na sredini Bootstrap sirine md-4 -->
-    <!-- <div class="col-md-8 offset-md-2 pad"> -->
+    <template v-else>
       <div class="card">
 
         <!-- Prikaz imena parent taska -->
@@ -24,7 +23,7 @@
           <li class="list-group-item"><strong>Created: </strong> {{task["time-created"]}} by {{task["user-created"]}}</li>
 
           <!-- Prikaz informacije kome je dati task dodeljen -->
-          <li class="list-group-item"><strong>Assgned to: </strong>{{task["user-working"]}} {{task["group-working"]}}</li>
+          <li class="list-group-item"><strong>Assigned to: </strong>{{task["user-working"]}} {{task["group-working"]}}</li>
 
           <!-- Rok za zavrsavanje datog taska -->
           <li class="list-group-item"><strong>Deadline: </strong>{{task["task-deadline"]}}</li>
@@ -50,39 +49,39 @@
         </ul>
 
       </div>
-    </div>
-
-  <!-- </div> -->
-<!-- </div> -->
+    </template></div>
 </template>
 
 <script>
 import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
 
 export default {
-
   data() {
-    return {
-
-    };
-
+    return {};
   },
 
   computed: {
-    task: function() {
-      // console.log('Computed '+store.getters.getSelectedTask);
-      console.log('Coputed iz taskvjua');
-      console.log(store.getters.getSelectedTask);
+    task() {
       return store.getters.getSelectedTask;
     },
-  },
 
+    selectedItemID() {
+      var a = store.getters.selectedItemID;
+      if (a === undefined) return 0;
+      else return a;
+    }
+  }
+
+  // watch: {
+  //   'selectedItemID': function(val, oldVal) {
+  //     this.getCompanyInfo(val);
+  //     this.loadAdmins(val);
+  //     this.loadEmployees(val);
+  //   }
+  // }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.task-view-section {
-  padding-top: 50px;
-}
 </style>

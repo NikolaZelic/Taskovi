@@ -5,17 +5,23 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
+<<<<<<< HEAD
           <!-- <task-view></task-view> -->
+=======
+>>>>>>> 179b17759852f4f612c4678e954214079694f3a7
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
           <!-- <project-edit></project-edit> -->
-          <!-- <project-view></project-view> -->
-          <team-add></team-add>
+          <project-view v-if='selectedTab === 0'></project-view>
+          <task-view v-else-if='selectedTab === 1'></task-view>
+          <company-view v-else-if='selectedTab === 3'></company-view>
+
+          <!-- <team-add></team-add> -->
           <!-- <team-edit></team-edit> -->
+
           <!-- <company-add></company-add> -->
           <!-- <company-edit></company-edit> -->
 
-          <!-- <company-view></company-view> -->
           <!-- <registration></registration> -->
 
         </keep-alive>
@@ -26,6 +32,8 @@
 </template>
 
 <script>
+import { store } from "@/store/index.js";
+
 import SideBar from "@/components/SideBar";
 
 import ChatElement from "@/components/Chat/ChatElement";
@@ -34,7 +42,6 @@ import TaskView from "@/components/Content/TaskView";
 import TaskAdd from "@/components/Content/TaskAdd";
 import TeamAdd from "@/components/Content/TeamAdd";
 import TeamEdit from "@/components/Content/TeamEdit";
-
 
 import ProjectAdd from "@/components/Content/ProjectAdd";
 import ProjectView from "@/components/Content/ProjectView";
@@ -46,7 +53,6 @@ import CompanyView from "@/components/Content/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
 import { api } from "@/api/index.js";
-
 
 export default {
   components: {
@@ -63,7 +69,6 @@ export default {
     Registration,
     CompanyView,
     TeamEdit
-
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
@@ -81,19 +86,16 @@ export default {
   align-items: stretch;
   flex-direction: column;
 }
-/*
-.levi{
-  flex: 0.4;
-} */
-
-/* #wrapper > *{
-  width: 100%;
-} */
 
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.item-filter {
+  justify-content: unset;
+  flex-wrap: wrap;
 }
 
 .fas {
@@ -103,6 +105,10 @@ export default {
 .dynamic-center {
   padding: 50px 30px 0;
   flex: 1;
+}
+
+.dynamic-center h1 {
+  text-align: center;
 }
 
 @media only screen and (min-width: 1500px) {
@@ -115,15 +121,21 @@ export default {
   #wrapper {
     flex-direction: row;
   }
-    /* width: 50%; */
-   #wrapper > * {
-    min-height: 100vh;
-  }
-  #wrapper > aside{
+  /* SIDEBAR */
+  #wrapper > aside {
+    position: fixed;
+    height: 100vh;
     width: 45%;
   }
-  #wrapper > div{
+
+  .item-filter {
+    justify-content: space-around;
+  }
+  /* MAIN CONTENT */
+  #wrapper > div {
     width: 55%;
+    margin-left: 45%;
+    min-height: 100vh;
   }
 }
 </style>

@@ -1,8 +1,5 @@
 s<template>
 <div>
-  <!-- <div class="row task-add-section">
-    <div class="col-md-8 offset-md-2 pad"> -->
-
       <h1 class="display-4">Adding task:</h1><br>
 
       <form>
@@ -98,8 +95,6 @@ s<template>
 
 
     </div>
-  <!-- </div>
-</div> -->
 </template>
 
 <script>
@@ -114,7 +109,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .task-add-section {
   padding-top: 50px;

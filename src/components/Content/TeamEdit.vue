@@ -1,5 +1,5 @@
 <template>
-<div class="col-md-8 offset-md-2">
+<div>
 
   <!-- Changing team's name -->
   <h4>Change team name:</h4>
@@ -42,84 +42,92 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   data() {
     return {
-      teamname: '',
-      useremail: '',
-      message: '',
+      teamname: "",
+      useremail: "",
+      message: "",
 
       notExistingAdmin: false,
       notExistingMember: false,
 
       admins: [],
-      members: [],
-    }
+      members: []
+    };
   },
 
   methods: {
     changeTeamName() {
-      axios.put('LINKTOAPI', {
+      axios.put("LINKTOAPI", {
         teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
         teamname: this.teamname,
-        sid: window.localStorage.getItem('sid')
-      })
+        sid: window.localStorage.getItem("sid")
+      });
     },
 
     addAdmin() {
-      axios.post('LINKTOAPI', {
-        teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
-        email: this.email,
-        sid: window.localStorage.getItem('sid')
-      }).then(response => {
-        if (response.data.status === 'ERR') {
-          this.notExistingAdmin = true;
-          this.message = response.data.message;
-        } else {
-          this.notExistingAdmin = false;
-        }
-        this.loadAdmins();
-      })
+      axios
+        .post("LINKTOAPI", {
+          teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
+          email: this.email,
+          sid: window.localStorage.getItem("sid")
+        })
+        .then(response => {
+          if (response.data.status === "ERR") {
+            this.notExistingAdmin = true;
+            this.message = response.data.message;
+          } else {
+            this.notExistingAdmin = false;
+          }
+          this.loadAdmins();
+        });
     },
 
     addMember() {
-      axios.post('LINKTOAPI', {
-        teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
-        email: this.email,
-        sid: window.localStorage.getItem('sid')
-      }).then(response => {
-        if (response.data.status === 'ERR') {
-          this.notExistingMember = true;
-          this.message = response.data.message;
-        } else {
-          this.notExistingMember = false;
-        }
-        this.loadMembers();
-      })
+      axios
+        .post("LINKTOAPI", {
+          teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
+          email: this.email,
+          sid: window.localStorage.getItem("sid")
+        })
+        .then(response => {
+          if (response.data.status === "ERR") {
+            this.notExistingMember = true;
+            this.message = response.data.message;
+          } else {
+            this.notExistingMember = false;
+          }
+          this.loadMembers();
+        });
     },
 
     loadAdmins() {
-      axios.get('LINKTOAPI', {
-        params: {
-          teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.admins = response.data.data;
-      })
+      axios
+        .get("LINKTOAPI", {
+          params: {
+            teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          this.admins = response.data.data;
+        });
     },
 
     loadMembers() {
-      axios.get('LINKTOAPI', {
-        params: {
-          teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.members = response.data.data;
-      })
+      axios
+        .get("LINKTOAPI", {
+          params: {
+            teamid: 13, //treba ubaciti iz stora? neki teamID onog tima koja je odabran u side meniju
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          this.members = response.data.data;
+        });
     }
   },
 
@@ -127,10 +135,8 @@ export default {
     this.loadAdmins();
     this.loadMembers();
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

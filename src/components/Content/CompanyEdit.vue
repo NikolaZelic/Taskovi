@@ -1,6 +1,5 @@
 <template>
-<div class="row">
-  <div class="col-md-8 offset-md-2 pad">
+<div>
 
     <!-- Changing company name -->
     <h4>Change company name:</h4>
@@ -40,16 +39,14 @@
         <span class="small"> --- {{ employee.email }}</span>
       </li>
     </ul>
-
-  </div>
 </div>
 </template>
 
 <script>
-import axios from 'axios'
-import {store} from "@/store/index.js"
-import {mapGetters} from "vuex"
-import Multiselect from 'vue-multiselect'
+import axios from "axios";
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
+import Multiselect from "vue-multiselect";
 
 export default {
   components: {
@@ -58,92 +55,118 @@ export default {
 
   data() {
     return {
-      company: '',
-      email: '',
+      company: "",
+      email: "",
       admins: [],
       employees: [],
       notExistingAdmin: false,
       notExistingEmployee: false,
-      message: 'prazno'
-    }
+      message: "prazno"
+    };
   },
 
   methods: {
     changeCompanyName() {
-      axios.put('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/changename', {
-        comid: this.selectedCompanyID,
-        companyname: this.company,
-        sid: window.localStorage.getItem('sid')
-      })
+      axios.put(
+        "http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/changename",
+        {
+          comid: this.selectedCompanyID,
+          companyname: this.company,
+          sid: window.localStorage.getItem("sid")
+        }
+      );
     },
 
     removeAdmin(idAdmin) {
-      axios.put('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins', {
-        comid: this.selectedCompanyID,
-        companyname: this.company,
-        id: idAdmin,
-        sid: window.localStorage.getItem('sid')
-      })
+      axios.put(
+        "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
+        {
+          comid: this.selectedCompanyID,
+          companyname: this.company,
+          id: idAdmin,
+          sid: window.localStorage.getItem("sid")
+        }
+      );
     },
 
     addAdmin() {
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins', {
-        comid: this.selectedCompanyID,
-        email: this.email,
-        sid: window.localStorage.getItem('sid')
-      }).then(response => {
-        if (response.data.status === 'ERR') {
-          this.notExistingAdmin = true;
-          this.message = response.data.message;
-        } else {
-          this.notExistingAdmin = false;
-        }
-        this.loadAdmins();
-      })
+      axios
+        .post(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
+          {
+            comid: this.selectedCompanyID,
+            email: this.email,
+            sid: window.localStorage.getItem("sid")
+          }
+        )
+        .then(response => {
+          if (response.data.status === "ERR") {
+            this.notExistingAdmin = true;
+            this.message = response.data.message;
+          } else {
+            this.notExistingAdmin = false;
+          }
+          this.loadAdmins();
+        });
     },
 
     addEmployees() {
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users', {
-        comid: this.selectedCompanyID,
-        email: this.email,
-        sid: window.localStorage.getItem('sid')
-      }).then(response => {
-        if (response.data.status === 'ERR') {
-          this.notExistingEmployee = true;
-          this.message = response.data.message;
-        } else {
-          this.notExistingEmployee = false;
-        }
-        this.loadEmployees();
-      })
+      axios
+        .post(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
+          {
+            comid: this.selectedCompanyID,
+            email: this.email,
+            sid: window.localStorage.getItem("sid")
+          }
+        )
+        .then(response => {
+          if (response.data.status === "ERR") {
+            this.notExistingEmployee = true;
+            this.message = response.data.message;
+          } else {
+            this.notExistingEmployee = false;
+          }
+          this.loadEmployees();
+        });
     },
 
     loadAdmins(comID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins', {
-        params: {
-          comid: comID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.admins = response.data.data;
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
+          {
+            params: {
+              comid: comID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.admins = response.data.data;
+        });
     },
 
     loadEmployees(comID) {
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users', {
-        params: {
-          comid: comID,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(response => {
-        this.employees = response.data.data;
-      })
+      axios
+        .get(
+          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
+          {
+            params: {
+              comid: comID,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          this.employees = response.data.data;
+        });
     }
   },
 
   computed: {
     ...mapGetters({
-      selectedCompanyID: "selectedItemID",
+      selectedCompanyID: "selectedItemID"
     })
   },
 
@@ -153,12 +176,12 @@ export default {
   },
 
   watch: {
-    'selectedCompanyID': function(val, oldVal) {
+    selectedCompanyID: function(val, oldVal) {
       this.loadAdmins(val);
       this.loadEmployees(val);
     }
   }
-}
+};
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">

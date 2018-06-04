@@ -1,5 +1,5 @@
 <template>
-<div class="top-padding col-md-8 offset-md-2">
+<div>
 
   <h4>Adding project:</h4>
 
@@ -19,14 +19,12 @@
 
 <!-- <multiselect  :options="users" placeholder="Search for user you want to add..." label="name"></multiselect> -->
 
-
-
 </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Multiselect from 'vue-multiselect'
+import axios from "axios";
+import Multiselect from "vue-multiselect";
 
 export default {
   components: {
@@ -35,11 +33,11 @@ export default {
 
   data() {
     return {
-      projectName: '',
-      projecDescription: '',
+      projectName: "",
+      projecDescription: "",
 
       value: {
-        title: 'Which company this project will be a part of?',
+        title: "Which company this project will be a part of?",
         id: 0
       },
       options: [],
@@ -49,34 +47,33 @@ export default {
 
   methods: {
     addProject() {
-      axios.post('http://671n121.mars-t.mars-hosting.com/mngapi/projects', {
+      axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/projects", {
         grpname: this.projectName,
         grpdesc: this.projecDescription,
         grporigin: this.value.id,
-        sid: window.localStorage.getItem('sid')
-      })
+        sid: window.localStorage.sid
+      });
     },
 
     getAdminCompanies() {
-      let self = this
-
-      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users/companies', {
-        params: {
-          isadmin: 1,
-          sid: window.localStorage.getItem('sid')
-        }
-      }).then(function(response) {
-        self.options = response.data.data;
-      })
+      axios
+        .get("http://671n121.mars-t.mars-hosting.com/mngapi/users/companies", {
+          params: {
+            isadmin: 1,
+            sid: window.localStorage.sid
+          }
+        })
+        .then(response => {
+          this.options = response.data.data;
+        });
     },
 
     getUsers() {
-      let self = this
-
-      axios.get('http://671n121.mars-t.mars-hosting.com/testUsers').then(function(response) {
-// console.log(response.data.Result);
-        self.users = response.data.Result;
-      })
+      axios
+        .get("http://671n121.mars-t.mars-hosting.com/testUsers")
+        .then(response => {
+          this.users = response.data.Result;
+        });
     }
   },
 
@@ -84,7 +81,7 @@ export default {
     this.getAdminCompanies();
     this.getUsers();
   }
-}
+};
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">

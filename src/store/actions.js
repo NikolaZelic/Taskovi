@@ -1,4 +1,3 @@
-
 import {api} from '@/api/index.js';
 import {store} from './index';
 const actions = {
@@ -32,7 +31,9 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
-    })
+    }).catch(error => {
+      console.log('Greska pri ucitavanju podataka: ' + error);
+    });
   },
 
   getUserCompanies(commit, params) {
