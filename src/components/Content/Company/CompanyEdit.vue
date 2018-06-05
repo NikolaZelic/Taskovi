@@ -68,7 +68,7 @@ export default {
   methods: {
     changeCompanyName() {
       axios.put(
-        "http://671n121.mars-t.mars-hosting.com/mngapi/users/companies/:comid/changename",
+        "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid",
         {
           comid: this.selectedCompanyID,
           companyname: this.company,

@@ -6,10 +6,12 @@
       <div class="dynamic-center">
         <keep-alive>
           <!-- <task-add></task-add> -->
-          <!-- <project-add></project-add> -->
 
           <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
+
+          <project-add v-if="selectedTab === 0 && newItem"></project-add>
+
 
           <!-- <team-edit></team-edit> -->
 
@@ -88,6 +90,10 @@ export default {
 
     selectedItemEdit() {
       return store.state.editItem;
+    },
+
+    newItem(){
+      return store.state.addItem;
     }
   }
 };
