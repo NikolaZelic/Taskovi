@@ -13,41 +13,40 @@
     <h1>{{projectInfo.title}}</h1>
     <span>{{projectInfo.description}}</span >
 
+      <div class="row mt-5">
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush">
 
-<!-- <h4 class="mt-5">Main tasks:</h4> -->
-      <ul class="list-group list-group-flush mt-5">
+            <!-- Lista admina -->
+            <li class="list-group-item" v-for="ptask in parentTasks" @click="tasks(ptask.par_id); subTaskShow = !subTaskShow">
+              <h4>{{ ptask.par_title }}</h4>
+              <p>{{ ptask.par_description }}</p>
+              <span class="badge badge-secondary">Deadline: {{ ptask.par_duedate }}</span>
+            </li>
 
-        <!-- Lista admina -->
-        <li class="list-group-item" v-for="ptask in parentTasks" @click="tasks(ptask.par_id); subTaskShow = !subTaskShow">
-          <h4>{{ ptask.par_title }}</h4>
-          <p>{{ ptask.par_description }}</p>
-          <span class="badge badge-secondary">Deadline: {{ ptask.par_duedate }}</span>
+          </ul>
+        </div>
+        <div class="col-md-6">
 
-
-
-          <div class="ml-5">
-              <span v-if='!subTaskShow'>Select certain task to see everything that came after...</span>
-
+          <span v-if='!subTaskShow'>Select certain task to see everything that came after...</span>
           <div v-else>
-
-                <ul class="list-group list-group-flush mt-5">
-
+                <ul class="list-group list-group-flush">
                   <li class="list-group-item" v-for="task in tasksList">
-                    <h4>{{ task.tsk_title }}</h4>
-                    <p>{{ task.par_description }}</p>
-                    <span class="badge badge-secondary">Deadline: {{ task.tsk_deadline }}</span>
+                    <h4>{{ task.title }}</h4>
+                    <p>{{ task.description }}</p>
+                    <span class="badge badge-secondary">Deadline: {{ task.duedate }}</span>
                   </li>
-
                 </ul>
-
           </div>
 
-          </div>
-        </li>
+        </div>
+      </div>
 
-      </ul>
 
-      <br>
+
+
+
+
 
       <!-- <ul class="list-group list-group-flush mt-5">
 
@@ -112,24 +111,24 @@ export default {
         )
         .then(response => {
           this.parentTasks = response.data.data;
-          console.log(response.data.data);
+          // console.log(response.data.data);
         });
     },
 
 
 
     tasks(ptaskID) {
-      console.log(ptaskID);
+      // console.log(ptaskID);
 
       axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/parenttask/:ptasid/tasks", {
           params: {
-            ptasid: ptaskID,
+            parid: ptaskID,
             sid: window.localStorage.getItem("sid")
           }
         })
         .then(response => {
           this.tasksList = response.data.data;
-          console.log(response.data.data);
+          // console.log(response.data.data);
         });
     }
 

@@ -16,12 +16,13 @@
 
 <script>
 import axios from "axios";
+import { store } from "@/store/index.js";
 
 export default {
   data() {
     return {
-      projectName: "",
-      projecDescription: ""
+      projectName: undefined,
+      projecDescription: undefined
     };
   },
 
@@ -32,11 +33,13 @@ export default {
         {
           grpname: this.projectName,
           grpdesc: this.projecDescription,
-          proid: 50,
+          proid: store.getters.selectedItemID,
           sid: window.localStorage.getItem("sid")
         }
       );
     }
+
+
   }
 };
 </script>
