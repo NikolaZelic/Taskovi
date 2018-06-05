@@ -5,24 +5,26 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
-          <!-- <task-add></task-add> -->
 
+          <!-- Editing existing -->
           <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <!-- Dodati editovanje taskova -->
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
+          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
 
+          <!-- Adding new -->
           <project-add v-if="selectedTab === 0 && newItem"></project-add>
+          <task-add v-if="selectedTab === 1 && newItem"></task-add>
+          <company-add v-if="selectedTab === 3 && newItem"></company-add>
+          <team-add v-if="selectedTab === 4 && newItem"></team-add>
 
-
-          <!-- <team-edit></team-edit> -->
-
-
+          <!-- Viewing existing -->
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
+          <!-- Dodati pregled timova -->
 
-          <!-- <team-add></team-add> -->
 
-          <!-- <company-add></company-add> -->
 
           <!-- <registration></registration> -->
 
@@ -57,9 +59,15 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
+<<<<<<< HEAD
 import {
   api
 } from "@/api/index.js";
+=======
+import { api } from "@/api/index.js";
+import { mapGetters } from "vuex";
+
+>>>>>>> ac58ce1d7192711046f5a4c85a58fe6f371b976f
 
 export default {
   components: {
@@ -88,6 +96,7 @@ export default {
   },
 
   computed: {
+<<<<<<< HEAD
     selectedTab() {
       return store.state.currentTabIndex;
     },
@@ -99,6 +108,13 @@ export default {
     newItem() {
       return store.state.addItem;
     }
+=======
+    ...mapGetters({
+      selectedTab: 'getTabIndex',
+      newItem: 'itemAdded',
+      selectedItemEdit : 'getEditItemID'
+    })
+>>>>>>> ac58ce1d7192711046f5a4c85a58fe6f371b976f
   }
 };
 </script>
