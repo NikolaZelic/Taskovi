@@ -87,7 +87,7 @@ export default {
   methods: {
     getProjectInfo(proID) {
       axios
-        .get("http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid", {
+        .get("http://671n121.mars-t.mars-hosting.com/mngapi/project/:proid", {
           params: {
             proid: proID,
             sid: window.localStorage.getItem("sid")
@@ -102,7 +102,7 @@ export default {
     getParentTasks(proID) {
       axios
         .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/projects/:proid/parenttasks", {
+          "http://671n121.mars-t.mars-hosting.com/mngapi/project/:proid/parenttasks", {
             params: {
               proid: proID,
               sid: window.localStorage.getItem("sid")
