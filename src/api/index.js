@@ -4,6 +4,16 @@ import {store} from '@/store/index.js';
 
 export const api = {
 
+  // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
+  createTeam(comid, users, teamname){
+    return axios.post('companies/'+comid+"/teams?sid="+window.localStorage.sid,
+      {
+        teamname: teamname,
+        users: JSON.stringify(users)
+      }
+    );
+  },
+
   // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
   refreshSuggestions(searchText, comId) {
     return axios.get('users', {
@@ -98,6 +108,7 @@ export const api = {
     return axios.get('/users/companies', {
       params: {
         sid: window.localStorage.sid,
+        isadmin: true,
       }
     });
   },

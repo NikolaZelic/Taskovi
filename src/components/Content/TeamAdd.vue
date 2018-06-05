@@ -10,6 +10,9 @@
   <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===1'>
     <span>Company: </span><span>{{ choosenCompany.title }}</span>
   </div>
+  <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===0'>
+    User doesn't have any company! This will provide bug!!!
+  </div>
   <!-- TEAM NAME -->
   <div class="form-group">
     <label for="team_name">Team name</label>
@@ -56,7 +59,9 @@
   <div v-show='errorMsg.length>0' class="error">
     <p>{{ errorMsg }}</p>
   </div>
-
+  <div class="" v-if='success != undefined'>
+    {{ success }}
+  </div>
 </div>
 </template>
 
@@ -67,7 +72,7 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
-import axios from 'axios';
+import {api} from '@/api/index.js';
 
 var interval;
 
@@ -84,6 +89,7 @@ export default {
       // inputText: '',
       haveChange: 0,
       choosenCompany: '',
+      success: undefined,
     };
   },
   computed: {
@@ -186,6 +192,15 @@ export default {
         this.errorMsg = 'You have to choose company';
         return;
       }
+
+      // Poziv API-ja
+
+      api.createTeam(this.choosenCompany.id, this.addedMembers.map( (e)=>{return {id:e.id} } ) , this.teamName ).then( r => {
+        if(r.data.status == 'OK')
+          this.success = true;
+        else
+          this.success = false;
+      });
     },
     // Metode za AutoSuggest komponentu, hendleri
     onInputChange(text, oldText){
