@@ -104,6 +104,7 @@ export const api = {
   },
 
   getUserTeams(comid) {
+    console.log('LOL ' + comid);
     return axios.get('/companies/' + comid + '/teams', {
       params: {
         sid: window.localStorage.sid,
