@@ -1,6 +1,6 @@
 import {store} from './index';
 const getters = {
-
+  // ZELIC IMPROVE
   getSelectedTask: state => {
     return store.state.selectedTask;
   },

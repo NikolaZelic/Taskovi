@@ -47,7 +47,7 @@
       </form>
       <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <label>
-            <input type="checkbox" name="check" value="false" v-model="tabs[currentTabIndex].isAdmin">
+            <input type="checkbox" v-model="companyAdmin">
             <span class="label-text">is Admin</span>
           </label>
       </form>
@@ -67,17 +67,14 @@
               </td>
               <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTabIndex].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
               <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-              <td v-if="item.haveUnseenFeed ==='true'">
-                <span title="Unread" class="badge badge-primary badge-pill">1</span>
-              </td>
-              <td v-if="item.isUrgent === 'urgent'">
-                <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-              </td>
+              <td v-if="item.haveUnseenFeed ==='true'"><span title="Unread" class="badge badge-primary badge-pill">1</span></td>
+              <td v-if="item.isUrgent === 'urgent'"><span title="Urgent" class="badge badge-purple badge-pill">U</span></td>
               <td v-if="item.deadline !== undefined && item.deadline !== null">
                 <span title="Deadline" class="badge badge-danger">
-                    {{ deadlineSplit(item.deadline)}}
+                    {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
+              <td v-if="item.teamcount !== null"><span title="Team Count" class="badge badge-warning">{{ item.teamcount }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -103,6 +100,7 @@ export default {
       isCollapsedSidebar: false,
       searchData: "",
       currentTabIndex: 1,
+      companyAdmin: true,
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram",
@@ -118,7 +116,7 @@ export default {
         {
           name: "Companies",
           icon: "fas fa-building",
-          isAdmin: false,
+          isAdmin: true,
         },
         {
           name: "Teams",
@@ -135,19 +133,12 @@ export default {
       this.tabs[this.currentTabIndex].itemIndex = -1
       this.getTabData(val);
     },
-    getActiveArray: function(val, oldVal) {
+    getActiveArray(val, oldVal) {
       this.activeArray = val;
     },
-    tabs: {
-      handler(val, oldVal) {
-        let i = this.currentTabIndex;
-        if (i !== 3 || val[i].isAdmin === oldVal[i].isAdmin)
-          return;
-        // COMPANY API
-        if (val[i].isAdmin === true)
-          console.log(val[3].isAdmin);
-      },
-      deep: true,
+    companyAdmin(val) {
+      this.tabs[this.currentTabIndex].isAdmin = val;
+      this.actionTabDataCompany();
     }
   },
   methods: {
@@ -176,10 +167,10 @@ export default {
           this.actionTabDataWork("getUserWork", s, t, a);
           break;
         case 3:
-          this.actionTabDataCompany("getUserCompanies");
+          this.actionTabDataCompany();
           break;
         case 4:
-          this.actionTabDataTeam("getUserTeams");
+          this.actionTabDataTeam();
           break;
       }
       this.setActiveArray();
@@ -201,7 +192,7 @@ export default {
     showCompanyFilter() {
       return this.currentTabIndex === 3;
     },
-    addItemButton() {
+    addItemButton(e) {
       store.dispatch("itemAddClick");
     },
     editItemButton(item) {
@@ -235,14 +226,16 @@ export default {
         archived: a
       });
     },
-    actionTabDataCompany(name) {
-      store.dispatch(name, {
-        index: this.currentTabIndex
+    actionTabDataCompany() {
+      let i = this.currentTabIndex;
+      store.dispatch('getUserCompanies', {
+        index: i,
+        admin: this.tabs[i].isAdmin,
       });
     },
-    actionTabDataTeam(name) {
+    actionTabDataTeam() {
       let i = this.currentTabIndex;
-      store.dispatch(name, {
+      store.dispatch('getUserTeams', {
         index: i,
         comid: this.tabs[i - 1].itemIndex,
       });
