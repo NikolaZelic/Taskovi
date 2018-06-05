@@ -30,15 +30,15 @@ const actions = {
     });
   },
 
-    itemAddClick(commit, params) {
-      store.commit('itemAddClick');
-    },
+  itemAddClick(commit, params) {
+    store.commit('itemAddClick');
+  },
 
-    itemEditClick(commit, params) {
-      store.commit('itemEditClick', {
-        id: params.id,
-      });
-    },
+  itemEditClick(commit, params) {
+    store.commit('itemEditClick', {
+      id: params.id,
+    });
+  },
 
 }
 const mutations = {
@@ -47,14 +47,14 @@ const mutations = {
       store.state.sidebarTabData[params.index] = params.data;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    store.state.editItem = undefined;
-    store.state.addItem = false;
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined
   },
 
   setSidebarItemSelection: (state, params) => {
     store.state.sidebarItemSelection[params.index] = params.id;
-    store.state.editItem = undefined;
-    store.state.addItem = false;
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     // IMPROVE API - ZELIC
@@ -71,6 +71,7 @@ const mutations = {
   },
 
   itemEditClick: (state, params) => {
+    store.state.itemAction.add = undefined;
     store.state.itemAction.edit = params.id;
   },
 }
