@@ -13,20 +13,16 @@
           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
 
           <!-- Adding new -->
-          <project-add v-if="selectedTab === 0 && newItem"></project-add>
-          <task-add v-if="selectedTab === 1 && newItem"></task-add>
-          <company-add v-if="selectedTab === 3 && newItem"></company-add>
-          <team-add v-if="selectedTab === 4 && newItem"></team-add>
+          <project-add v-if="selectedTab === 0 && newItem===1"></project-add>
+          <task-add v-if="selectedTab === 1 && newItem===1"></task-add>
+          <company-add v-if="selectedTab === 3 && newItem===1"></company-add>
+          <team-add v-if="selectedTab === 4 && newItem===1"></team-add>
 
           <!-- Viewing existing -->
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
           <team-view v-else-if='selectedTab === 4'></team-view>
-
-
-
-          <!-- <registration></registration> -->
 
         </keep-alive>
       </div>
