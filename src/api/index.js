@@ -94,16 +94,16 @@ export const api = {
     });
   },
 
-  getUserCompanies(index) {
+  getUserCompanies(admin) {
     return axios.get('/users/companies', {
       params: {
         sid: window.localStorage.sid,
+        isadmin : admin,
       }
     });
   },
 
-  getUserTeams(index, comid) {
-    console.log(comid);
+  getUserTeams(comid) {
     return axios.get('/companies/' + comid + '/teams', {
       params: {
         sid: window.localStorage.sid,

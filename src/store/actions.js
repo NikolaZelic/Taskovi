@@ -47,8 +47,8 @@ const actions = {
     });
   },
 
-  getUserCompanies(commit, params) {
-    api.getUserCompanies(params.index).then(r => {
+  getUserCompanies(commit, params) {   
+    api.getUserCompanies(params.admin).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
