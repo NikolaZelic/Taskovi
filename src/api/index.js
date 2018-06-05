@@ -109,11 +109,7 @@ export const api = {
     return axios.get('/users/companies', {
       params: {
         sid: window.localStorage.sid,
-<<<<<<< HEAD
         isadmin : admin,
-=======
-        isadmin: true,
->>>>>>> 0833805df1e5e8bdfa385eed9c44906dc4ed9396
       }
     });
   },
