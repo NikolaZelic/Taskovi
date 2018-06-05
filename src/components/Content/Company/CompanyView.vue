@@ -1,7 +1,7 @@
 <template>
 <div >
     <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
-    <template v-if="selectedCompanyID <= 0">
+    <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
     </template>
 
@@ -60,6 +60,7 @@ export default {
         })
         .then(response => {
           this.companyInfo = response.data.data[0];
+          // console.log(response.data.data[0]);
         });
     },
 
@@ -97,15 +98,19 @@ export default {
   },
 
   computed: {
-    selectedCompanyID() {
-      var a = store.getters.selectedItemID;
-      if (a === undefined) return 0;
-      else return a;
-    }
+    // selectedCompanyID() {
+    //   var a = store.getters.selectedItemID;
+    //   if (a === undefined) return 0;
+    //   else return a;
+    // }
+
+    ...mapGetters({
+      selectedItemID: "selectedItemID"
+    })
   },
 
   watch: {
-    selectedCompanyID: function(val, oldVal) {
+    selectedItemID: function(val, oldVal) {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);

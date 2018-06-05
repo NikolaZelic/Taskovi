@@ -9,7 +9,7 @@
     <label for="companydesc">Description</label>
     <textarea class="form-control mb-3" id="companydesc" rows="3" v-model='companydesc' placeholder="Tell us a little something about your company..." spellcheck="false"></textarea>
 
-    <button @click="changeCompanyInfo()" class="btn btn-secondary mb-5">Change company info</button>
+    <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5">Change company info</button>
 
     <!-- Adding new admins/employees -->
     <h4>Add new user:</h4>
@@ -74,7 +74,7 @@ export default {
         {
           companyname: this.companyname,
           companydesc: this.companydesc,
-          comid: this.selectedCompanyID,
+          comid: this.getEditItemID,
           sid: window.localStorage.getItem("sid")
         }
       );
@@ -169,14 +169,15 @@ export default {
 
   computed: {
     ...mapGetters({
-      selectedCompanyID: "selectedItemID"
+      selectedCompanyID: "selectedItemID",
+      getEditItemID: 'getEditItemID'
     })
   },
 
-  mounted() {
-    this.loadAdmins();
-    this.loadEmployees();
-  },
+  // mounted() {
+  //   this.loadAdmins();
+  //   this.loadEmployees();
+  // },
 
   watch: {
     selectedCompanyID: function(val, oldVal) {

@@ -2,7 +2,7 @@
 <div>
 
   <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
-  <template v-if="selectedProjectID <= 0">
+  <template v-if="selectedItemID === undefined">
       <h1>Select project first...</h1>
     </template>
 
@@ -157,11 +157,15 @@ export default {
   },
 
   computed: {
-    selectedProjectID() {
-      var a = store.getters.selectedItemID;
-      if (a === undefined) return 0;
-      else return a;
-    }
+    // selectedProjectID() {
+    //   var a = store.getters.selectedItemID;
+    //   if (a === undefined) return 0;
+    //   else return a;
+    // }
+
+    ...mapGetters({
+      selectedItemID: "selectedItemID"
+    })
   },
 
   // mounted(){
@@ -169,11 +173,12 @@ export default {
   // },
 
   watch: {
-    selectedProjectID: function(val, oldVal) {
-      this.getProjectInfo(val);
-      this.getParentTasks(val);
-      this.subTaskShow = false;
-
+    selectedItemID: function(val, oldVal) {
+      // if (selectedItemID !== undefined) {
+        this.getProjectInfo(val);
+        this.getParentTasks(val);
+        this.subTaskShow = false;
+      // }
       // this.loadAdmins(val);
       // this.loadEmployees(val);
     }
