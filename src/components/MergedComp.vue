@@ -8,7 +8,7 @@
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
-          <!-- Dodati editovanje taskova -->
+          <task-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined"></task-edit>
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
 
@@ -22,7 +22,7 @@
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
-          <!-- Dodati pregled timova -->
+          <team-view v-else-if='selectedTab === 4'></team-view>
 
 
 
@@ -46,7 +46,9 @@ import ChatElement from "@/components/Chat/ChatElement";
 
 import TaskView from "@/components/Content/Task/TaskView";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
+import TaskEdit from "@/components/Content/Task/TaskEdit";
 
+import TeamView from "@/components/Content/Team/TeamView";
 import TeamAdd from "@/components/Content/Team/TeamAdd";
 import TeamEdit from "@/components/Content/Team/TeamEdit";
 
@@ -69,6 +71,7 @@ export default {
     ChatElement,
     TaskView,
     TaskAdd,
+    TaskEdit,
     ProjectAdd,
     ProjectView,
     ProjectEdit,
@@ -77,12 +80,13 @@ export default {
     CompanyEdit,
     Registration,
     CompanyView,
-    TeamEdit
+    TeamEdit,
+    TeamView
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
+    api.login("email1@gmail.com", "pass123");
+    // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
