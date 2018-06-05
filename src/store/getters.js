@@ -14,15 +14,15 @@ const getters = {
   },
 
   selectedItemID: state => {
-    return store.state.sidebarSelection[store.state.currentTabIndex];
+    return store.state.sidebarItemSelection[store.state.currentTabIndex];
   },
 
   itemAdded: state => {
-    return store.state.addItem;
+    return store.state.itemAction.add;
   },
 
   getEditItemID: state => {
-    return store.state.editItem;
+    return store.state.itemAction.edit;
   },
 
   // by Zelic - korisceno u TeamAdd
