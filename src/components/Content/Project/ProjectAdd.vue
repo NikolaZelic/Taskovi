@@ -7,7 +7,7 @@
   <input type="text" class="form-control mb-3" id="projectname" name="projectname" v-model="projectName" placeholder="Enter project name">
 
   <label for="description">Description</label>
-  <textarea class="form-control mb-3" id="description" rows="3" name="description" v-model='projecDescription' placeholder="Tell us a little something about your project..." spellcheck="false"></textarea>
+  <textarea class="form-control mb-3" id="description" rows="3" name="description" v-model='projectDescription' placeholder="Tell us a little something about your project..." spellcheck="false"></textarea>
 
   <multiselect v-model="value" :options="options" placeholder="Select one" label="title" track-by="id"></multiselect>
   <small class="form-text text-muted mb-3">It's not mandatory to choose company; projects can exist without one.</small>
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       projectName: "",
-      projecDescription: "",
+      projectDescription: "",
 
       value: {
         title: "Which company this project will be a part of?",
@@ -47,9 +47,9 @@ export default {
 
   methods: {
     addProject() {
-      axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/projects", {
+      axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/project", {
         grpname: this.projectName,
-        grpdesc: this.projecDescription,
+        grpdesc: this.projectDescription,
         grporigin: this.value.id,
         sid: window.localStorage.sid
       });
