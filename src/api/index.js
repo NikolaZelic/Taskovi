@@ -102,8 +102,9 @@ export const api = {
     });
   },
 
-  getUserTeams(index) {
-    return axios.get('/users/teams', {
+  getUserTeams(index, comid) {
+    console.log(comid);
+    return axios.get('/companies/' + comid + '/teams', {
       params: {
         sid: window.localStorage.sid,
       }

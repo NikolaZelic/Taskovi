@@ -2,6 +2,11 @@ import {
   store
 } from './index';
 const mutations = {
+
+  itemAddClick: (state, params) => {
+    store.state.addItem = true;
+  },
+
   itemEditClick: (state, params) => {
     store.state.editItem = params.id;
   },
@@ -23,6 +28,7 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     store.state.editItem = undefined;
+    store.state.addItem = false;
   },
 
   addMessages: (state, params) => {
@@ -39,6 +45,7 @@ const mutations = {
   changeSidebarSelection: (state, params) => {
     store.state.sidebarSelection[params.index] = params.id;
     store.state.editItem = undefined;
+    store.state.addItem = false;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     // IMPROVE API - ZELIC

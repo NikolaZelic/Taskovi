@@ -95,7 +95,7 @@ export default {
         })
         .then(response => {
           this.projectInfo = response.data.data[0];
-          console.log(response.data.data);
+          // console.log(response.data.data);
         });
     },
 

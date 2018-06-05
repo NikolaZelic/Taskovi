@@ -1,108 +1,109 @@
 <template>
-  <aside id="sidebar">
-    <div class="static-side">
-      <span title="Collapse Sidebar" @click="isCollapsedSidebar = !isCollapsedSidebar" :class='[
+<aside id="sidebar">
+  <div class="static-side">
+    <span title="Collapse Sidebar" @click="isCollapsedSidebar = !isCollapsedSidebar" :class='[
     {"fas fa-angle-double-right":isCollapsedSidebar},
     {"fas fa-angle-double-left":isCollapsedSidebar===false}
     ]'></span>
 
-      <div class="tabs">
-        <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTab.index === index}, tab.icon]"
-          @click="getTabData($event,currentTab.index = index)">
+    <div class="tabs">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTab.index === index}, tab.icon]" @click="getTabData($event,currentTab.index = index)" :disabled="tab.disabled === true">
         </button>
-      </div>
-
-      <div class="user-sidebar">
-        <span title="User Options" class="fas fa-user-cog"></span>
-        <span title="Sign Out" class="fas fa-sign-out-alt"></span>
-      </div>
     </div>
-    <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
-      <div class="sidebar-header">
-        <a>
+
+    <div class="user-sidebar">
+      <span title="User Options" class="fas fa-user-cog"></span>
+      <span title="Sign Out" class="fas fa-sign-out-alt"></span>
+    </div>
+  </div>
+  <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
+    <div class="sidebar-header">
+      <a>
           <span :class="currentTab.icon"></span>
           <span>{{ currentTab.title }}</span>
           <span v-if='filteredItemsCount !== 0' class='badge badge-warning'>{{ filteredItemsCount }}</span>
         </a>
-      </div>
-      <div class="sidebar-body">
-        <form class="form-block">
-          <div class="search">
-            <span class="fas fa-search"></span>
-            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
-          </div>
-        </form>
-        <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-          <label>
+    </div>
+    <div class="sidebar-body">
+      <form class="form-block">
+        <div class="search">
+          <span class="fas fa-search"></span>
+          <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+        </div>
+      </form>
+      <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
+        <label>
             <input type="radio" name="check" value="cs" v-model="invokeFilterType">
             <span class="label-text">Created</span>
           </label>
-          <label>
+        <label>
             <input type="radio" name="check" value="as" v-model="invokeFilterType">
             <span class="label-text">Assigned</span>
           </label>
-          <label>
+        <label>
             <input type="radio" name="check" value="ar" v-model="invokeFilterType">
             <span class="label-text">Archived</span>
           </label>
-        </form>
-        <div class="item-list">
-          <table>
-            <tbody>
-              <tr v-for="item in filterArray" :key='item.id' :class="{ active: currentItemIndex === item.id}">
-                <td v-if='showSubFilter()'>
-                  <label title="Mark as Completed">
+      </form>
+      <div class="item-list">
+        <table>
+          <tbody>
+            <tr v-for="item in filterArray" :key='item.id' :class="{ active: tabs[currentTab.index].itemIndex === item.id}">
+              <td v-if='showSubFilter()'>
+                <label title="Mark as Completed">
                     <input type="checkbox">
                     <span class="label-text"></span>
                   </label>
-                </td>
-                <!-- @click="removeItem(item)" -->
-                <td>
-                  <span class="td-icons fas fa-edit" title="Edit Item" @click="editItem(item)"></span>
-                </td>
-                <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, currentItemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
-                <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-                <td v-if="item.haveUnseenFeed ==='true'">
-                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
-                </td>
-                <td v-if="item.isUrgent === 'urgent'">
-                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                </td>
-                <td v-if="item.deadline !== undefined && item.deadline !== null">
-                  <span title="Deadline" class="badge badge-danger">
+              </td>
+              <!-- @click="removeItem(item)" -->
+              <td>
+                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
+              </td>
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTab.index].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
+              <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
+              <td v-if="item.haveUnseenFeed ==='true'">
+                <span title="Unread" class="badge badge-primary badge-pill">1</span>
+              </td>
+              <td v-if="item.isUrgent === 'urgent'">
+                <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+              </td>
+              <td v-if="item.deadline !== undefined && item.deadline !== null">
+                <span title="Deadline" class="badge badge-danger">
                     {{ deadlineSplit(item.deadline)}}
                   </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <button id="addItem" class="btn btn-block btn-warning" @click="addItem">
-          <span class="fas fa-plus"></span> Add New</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
+          <span class="fas fa-plus"></span> Add New</button>
     </div>
-  </aside>
+  </div>
+</aside>
 </template>
 
 <script>
-import { store } from "@/store/index.js";
-import { mapGetters } from "vuex";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapGetters
+} from "vuex";
 export default {
   data() {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
-      currentItemIndex: -1,
       searchData: "",
       currentTab: {
         index: 1,
         title: undefined,
         icon: undefined
       },
-      tabs: [
-        {
+      tabs: [{
           name: "Projects",
-          icon: "fas fa-project-diagram"
+          icon: "fas fa-project-diagram",
         },
         {
           name: "Tasks",
@@ -118,7 +119,8 @@ export default {
         },
         {
           name: "Teams",
-          icon: "fas fa-users"
+          icon: "fas fa-users",
+          disabled: true,
         }
       ],
       activeArray: [],
@@ -127,7 +129,7 @@ export default {
   },
   watch: {
     invokeFilterType(val) {
-      this.currentItemIndex = -1;
+      this.tabs[this.currentTab.index].itemIndex = -1
       this.getTabData(val);
     },
     getActiveArray: function(val, oldVal) {
@@ -162,33 +164,33 @@ export default {
           this.actionTabDataWork("getUserWork", s, t, a);
           break;
         case 3:
-          this.actionTabDataPeople("getUserCompanies");
+          this.actionTabDataCompany("getUserCompanies");
           break;
         case 4:
-          this.actionTabDataPeople("getUserTeams");
+          this.actionTabDataTeam("getUserTeams");
           break;
       }
       this.setActiveArray();
     },
     selectItem(id_item) {
+      let i = this.currentTab.index;
+      if (this.currentTab.index === 3) {
+        this.tabs[i + 1].disabled = false;
+      }
       store.commit("changeSidebarSelection", {
-        index: this.currentTab.index,
+        index: i,
         id: id_item
       });
     },
     showSubFilter() {
-      let a = this.currentTab.index;
-      return a === 0 || a === 1 || a === 2;
+      let i = this.currentTab.index;
+      return i === 0 || i === 1 || i === 2;
     },
-    addItem() {
-      // this.setActiveArray();
-      // return;
-      // this.activeArray = tabData;
-      // return;
-      // console.log("> " + tabData);
-      // for (let i in tabData) {
-      //   console.log(tabData[i].title);
-      // }
+    addItemButton() {
+      store.dispatch("itemAddClick");
+    },
+    editItemButton(item) {
+      store.dispatch("itemEditClick", item);
     },
     removeItem(item) {
       var aa = this.getActiveArray(this.currentTab.index);
@@ -205,13 +207,10 @@ export default {
     renameItem(item) {
       this.renamingItem = item;
     },
-    editItem(item) {
-      store.dispatch("itemEditClick",item);
-    },
     deadlineSplit(dateTime) {
-      return dateTime !== undefined && dateTime !== null
-        ? dateTime.split(" ")[0]
-        : "";
+      return dateTime !== undefined && dateTime !== null ?
+        dateTime.split(" ")[0] :
+        "";
     },
     actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
@@ -221,9 +220,16 @@ export default {
         archived: a
       });
     },
-    actionTabDataPeople(name) {
+    actionTabDataCompany(name) {
       store.dispatch(name, {
         index: this.currentTab.index
+      });
+    },
+    actionTabDataTeam(name) {
+      let i = this.currentTab.index;
+      store.dispatch(name, {
+        index: i,
+        comid : this.tabs[i-1].itemIndex,
       });
     },
     setActiveArray() {
@@ -246,9 +252,9 @@ export default {
       let filtered = tabData.filter(it => {
         var item = it.title;
         var searchItem = this.searchData;
-        return item == undefined || searchItem == undefined
-          ? false
-          : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
+        return item == undefined || searchItem == undefined ?
+          false :
+          item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
       });
       return filtered;
     }
@@ -376,7 +382,7 @@ export default {
   margin-left: 10px;
 }
 
-.sidebar-header > a > .fas {
+.sidebar-header>a>.fas {
   margin-right: 15px;
 }
 
@@ -389,7 +395,7 @@ export default {
   margin: 0 0 10px 0;
 }
 
-.item-list > table {
+.item-list>table {
   padding: 0;
   width: 100%;
   overflow: hidden;
@@ -440,7 +446,7 @@ export default {
   flex: 1;
 }
 
-.item-list tr > input {
+.item-list tr>input {
   flex: 1;
   line-height: initial;
 }
@@ -522,7 +528,7 @@ h2 {
   padding: 20px;
 }
 
-.sidebar-body > form {
+.sidebar-body>form {
   margin-bottom: 15px;
 }
 
@@ -531,7 +537,7 @@ h2 {
   justify-content: space-around;
 }
 
-.item-filter > * {
+.item-filter>* {
   color: white;
 }
 
@@ -539,7 +545,7 @@ h2 {
   background: #8c28a7;
 }
 
-label{
+label {
   margin: 0;
 }
 </style>

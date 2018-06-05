@@ -26,8 +26,12 @@ const actions = {
     api.selectTask(params.id);
   },
 
-  itemEditClick(commit, params){
-    store.commit('itemEditClick',{
+  itemAddClick(commit, params) {
+    store.commit('itemAddClick');
+  },
+
+  itemEditClick(commit, params) {
+    store.commit('itemEditClick', {
       id: params.id,
     });
   },
@@ -53,7 +57,7 @@ const actions = {
   },
 
   getUserTeams(commit, params) {
-    api.getUserTeams(params.index).then(r => {
+    api.getUserTeams(params.index, params.comid).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data

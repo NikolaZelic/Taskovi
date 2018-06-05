@@ -5,24 +5,26 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
-          <!-- <task-add></task-add> -->
 
+          <!-- Editing existing -->
           <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <!-- Dodati editovanje taskova -->
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
+          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
 
+          <!-- Adding new -->
           <project-add v-if="selectedTab === 0 && newItem"></project-add>
+          <task-add v-if="selectedTab === 1 && newItem"></task-add>
+          <company-add v-if="selectedTab === 3 && newItem"></company-add>
+          <team-add v-if="selectedTab === 4 && newItem"></team-add>
 
-
-          <!-- <team-edit></team-edit> -->
-
-
+          <!-- Viewing existing -->
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
+          <!-- Dodati pregled timova -->
 
-          <!-- <team-add></team-add> -->
 
-          <!-- <company-add></company-add> -->
 
           <!-- <registration></registration> -->
 
@@ -40,21 +42,24 @@ import SideBar from "@/components/SideBar";
 
 import ChatElement from "@/components/Chat/ChatElement";
 
-import TaskView from "@/components/Content/TaskView";
-import TaskAdd from "@/components/Content/TaskAdd";
-import TeamAdd from "@/components/Content/TeamAdd";
-import TeamEdit from "@/components/Content/TeamEdit";
+import TaskView from "@/components/Content/Task/TaskView";
+import TaskAdd from "@/components/Content/Task/TaskAdd";
 
-import ProjectAdd from "@/components/Content/ProjectAdd";
-import ProjectView from "@/components/Content/ProjectView";
-import ProjectEdit from "@/components/Content/ProjectEdit";
+import TeamAdd from "@/components/Content/Team/TeamAdd";
+import TeamEdit from "@/components/Content/Team/TeamEdit";
 
-import CompanyAdd from "@/components/Content/CompanyAdd";
-import CompanyEdit from "@/components/Content/CompanyEdit";
-import CompanyView from "@/components/Content/CompanyView";
+import ProjectAdd from "@/components/Content/Project/ProjectAdd";
+import ProjectView from "@/components/Content/Project/ProjectView";
+import ProjectEdit from "@/components/Content/Project/ProjectEdit";
+
+import CompanyAdd from "@/components/Content/Company/CompanyAdd";
+import CompanyEdit from "@/components/Content/Company/CompanyEdit";
+import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
 import { api } from "@/api/index.js";
+import { mapGetters } from "vuex";
+
 
 export default {
   components: {
@@ -83,17 +88,11 @@ export default {
   },
 
   computed: {
-    selectedTab() {
-      return store.state.currentTabIndex;
-    },
-
-    selectedItemEdit() {
-      return store.state.editItem;
-    },
-
-    newItem(){
-      return store.state.;
-    }
+    ...mapGetters({
+      selectedTab: 'getTabIndex',
+      newItem: 'itemAdded',
+      selectedItemEdit : 'getEditItemID'
+    })
   }
 };
 </script>
