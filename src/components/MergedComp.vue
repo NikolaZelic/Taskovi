@@ -5,6 +5,7 @@
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
+          <!-- <task-view></task-view> -->
           <!-- <task-add></task-add> -->
           <!-- <project-add></project-add> -->
 
@@ -75,20 +76,17 @@ export default {
     // api.login("email1@gmail.com", "pass123");
     api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
-    // api.login("email001@qqq.com", "qqq");
-    // api.login("email004@qqq.com", "qqq");
-    // api.login("email2@yahoo.com", "pass111");
+
   },
 
   computed: {
-    selectedTab() {
-      return store.state.currentTabIndex;
-    },
-
-    selectedItemEdit() {
-      return store.state.editItem;
-    }
-  }
+    ...mapGetters({
+      selectedTab: 'getTabIndex',
+      newItem: 'itemAdded',
+      selectedItemEdit : 'getEditItemID'
+    })
+  },
+  
 };
 </script>
 

@@ -127,7 +127,7 @@ export default {
     }
   },
 
-  created(){
+  created: function(){
     // Citanje userovih kompanije ako vec nisu procitane
     if( this.usersCompanies===undefined ){
       store.dispatch('selectUsersCompanies');
@@ -141,7 +141,7 @@ export default {
     }, 500);
   },
 
-  destroy(){
+  destroy: function(){
     clearInterval(interval);
   },
 
@@ -202,14 +202,9 @@ export default {
           this.success = false;
       });
     },
-    // Metode za AutoSuggest komponentu, hendleri
-    onInputChange(text, oldText){
-      // this.inputText = text;
-      if( text.length == 0 ){
-        store.dispatch('cleanSuggestions');
-        this.haveChange = 0;
-        return;
-      }
+    // Metode za Auto
+    onInputChange: function(text, oldText){
+      this.inputText = text;
       this.haveChange = 1;
     },
     onSelected(item) {

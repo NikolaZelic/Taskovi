@@ -15,9 +15,10 @@ export const api = {
   },
 
   // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
-  refreshSuggestions(searchText, comId) {
-    return axios.get('users', {
-      params: {
+  refreshSuggestions(searchText, comId){
+    return axios.get('users',
+    {
+      params:{
         sid: window.localStorage.sid,
         searchstring: searchText,
         comid: comId,
