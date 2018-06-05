@@ -59,15 +59,9 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
-<<<<<<< HEAD
-import {
-  api
-} from "@/api/index.js";
-=======
 import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 
->>>>>>> ac58ce1d7192711046f5a4c85a58fe6f371b976f
 
 export default {
   components: {
@@ -96,25 +90,11 @@ export default {
   },
 
   computed: {
-<<<<<<< HEAD
-    selectedTab() {
-      return store.state.currentTabIndex;
-    },
-
-    selectedItemEdit() {
-      return store.state.editItem;
-    },
-
-    newItem() {
-      return store.state.addItem;
-    }
-=======
     ...mapGetters({
       selectedTab: 'getTabIndex',
       newItem: 'itemAdded',
       selectedItemEdit : 'getEditItemID'
     })
->>>>>>> ac58ce1d7192711046f5a4c85a58fe6f371b976f
   }
 };
 </script>
