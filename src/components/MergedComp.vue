@@ -1,16 +1,25 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
+      <!-- <side-bar/> -->
 
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
+<<<<<<< HEAD
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
           <task-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined"></task-edit>
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
+=======
+          <!-- <task-view></task-view> -->
+          <!-- <task-add></task-add> -->
+          <!-- <project-add></project-add> -->
+
+          <!-- <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit> -->
+>>>>>>> 0833805df1e5e8bdfa385eed9c44906dc4ed9396
 
           <!-- Adding new -->
           <project-add v-if="selectedTab === 0 && newItem===1"></project-add>
@@ -18,11 +27,23 @@
           <company-add v-if="selectedTab === 3 && newItem===1"></company-add>
           <team-add v-if="selectedTab === 4 && newItem===1"></team-add>
 
+<<<<<<< HEAD
           <!-- Viewing existing -->
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <company-view v-else-if='selectedTab === 3'></company-view>
           <team-view v-else-if='selectedTab === 4'></team-view>
+=======
+          <!-- <project-view v-if='selectedTab === 0'></project-view>
+          <task-view v-else-if='selectedTab === 1'></task-view>
+          <company-view v-else-if='selectedTab === 3'></company-view> -->
+
+          <team-add></team-add>
+
+          <!-- <company-add></company-add> -->
+
+          <!-- <registration></registration> -->
+>>>>>>> 0833805df1e5e8bdfa385eed9c44906dc4ed9396
 
         </keep-alive>
       </div>
@@ -84,9 +105,7 @@ export default {
     api.login("email1@gmail.com", "pass123");
     // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
-    // api.login("email001@qqq.com", "qqq");
-    // api.login("email004@qqq.com", "qqq");
-    // api.login("email2@yahoo.com", "pass111");
+
   },
 
   computed: {
@@ -95,7 +114,12 @@ export default {
       newItem: 'itemAdded',
       selectedItemEdit : 'getEditItemID'
     })
+<<<<<<< HEAD
   }
+=======
+  },
+  
+>>>>>>> 0833805df1e5e8bdfa385eed9c44906dc4ed9396
 };
 </script>
 

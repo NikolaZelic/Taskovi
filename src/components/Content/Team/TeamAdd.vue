@@ -10,6 +10,9 @@
   <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===1'>
     <span>Company: </span><span>{{ choosenCompany.title }}</span>
   </div>
+  <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===0'>
+    User doesn't have any company! This will provide bug!!!
+  </div>
   <!-- TEAM NAME -->
   <div class="form-group">
     <label for="team_name">Team name</label>
@@ -20,6 +23,7 @@
   <label for="pro_leader">Members</label>
   <div class="form-group input-group">
       <vue-autosuggest
+        ref="suggestionTag"
         :suggestions="[ { data: suggestions } ]"
         :renderSuggestion="renderSuggestion"
         @click="clickHandler" :onSelected="onSelected"
@@ -55,7 +59,9 @@
   <div v-show='errorMsg.length>0' class="error">
     <p>{{ errorMsg }}</p>
   </div>
-
+  <div class="" v-if='success != undefined'>
+    {{ success }}
+  </div>
 </div>
 </template>
 
@@ -66,7 +72,7 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
-import axios from 'axios';
+import {api} from '@/api/index.js';
 
 var interval;
 
@@ -80,9 +86,10 @@ export default {
       userToAdd: null,
       addedMembers: [],
       errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
-      inputText: '',
+      // inputText: '',
       haveChange: 0,
       choosenCompany: '',
+      success: undefined,
     };
   },
   computed: {
@@ -91,7 +98,7 @@ export default {
     },
 
     usersCompanies(){
-      console.log('Computed za sugestije');
+      // console.log('Computed za sugestije');
       var a = store.getters.getUsersCompanies;
       // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
       if(a!==undefined){
@@ -101,9 +108,26 @@ export default {
       }
       return a;
     },
+
+    inputText(){
+      return this.$refs.suggestionTag.searchInput;
+    }
   },
 
-  created(){
+  watch: {
+    choosenCompany: function(){
+      this.addedMembers = [];
+    },
+
+    errorMsg: function(){
+      if( this.errorMsg != '' )
+        setTimeout( () =>{
+            this.errorMsg = '';
+          } , 3000);
+    }
+  },
+
+  created: function(){
     // Citanje userovih kompanije ako vec nisu procitane
     if( this.usersCompanies===undefined ){
       store.dispatch('selectUsersCompanies');
@@ -117,27 +141,43 @@ export default {
     }, 500);
   },
 
-  destroy(){
+  destroy: function(){
     clearInterval(interval);
   },
 
   methods: {
     pozivapija(){
-      // axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/test?broj='+this.inputText ).
-      // then( result => {
-      //   console.log(result.data['I have']);
-      //   this.haveChange = 0;
-      // });
       store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
     },
 
     addUser(){
        if(this.userToAdd===null){
+         if( this.inputText != null && this.inputText.length > 0 ){
+           this.errorMsg = 'Unknown user';
+           return;
+         }
          this.errorMsg = 'You have to enter user';
          return;
        }
+       // Provera da li je user vec dodat
+       var id = this.userToAdd.id;
+       var duplikat = false;
+       this.addedMembers.forEach( e => {
+          if( e.id == id )
+          {
+            this.errorMsg = 'User is already added';
+            this.userToAdd = null;
+            store.dispatch('cleanSuggestions');
+            duplikat = true;
+            this.$refs.suggestionTag.searchInput = "";
+          }
+       });
+       if( duplikat )
+        return;
        this.addedMembers.push(this.userToAdd);
        this.userToAdd = null;
+       store.dispatch('cleanSuggestions');
+       this.$refs.suggestionTag.searchInput = "";
     },
     createTeam() {
       if(this.teamName.length==0){
@@ -152,19 +192,24 @@ export default {
         this.errorMsg = 'You have to choose company';
         return;
       }
+
+      // Poziv API-ja
+
+      api.createTeam(this.choosenCompany.id, this.addedMembers.map( (e)=>{return {id:e.id} } ) , this.teamName ).then( r => {
+        if(r.data.status == 'OK')
+          this.success = true;
+        else
+          this.success = false;
+      });
     },
-    // Metode za AutoSuggest komponentu, hendleri
-    poziv(text, oldText) {
-        // this.userToAdd = null;  // Za slucaj da je bio selektovan, pa se predomislio
-        // if( text===null ){
-        //   this.inputText = null;
-        //   return;
-    },
-    onInputChange(text, oldText){
+    // Metode za Auto
+    onInputChange: function(text, oldText){
       this.inputText = text;
       this.haveChange = 1;
     },
     onSelected(item) {
+      if( item == null || item == undefined )
+        return;
        this.userToAdd = item.item;
     },
     clickHandler(item) {
