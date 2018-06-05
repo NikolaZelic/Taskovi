@@ -128,6 +128,7 @@ export default {
         })
         .then(response => {
           this.tasksList = response.data.data;
+          this.subTaskShow = true;
           // console.log(response.data.data);
         });
     }
@@ -171,6 +172,8 @@ export default {
     selectedProjectID: function(val, oldVal) {
       this.getProjectInfo(val);
       this.getParentTasks(val);
+      this.subTaskShow = false;
+
       // this.loadAdmins(val);
       // this.loadEmployees(val);
     }
