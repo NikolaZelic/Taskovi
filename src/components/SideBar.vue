@@ -3,11 +3,14 @@
   <div class="static-side">
     <span title="Collapse Sidebar" @click="isCollapsedSidebar = !isCollapsedSidebar" :class='[
     {"fas fa-angle-double-right":isCollapsedSidebar},
-    {"fas fa-angle-double-left":isCollapsedSidebar===false}
-    ]'></span>
+    {"fas fa-angle-double-left":isCollapsedSidebar===false}]'>
+  </span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)" :disabled="tab.disabled === true">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks"
+      :class="[{active:currentTabIndex === index}, tab.icon]"
+      @click="getTabData($event,currentTabIndex = index)"
+      :disabled="tab.disabled === true">
         </button>
     </div>
 
@@ -74,7 +77,7 @@
                     {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
-              <td v-if="item.teamcount !== null"><span title="Team Count" class="badge badge-warning">{{ item.teamcount }}</span></td>
+              <td v-if="item.teamcount !== undefined && item.teamcount !== null"><span title="Team Count" class="badge badge-warning">{{ item.teamcount }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -87,12 +90,8 @@
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapGetters
-} from "vuex";
+import {store} from "@/store/index.js";
+import {mapGetters} from "vuex";
 export default {
   data() {
     return {
@@ -180,7 +179,7 @@ export default {
       if (this.currentTabIndex === 3) {
         this.tabs[i + 1].disabled = false;
       }
-      store.commit("changeSidebarSelection", {
+      store.commit("setSidebarItemSelection", {
         index: i,
         id: id_item
       });

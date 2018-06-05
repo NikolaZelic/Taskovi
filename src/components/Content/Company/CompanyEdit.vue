@@ -2,13 +2,14 @@
 <div>
 
     <!-- Changing company name -->
-    <h4>Change company name:</h4>
-    <div class="input-group mb-5">
-      <input type="text" class="form-control" name="companyname" v-model="company" placeholder="Enter new company name">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" @click="changeCompanyName()">Change</button>
-      </div>
-    </div>
+    <h4>Change company info:</h4>
+    <label for="companyname" class="mt-3">Company name</label>
+    <input type="text" class="form-control mb-3" id="companyname" v-model="companyname" placeholder="Enter the name of the company you're creating">
+
+    <label for="companydesc">Description</label>
+    <textarea class="form-control mb-3" id="companydesc" rows="3" v-model='companydesc' placeholder="Tell us a little something about your company..." spellcheck="false"></textarea>
+
+    <button @click="changeCompanyInfo()" class="btn btn-secondary mb-5">Change company info</button>
 
     <!-- Adding new admins/employees -->
     <h4>Add new user:</h4>
@@ -55,7 +56,8 @@ export default {
 
   data() {
     return {
-      company: "",
+      companyname: undefined,
+      companydesc: undefined,
       email: "",
       admins: [],
       employees: [],
@@ -66,12 +68,13 @@ export default {
   },
 
   methods: {
-    changeCompanyName() {
+    changeCompanyInfo() {
       axios.put(
         "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid",
         {
+          companyname: this.companyname,
+          companydesc: this.companydesc,
           comid: this.selectedCompanyID,
-          companyname: this.company,
           sid: window.localStorage.getItem("sid")
         }
       );
