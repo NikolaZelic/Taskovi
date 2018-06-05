@@ -1,9 +1,5 @@
-import {
-  instance as axios
-} from './config.js'
-import {
-  store
-} from '@/store/index.js';
+import {instance as axios} from './config.js'
+import {store} from '@/store/index.js';
 // KAD PRAVIS API OBAVEZN KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
 export const api = {

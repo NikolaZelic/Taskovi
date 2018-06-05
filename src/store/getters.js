@@ -17,6 +17,10 @@ const getters = {
     return store.state.sidebarSelection[store.state.currentTabIndex];
   },
 
+  itemAdded: state => {
+    return store.state.addItem;
+  },
+
   getEditItemID: state => {
     return store.state.editItem;
   },

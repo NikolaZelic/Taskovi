@@ -38,18 +38,19 @@ import SideBar from "@/components/SideBar";
 
 import ChatElement from "@/components/Chat/ChatElement";
 
-import TaskView from "@/components/Content/TaskView";
-import TaskAdd from "@/components/Content/TaskAdd";
-import TeamAdd from "@/components/Content/TeamAdd";
-import TeamEdit from "@/components/Content/TeamEdit";
+import TaskView from "@/components/Content/Task/TaskView";
+import TaskAdd from "@/components/Content/Task/TaskAdd";
 
-import ProjectAdd from "@/components/Content/ProjectAdd";
-import ProjectView from "@/components/Content/ProjectView";
-import ProjectEdit from "@/components/Content/ProjectEdit";
+import TeamAdd from "@/components/Content/Team/TeamAdd";
+import TeamEdit from "@/components/Content/Team/TeamEdit";
 
-import CompanyAdd from "@/components/Content/CompanyAdd";
-import CompanyEdit from "@/components/Content/CompanyEdit";
-import CompanyView from "@/components/Content/CompanyView";
+import ProjectAdd from "@/components/Content/Project/ProjectAdd";
+import ProjectView from "@/components/Content/Project/ProjectView";
+import ProjectEdit from "@/components/Content/Project/ProjectEdit";
+
+import CompanyAdd from "@/components/Content/Company/CompanyAdd";
+import CompanyEdit from "@/components/Content/Company/CompanyEdit";
+import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
 import { api } from "@/api/index.js";

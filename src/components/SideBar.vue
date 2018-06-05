@@ -57,7 +57,7 @@
               </td>
               <!-- @click="removeItem(item)" -->
               <td>
-                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItem(item)"></span>
+                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
               </td>
               <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTab.index].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
               <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
@@ -76,7 +76,7 @@
           </tbody>
         </table>
       </div>
-      <button id="addItem" class="btn btn-block btn-warning" @click="addItem">
+      <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
           <span class="fas fa-plus"></span> Add New</button>
     </div>
   </div>
@@ -186,15 +186,11 @@ export default {
       let i = this.currentTab.index;
       return i === 0 || i === 1 || i === 2;
     },
-    addItem() {
-      // this.setActiveArray();
-      // return;
-      // this.activeArray = tabData;
-      // return;
-      // console.log("> " + tabData);
-      // for (let i in tabData) {
-      //   console.log(tabData[i].title);
-      // }
+    addItemButton() {
+      store.dispatch("itemAddClick");
+    },
+    editItemButton(item) {
+      store.dispatch("itemEditClick", item);
     },
     removeItem(item) {
       var aa = this.getActiveArray(this.currentTab.index);
@@ -210,9 +206,6 @@ export default {
     },
     renameItem(item) {
       this.renamingItem = item;
-    },
-    editItem(item) {
-      store.dispatch("itemEditClick", item);
     },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ?
