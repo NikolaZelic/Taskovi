@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { store } from "@/store/index.js";
+import {
+  store
+} from "@/store/index.js";
 
 import SideBar from "@/components/SideBar";
 
@@ -55,7 +57,9 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
-import { api } from "@/api/index.js";
+import {
+  api
+} from "@/api/index.js";
 
 export default {
   components: {
@@ -92,7 +96,7 @@ export default {
       return store.state.editItem;
     },
 
-    newItem(){
+    newItem() {
       return store.state.addItem;
     }
   }
@@ -137,6 +141,9 @@ export default {
 }
 
 @media only screen and (min-width: 900px) {
+  body{
+    font-size: 0.8rem;
+  }
   #wrapper {
     flex-direction: row;
   }

@@ -1,9 +1,8 @@
-import {
-  store
-} from './index';
+import {store} from './index';
 const mutations = {
 
   itemAddClick: (state, params) => {
+    store.state.editItem = undefined;
     store.state.addItem = true;
   },
 

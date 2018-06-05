@@ -7,7 +7,7 @@
     ]'></span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTab.index === index}, tab.icon]" @click="getTabData($event,currentTab.index = index)" :disabled="tab.disabled === true">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)" :disabled="tab.disabled === true">
         </button>
     </div>
 
@@ -19,8 +19,8 @@
   <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
     <div class="sidebar-header">
       <a>
-          <span :class="currentTab.icon"></span>
-          <span>{{ currentTab.title }}</span>
+          <span :class="tabs[currentTabIndex].icon"></span>
+          <span>{{ tabs[currentTabIndex].name }}</span>
           <span v-if='filteredItemsCount !== 0' class='badge badge-warning'>{{ filteredItemsCount }}</span>
         </a>
     </div>
@@ -45,10 +45,16 @@
             <span class="label-text">Archived</span>
           </label>
       </form>
+      <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
+        <label>
+            <input type="checkbox" name="check" value="false" v-model="tabs[currentTabIndex].isAdmin">
+            <span class="label-text">is Admin</span>
+          </label>
+      </form>
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="item in filterArray" :key='item.id' :class="{ active: tabs[currentTab.index].itemIndex === item.id}">
+            <tr v-for="item in filterArray" :key='item.id' :class="{ active: tabs[currentTabIndex].itemIndex === item.id}">
               <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
                     <input type="checkbox">
@@ -59,7 +65,7 @@
               <td>
                 <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
               </td>
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTab.index].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTabIndex].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
               <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
               <td v-if="item.haveUnseenFeed ==='true'">
                 <span title="Unread" class="badge badge-primary badge-pill">1</span>
@@ -96,11 +102,7 @@ export default {
       renamingItem: {},
       isCollapsedSidebar: false,
       searchData: "",
-      currentTab: {
-        index: 1,
-        title: undefined,
-        icon: undefined
-      },
+      currentTabIndex: 1,
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram",
@@ -115,7 +117,8 @@ export default {
         },
         {
           name: "Companies",
-          icon: "fas fa-building"
+          icon: "fas fa-building",
+          isAdmin: false,
         },
         {
           name: "Teams",
@@ -124,24 +127,33 @@ export default {
         }
       ],
       activeArray: [],
-      invokeFilterType: "as"
+      invokeFilterType: "as",
     };
   },
   watch: {
     invokeFilterType(val) {
-      this.tabs[this.currentTab.index].itemIndex = -1
+      this.tabs[this.currentTabIndex].itemIndex = -1
       this.getTabData(val);
     },
     getActiveArray: function(val, oldVal) {
       this.activeArray = val;
+    },
+    tabs: {
+      handler(val, oldVal) {
+        let i = this.currentTabIndex;
+        if (i !== 3 || val[i].isAdmin === oldVal[i].isAdmin)
+          return;
+        // COMPANY API
+        if (val[i].isAdmin === true)
+          console.log(val[3].isAdmin);
+      },
+      deep: true,
     }
   },
   methods: {
     getTabData(type) {
-      let index = this.currentTab.index;
+      let index = this.currentTabIndex;
       this.isCollapsedSidebar = false;
-      this.currentTab.title = this.tabs[index].name;
-      this.currentTab.icon = this.tabs[index].icon;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
       let t = index === 2 ? "bugfix" : "task";
@@ -173,8 +185,8 @@ export default {
       this.setActiveArray();
     },
     selectItem(id_item) {
-      let i = this.currentTab.index;
-      if (this.currentTab.index === 3) {
+      let i = this.currentTabIndex;
+      if (this.currentTabIndex === 3) {
         this.tabs[i + 1].disabled = false;
       }
       store.commit("changeSidebarSelection", {
@@ -183,8 +195,11 @@ export default {
       });
     },
     showSubFilter() {
-      let i = this.currentTab.index;
+      let i = this.currentTabIndex;
       return i === 0 || i === 1 || i === 2;
+    },
+    showCompanyFilter() {
+      return this.currentTabIndex === 3;
     },
     addItemButton() {
       store.dispatch("itemAddClick");
@@ -193,7 +208,7 @@ export default {
       store.dispatch("itemEditClick", item);
     },
     removeItem(item) {
-      var aa = this.getActiveArray(this.currentTab.index);
+      var aa = this.getActiveArray(this.currentTabIndex);
       console.log(aa);
       var index = aa.indexOf(item);
       console.log(index + "  |  " + aa.splice(index, 1));
@@ -214,7 +229,7 @@ export default {
     },
     actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
-        index: this.currentTab.index,
+        index: this.currentTabIndex,
         state: s,
         type: t,
         archived: a
@@ -222,14 +237,14 @@ export default {
     },
     actionTabDataCompany(name) {
       store.dispatch(name, {
-        index: this.currentTab.index
+        index: this.currentTabIndex
       });
     },
     actionTabDataTeam(name) {
-      let i = this.currentTab.index;
+      let i = this.currentTabIndex;
       store.dispatch(name, {
         index: i,
-        comid : this.tabs[i-1].itemIndex,
+        comid: this.tabs[i - 1].itemIndex,
       });
     },
     setActiveArray() {
@@ -268,7 +283,7 @@ export default {
   },
   mounted() {
     store.commit("setSidebarData", {
-      index: this.currentTab.index
+      index: this.currentTabIndex
     });
     this.getTabData(null);
   }
@@ -320,8 +335,8 @@ export default {
 }
 
 .tablinks[disabled] {
-  color: black;
-  background: white;
+  color: #0a0a0a;
+  background: #4c4c4c;
 }
 
 .tablinks.active {
