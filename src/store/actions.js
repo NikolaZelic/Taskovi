@@ -8,12 +8,13 @@ const actions = {
   },
 
   // by Zelic - poziva se u TeamAdd
-  selectUsersCompanies(commit, params) {
-    api.getUserCompanies().
-    then( result => {
-      store.commit( 'setUSersCompanies', {r:result.data} );
-    } );
-  },
+  // selectUsersCompanies(commit, params) {
+  //   api.getUserCompanies().
+  //   then( result => {
+  //     console.log(result);
+  //     store.commit( 'setUsersCompanies', {r:result.data} );
+  //   } );
+  // },
 
   // by Zelic - poziva se u TeamAdd
   refreshSuggestions(commit, params){

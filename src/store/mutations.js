@@ -13,9 +13,9 @@ const mutations = {
   },
 
   // by Zelic - korisceno u TeamAdd.
-  setUsersCompanies: (state, params) => {
-    store.state.usersCompanies = params.r.data;
-  },
+  // setUsersCompanies: (state, params) => {
+  //   store.state.usersCompanies = params.r.data;
+  // },
 
   // by nzelic
   changeSelectedTask: (state, params) => {

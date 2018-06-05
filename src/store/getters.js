@@ -1,4 +1,6 @@
-import {store} from './index';
+import {
+  store
+} from './index';
 const getters = {
   // ZELIC IMPROVE
   getSelectedTask: state => {
@@ -11,6 +13,11 @@ const getters = {
 
   currentTabArray: state => {
     return store.state.sidebarTabData[store.state.currentTabIndex];
+  },
+
+  getUsersCompanies: state => {
+    console.log( store.state.sidebarTabData[3].length );
+    return store.state.sidebarTabData;
   },
 
   selectedItemID: state => {
@@ -31,9 +38,9 @@ const getters = {
   },
 
   // by Zelic - korisceno u TeamAdd.
-  getUsersCompanies: state => {
-    return store.state.usersCompanies;
-  },
+  // getUsersCompanies: state => {
+  //   return store.state.usersCompanies;
+  // },
 
   getMessages: state => {
     return store.state.messages;

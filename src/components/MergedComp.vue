@@ -21,7 +21,7 @@
           <!-- Viewing existing -->
           <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
-          <company-view v-else-if='selectedTab === 3'></company-view>
+          <!-- <company-view v-else-if='selectedTab === 3'></company-view> -->
           <team-view v-else-if='selectedTab === 4'></team-view>
 
         </keep-alive>
@@ -85,8 +85,8 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    api.login("email1@gmail.com", "pass123");
-    // api.login("admin2@gmail.com", "admin222");
+    // api.login("email1@gmail.com", "pass123");
+    api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
 
   },

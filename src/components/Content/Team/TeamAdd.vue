@@ -72,6 +72,7 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
+import {mapGetters} from "vuex";
 import {api} from '@/api/index.js';
 
 var interval;
@@ -93,19 +94,22 @@ export default {
     };
   },
   computed: {
+    // ...mapGetters(['getUsersCompanies']),
+
     suggestions() {
       return store.getters.getSuggestedUsers;
     },
 
     usersCompanies(){
       // console.log('Computed za sugestije');
-      var a = store.getters.getUsersCompanies;
+      var a = store.getters.getUsersCompanies[3];
       // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
       if(a!==undefined){
         if(a.length===1){
           this.choosenCompany = a[0];
         }
       }
+      // console.log(a);
       return a;
     },
 
@@ -129,9 +133,9 @@ export default {
 
   created: function(){
     // Citanje userovih kompanije ako vec nisu procitane
-    if( this.usersCompanies===undefined ){
-      store.dispatch('selectUsersCompanies');
-    }
+    // if( this.usersCompanies===undefined ){
+    //   // store.dispatch('selectUsersCompanies');
+    // }
 
     interval = setInterval( ()=>{
       if( this.haveChange===1 && this.inputText.length>0 && this.choosenCompany.id!==undefined ){
