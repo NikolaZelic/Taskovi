@@ -34,7 +34,6 @@ export const store = new Vuex.Store({
       [],
       [],
       [],
-      [],
       []
     ],
     messages: [],
@@ -43,6 +42,7 @@ export const store = new Vuex.Store({
       edit: undefined,
       add: undefined,
     },
+    companyID: 13,
     // COMMUNICATION
     selectedTask: {},
     // by Zelic - korisceno u TeamAdd

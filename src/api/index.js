@@ -5,20 +5,17 @@ import {store} from '@/store/index.js';
 export const api = {
 
   // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
-  createTeam(comid, users, teamname){
-    return axios.post('companies/'+comid+"/teams?sid="+window.localStorage.sid,
-      {
-        teamname: teamname,
-        users: JSON.stringify(users)
-      }
-    );
+  createTeam(comid, users, teamname) {
+    return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
+      teamname: teamname,
+      users: JSON.stringify(users)
+    });
   },
 
   // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
-  refreshSuggestions(searchText, comId){
-    return axios.get('users',
-    {
-      params:{
+  refreshSuggestions(searchText, comId) {
+    return axios.get('users', {
+      params: {
         sid: window.localStorage.sid,
         searchstring: searchText,
         comid: comId,
@@ -70,9 +67,9 @@ export const api = {
         var sid = response.data.sid;
         if (sid != undefined || sid != null) {
           // Zapisujem sid u store
-          window.localStorage.setItem('sid', sid);
-          window.localStorage.setItem('name', response.data.name);
-          window.localStorage.setItem('surname', response.data.surname);
+          window.localStorage.sid= sid;
+          window.localStorage.name = response.data.name;
+          window.localStorage.surname= response.data.surname;
         }
       })
       .catch(error => {
@@ -105,17 +102,17 @@ export const api = {
     });
   },
 
+  // KORISTI SE U USER OPTIONS SADA
   getUserCompanies(admin) {
     return axios.get('/users/companies', {
       params: {
         sid: window.localStorage.sid,
-        isadmin : admin,
+        isadmin: admin,
       }
     });
   },
 
-  getUserTeams(comid) {
-    console.log('LOL ' + comid);
+  getUserTeams(index, comid) {
     return axios.get('/companies/' + comid + '/teams', {
       params: {
         sid: window.localStorage.sid,
