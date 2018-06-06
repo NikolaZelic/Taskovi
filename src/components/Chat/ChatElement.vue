@@ -50,7 +50,7 @@ export default {
     },
 
     taskid() {
-      var id = store.getters.selectedTaskID;
+      var id = store.getters.selectedItemID;
       if (id === -1) {
         this.hideRightSide();
       }
@@ -63,14 +63,11 @@ export default {
       if (this.fInterval) {
         clearInterval(this.fInterval);
       }
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        direction: "start"
-      });
+      store.dispatch("readeFeeds", { taskid: this.taskid, direction: "start" });
       this.resetInterval(2000);
-      console.log("Ovo je taks id: " + this.taskid);
     },
     messages() {
+      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
       this.resetInterval(2000);
     }
   },
