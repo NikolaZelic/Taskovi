@@ -1,28 +1,28 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
+      <!-- <side-bar/> -->
 
     <div class="main-content">
       <div class="dynamic-center">
         <keep-alive>
 
           <!-- Editing existing -->
-          <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
+          <!-- <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
           <task-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined"></task-edit>
           <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
-          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
+          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit> -->
 
           <!-- Adding new -->
-          <project-add v-if="selectedTab === 0 && newItem===1"></project-add>
+          <!-- <project-add v-if="selectedTab === 0 && newItem===1"></project-add>
           <task-add v-if="selectedTab === 1 && newItem===1"></task-add>
           <company-add v-if="selectedTab === 3 && newItem===1"></company-add>
-          <team-add v-if="selectedTab === 4 && newItem===1"></team-add>
-
+          <team-add v-if="selectedTab === 4 && newItem===1"></team-add> -->
+          <parenttask-add/>
           <!-- Viewing existing -->
-          <project-view v-if='selectedTab === 0'></project-view>
+          <!-- <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <!-- <company-view v-else-if='selectedTab === 3'></company-view> -->
-          <team-view v-else-if='selectedTab === 4'></team-view>
+          <!-- <team-view v-else-if='selectedTab === 4'></team-view> -->
 
         </keep-alive>
       </div>
@@ -43,6 +43,8 @@ import ChatElement from "@/components/Chat/ChatElement";
 import TaskView from "@/components/Content/Task/TaskView";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
+
+import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
 
 import TeamView from "@/components/Content/Team/TeamView";
 import TeamAdd from "@/components/Content/Team/TeamAdd";
@@ -81,7 +83,8 @@ export default {
     Registration,
     CompanyView,
     TeamEdit,
-    TeamView
+    TeamView,
+    ParenttaskAdd
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
