@@ -106,14 +106,32 @@ export default {
 
     ...mapGetters({
       selectedItemID: "selectedItemID"
+      // selectedTab: 'getTabIndex'
     })
   },
 
+// activated () {
+//   this.getCompanyInfo(val);
+//   this.loadAdmins(val);
+//   this.loadEmployees(val);
+//
+// },
+
+mounted(){
+  this.getCompanyInfo(this.selectedItemID);
+  this.loadAdmins(this.selectedItemID);
+  this.loadEmployees(this.selectedItemID);
+},
+
   watch: {
     selectedItemID: function(val, oldVal) {
+      //if (val !== undefined) {
+      // if(selectedTab === 3){
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
+  //  }
+    // }
     }
   }
 };

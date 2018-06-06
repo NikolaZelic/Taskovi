@@ -4,27 +4,27 @@
 
     <div class="main-content">
       <div class="dynamic-center">
-        <keep-alive>
+        <!-- <keep-alive> -->
 
           <!-- Editing existing -->
-          <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
-          <task-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined"></task-edit>
-          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined"></company-edit>
-          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined"></team-edit>
+          <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
+          <task-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
+          <company-edit v-if="selectedTab === 3 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
+          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
 
           <!-- Adding new -->
-          <project-add v-if="selectedTab === 0 && newItem===1"></project-add>
-          <task-add v-if="selectedTab === 1 && newItem===1"></task-add>
-          <company-add v-if="selectedTab === 3 && newItem===1"></company-add>
-          <team-add v-if="selectedTab === 4 && newItem===1"></team-add>
+          <project-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></project-add>
+          <task-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></task-add>
+          <company-add v-if="selectedTab === 3 && newItem===1 && selectedItemEdit===undefined"></company-add>
+          <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
 
           <!-- Viewing existing -->
-          <project-view v-if='selectedTab === 0'></project-view>
-          <task-view v-else-if='selectedTab === 1'></task-view>
-          <company-view v-else-if='selectedTab === 3'></company-view>
-          <team-view v-else-if='selectedTab === 4'></team-view>
+          <project-view v-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></project-view>
+          <task-view v-else-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></task-view>
+          <company-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></company-view>
+          <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
-        </keep-alive>
+        <!-- </keep-alive> -->
       </div>
       <!-- <chat-element/> -->
     </div>

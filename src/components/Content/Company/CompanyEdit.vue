@@ -174,17 +174,29 @@ export default {
     })
   },
 
+  mounted() {
+    // getCompanyInfo(13);
+    this.loadAdmins(this.selectedCompanyID);
+    this.loadEmployees(this.selectedCompanyID);
+  },
+
+
   // mounted() {
   //   this.loadAdmins();
   //   this.loadEmployees();
   // },
 
-  watch: {
-    selectedCompanyID: function(val, oldVal) {
-      this.loadAdmins(val);
-      this.loadEmployees(val);
-    }
-  }
+  // activated: function () {
+  //   this.loadAdmins(getEditItemID);
+  //   this.loadEmployees(getEditItemID);
+  // }
+
+  // watch: {
+  //   selectedCompanyID: function(val, oldVal) {
+  //     this.loadAdmins(val);
+  //     this.loadEmployees(val);
+  //   }
+  // }
 };
 </script>
 

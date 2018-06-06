@@ -95,7 +95,7 @@ export default {
         })
         .then(response => {
           this.projectInfo = response.data.data[0];
-          // console.log(response.data.data);
+          //console.log(response.data.data[0].title);
         });
     },
 
@@ -168,13 +168,15 @@ export default {
     })
   },
 
-  // mounted(){
-  //   this.tasks(1);
-  // },
+  mounted(){
+    this.getProjectInfo(this.selectedItemID);
+    this.getParentTasks(this.selectedItemID);
+    this.subTaskShow = false;
+  },
 
   watch: {
     selectedItemID: function(val, oldVal) {
-      // if (selectedItemID !== undefined) {
+      // if (val === undefined)  {
         this.getProjectInfo(val);
         this.getParentTasks(val);
         this.subTaskShow = false;

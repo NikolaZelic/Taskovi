@@ -59,7 +59,7 @@ export default {
       axios
         .get("http://671n121.mars-t.mars-hosting.com/mngapi/users/companies", {
           params: {
-            isadmin: 1,
+            isadmin: true,
             sid: window.localStorage.sid
           }
         })
