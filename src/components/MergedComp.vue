@@ -19,17 +19,10 @@
           <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
 
           <!-- Viewing existing -->
-<<<<<<< HEAD
-          <project-view v-if='selectedTab === 0'></project-view>
-          <task-view v-else-if='selectedTab === 1'></task-view>
-          <!-- <company-view v-else-if='selectedTab === 3'></company-view> -->
-          <team-view v-else-if='selectedTab === 4'></team-view>
-=======
           <project-view v-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></project-view>
           <task-view v-else-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></task-view>
           <company-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></company-view>
           <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
->>>>>>> a4f3413006acc072cfaf0efbfc35faf21496ce0e
 
         <!-- </keep-alive> -->
       </div>
@@ -94,12 +87,9 @@ export default {
     // TEST LOGIN -- REMOVE FINAL
     // api.login("email1@gmail.com", "pass123");
     api.login("admin2@gmail.com", "admin222");
-<<<<<<< HEAD
-=======
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
->>>>>>> a4f3413006acc072cfaf0efbfc35faf21496ce0e
     // api.login("email2@yahoo.com", "pass111");
 
   },
