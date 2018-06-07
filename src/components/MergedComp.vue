@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="wrapper">
-      <!-- <side-bar/> -->
+      <side-bar/>
 
     <div class="main-content">
       <div class="dynamic-center">
@@ -24,7 +24,7 @@
           <!-- <company-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></company-view> -->
           <team-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
-          <parenttask-add/>
+          <!-- <parenttask-add/> -->
         <!-- </keep-alive> -->
 
       </div>
