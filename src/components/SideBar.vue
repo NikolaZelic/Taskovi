@@ -3,18 +3,22 @@
   <div class="static-side">
     <span title="Collapse Sidebar" @click="isCollapsedSidebar = !isCollapsedSidebar" :class='[
     {"fas fa-angle-double-right":isCollapsedSidebar},
-    {"fas fa-angle-double-left":isCollapsedSidebar===false}]'>
+    {"fas fa-angle-double-left":!isCollapsedSidebar}]'>
   </span>
+    <svg height="3px" width="100%">
+      <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke:#636262;stroke-width:2" />
+    </svg>
 
     <div class="tabs">
       <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)" :disabled="tab.disabled === true">
-        </button>
+      </button>
     </div>
 
     <div class="user-sidebar">
       <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
-      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup'  @mouseleave='mouseLeavePopup' />
-      <popup v-show='activePopup'/>
+      <popup v-show='activePopup' />
+      <!-- <popup/> -->
+      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup' @mouseleave='mouseLeavePopup' />
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
     </div>
   </div>
@@ -23,40 +27,43 @@
       <a>
           <span :class="tabs[currentTabIndex].icon"></span>
           <span>{{ tabs[currentTabIndex].name }}</span>
-          <span v-if='filteredItemsCount !== 0' class='badge badge-warning'>{{ filteredItemsCount }}</span>
+          <span v-if='shownItemsCount !== 0' class='badge badge-warning'>{{ shownItemsCount }}</span>
         </a>
     </div>
     <div class="sidebar-body">
-      <form class="form-block">
-        <div class="search">
-          <span class="fas fa-search"></span>
-          <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
-        </div>
-      </form>
-      <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-        <label>
-            <input type="radio" name="check" value="cs" v-model="invokeFilterType">
-            <span class="label-text">Created</span>
-          </label>
-        <label>
-            <input type="radio" name="check" value="as" v-model="invokeFilterType">
-            <span class="label-text">Assigned</span>
-          </label>
-        <label>
-            <input type="radio" name="check" value="ar" v-model="invokeFilterType">
-            <span class="label-text">Archived</span>
-          </label>
-      </form>
-      <!-- <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
-        <label>
-            <input type="checkbox" v-model="companyAdmin">
-            <span class="label-text">is Admin</span>
-          </label>
-      </form> -->
+      <div class="form-filter">
+        <form class="form-block">
+          <div class="search">
+            <span class="fas fa-search"></span>
+            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+          </div>
+        </form>
+        <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
+          <label>
+              <input type="radio" name="check" value="cs" v-model="invokeFilterType">
+              <span class="label-text">Created</span>
+            </label>
+          <label>
+              <input type="radio" name="check" value="as" v-model="invokeFilterType">
+              <span class="label-text">Assigned</span>
+            </label>
+          <label>
+              <input type="radio" name="check" value="ar" v-model="invokeFilterType">
+              <span class="label-text">Archived</span>
+            </label>
+        </form>
+        <!-- <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
+          <label>
+              <input type="checkbox" v-model="companyAdmin">
+              <span class="label-text">is Admin</span>
+            </label>
+        </form> -->
+      </div>
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="item in filterArray" :key='item.id' :class="{ active: tabs[currentTabIndex].itemIndex === item.id}">
+            <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+              <!-- <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: item.id === tabs[currentTabIndex].itemIndex}"> -->
               <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
                     <input type="checkbox">
@@ -65,9 +72,9 @@
               </td>
               <!-- @click="removeItem(item)" -->
               <td>
-                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
+                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
               </td>
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, tabs[currentTabIndex].itemIndex = item.id)' class='td-flex'>{{ item.title }}</td>
+              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
               <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
               <td v-if="item.haveUnseenFeed ==='true'"><span title="Unread" class="badge badge-primary badge-pill">1</span></td>
               <td v-if="item.isUrgent === 'urgent'"><span title="Urgent" class="badge badge-purple badge-pill">U</span></td>
@@ -82,7 +89,7 @@
         </table>
       </div>
       <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
-          <span class="fas fa-plus"></span> Add New</button>
+          <span class="fas fa-plus-circle"></span> Add New</button>
     </div>
   </div>
 </aside>
@@ -107,6 +114,7 @@ export default {
       searchData: "",
       currentTabIndex: 1,
       activePopup: false,
+      activeItem: undefined,
       // companyAdmin: true,
       tabs: [{
           name: "Projects",
@@ -120,11 +128,6 @@ export default {
           name: "Issues",
           icon: "fas fa-bug"
         },
-        // {
-        //   name: "Companies",
-        //   icon: "fas fa-building",
-        //   isAdmin: true,
-        // },
         {
           name: "Teams",
           icon: "fas fa-users",
@@ -135,22 +138,22 @@ export default {
     };
   },
   watch: {
-    invokeFilterType(val) {
-      this.tabs[this.currentTabIndex].itemIndex = -1
+    invokeFilterType(val,oldVal) {
+      console.log(val + ' '+oldVal);
+      delete this.tabs[this.currentTabIndex].itemIndex;
       this.getTabData(val);
     },
     getActiveArray(val, oldVal) {
       this.activeArray = val;
     },
-    companyAdmin(val) {
-      this.tabs[this.currentTabIndex].isAdmin = val;
-      this.actionTabDataCompany();
+    currentTabIndex(val) {
+      this.isCollapsedSidebar = false;
+      this.activeItem = this.tabs[val].itemIndex;
     }
   },
   methods: {
     getTabData(type) {
       let index = this.currentTabIndex;
-      this.isCollapsedSidebar = false;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
       let t = index === 2 ? "bugfix" : "task";
@@ -172,23 +175,17 @@ export default {
         case 2:
           this.actionTabDataWork("getUserWork", s, t, a);
           break;
-          // case 3:
-          //   this.actionTabDataCompany();
-          //   break;
         case 3:
           this.actionTabDataTeam();
           break;
       }
       this.setActiveArray();
     },
-    selectItem(id_item) {
-      let i = this.currentTabIndex;
-      // if (this.currentTabIndex === 3) {
-      //   this.tabs[i + 1].disabled = false;
-      // }
+    selectItem(itemID) {
+      this.tabs[this.currentTabIndex].itemIndex = itemID;
       store.commit("setSidebarItemSelection", {
-        index: i,
-        id: id_item
+        index: this.currentTabIndex,
+        id: itemID
       });
     },
     showSubFilter() {
@@ -232,13 +229,6 @@ export default {
         archived: a
       });
     },
-    // actionTabDataCompany() {
-    //   let i = this.currentTabIndex;
-    //   store.dispatch('getUserCompanies', {
-    //     index: i,
-    //     admin: this.tabs[i].isAdmin,
-    //   });
-    // },
     actionTabDataTeam() {
       let i = this.currentTabIndex;
       store.dispatch('getUserTeams', {
@@ -255,10 +245,10 @@ export default {
     signOut() {
       alert('Sign out Kliknut');
     },
-    mouseOverPopup(){
+    mouseOverPopup() {
       this.activePopup = true;
     },
-    mouseLeavePopup(){
+    mouseLeavePopup() {
       this.activePopup = false;
     },
   },
@@ -267,10 +257,10 @@ export default {
     getActiveArray() {
       return store.getters.currentTabData;
     },
-    filteredItemsCount() {
-      return this.filterArray.length;
+    shownItemsCount() {
+      return this.itemsFiltered.length;
     },
-    filterArray() {
+    itemsFiltered() {
       let tabData = this.activeArray;
       if (tabData === undefined) return;
       let filtered = tabData.filter(it => {
@@ -314,7 +304,7 @@ export default {
   min-width: 70px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   border-right: 1px solid #444;
 }
 
@@ -331,7 +321,15 @@ export default {
   color: #333;
 }
 
+.static-side>* {
+  padding: 5px 0;
+}
+
 /* TABS START */
+
+.tabs {
+  margin: 0 0 auto;
+}
 
 .tablinks {
   width: 100%;
@@ -341,6 +339,7 @@ export default {
   background: unset;
   border: unset;
   color: #fff;
+  cursor: pointer;
 }
 
 .tablinks[disabled] {
@@ -358,6 +357,10 @@ export default {
   background: #ccc;
   color: #333;
 }
+
+/* .tablinks > * {
+
+} */
 
 /* TABS END */
 
@@ -429,7 +432,7 @@ export default {
 
 .item-list tr {
   display: flex;
-  line-height: 35px;
+  line-height: 32px;
 }
 
 .item-list tr:hover {
@@ -445,11 +448,12 @@ export default {
 }
 
 .item-list tr:nth-child(even) {
-  background-color: #44444466;
+  background-color: #69696917;
 }
 
 .item-list tr.active {
-  background-color: #6d4444;
+  border-left: 3px solid #baf52d;
+  background-color: #080808;
 }
 
 .item-list td {
@@ -549,11 +553,11 @@ h2 {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px;
 }
 
-.sidebar-body>form {
-  margin-bottom: 15px;
+.form-filter>form {
+  margin-bottom: 10px;
 }
 
 .item-filter {

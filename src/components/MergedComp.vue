@@ -144,7 +144,7 @@ export default {
 
 @media only screen and (min-width: 900px) {
   body{
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
   #wrapper {
     flex-direction: row;
