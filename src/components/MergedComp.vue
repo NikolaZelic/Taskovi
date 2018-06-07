@@ -28,7 +28,7 @@
         <!-- </keep-alive> -->
 
       </div>
-      <!-- <chat-element/> -->
+      <chat-element/>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
 <div v-bind:class="mess.right?'cont right-con':'cont left-con'" :id="mess.fed_id">
-  <img src="@/assets/user.png" />
+  <img :src="icon()" />
   <div class="message-body">
     <div class="message-body-header">
       <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
@@ -26,6 +26,13 @@ export default {
     };
   },
   methods: {
+    icon(){
+      if(this.mess.fed_type==='attachment'){
+        return 'static\\file-icon.png';
+      }else{
+        return 'static\\user.png';
+      }
+    },
     showFile() {
       return (
         "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/" +
