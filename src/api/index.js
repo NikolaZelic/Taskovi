@@ -116,13 +116,6 @@ export const api = {
     });
   },
 
-  // getUserTeams(index, comid) {
-  //   return axios.get('/companies/' + comid + '/teams', {
-  //     params: {
-  //       sid: window.localStorage.sid,
-  //     }
-  //   });
-  // },
   getUserTeams(index, admin) {
     return axios.get('/users/teams', {
       params: {
@@ -132,6 +125,8 @@ export const api = {
     });
   },
 
+
+  // ZELIC - PROMENI AXIOS U RETURN
   selectTask(id) {
     // console.log('API Selected Task');
     axios({

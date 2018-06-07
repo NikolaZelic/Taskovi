@@ -16,9 +16,11 @@
 
     <div class="user-sidebar">
       <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
-      <popup v-show='activePopup' :class='{show: activePopup}' />
+      <transition name='fade'>
+        <popup v-show='activePopup' :class='{show: activePopup}' />
+      </transition>
       <!-- <popup/> -->
-      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup' @mouseleave='mouseLeavePopup' />
+      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
     </div>
   </div>
@@ -62,7 +64,15 @@
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+            <!-- <transition-group
+    name="staggered-fade"
+    tag="tbody"
+    v-bind:css="false"
+    v-on:before-enter="beforeEnter"
+    v-on:enter="enter"
+    v-on:leave="leave"
+  > -->
+            <tr v-for="(item,index) in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
               <!-- <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: item.id === tabs[currentTabIndex].itemIndex}"> -->
               <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
@@ -83,8 +93,9 @@
                     {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
-              <td v-if="item.userscount !== undefined && item.userscount !== null"><span title="Team Members Count" class="badge badge-warning">{{ item.userscount }}</span></td>
+              <td v-if="item.userscount !== undefined && item.userscount !== null"><span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span></td>
             </tr>
+  <!-- </transition-group> -->
           </tbody>
         </table>
       </div>
@@ -136,6 +147,8 @@ export default {
       ],
       activeArray: [],
       invokeFilterType: "as",
+      backColorCache: {},
+      frontColorCache: {},
     };
   },
   watch: {
@@ -252,11 +265,32 @@ export default {
     signOut() {
       alert('Sign out Kliknut');
     },
-    mouseOverPopup() {
-      this.activePopup = true;
+    mouseOverPopup(val) {
+      this.activePopup = val;
     },
-    mouseLeavePopup() {
-      this.activePopup = false;
+    beforeEnter: function (el) {
+      el.style.opacity = 0
+      el.style.height = 0
+    },
+    enter: function (el, done) {
+      var delay = el.dataset.index * 150
+      setTimeout(function () {
+        Velocity(
+          el,
+          { opacity: 1, height: '1.6em' },
+          { complete: done }
+        )
+      }, delay)
+    },
+    leave: function (el, done) {
+      var delay = el.dataset.index * 150
+      setTimeout(function () {
+        Velocity(
+          el,
+          { opacity: 0, height: 0 },
+          { complete: done }
+        )
+      }, delay)
     },
   },
   computed: {
@@ -594,5 +628,12 @@ h2 {
 
 label {
   margin: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

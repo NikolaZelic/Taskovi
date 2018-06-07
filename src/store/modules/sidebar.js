@@ -23,7 +23,6 @@ const actions = {
 
   getUserTeams(commit, params) {
     api.getUserTeams(params.index, params.admin).then(r => {
-      console.log(r);
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data

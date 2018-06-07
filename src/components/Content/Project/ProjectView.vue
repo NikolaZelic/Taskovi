@@ -42,12 +42,6 @@
         </div>
       </div>
 
-
-
-
-
-
-
       <!-- <ul class="list-group list-group-flush mt-5">
 
         <li class="list-group-item" v-for="ptask in parentTasks" @click="tasks(ptask.par_id)">
@@ -94,7 +88,8 @@ export default {
           }
         })
         .then(response => {
-          this.projectInfo = response.data.data[0];
+          if (response.data.data[0] !== undefined)
+            this.projectInfo = response.data.data[0];
           //console.log(response.data.data[0].title);
         });
     },
@@ -105,12 +100,13 @@ export default {
           "http://671n121.mars-t.mars-hosting.com/mngapi/project/:proid/parenttasks", {
             params: {
               proid: proID,
-              sid: window.localStorage.getItem("sid")
+              sid: window.localStorage.sid,
             }
           }
         )
         .then(response => {
-          this.parentTasks = response.data.data;
+          if (response.data.data !== undefined)
+            this.parentTasks = response.data.data;
           // console.log(response.data.data);
         });
     },
@@ -123,11 +119,12 @@ export default {
       axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/parenttask/:ptasid/tasks", {
           params: {
             parid: ptaskID,
-            sid: window.localStorage.getItem("sid")
+            sid: window.localStorage.sid,
           }
         })
         .then(response => {
-          this.tasksList = response.data.data;
+          if (response.data.data !== undefined)
+            this.tasksList = response.data.data;
           this.subTaskShow = true;
           // console.log(response.data.data);
         });
@@ -168,7 +165,7 @@ export default {
     })
   },
 
-  mounted(){
+  mounted() {
     this.getProjectInfo(this.selectedItemID);
     this.getParentTasks(this.selectedItemID);
     this.subTaskShow = false;
@@ -176,13 +173,9 @@ export default {
 
   watch: {
     selectedItemID: function(val, oldVal) {
-      // if (val === undefined)  {
-        this.getProjectInfo(val);
-        this.getParentTasks(val);
-        this.subTaskShow = false;
-      // }
-      // this.loadAdmins(val);
-      // this.loadEmployees(val);
+      this.getProjectInfo(val);
+      this.getParentTasks(val);
+      this.subTaskShow = false;
     }
   }
 };

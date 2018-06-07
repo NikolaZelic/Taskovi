@@ -41,11 +41,6 @@ const getters = {
     return store.state.suggestedUsers;
   },
 
-  // by Zelic - korisceno u TeamAdd.
-  // getUsersCompanies: state => {
-  //   return store.state.usersCompanies;
-  // },
-
   getMessages: state => {
     return store.state.messages;
   },

@@ -3,7 +3,7 @@
   <h1 class="display-4">Create team:</h1><br>
 
   <!-- IZBOR KOMPANIJE -->
-  <select v-if='usersCompanies!==undefined && usersCompanies.length>1'  v-model="choosenCompany">
+  <select v-if='usersCompanies!==undefined && usersCompanies.length>1' v-model="choosenCompany">
     <option value="" disabled selected>Choose company</option>
     <option v-for='company in usersCompanies' v-bind:value="company">{{ company.title }}</option>
   </select>
@@ -22,15 +22,9 @@
   <!-- ADDING MEMBERS -->
   <label for="pro_leader">Members</label>
   <div class="form-group input-group">
-      <vue-autosuggest
-        ref="suggestionTag"
-        :suggestions="[ { data: suggestions } ]"
-        :renderSuggestion="renderSuggestion"
-        @click="clickHandler" :onSelected="onSelected"
-        :inputProps="{class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'}"
-        :getSuggestionValue = "getSuggestionValue"
-      />
-      </vue-autosuggest>
+    <vue-autosuggest ref="suggestionTag" :suggestions="[ { data: suggestions } ]" :renderSuggestion="renderSuggestion" @click="clickHandler" :onSelected="onSelected" :inputProps="{class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'}"
+      :getSuggestionValue="getSuggestionValue" />
+    </vue-autosuggest>
     <div class="input-group-append">
       <button @click='addUser()' class="btn btn-outline-secondary" type="button">Add</button>
     </div>
@@ -72,8 +66,12 @@ import {
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
-import {mapGetters} from "vuex";
-import {api} from '@/api/index.js';
+import {
+  mapGetters
+} from "vuex";
+import {
+  api
+} from '@/api/index.js';
 
 var interval;
 
@@ -100,12 +98,12 @@ export default {
       return store.getters.getSuggestedUsers;
     },
 
-    usersCompanies(){
+    usersCompanies() {
       // console.log('Computed za sugestije');
-      var a = store.getters.getUsersCompanies[3];
+      var a = store.getters.getAllTabData[3];
       // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
-      if(a!==undefined){
-        if(a.length===1){
+      if (a !== undefined) {
+        if (a.length === 1) {
           this.choosenCompany = a[0];
         }
       }
@@ -113,78 +111,73 @@ export default {
       return a;
     },
 
-    inputText(){
+    inputText() {
       return this.$refs.suggestionTag.searchInput;
     }
   },
 
   watch: {
-    choosenCompany: function(){
+    choosenCompany: function() {
       this.addedMembers = [];
     },
 
-    errorMsg: function(){
-      if( this.errorMsg != '' )
-        setTimeout( () =>{
-            this.errorMsg = '';
-          } , 3000);
+    errorMsg: function() {
+      if (this.errorMsg != '')
+        setTimeout(() => {
+          this.errorMsg = '';
+        }, 3000);
     }
   },
 
-  created: function(){
-    // Citanje userovih kompanije ako vec nisu procitane
-    // if( this.usersCompanies===undefined ){
-    //   // store.dispatch('selectUsersCompanies');
-    // }
-
-    interval = setInterval( ()=>{
-      if( this.haveChange===1 && this.inputText.length>0 && this.choosenCompany.id!==undefined ){
+  created: function() {
+    interval = setInterval(() => {
+      if (this.haveChange === 1 && this.inputText.length > 0 && this.choosenCompany.id !== undefined) {
         this.pozivapija();
         this.haveChange = 0;
       }
     }, 500);
   },
 
-  destroy: function(){
+  destroy: function() {
     clearInterval(interval);
   },
 
   methods: {
-    pozivapija(){
-      store.dispatch('refreshSuggestions', { searchText: this.inputText, comId: this.choosenCompany.id });
+    pozivapija() {
+      store.dispatch('refreshSuggestions', {
+        searchText: this.inputText,
+        comId: this.choosenCompany.id
+      });
     },
 
-    addUser(){
-       if(this.userToAdd===null){
-         if( this.inputText != null && this.inputText.length > 0 ){
-           this.errorMsg = 'Unknown user';
-           return;
-         }
-         this.errorMsg = 'You have to enter user';
-         return;
-       }
-       // Provera da li je user vec dodat
-       var id = this.userToAdd.id;
-       var duplikat = false;
-       this.addedMembers.forEach( e => {
-          if( e.id == id )
-          {
-            this.errorMsg = 'User is already added';
-            this.userToAdd = null;
-            store.dispatch('cleanSuggestions');
-            duplikat = true;
-            this.$refs.suggestionTag.searchInput = "";
-          }
-       });
-       if( duplikat )
+    addUser() {
+      if (this.userToAdd === null) {
+        this.errorMsg = this.inputText != null && this.inputText.length > 0 ?
+        'Unknown user' :
+        'You have to enter user';
         return;
-       this.addedMembers.push(this.userToAdd);
-       this.userToAdd = null;
-       store.dispatch('cleanSuggestions');
-       this.$refs.suggestionTag.searchInput = "";
+      }
+      // Provera da li je user vec dodat
+      var id = this.userToAdd.id;
+      var duplikat = false;
+      this.addedMembers.forEach(e => {
+        if (e.id == id) {
+          this.errorMsg = 'User is already added';
+          this.userToAdd = null;
+          store.dispatch('cleanSuggestions');
+          duplikat = true;
+          this.$refs.suggestionTag.searchInput = "";
+        }
+      });
+      if (duplikat)
+        return;
+      this.addedMembers.push(this.userToAdd);
+      this.userToAdd = null;
+      store.dispatch('cleanSuggestions');
+      this.$refs.suggestionTag.searchInput = "";
     },
     createTeam() {
-      if(this.teamName.length==0){
+      if (this.teamName.length == 0) {
         this.errorMsg = "You have to enter team name";
         return;
       }
@@ -192,39 +185,42 @@ export default {
         this.errorMsg = "You have to add user(s) to team.";
         return;
       }
-      if( this.choosenCompany.id===undefined ){
+      if (this.choosenCompany.id === undefined) {
         this.errorMsg = 'You have to choose company';
         return;
       }
 
       // Poziv API-ja
 
-      api.createTeam(this.choosenCompany.id, this.addedMembers.map( (e)=>{return {id:e.id} } ) , this.teamName ).then( r => {
-        if(r.data.status == 'OK')
+      api.createTeam(this.choosenCompany.id, this.addedMembers.map((e) => {
+        return {
+          id: e.id
+        }
+      }), this.teamName).then(r => {
+        if (r.data.status == 'OK')
           this.success = true;
         else
           this.success = false;
       });
     },
     // Metode za Auto
-    onInputChange: function(text, oldText){
+    onInputChange: function(text, oldText) {
       this.inputText = text;
       this.haveChange = 1;
     },
     onSelected(item) {
-      if( item == null || item == undefined )
+      if (item == null || item == undefined)
         return;
-       this.userToAdd = item.item;
+      this.userToAdd = item.item;
     },
-    clickHandler(item) {
+    clickHandler(item) {},
+    renderSuggestion(suggestion) {
+      var i = suggestion.item;
+      return i.name + " " + i.surname + " " + i.email;
     },
-    renderSuggestion(suggestion){
-       var i = suggestion.item;
-       return i.name+" "+i.surname+" "+i.email;
-    },
-    getSuggestionValue(item){
-        var i = item.item;
-        return i.name+' '+i.surname+' '+i.email;
+    getSuggestionValue(item) {
+      var i = item.item;
+      return i.name + ' ' + i.surname + ' ' + i.email;
     }
   }
 }
@@ -234,9 +230,11 @@ export default {
 .task-add-section {
   padding-top: 50px;
 }
-.error{
+
+.error {
   color: red;
 }
+
 .suggestions-content {
   position: absolute;
   background-color: #f1f1f1;
@@ -261,14 +259,17 @@ export default {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box
 }
+
 #autosuggest__input.autosuggest__input-open {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0
 }
+
 .autosuggest__results-container {
   position: relative;
   width: 100%
 }
+
 .autosuggest__results {
   font-weight: 300;
   margin: 0;
@@ -281,18 +282,22 @@ export default {
   background: #fff;
   padding: 0
 }
+
 .autosuggest__results ul {
   list-style: none;
   padding-left: 0;
   margin: 0
 }
+
 .autosuggest__results .autosuggest__results_item {
   cursor: pointer;
   padding: 15px
 }
+
 #autosuggest ul:first-child>.autosuggest__results_title {
   border-top: none
 }
+
 .autosuggest__results .autosuggest__results_title {
   color: gray;
   font-size: 11px;
@@ -300,6 +305,7 @@ export default {
   padding: 15px 13px 5px;
   border-top: 1px solid #d3d3d3
 }
+
 .autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted,
 .autosuggest__results .autosuggest__results_item:active,
 .autosuggest__results .autosuggest__results_item:focus,

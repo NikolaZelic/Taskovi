@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Velocity from './assets/js/velocity.min.js';
 export default {
   name: "App"
 };

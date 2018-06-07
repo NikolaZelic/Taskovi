@@ -48,7 +48,8 @@ export default {
   border: 1px solid #5555;
   top: 60px;
   display: inline-block;
-  background: #2b2c2fba;
+  background: #040201f4;
+  box-shadow: 0px 0px 20px 5px rgba(154, 79, 79, 0.2);
   width: 300px;
   height: 200px;
   user-select: none;
@@ -92,7 +93,7 @@ export default {
   animation: fadeIn 1s;
 }
 
-td{
+td {
   padding: 5px 10px;
 }
 
