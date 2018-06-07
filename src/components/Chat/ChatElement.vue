@@ -38,6 +38,7 @@ export default {
     return {
       showFeeds: true,
       count: 0,
+      countNumber:10,
       fInterval: null,
       feed: "", //ovo je tekst koji jos nije poslat
       uploadProgress: 50,
@@ -50,25 +51,21 @@ export default {
     },
 
     taskid() {
-      var id = store.getters.selectedItemID;
-      if (id === -1) {
-        this.hideRightSide();
-      }
-      // console.log('Iz RightSide '+id);
-      return id;
+      return store.getters.getTaskID;
     }
   },
   watch: {
     taskid(val) {
-      if (this.fInterval) {
-        clearInterval(this.fInterval);
-      }
-      store.dispatch("readeFeeds", { taskid: this.taskid, direction: "start" });
-      this.resetInterval(2000);
+      // if(this.taskid != -1){
+      store.dispatch("readeFeeds", { taskid: this.taskid, fedid: 0, direction: "start" });
+      this.countNumber = 3;
+      this.count = 1;
+      // }
     },
     messages() {
       document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
-      this.resetInterval(2000);
+      this.countNumber = 3;
+      this.count = 1;
     }
   },
   methods: {
@@ -142,41 +139,38 @@ export default {
         this.addUp();
       }
     },
-    startFeed(time) {
-      if (this.taskid === -1) return;
+    startFeed() {
+      //poziva api svaki put kada je count deljiv sa countNumber
       this.fInterval = setInterval(() => {
-        var msg = store.state.messages;
-        if (msg.length > 0) {
-          store.dispatch("readeFeeds", {
-            taskid: this.taskid,
-            fedid: msg[msg.length - 1].fed_id,
-            direction: "down"
-          });
-        } else {
-          store.dispatch("readeFeeds", {
-            taskid: this.taskid,
-            fedid: 0,
-            direction: "start"
-          });
+        if(this.count % this.countNumber == 0 && this.taskid != -1){
+          var msg = store.state.messages;
+          if (msg.length > 0) {
+            store.dispatch("readeFeeds", {
+              taskid: this.taskid,
+              fedid: msg[msg.length - 1].fed_id,
+              direction: "down"
+            });
+          } else {
+            store.dispatch("readeFeeds", {
+              taskid: this.taskid,
+              fedid: 0,
+              direction: "start"
+            });
+          }
+        }//kraj if unutar intervala
+
+        if(this.count++ >=25){
+          this.countNumber = 10;
+          this.count = 1;
         }
-        console.log(this.count);
-        this.count++;
-        if (this.count > 20) {
-          this.count = 0;
-          this.resetInterval(10000);
-        }
-      }, time);
-    },
-    resetInterval(time) {
-      clearInterval(this.fInterval);
-      this.startFeed(time);
-    },
-    hideRightSide() {
-      // Sveto ovde ti uleces !
+      }, 1000);
     }
   },
   mounted() {
-    this.startFeed(2000);
+    this.startFeed();
+  },
+  destroyed(){
+    clearInterval(this.fInterval);
   }
 };
 </script>
