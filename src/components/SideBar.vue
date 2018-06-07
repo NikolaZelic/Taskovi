@@ -365,10 +365,6 @@ export default {
   color: #333;
 }
 
-/* .tablinks > * {
-
-} */
-
 /* TABS END */
 
 /* COLLAPSED START */
@@ -434,10 +430,11 @@ export default {
   width: 100%;
   /* border-collapse: collapse; */
 }
-.item-list>table td{
+
+.item-list>table td {
   height: 100%;
   /* overflow: hidden; */
-	/* overflow-y:auto; */
+  /* overflow-y:auto; */
 }
 
 .item-list tr {
@@ -467,8 +464,8 @@ export default {
 }
 
 .item-list td {
-  border-left: 1px solid #333;
-  border-right: 1px solid #333;
+  /* border-left: 1px solid #333;
+  border-right: 1px solid #333; */
   padding: 0 7px;
 }
 
@@ -492,6 +489,12 @@ export default {
 .td-icons {
   cursor: pointer;
   font-size: 15px;
+}
+
+/* HOVER EFFECT */
+
+#addItem:hover {
+  box-shadow: 0px 0px 17px 0px rgba(255, 248, 19, 0.2);
 }
 
 /* TASK LIST END */
