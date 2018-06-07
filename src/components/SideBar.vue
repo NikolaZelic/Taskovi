@@ -138,8 +138,8 @@ export default {
     };
   },
   watch: {
-    invokeFilterType(val,oldVal) {
-      console.log(val + ' '+oldVal);
+    invokeFilterType(val, oldVal) {
+      console.log(val + ' ' + oldVal);
       delete this.tabs[this.currentTabIndex].itemIndex;
       this.getTabData(val);
     },
@@ -437,7 +437,7 @@ export default {
 
 .item-list tr:hover {
   text-decoration: none;
-  color: #fff;
+  color: #e2ff05;
   background: #8e8e8e66 !important;
 }
 
@@ -480,7 +480,6 @@ export default {
 }
 
 .td-icons {
-  color: #fff;
   cursor: pointer;
   font-size: 15px;
 }
