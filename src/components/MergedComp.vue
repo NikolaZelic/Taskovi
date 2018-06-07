@@ -17,14 +17,16 @@
           <task-add v-if="selectedTab === 1 && newItem===1"></task-add>
           <company-add v-if="selectedTab === 3 && newItem===1"></company-add>
           <team-add v-if="selectedTab === 4 && newItem===1"></team-add> -->
-          <parenttask-add/>
+
           <!-- Viewing existing -->
           <!-- <project-view v-if='selectedTab === 0'></project-view>
           <task-view v-else-if='selectedTab === 1'></task-view>
           <!-- <company-view v-else-if='selectedTab === 3'></company-view> -->
           <!-- <team-view v-else-if='selectedTab === 4'></team-view> -->
 
+          <parenttask-add/>
         <!-- </keep-alive> -->
+
       </div>
       <!-- <chat-element/> -->
     </div>
@@ -89,7 +91,7 @@ export default {
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
     // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
+    // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");

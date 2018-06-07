@@ -132,11 +132,6 @@ export default {
   },
 
   created: function(){
-    // Citanje userovih kompanije ako vec nisu procitane
-    // if( this.usersCompanies===undefined ){
-    //   // store.dispatch('selectUsersCompanies');
-    // }
-
     interval = setInterval( ()=>{
       if( this.haveChange===1 && this.inputText.length>0 && this.choosenCompany.id!==undefined ){
         this.pozivapija();
