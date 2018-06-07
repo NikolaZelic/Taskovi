@@ -16,9 +16,13 @@ const actions = {
       console.log("Dolazi ovde");
       var msg = store.state.messages;
       if (msg.length === 0) {
-        this.readeFeeds(params.tasid, 0, 'start');
+        store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
       } else {
-        this.readeFeeds(params.tasid, msg[msg.length - 1].fed_id, 'down');
+        store.dispatch("readeFeeds", {
+          taskid: params.taskid,
+          fedid: msg[msg.length - 1].fed_id,
+          direction: "down"
+        });
       }
     });
   },
@@ -38,8 +42,20 @@ const mutations = {
     }
   }
 }
+const getters ={
+  getTaskID:state=>{
+    var item = store.getters.selectedItemID;
+    var tab = store.getters.getTabIndex;
+    if((tab  == 1  || tab == 2)&& item){
+      return store.getters.selectedItemID;
+    }else{
+      return -1;
+    }
+  }
+}
 
 export default {
   actions,
   mutations,
+  getters
 }
