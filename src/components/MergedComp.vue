@@ -4,7 +4,7 @@
 
     <div class="main-content">
       <div class="dynamic-center">
-        <keep-alive>
+        <!-- <keep-alive> -->
 
           <!-- Editing existing -->
           <!-- <project-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined"></project-edit>
@@ -24,7 +24,7 @@
           <!-- <company-view v-else-if='selectedTab === 3'></company-view> -->
           <!-- <team-view v-else-if='selectedTab === 4'></team-view> -->
 
-        </keep-alive>
+        <!-- </keep-alive> -->
       </div>
       <!-- <chat-element/> -->
     </div>
@@ -90,6 +90,9 @@ export default {
     // TEST LOGIN -- REMOVE FINAL
     // api.login("email1@gmail.com", "pass123");
     api.login("admin2@gmail.com", "admin222");
+    // api.login("email2@yahoo.com", "pass111");
+    // api.login("email001@qqq.com", "qqq");
+    // api.login("email004@qqq.com", "qqq");
     // api.login("email2@yahoo.com", "pass111");
 
   },

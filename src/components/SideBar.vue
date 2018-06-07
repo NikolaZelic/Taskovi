@@ -7,16 +7,15 @@
   </span>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks"
-      :class="[{active:currentTabIndex === index}, tab.icon]"
-      @click="getTabData($event,currentTabIndex = index)"
-      :disabled="tab.disabled === true">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)" :disabled="tab.disabled === true">
         </button>
     </div>
 
     <div class="user-sidebar">
-      <span title="User Options" class="fas fa-user-cog"></span>
-      <span title="Sign Out" class="fas fa-sign-out-alt"></span>
+      <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
+      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup'  @mouseleave='mouseLeavePopup' />
+      <popup v-show='activePopup'/>
+      <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
     </div>
   </div>
   <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
@@ -48,12 +47,12 @@
             <span class="label-text">Archived</span>
           </label>
       </form>
-      <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
+      <!-- <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
         <label>
             <input type="checkbox" v-model="companyAdmin">
             <span class="label-text">is Admin</span>
           </label>
-      </form>
+      </form> -->
       <div class="item-list">
         <table>
           <tbody>
@@ -77,7 +76,7 @@
                     {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
-              <td v-if="item.teamcount !== undefined && item.teamcount !== null"><span title="Team Count" class="badge badge-warning">{{ item.teamcount }}</span></td>
+              <td v-if="item.usercount !== undefined && item.usercount !== null"><span title="User Count" class="badge badge-warning">{{ item.usercount }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -90,16 +89,25 @@
 </template>
 
 <script>
-import {store} from "@/store/index.js";
-import {mapGetters} from "vuex";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapGetters
+} from "vuex";
+import popup from './UserPopup';
 export default {
+  components: {
+    popup,
+  },
   data() {
     return {
       renamingItem: {},
       isCollapsedSidebar: false,
       searchData: "",
       currentTabIndex: 1,
-      companyAdmin: true,
+      activePopup: false,
+      // companyAdmin: true,
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram",
@@ -112,15 +120,14 @@ export default {
           name: "Issues",
           icon: "fas fa-bug"
         },
-        {
-          name: "Companies",
-          icon: "fas fa-building",
-          isAdmin: true,
-        },
+        // {
+        //   name: "Companies",
+        //   icon: "fas fa-building",
+        //   isAdmin: true,
+        // },
         {
           name: "Teams",
           icon: "fas fa-users",
-          disabled: true,
         }
       ],
       activeArray: [],
@@ -165,10 +172,10 @@ export default {
         case 2:
           this.actionTabDataWork("getUserWork", s, t, a);
           break;
+          // case 3:
+          //   this.actionTabDataCompany();
+          //   break;
         case 3:
-          this.actionTabDataCompany();
-          break;
-        case 4:
           this.actionTabDataTeam();
           break;
       }
@@ -176,9 +183,9 @@ export default {
     },
     selectItem(id_item) {
       let i = this.currentTabIndex;
-      if (this.currentTabIndex === 3) {
-        this.tabs[i + 1].disabled = false;
-      }
+      // if (this.currentTabIndex === 3) {
+      //   this.tabs[i + 1].disabled = false;
+      // }
       store.commit("setSidebarItemSelection", {
         index: i,
         id: id_item
@@ -188,7 +195,7 @@ export default {
       let i = this.currentTabIndex;
       return i === 0 || i === 1 || i === 2;
     },
-    showCompanyFilter() {
+    showTeamFilter() {
       return this.currentTabIndex === 3;
     },
     addItemButton(e) {
@@ -225,30 +232,40 @@ export default {
         archived: a
       });
     },
-    actionTabDataCompany() {
-      let i = this.currentTabIndex;
-      store.dispatch('getUserCompanies', {
-        index: i,
-        admin: this.tabs[i].isAdmin,
-      });
-    },
+    // actionTabDataCompany() {
+    //   let i = this.currentTabIndex;
+    //   store.dispatch('getUserCompanies', {
+    //     index: i,
+    //     admin: this.tabs[i].isAdmin,
+    //   });
+    // },
     actionTabDataTeam() {
       let i = this.currentTabIndex;
       store.dispatch('getUserTeams', {
         index: i,
-        comid: this.tabs[i - 1].itemIndex,
+        comid: this.getCompanyID,
       });
     },
     setActiveArray() {
-      // console.log("setActiveArray RADII");
-      var data = this.getActiveArray;
-      this.activeArray = data;
-    }
+      this.activeArray = this.getActiveArray;
+    },
+    userOptions() {
+      alert('Avatar Kliknut');
+    },
+    signOut() {
+      alert('Sign out Kliknut');
+    },
+    mouseOverPopup(){
+      this.activePopup = true;
+    },
+    mouseLeavePopup(){
+      this.activePopup = false;
+    },
   },
   computed: {
-    ...mapGetters(["getTabIndex"]),
+    ...mapGetters(['getTabIndex', 'getCompanyID']),
     getActiveArray() {
-      return store.getters.currentTabArray;
+      return store.getters.currentTabData;
     },
     filteredItemsCount() {
       return this.filterArray.length;
@@ -550,6 +567,13 @@ h2 {
 
 .badge-purple {
   background: #8c28a7;
+}
+
+.user-sidebar img {
+  height: 40px;
+  margin: 10px auto;
+  border-radius: 50%;
+  display: block;
 }
 
 label {

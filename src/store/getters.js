@@ -11,13 +11,17 @@ const getters = {
     return store.state.currentTabIndex;
   },
 
-  currentTabArray: state => {
+  currentTabData: state => {
     return store.state.sidebarTabData[store.state.currentTabIndex];
   },
 
-  getUsersCompanies: state => {
-    console.log( store.state.sidebarTabData[3].length );
+  getAllTabData: state => {
     return store.state.sidebarTabData;
+  },
+
+  // ID KOMPANIJE - ZX
+  getCompanyID: state => {
+    return store.state.companyID;
   },
 
   selectedItemID: state => {
