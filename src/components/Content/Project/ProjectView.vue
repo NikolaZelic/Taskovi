@@ -122,7 +122,7 @@ export default {
 
       axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/parenttask/:ptasid/tasks", {
           params: {
-            parid: ptaskID,
+            ptasid: ptaskID,
             sid: window.localStorage.getItem("sid")
           }
         })
