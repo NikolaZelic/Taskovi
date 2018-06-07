@@ -16,7 +16,7 @@
 
     <div class="user-sidebar">
       <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
-      <popup v-show='activePopup' />
+      <popup v-show='activePopup' :class='{show: activePopup}' />
       <!-- <popup/> -->
       <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup' @mouseleave='mouseLeavePopup' />
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
@@ -52,12 +52,12 @@
               <span class="label-text">Archived</span>
             </label>
         </form>
-        <!-- <form v-if="showCompanyFilter()" class="item-filter" role="group" aria-label="Item Filter">
+        <form v-if="showTeamFilter()" class="item-filter" role="group" aria-label="Item Filter">
           <label>
-              <input type="checkbox" v-model="companyAdmin">
+              <input type="checkbox" v-model="teamAdmin">
               <span class="label-text">is Admin</span>
             </label>
-        </form> -->
+        </form>
       </div>
       <div class="item-list">
         <table>
@@ -83,7 +83,7 @@
                     {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
-              <td v-if="item.usercount !== undefined && item.usercount !== null"><span title="User Count" class="badge badge-warning">{{ item.usercount }}</span></td>
+              <td v-if="item.userscount !== undefined && item.userscount !== null"><span title="Team Members Count" class="badge badge-warning">{{ item.userscount }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -115,7 +115,7 @@ export default {
       currentTabIndex: 1,
       activePopup: false,
       activeItem: undefined,
-      // companyAdmin: true,
+      teamAdmin: true,
       tabs: [{
           name: "Projects",
           icon: "fas fa-project-diagram",
@@ -131,6 +131,7 @@ export default {
         {
           name: "Teams",
           icon: "fas fa-users",
+          isAdmin: true,
         }
       ],
       activeArray: [],
@@ -139,8 +140,9 @@ export default {
   },
   watch: {
     invokeFilterType(val, oldVal) {
-      console.log(val + ' ' + oldVal);
+      // console.log(val + ' ' + oldVal);
       delete this.tabs[this.currentTabIndex].itemIndex;
+      this.activeItem = undefined;
       this.getTabData(val);
     },
     getActiveArray(val, oldVal) {
@@ -149,6 +151,10 @@ export default {
     currentTabIndex(val) {
       this.isCollapsedSidebar = false;
       this.activeItem = this.tabs[val].itemIndex;
+    },
+    teamAdmin(val) {
+      this.tabs[this.currentTabIndex].isAdmin = val;
+      this.actionTabDataTeam();
     }
   },
   methods: {
@@ -233,7 +239,8 @@ export default {
       let i = this.currentTabIndex;
       store.dispatch('getUserTeams', {
         index: i,
-        comid: this.getCompanyID,
+        admin: this.tabs[i].isAdmin,
+        // comid: this.getCompanyID,
       });
     },
     setActiveArray() {
@@ -425,9 +432,12 @@ export default {
 .item-list>table {
   padding: 0;
   width: 100%;
-  overflow: hidden;
-  overflow-y: auto;
   /* border-collapse: collapse; */
+}
+.item-list>table td{
+  height: 100%;
+  /* overflow: hidden; */
+	/* overflow-y:auto; */
 }
 
 .item-list tr {

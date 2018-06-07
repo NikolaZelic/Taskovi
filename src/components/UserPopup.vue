@@ -1,7 +1,22 @@
 <template lang="html">
   <div class="popup">
-    <p>User: {{ lsSurname }} {{ lsName }}</p>
-    <p>Company: {{ companyName }}</p>
+    <table>
+      <tr>
+        <td>User: </td><td>{{ lsSurname }} {{ lsName }}</td>
+      </tr>
+        <tr>
+          <td>Company: </td><td>{{ companyName }}</td>
+        </tr>
+          <tr>
+            <td>Tasks working on: </td><td><span class="badge badge-warning">3</span></td>
+          </tr>
+            <tr>
+              <td>Unread Messages: </td><td><span class="badge badge-danger">0</span></td>
+            </tr>
+    </table>
+    <p> </p>
+    <p> </p>
+    <p> </p>
   </div>
 </template>
 
@@ -10,11 +25,7 @@ import {
   store
 } from "@/store/index.js";
 export default {
-  data: {
-    // name: undefined,
-    // surname: undefined,
-    // company: undefined,
-  },
+  data: {},
   computed: {
     lsName() {
       return localStorage.name;
@@ -34,9 +45,10 @@ export default {
   position: relative;
   left: 66px;
   border-radius: 20px;
+  border: 1px solid #5555;
   top: 60px;
   display: inline-block;
-  background: #2b363e;
+  background: #2b2c2fba;
   width: 300px;
   height: 200px;
   user-select: none;
@@ -77,8 +89,11 @@ export default {
 
 .popup .show {
   visibility: visible;
-  -webkit-animation: fadeIn 1s;
   animation: fadeIn 1s;
+}
+
+td{
+  padding: 5px 10px;
 }
 
 @keyframes fadeIn {

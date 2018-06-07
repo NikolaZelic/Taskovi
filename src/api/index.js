@@ -1,5 +1,9 @@
-import {instance as axios} from './config.js'
-import {store} from '@/store/index.js';
+import {
+  instance as axios
+} from './config.js'
+import {
+  store
+} from '@/store/index.js';
 // KAD PRAVIS API OBAVEZN KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
 export const api = {
@@ -67,9 +71,9 @@ export const api = {
         var sid = response.data.sid;
         if (sid != undefined || sid != null) {
           // Zapisujem sid u store
-          window.localStorage.sid= sid;
+          window.localStorage.sid = sid;
           window.localStorage.name = response.data.name;
-          window.localStorage.surname= response.data.surname;
+          window.localStorage.surname = response.data.surname;
         }
       })
       .catch(error => {
@@ -112,10 +116,18 @@ export const api = {
     });
   },
 
-  getUserTeams(index, comid) {
-    return axios.get('/companies/' + comid + '/teams', {
+  // getUserTeams(index, comid) {
+  //   return axios.get('/companies/' + comid + '/teams', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
+  getUserTeams(index, admin) {
+    return axios.get('/users/teams', {
       params: {
         sid: window.localStorage.sid,
+        isadmin: admin,
       }
     });
   },
