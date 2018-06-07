@@ -26,6 +26,24 @@ const actions = {
       }
     });
   },
+  sendAttach(commit, params){
+    api.sendAttach(params.taskid, params.file).then(response =>{
+      //For refresh new messages
+      var msg = store.state.messages;
+      if (msg.length === 0) {
+        store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
+      } else {
+        store.dispatch("readeFeeds", {
+          taskid: params.taskid,
+          fedid: msg[msg.length - 1].fed_id,
+          direction: "down"
+        });
+      }
+    })
+    .catch(err=>{
+      console.log("Error kod slanja filea");
+    });
+  }
 }
 
 const mutations = {
