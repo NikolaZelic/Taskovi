@@ -61,14 +61,16 @@ export const api = {
     fd.append('text', mess);
     return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
   },
-  
-  sendAttach(tasid,file){
+
+  sendAttach(tasid, file) {
     var fd = new FormData();
     fd.append("type", "file");
     fd.append("file", file);
-    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd,
-          { headers: {"content-type": "multipart/form-data"}}
-        );
+    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd, {
+      headers: {
+        "content-type": "multipart/form-data"
+      }
+    });
   },
 
   login(email, password) {
