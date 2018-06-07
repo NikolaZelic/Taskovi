@@ -1,42 +1,284 @@
 <template>
-  <div>
-      <h1 class="display-4">Creating Task</h1><br>
+  <div class='tmp-content'>
+      <div class="header">
+        <h1 class="display-4">Creating Task</h1>
+        <div class='exit-wrapper'>
+          <i class="exit-position far fa-times-circle"></i>
+          <div class="exit-text">ESC</div>
+        </div>
+      </div>
 
+      <div class="content">
+        <!-- TITLE -->
         <div class="form-group">
-          <label for="tsk_title">Task title</label>
-          <input type="text" class="form-control" id="tsk_title" placeholder="Title">
+          <input v-model='title' type="text" class="form-control" id="tsk_title" placeholder="Title">
         </div>
 
+        <!-- DESCRIPTION -->
         <div class="form-group">
-          <label for="tsk_desc">Task description</label>
-          <textarea class="form-control" id="tsk_desc" rows="3" placeholder="The better your description is it will be easier for your colleagues two know what this is about and to help them complete this task of yours"></textarea>
+          <!-- <label for="tsk_desc">Task description</label> -->
+          <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
         </div>
 
+        <!-- DEADLINE -->
         <div class="form-group">
-          <label for="tsk_deadline">Deadline</label>
-          <input type="datetime-local" class="form-control" id="tsk_deadline">
+          <!-- <label for="tsk_deadline">Deadline</label> -->
+          <div class="calender-wrapper">
+            <flat-pickr
+                v-model="deadline"
+                :config="config"
+                id = 'id'
+                class="deadline"
+                placeholder="Pick Deadline (optional)"
+                name="date">
+            </flat-pickr>
+          </div>
         </div>
 
+        <!-- ADING WORKERS -->
         <div class="form-group">
-          <button type="submit" class="btn btn-success">Add task</button>
+          <i :class="personClass" @click='selectUser'></i>
+          <i :class="teamClass" @click='selectTeam'></i>
+          <vue-autosuggest
+            id='auto-suggestion'
+            ref="suggestionTag"
+            :suggestions="[ { data: suggestions } ]"
+            :renderSuggestion="renderSuggestion"
+            @click="clickHandler"
+            :onSelected="onSelected"
+            :inputProps= "inputProps"
+            :getSuggestionValue = "getSuggestionValue"
+          />
+          </vue-autosuggest>
         </div>
-    </div>
+
+        <!-- SUBMIT -->
+        <div class="form-group button-wrapper">
+          <button type="submit" class="btn btn-success">Create</button>
+        </div>
+
+      </div>
+  </div>
 </template>
 
 <script>
-// import axios from 'axios'
+
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
+import {
+  VueAutosuggest
+} from 'vue-autosuggest';
 
 export default {
+  components: {
+    flatPickr,
+    VueAutosuggest
+  },
+
   data() {
     return {
-      working: ""
-    };
+      title: '',
+      description: '',
+      deadline: null,
+      config: {
+          wrap: true, // set wrap to true only when using 'input-group'
+          altFormat: 'M	j, Y',
+          altInput: true,
+          dateFormat: 'Y-m-d',
+          // locale: "Hindi", // locale for this instance only
+        },
+      teamSelect: false,
+      personClass: 'fas fa-user fas-selected',
+      teamClass: 'fas fa-users',
+      inputProps: {class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'},
+
+    }
+  },
+
+  computed: {
+    suggestions: function(){
+      return ["Pera","Mika","Zika"];
+    },
+    inputWorker: function(){
+      return this.$refs.suggestionTag.searchInput;
+    },
+  },
+
+  methods: {
+    selectUser(){
+      this.teamSelect = false;
+      this.personClass = 'fas fa-user fas-selected';
+      this.teamClass = 'fas fa-users';
+      this.inputProps.placeholder = 'Enter User';
+      this.$refs.suggestionTag.searchInput = null;
+    },
+    selectTeam (){
+      this.teamSelect = true;
+      this.personClass = 'fas fa-user';
+      this.teamClass = 'fas fa-users fas-selected';
+      this.inputProps.placeholder = 'Enter Team';
+      this.$refs.suggestionTag.searchInput = null;
+    },
+// Metode u AutoSuggesion komponenti
+    onInputChange: function(text, oldText){
+    },
+    onSelected(item) {
+      if( item == null || item == undefined )
+        return;
+    },
+    clickHandler(item) {
+    },
+    renderSuggestion(suggestion){
+       var i = suggestion.item;
+       return i;
+    },
+    getSuggestionValue(item){
+        var i = item.item;
+        return i.name+' '+i.surname+' '+i.email;
+    },
+
   }
 };
 </script>
 
 <style scoped>
+
+.tmp-content{
+  position: fixed;
+  /* z-index: 9998; */
+  top: 0%;
+  left: 0%;
+  width: 80%;
+  /* height: 80%; */
+  background: #24262d;
+  color: #eee;
+  padding: 5px;
+  /* background-color: rgba(0, 0, 0, .5); */
+  /* display: table; */
+  /* transition: opacity .3s ease; */
+}
+
 .task-add-section {
   padding-top: 50px;
+}
+.header{
+  position: relative;
+  margin: 20px;
+}
+.exit-wrapper{
+  right: 0px;
+  top: 0px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.exit-text{
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  font-size: 20px;
+}
+.exit-position{
+  position: absolute;
+  right: 20px;
+  font-size: 50px;
+}
+.display-4{
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+.content{
+  position: relative;
+  padding: 20px;
+  margin: 10px;
+  border: 2px solid #cc6600;
+  border-radius: 10px;
+}
+.calender-wrapper{
+  position: relative;
+}
+.form-control{
+  display: inline;
+  position: relative;
+  background-color : #2e3038;
+  color: #eee;
+}
+.deadline{
+  background-color : #2e3038;
+}
+#tsk_deadline{
+  width: 97%;
+  cursor: pointer;
+}
+.fas{
+  font-size: 25px;
+  margin: 3px;
+  padding: 3px;
+}
+.fas-selected{
+  color: #cc6600;
+  border-bottom: 2px solid #cc6600;
+}
+#auto-suggestion{
+  display: inline-block;
+  right: 0px;
+}
+
+.button-wrapper{
+  position: relative;
+  height: 30px;
+}
+.btn-success{
+  position: absolute;
+  right: 0px;
+  bottom: -13px;
+}
+</style>
+<style media="screen">
+.autosuggest__input, .autosuggest__input:focus {
+  color: #eee;
+  background-color : #2e3038;
+}
+#autosuggest__input.autosuggest__input-open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0
+}
+.autosuggest__results-container {
+  position: relative;
+  width: 100%
+}
+.autosuggest__results {
+  margin: 0;
+  position: absolute;
+  z-index: 10000001;
+  width: 100%;
+  background-color: #454854;
+  padding: 0
+}
+.autosuggest__results ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0
+}
+.autosuggest__results .autosuggest__results_item {
+  cursor: pointer;
+  padding: 15px
+}
+#autosuggest ul:first-child>.autosuggest__results_title {
+  border-top: none
+}
+.autosuggest__results .autosuggest__results_title {
+  color: #eee;
+  font-size: 11px;
+  margin-left: 0;
+  padding: 15px 13px 5px;
+  border-top: 1px solid #d3d3d3
+}
+.autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted,
+.autosuggest__results .autosuggest__results_item:active,
+.autosuggest__results .autosuggest__results_item:focus,
+.autosuggest__results .autosuggest__results_item:hover {
+  background-color: #2e3038;
 }
 </style>

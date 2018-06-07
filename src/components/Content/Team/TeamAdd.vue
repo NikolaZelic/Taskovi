@@ -153,8 +153,8 @@ export default {
     addUser() {
       if (this.userToAdd === null) {
         this.errorMsg = this.inputText != null && this.inputText.length > 0 ?
-        'Unknown user' :
-        'You have to enter user';
+          'Unknown user' :
+          'You have to enter user';
         return;
       }
       // Provera da li je user vec dodat

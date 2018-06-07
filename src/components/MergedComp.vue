@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
+      <!-- <side-bar/> -->
 
     <div class="main-content">
       <div class="dynamic-center">
@@ -24,7 +24,9 @@
           <!-- <company-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></company-view> -->
           <team-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
+          <parenttask-add/>
         <!-- </keep-alive> -->
+
       </div>
       <!-- <chat-element/> -->
     </div>
@@ -43,6 +45,8 @@ import ChatElement from "@/components/Chat/ChatElement";
 import TaskView from "@/components/Content/Task/TaskView";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
+
+import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
 
 import TeamView from "@/components/Content/Team/TeamView";
 import TeamAdd from "@/components/Content/Team/TeamAdd";
@@ -81,12 +85,13 @@ export default {
     Registration,
     CompanyView,
     TeamEdit,
-    TeamView
+    TeamView,
+    ParenttaskAdd
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
     // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
+    // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");
