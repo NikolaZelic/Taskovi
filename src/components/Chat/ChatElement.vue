@@ -88,43 +88,42 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      var fd = new FormData();
-      console.log(f);
-      console.log("prikaz filea");
-      fd.append("type", "file");
-      fd.append("file", f);
-      fd.append("tasid", 1);
-      axios
-        .post(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds",
-          fd, {
-            headers: {
-              "content-type": "multipart/form-data"
-            },
-            onUploadProgress: progressEvent => {
-              this.inProgress = true;
-              this.uploadProgress = Math.round(
-                progressEvent.loaded / progressEvent.total * 100
-              );
-            }
-          }
-        )
-        .then(res => {
-          this.inProgress = false;
-          console.log(res);
-          console.log("prikaz vracenog statusa");
-          api
-            .newFeed(
-              this.taskId,
-              this.messages[this.messages.length - 1].fed_id
-            )
-            .then(res1 => {
-              this.messages = this.messages.concat(res1.data.data);
-            });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      store.dispatch("sendAttach",{
+        type:'file',
+        file: f,
+        taskid: this.taskid
+      });
+      // axios
+      //   .post(
+      //     "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds",
+      //     fd, {
+      //       headers: {
+      //         "content-type": "multipart/form-data"
+      //       },
+      //       onUploadProgress: progressEvent => {
+      //         this.inProgress = true;
+      //         this.uploadProgress = Math.round(
+      //           progressEvent.loaded / progressEvent.total * 100
+      //         );
+      //       }
+      //     }
+      //   )
+      //   .then(res => {
+      //     this.inProgress = false;
+      //     console.log(res);
+      //     console.log("prikaz vracenog statusa");
+      //     api
+      //       .newFeed(
+      //         this.taskId,
+      //         this.messages[this.messages.length - 1].fed_id
+      //       )
+      //       .then(res1 => {
+      //         this.messages = this.messages.concat(res1.data.data);
+      //       });
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     },
     addUp() {
       if (this.taskid === -1) return;
