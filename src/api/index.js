@@ -9,14 +9,14 @@ import {
 export const api = {
 
   // by Zelic - Koristi se u ParenttaskAdd.vue
-  suggestTags(tagFor, searchStr){
+  suggestTags(tagFor, searchStr) {
     return axios.get("tags", {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchStr,
         type: tagFor
       }
-    } );
+    });
   },
 
   // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
@@ -115,6 +115,37 @@ export const api = {
     });
   },
 
+  // ZX
+  getCompanyInfo(compID) {
+    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
+      params: {
+        comid: compID,
+        sid: window.localStorage.sid,
+      }
+    });
+  },
+
+  // ZX
+  getAdmins(compID) {
+    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
+      params: {
+        comid: compID,
+        sid: window.localStorage.sid,
+      }
+    });
+  },
+
+  // ZX
+  getEmployees(compID) {
+    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
+      params: {
+        comid: compID,
+        sid: window.localStorage.sid,
+      }
+    });
+  },
+
+  // ZX
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks'
     if (index === 1) link = '/users/projects';
@@ -128,7 +159,7 @@ export const api = {
     });
   },
 
-  // KORISTI SE U USER OPTIONS SADA
+  // ZX
   getUserCompanies(admin) {
     return axios.get('/users/companies', {
       params: {
@@ -138,6 +169,7 @@ export const api = {
     });
   },
 
+  // ZX
   getUserTeams(index, admin) {
     return axios.get('/users/teams', {
       params: {

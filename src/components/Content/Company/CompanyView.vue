@@ -1,9 +1,9 @@
 <template>
 <div>
   <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
-  <template v-if="getCompanyID === undefined">
+  <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
-    </template>
+  </template>
 
   <!-- Ako je konretna kompanija selektovana onda se prikazuje ovo -->
   <template v-else>
@@ -42,69 +42,41 @@ import {
 } from "@/store/index.js";
 import {
   mapState
+} from 'vuex';
+import {
+  mapGetters
 } from 'vuex'
 
 export default {
-  data() {
-    return {
-      companyInfo: [],
-      admins: [],
-      employees: []
-    };
-  },
-
-  methods: {
-    getCompanyInfo(compID) {
-      axios
-        .get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
-          params: {
-            comid: compID,
-            sid: window.localStorage.sid,
-          }
-        })
-        .then(r => {
-          if (r.data.data !== undefined)
-            this.companyInfo = r.data.data[0];
-        });
-    },
-
-    loadAdmins(compID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
-            params: {
-              comid: compID,
-              sid: window.localStorage.sid,
-            }
-          }
-        )
-        .then(response => {
-          if (response.data.data !== undefined)
-            this.admins = response.data.data;
-        });
-    },
-
-    loadEmployees(compID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-            params: {
-              comid: compID,
-              sid: window.localStorage.sid,
-            }
-          }
-        )
-        .then(response => {
-          if (response.data.data !== undefined)
-            this.employees = response.data.data;
-        });
-    }
-  },
-
   computed: {
     ...mapState({
       getCompanyID: 'companyID',
+      admins: state => state.modulecompany.admins,
+      employees: state => state.modulecompany.employees,
+      companyInfo: state => state.modulecompany.companyInfo,
     }),
+    ...mapGetters([
+      'selectedItemID',
+    ]),
+  },
+  methods: {
+    getCompanyInfo(compID) {
+      store.dispatch('getCompanyInfo', {
+        compID: compID,
+      });
+    },
+
+    loadAdmins(compID) {
+      store.dispatch('loadAdmins', {
+        compID: compID,
+      });
+    },
+
+    loadEmployees(compID) {
+      store.dispatch('loadEmployees', {
+        compID: compID,
+      });
+    },
   },
 
   mounted() {
@@ -114,7 +86,7 @@ export default {
   },
 
   watch: {
-    getCompanyID: function(val, oldVal) {
+    selectedItemID(val) {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
