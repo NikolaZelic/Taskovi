@@ -5,7 +5,9 @@ const state = {
   selectedTask: {},
   // by Zelic - korisceno u TeamAdd
   suggestedUsers: [],
-  // by Zelic - korisceno u ParanttaskAdd.vuex
+  // by Zelic - korisceno u: ParenttaskAdd.vue
+  suggestedTeams: [],
+  // by Zelic - korisceno u ParanttaskAdd.vue
   suggestedTags: [],
 }
 const actions = {
@@ -23,6 +25,13 @@ const actions = {
     store.commit('cleanSuggestions');
   },
 
+  // by Zelic
+  cleanSuggestedTeams(commit, params){
+    store.commit('cleaneSuggestedTeams');
+  },
+  cleanSuggestedTags(commit, params){
+    store.commit('cleaneSuggestedTags');
+  },
   // by Zelic - poziva se u TeamAdd
   // selectUsersCompanies(commit, params) {
   //   api.getUserCompanies().
@@ -34,12 +43,21 @@ const actions = {
 
   // by Zelic - poziva se u TeamAdd
   refreshSuggestions(commit, params){
+    // console.log('Action');
      var searchText = params.searchText;
      var comId = params.comId;
      api.refreshSuggestions(searchText,comId).
      then( result => {
        store.commit('setSuggestions', result);
      } );
+  },
+
+  // by Zelic - kotsiti se u ParenttaskAdd.vue
+  suggestTeams(commit, params){
+    api.suggestGroup('team', params.searchStr, params.comId).
+    then( result => {
+      store.commit('setSuggestedTeams', result) ;
+    } );
   },
 
   selectTask(commit, params){
@@ -49,20 +67,32 @@ const actions = {
 }
 
 const mutations = {
+
+  // by Zelic
+  setSuggestedTeams: (state, params) => {
+    state.suggestedTeams = params.data.data;
+  },
+
+  cleaneSuggestedTeams: (state, params) => {
+    state.suggestedTeams = [];
+  },
+
   // by Zelic
   setSuggestedTags: (state, params) => {
     state.suggestedTags = params.suggestions;
   },
-
+  cleaneSuggestedTags: (state, params) => {
+    state.suggestedTags = [];
+  },
   // by Zelic - koristi se u TeamAdd-u
   cleanSuggestions: (state, params) => {
-    store.state.suggestedUsers = [];
+    state.suggestedUsers = [];
   },
 
   // by Zelic - Poziva se iz actions/refreshSuggestions. Sluzi u TeamAdd.vue
   setSuggestions: (state, params) => {
     // console.log(params.data.data);
-    store.state.suggestedUsers = params.data.data;
+    state.suggestedUsers = params.data.data;
   },
 
   // by Zelic - korisceno u TeamAdd.
@@ -72,8 +102,8 @@ const mutations = {
 
   // by Zelic
   changeSelectedTask: (state, params) => {
-    console.log('Change selected task');
-    console.log(params.selectedTask);
+    // console.log('Change selected task');
+    // console.log(params.selectedTask);
     store.state.selectedTask = params.selectedTask;
     // console.log(state.selectedTask);
   },
@@ -86,13 +116,14 @@ const getters = {
 
   // by Zelic - korisceno u TeamAdd
   getSuggestedUsers: state => {
-    return store.state.suggestedUsers;
+    return state.suggestedUsers;
   },
 
   // by Zelic
-  getSuggestedTags: state => {
-    return state.suggestedTags;
-  }
+  getSuggestedTeams: state => {
+    return state.suggestedTeams;
+  },
+
 }
 export default {
   actions,

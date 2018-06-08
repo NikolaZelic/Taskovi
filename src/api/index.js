@@ -8,6 +8,30 @@ import {
 
 export const api = {
 
+  // by Zelic - Poziva se u ParenttaskAdd.vue
+  createParenttask(proid, title, description, deadline, userid, teamid, tagarray ){
+    return axios.post('project/'+proid+"/parenttasks?sid="+window.localStorage.sid,{
+        title: title,
+        description: description,
+        deadline: deadline,
+        userid: userid,
+        teamid: teamid,
+        tagarray: JSON.stringify(tagarray)
+    });
+  },
+
+  // by Zelic - koristi se u ParenttaskAdd.vue
+  suggestGroup(grpType, searchStr, comId){
+    return axios.get('groups', {
+      params:{
+        sid: window.localStorage.sid,
+        searchstring: searchStr,
+        comid: comId,
+        type: grpType
+      }
+    });
+  },
+
   // by Zelic - Koristi se u ParenttaskAdd.vue
   suggestTags(tagFor, searchStr){
     return axios.get("tags", {
