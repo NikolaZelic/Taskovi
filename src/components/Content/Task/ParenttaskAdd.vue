@@ -54,7 +54,7 @@
 
         <!-- TAGS -->
         <div class="form-group">
-          <multiselect v-model="selectedTags" id="ajax" label="text" track-by="id" placeholder="Select Tags"
+          <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Select Tags"
             open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true"
             :internal-search="false" :clear-on-select="true" :close-on-select="true" :limit="5"
             :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="searchTags">
@@ -154,6 +154,12 @@ export default {
 
   destroy: function() {
     clearInterval(interval);
+  },
+
+  watch:{
+    selectedTags: function(){
+      store.dispatch('cleanSuggestedTags');
+    },
   },
 
   methods: {
@@ -407,5 +413,29 @@ export default {
 .autosuggest__results .autosuggest__results_item:focus,
 .autosuggest__results .autosuggest__results_item:hover {
   background-color: #2e3038;
+}
+
+.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly]{
+    background: #2e3038;
+}
+.tmp-content .multiselect .multiselect__tags,
+.tmp-content .multiselect .multiselect__single,
+.tmp-content .multiselect #tags-component {
+  background: #2e3038;
+  /* color: #eee; */
+}
+.tmp-content .multiselect #tags-component:focus {
+  color: #eee;
+}
+.tmp-content .multiselect .multiselect__option--highlight{
+  background: #454854;
+}
+.tmp-content .multiselect .multiselect__option--highlight:hover{
+  background: #2e3038;
+}
+.tmp-content .multiselect--active .multiselect__option--highlight::after,
+.tmp-content .multiselect .multiselect__tag span,
+.tmp-content .multiselect .multiselect__tag{
+  background: #cc6600;
 }
 </style>
