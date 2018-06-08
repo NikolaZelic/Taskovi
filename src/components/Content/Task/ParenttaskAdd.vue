@@ -52,6 +52,21 @@
           </vue-autosuggest>
         </div>
 
+        <!-- TAGS -->
+        <div class="form-group">
+
+          <!-- TESTIRANJE MULTYSELEKTA -->
+          <multiselect v-model="selectedTags" id="ajax" label="text" track-by="id" placeholder="Select Tags"
+            open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true" :loading="isLoading"
+            :internal-search="false" :clear-on-select="false" :close-on-select="false" :limit="5"
+            :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="asyncFind">
+            <template slot="clear" slot-scope="props">
+              <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
+            </template><span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+          </multiselect>
+
+        </div>
+
         <!-- SUBMIT -->
         <div class="form-group button-wrapper">
           <button type="submit" class="btn btn-success">Create</button>
@@ -68,11 +83,15 @@ import 'flatpickr/dist/flatpickr.css';
 import {
   VueAutosuggest
 } from 'vue-autosuggest';
+import Multiselect from "vue-multiselect";
+import {store} from "@/store/index";
+import {api} from "@/api/index";
 
 export default {
   components: {
     flatPickr,
-    VueAutosuggest
+    VueAutosuggest,
+    Multiselect
   },
 
   data() {
@@ -91,6 +110,9 @@ export default {
       personClass: 'fas fa-user fas-selected',
       teamClass: 'fas fa-users',
       inputProps: {class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'},
+      // tags: [{id:1, text:'Front-end'}],
+      selectedTags: [],
+      isLoading: false,
 
     }
   },
@@ -102,6 +124,13 @@ export default {
     inputWorker: function(){
       return this.$refs.suggestionTag.searchInput;
     },
+    suggestedTags: function(){
+      return store.getters.getSuggestedTags;
+    }
+  },
+
+  created: function(){
+    store.dispatch('suggestTags', {searchStr:'b', tagFor:'task'})
   },
 
   methods: {
@@ -134,13 +163,20 @@ export default {
     },
     getSuggestionValue(item){
         var i = item.item;
-        return i.name+' '+i.surname+' '+i.email;
+        // return i.name+' '+i.surname+' '+i.email;
+        return i;
     },
-
+// MEtode za MultySelekt komponentu
+    asyncFind(query){
+      console.log(query);
+    },
+    limitText (count) {
+      return `and ${count} other countries`;
+    }
   }
 };
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 
 .tmp-content{
@@ -215,16 +251,33 @@ export default {
   font-size: 25px;
   margin: 3px;
   padding: 3px;
+  cursor: pointer;
 }
 .fas-selected{
   color: #cc6600;
   border-bottom: 2px solid #cc6600;
 }
 #auto-suggestion{
+  position: absolute;
   display: inline-block;
-  right: 0px;
+  right: 15px;
+  left: 110px;
 }
+.tags-wrapper{
+  font-size: 18px;
 
+}
+.tag{
+  background-color: #cc6600;
+  border: 1px solid #cc6600;
+  border-radius: 5px;
+}
+.tag-text{
+
+}
+.fa-times{
+  font-size: 16px;
+}
 .button-wrapper{
   position: relative;
   height: 30px;
