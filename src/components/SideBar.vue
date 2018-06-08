@@ -1,16 +1,16 @@
 <template>
 <aside id="sidebar">
   <div class="static-side">
-    <span title="Collapse Sidebar" @click="isCollapsedSidebar = !isCollapsedSidebar" :class='[
-    {"fas fa-angle-double-right":isCollapsedSidebar},
-    {"fas fa-angle-double-left":!isCollapsedSidebar}]'>
+    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class='[
+    {"fas fa-angle-double-right":sidebarCollapsed},
+    {"fas fa-angle-double-left":!sidebarCollapsed}]'>
   </span>
     <svg height="3px" width="100%">
       <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke:#636262;stroke-width:2" />
     </svg>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData($event,currentTabIndex = index)" :disabled="tab.disabled === true">
+      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index)" :disabled="tab.disabled === true">
       </button>
     </div>
 
@@ -24,7 +24,7 @@
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
     </div>
   </div>
-  <div class="sidebar-content" :class="{ collapsed: isCollapsedSidebar }">
+  <div class="sidebar-content" :class="{ collapsed: sidebarCollapsed }">
     <div class="sidebar-header">
       <a>
           <span :class="tabs[currentTabIndex].icon"></span>
@@ -56,7 +56,7 @@
         </form>
         <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
           <label>
-              <input type="checkbox" v-model="teamAdmin">
+              <input type="checkbox" v-model="adminFilter">
               <span class="label-text">is Admin</span>
             </label>
         </form>
@@ -114,12 +114,12 @@ export default {
   data() {
     return {
       renamingItem: {},
-      isCollapsedSidebar: false,
+      sidebarCollapsed: false,
       searchData: "",
       currentTabIndex: 1,
       activePopup: false,
       activeItem: undefined,
-      teamAdmin: true,
+      adminFilter: true,
       tabs: [{
           name: "Companies",
           icon: "fas fa-building",
@@ -150,28 +150,28 @@ export default {
   },
   watch: {
     invokeFilterType(val, oldVal) {
-      // console.log(val + ' ' + oldVal);
       delete this.tabs[this.currentTabIndex].itemIndex;
       this.activeItem = undefined;
-      this.getTabData(val);
+      this.getTabData();
     },
     getActiveArray(val, oldVal) {
       this.activeArray = val;
     },
     currentTabIndex(val) {
-      this.isCollapsedSidebar = false;
+      this.sidebarCollapsed = false;
       this.activeItem = this.tabs[val].itemIndex;
     },
-    teamAdmin(val) {
-      this.tabs[this.currentTabIndex].isAdmin = val;
-      this.actionTabDataTeam();
+    adminFilter(val) {
+      let i = this.currentTabIndex;
+      this.tabs[i].isAdmin = val;
+      this.actionTabDataPeople();
     }
   },
   methods: {
-    getTabData(type) {
+    getTabData() {
       let index = this.currentTabIndex;
-      let s = "both"; // DEFAULT
-      if (type === null) s = "assigned";
+      let type = this.invokeFilterType;
+      let s = type === null ? 'assigned' : 'both';
       let t = this.tabs[index].name === 'Issues' ? "bugfix" : "task";
       let a = "false";
       switch (type) {
@@ -187,15 +187,13 @@ export default {
       }
       switch (index) {
         case 0:
-          this.actionTabDataCompany();
+        case 4:
+          this.actionTabDataPeople();
           break;
         case 1:
         case 2:
         case 3:
           this.actionTabDataWork("getUserWork", s, t, a);
-          break;
-        case 4:
-          this.actionTabDataTeam();
           break;
       }
       this.setActiveArray();
@@ -249,19 +247,13 @@ export default {
         archived: a
       });
     },
-    actionTabDataTeam() {
+    actionTabDataPeople() {
       let i = this.currentTabIndex;
-      store.dispatch('getUserTeams', {
+      let name =  i === 0 ? 'getUserCompanies' : 'getUserTeams';
+      store.dispatch(name, {
         index: i,
         admin: this.tabs[i].isAdmin,
         // comid: this.getCompanyID,
-      });
-    },
-    actionTabDataCompany() {
-      let i = this.currentTabIndex;
-      store.dispatch('getUserCompanies', {
-        index: i,
-        admin: this.tabs[i].isAdmin,
       });
     },
     setActiveArray() {
@@ -316,9 +308,9 @@ export default {
       return store.getters.currentTabData;
     },
     shownItemsCount() {
-      return this.itemsFiltered === undefined
-      ? null
-      : this.itemsFiltered.length;
+      return this.itemsFiltered === undefined ?
+        null :
+        this.itemsFiltered.length;
     },
     itemsFiltered() {
       let tabData = this.activeArray;
@@ -344,7 +336,7 @@ export default {
     store.commit("setSidebarData", {
       index: this.currentTabIndex
     });
-    this.getTabData(null);
+    this.getTabData();
   }
 };
 </script>
