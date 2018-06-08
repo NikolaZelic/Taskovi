@@ -54,7 +54,7 @@
               <span class="label-text">Archived</span>
             </label>
         </form>
-        <form v-if="showTeamFilter()" class="item-filter" role="group" aria-label="Item Filter">
+        <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
           <label>
               <input type="checkbox" v-model="teamAdmin">
               <span class="label-text">is Admin</span>
@@ -64,16 +64,7 @@
       <div class="item-list">
         <table>
           <tbody>
-            <!-- <transition-group
-    name="staggered-fade"
-    tag="tbody"
-    v-bind:css="false"
-    v-on:before-enter="beforeEnter"
-    v-on:enter="enter"
-    v-on:leave="leave"
-  > -->
             <tr v-for="(item,index) in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-              <!-- <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: item.id === tabs[currentTabIndex].itemIndex}"> -->
               <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
                     <input type="checkbox">
@@ -95,7 +86,6 @@
               </td>
               <td v-if="item.userscount !== undefined && item.userscount !== null"><span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span></td>
             </tr>
-  <!-- </transition-group> -->
           </tbody>
         </table>
       </div>
@@ -113,6 +103,9 @@ import {
 import {
   mapGetters
 } from "vuex";
+import {
+  mapState
+} from 'vuex'
 import popup from './UserPopup';
 export default {
   components: {
@@ -128,6 +121,10 @@ export default {
       activeItem: undefined,
       teamAdmin: true,
       tabs: [{
+          name: "Companies",
+          icon: "fas fa-building",
+          isAdmin: true,
+        }, {
           name: "Projects",
           icon: "fas fa-project-diagram",
         },
@@ -175,7 +172,7 @@ export default {
       let index = this.currentTabIndex;
       let s = "both"; // DEFAULT
       if (type === null) s = "assigned";
-      let t = index === 2 ? "bugfix" : "task";
+      let t = this.tabs[index].name === 'Issues' ? "bugfix" : "task";
       let a = "false";
       switch (type) {
         case "cr":
@@ -190,11 +187,14 @@ export default {
       }
       switch (index) {
         case 0:
+          this.actionTabDataCompany();
+          break;
         case 1:
         case 2:
+        case 3:
           this.actionTabDataWork("getUserWork", s, t, a);
           break;
-        case 3:
+        case 4:
           this.actionTabDataTeam();
           break;
       }
@@ -209,12 +209,13 @@ export default {
     },
     showSubFilter() {
       let i = this.currentTabIndex;
-      return i === 0 || i === 1 || i === 2;
+      return i === 1 || i === 2 || i === 3;
     },
-    showTeamFilter() {
-      return this.currentTabIndex === 3;
+    showAdminFilter() {
+      let i = this.currentTabIndex;
+      return i === 0 || i === 4;
     },
-    addItemButton(e) {
+    addItemButton() {
       store.dispatch("itemAddClick");
     },
     editItemButton(item) {
@@ -222,9 +223,9 @@ export default {
     },
     removeItem(item) {
       var aa = this.getActiveArray(this.currentTabIndex);
-      console.log(aa);
+      // console.log(aa);
       var index = aa.indexOf(item);
-      console.log(index + "  |  " + aa.splice(index, 1));
+      // console.log(index + "  |  " + aa.splice(index, 1));
     },
     endEditing(item) {
       this.renamingItem = {};
@@ -256,6 +257,13 @@ export default {
         // comid: this.getCompanyID,
       });
     },
+    actionTabDataCompany() {
+      let i = this.currentTabIndex;
+      store.dispatch('getUserCompanies', {
+        index: i,
+        admin: this.tabs[i].isAdmin,
+      });
+    },
     setActiveArray() {
       this.activeArray = this.getActiveArray;
     },
@@ -268,38 +276,49 @@ export default {
     mouseOverPopup(val) {
       this.activePopup = val;
     },
-    beforeEnter: function (el) {
+    beforeEnter: function(el) {
       el.style.opacity = 0
       el.style.height = 0
     },
-    enter: function (el, done) {
+    enter: function(el, done) {
       var delay = el.dataset.index * 150
-      setTimeout(function () {
+      setTimeout(function() {
         Velocity(
-          el,
-          { opacity: 1, height: '1.6em' },
-          { complete: done }
+          el, {
+            opacity: 1,
+            height: '1.6em'
+          }, {
+            complete: done
+          }
         )
       }, delay)
     },
-    leave: function (el, done) {
+    leave: function(el, done) {
       var delay = el.dataset.index * 150
-      setTimeout(function () {
+      setTimeout(function() {
         Velocity(
-          el,
-          { opacity: 0, height: 0 },
-          { complete: done }
+          el, {
+            opacity: 0,
+            height: 0
+          }, {
+            complete: done
+          }
         )
       }, delay)
     },
   },
   computed: {
-    ...mapGetters(['getTabIndex', 'getCompanyID']),
+    ...mapState({
+      getTabIndex: 'currentTabIndex',
+      getCompanyID: 'companyID',
+    }),
     getActiveArray() {
       return store.getters.currentTabData;
     },
     shownItemsCount() {
-      return this.itemsFiltered.length;
+      return this.itemsFiltered === undefined
+      ? null
+      : this.itemsFiltered.length;
     },
     itemsFiltered() {
       let tabData = this.activeArray;
@@ -630,10 +649,16 @@ label {
   margin: 0;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+/* .fade-leave-active below version 2.1.8 */
+
+  {
   opacity: 0;
 }
 </style>
