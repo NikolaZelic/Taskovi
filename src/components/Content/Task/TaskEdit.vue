@@ -22,34 +22,29 @@
     </label>
   </div>
 
-  <div v-if="working === 'user'">
+  <div v-if="working === 'user'" class="mb-3">
     <multiselect v-model="value" :options="options" placeholder="Select user" track-by="id" @search-change="searchUserChange" :custom-label="showingUserResults"></multiselect>
   </div>
 
-  <div v-if="working === 'team'">
+  <div v-if="working === 'team'" class="mb-3">
     <multiselect v-model="value" :options="options" placeholder="Select team" track-by="id" @search-change="searchTeamChange" label="name"></multiselect>
   </div>
 
 
-
-
-
-
-
-
-  <br><br><br><br><br><br><br>
-  <!-- <label class="typo__label">Tagging</label>
-    <multiselect v-model="tagValue" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="code"
-    :options="tagOptions" :multiple="true" :taggable="true" @tag="addTag"></multiselect> -->
-
   <label class="typo__label">Tags</label>
-  <multiselect v-model="tagValue" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="tag_text" track-by="tag_id" :options="tagOptions" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+  <multiselect  class="mb-3" v-model="tagValue" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="tag_text" track-by="tag_id" :options="tagOptions" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+
+  <label class="typo__label">Priority</label>
+  <multiselect class="mb-3" v-model="priorityValue" placeholder="Choose priority of this task" label="pri_text" track-by="pri_id" :options="priorityOptions"></multiselect>
+
+  <label class="typo__label">Deadline:</label>
+  <datetime type="datetime" v-model="deadline"></datetime>
 
 
-  <br><br><br><br><br><br><br>
 
 
-  <!-- usr_id_working grp_id_working tsk_deadline tsk_urgent -->
+
+  <!-- tsk_deadline tsk_urgent -->
 </div>
 </template>
 
@@ -57,10 +52,14 @@
 import {store} from "@/store/index.js";
 import axios from "axios";
 import Multiselect from "vue-multiselect";
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css'
+
 
 export default {
   components: {
-    Multiselect
+    Multiselect,
+    Datetime
   },
 
   data() {
@@ -70,16 +69,20 @@ export default {
       working: undefined,
       searchTerm: undefined,
       tags: [],
+      deadline: undefined,
+
+      priorityValue: [],
+      priorityOptions: [],
 
       tagValue: [],
-      tagOptions: []
+      tagOptions: [],
 
 
       // tagValue: undefined,
       // tagOptions: [],
       //
-      // value: undefined,
-      // options: []
+      value: undefined,
+      options: []
     };
   },
 
@@ -98,9 +101,17 @@ export default {
         tag_text: newTag,
         tag_id: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
       }
-      this.tagOptions.push(tag)
-      this.tagValue.push(tag)
+
+      this.tagOptions.push(tag);
+      this.tagValue.push(tag);
+
+      axios.post("http://671n121.mars-t.mars-hosting.com/testTags", {tag_text: newTag});
+      this.loadTags();
     },
+
+    // addTagToDB(text) {
+    //
+    // },
 
     searchUserChange(term) {
       this.searchTerm = term;
@@ -157,11 +168,18 @@ export default {
 
 
       });
+    },
+
+    loadPriority(){
+      axios.get("http://671n121.mars-t.mars-hosting.com/testPriority").then(response => {
+        this.priorityOptions = response.data.data;
+      });
     }
   },
 
   mounted(){
     this.loadTags();
+    this.loadPriority();
   }
 };
 </script>
