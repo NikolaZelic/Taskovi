@@ -36,13 +36,13 @@ export const store = new Vuex.Store({
       [],
       []
     ],
+    modalError: false,
     messages: [],
     sidebarItemSelection: [],
     itemAction : {
       edit: undefined,
       add: undefined,
     },
-    companyID: 13,
-    // COMMUNICATION
+    companyID: undefined,
   },
 })

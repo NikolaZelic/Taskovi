@@ -4,7 +4,7 @@
     <!-- <div class="main-content"> -->
       <div class="dynamic-center">
         <!-- <keep-alive> -->
-          <!-- <profile/> -->
+          <!-- <user-options/> -->
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
@@ -29,6 +29,7 @@
 
       </div>
       <!-- <chat-element/> -->
+      <modal-error v-if="modalError"></modal-error>
     </div>
   </div>
 </template>
@@ -61,8 +62,9 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
+import ModalError from '@/components/Misc/ModalError';
 
-import Profile from "@/components/UserOptions";
+import UserOptions from "@/components/UserOptions";
 import {
   api
 } from "@/api/index.js";
@@ -92,7 +94,8 @@ export default {
     TeamEdit,
     TeamView,
     ParenttaskAdd,
-    Profile
+    UserOptions,
+    ModalError,
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
@@ -108,13 +111,10 @@ export default {
   computed: {
     ...mapState({
       selectedTab: 'currentTabIndex',
+      modalError: 'modalError',
+      newItem: state => state.itemAction.add,
+      selectedItemEdit: state => state.itemAction.edit,
     }),
-    newItem() {
-      return store.state.itemAction.add;
-    },
-    selectedItemEdit() {
-      return store.state.itemAction.edit;
-    },
   }
 }
 </script>

@@ -7,8 +7,10 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
-    }).catch(error => {
-      console.log('Greska pri ucitavanju podataka: ' + error);
+    }).catch(e => {
+
+          store.commit("modalError",true);
+      // console.log('Greska pri ucitavanju podataka: ' + error);
     });
   },
 
@@ -18,6 +20,9 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
+    }).catch(e=>{
+
+          store.commit("modalError",true);
     });
   },
 
@@ -27,6 +32,9 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
+    }).catch(e=>{
+
+          store.commit("modalError",true);
     });
   },
 
@@ -58,11 +66,11 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     // IMPROVE API - ZELIC
-    if (params.index === 1) {
-      store.dispatch('selectTask', {
-        id: params.id
-      })
-    }
+    // if (params.index === 1) {
+    //   store.dispatch('selectTask', {
+    //     id: params.id
+    //   })
+    // }
   },
 
   itemAddClick: (state, params) => {
