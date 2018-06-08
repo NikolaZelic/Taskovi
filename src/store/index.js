@@ -36,7 +36,10 @@ export const store = new Vuex.Store({
       [],
       []
     ],
-    modalError: false,
+    modalError: {
+      active: false,
+      message: '',
+    },
     messages: [],
     sidebarItemSelection: [],
     itemAction : {

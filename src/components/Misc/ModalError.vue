@@ -4,6 +4,7 @@
   <div class="modal-content">
    <span class="close" @click="closeModal">&times;</span>
     <p>Internet not detected or error requesting data.</p>
+     <p>{{ message }}</p>
   </div>
 </div>
 </template>
@@ -12,12 +13,22 @@
 import {
   store
 } from "@/store/index.js";
+import {
+  mapState
+} from 'vuex';
 export default {
   methods: {
     closeModal() {
-      store.commit("modalError", false);
+      store.commit("modalError", {
+        active: false
+      });
     }
   },
+  computed: {
+    ...mapState({
+      message: state => state.modalError.message,
+    }),
+  }
 }
 </script>
 

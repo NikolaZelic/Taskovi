@@ -109,7 +109,7 @@ export default {
   computed: {
     ...mapState({
       selectedTab: 'currentTabIndex',
-      modalError: 'modalError',
+      modalError: state => state.modalError.active,
       newItem: state => state.itemAction.add,
       selectedItemEdit: state => state.itemAction.edit,
     }),

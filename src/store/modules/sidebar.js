@@ -1,5 +1,9 @@
-import {api} from '@/api/index.js';
-import {store} from '../index';
+import {
+  api
+} from '@/api/index.js';
+import {
+  store
+} from '../index';
 const actions = {
   getUserWork(commit, params) {
     api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
@@ -8,9 +12,10 @@ const actions = {
         data: r.data.data
       });
     }).catch(e => {
-
-          store.commit("modalError",true);
-      // console.log('Greska pri ucitavanju podataka: ' + error);
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
+      });
     });
   },
 
@@ -20,9 +25,11 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
-    }).catch(e=>{
-
-          store.commit("modalError",true);
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
+      });
     });
   },
 
@@ -32,9 +39,11 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
-    }).catch(e=>{
-
-          store.commit("modalError",true);
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
+      });
     });
   },
 
