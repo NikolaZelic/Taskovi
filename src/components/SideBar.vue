@@ -156,7 +156,6 @@ export default {
       this.getTabData(val);
     },
     getActiveArray(val, oldVal) {
-      console.log(val);
       this.activeArray = val;
     },
     currentTabIndex(val) {
