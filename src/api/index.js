@@ -8,6 +8,17 @@ import {
 
 export const api = {
 
+  // by Zelic - Koristi se u ParenttaskAdd.vue
+  suggestTags(tagFor, searchStr){
+    return axios.get("tags", {
+      params: {
+        sid: window.localStorage.sid,
+        searchstring: searchStr,
+        type: tagFor
+      }
+    } );
+  },
+
   // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
   createTeam(comid, users, teamname) {
     return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {

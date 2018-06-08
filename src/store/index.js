@@ -49,5 +49,7 @@ export const store = new Vuex.Store({
     suggestedUsers: [],
     // by Zelic - korisceno u TeamAdd. Ovo bi moglo da se koristi i u drugim komponentama, mozda cak i u SideBar-u
     usersCompanies: undefined,
+    // by Zelic - korisceno u ParanttaskAdd.vuex
+    suggestedTags: [],
   },
 })
