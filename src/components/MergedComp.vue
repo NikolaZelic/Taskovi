@@ -3,7 +3,6 @@
       <side-bar/>
     <!-- <div class="main-content"> -->
       <div class="dynamic-center">
-        <!-- <keep-alive> -->
           <!-- <user-options/> -->
 
           <!-- Editing existing -->
@@ -25,7 +24,6 @@
           <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
           <!-- <parenttask-add/> -->
-        <!-- </keep-alive> -->
 
       </div>
       <!-- <chat-element/> -->
