@@ -1,10 +1,10 @@
 <template lang="html">
   <div id="wrapper">
       <side-bar/>
-    <!-- <div class="main-content"> -->
+    <div class="main-content">
       <div class="dynamic-center">
         <!-- <keep-alive> -->
-          <profile/>
+          <!-- <profile/> -->
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
@@ -96,8 +96,8 @@ export default {
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
-    // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
+    api.login("email1@gmail.com", "pass123");
+    // api.login("admin2@gmail.com", "admin222");
     // api.login("email2@yahoo.com", "pass111");
     // api.login("email001@qqq.com", "qqq");
     // api.login("email004@qqq.com", "qqq");

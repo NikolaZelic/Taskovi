@@ -32,19 +32,22 @@
 
 
   <label class="typo__label">Tags</label>
-  <multiselect  class="mb-3" v-model="tagValue" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="tag_text" track-by="tag_id" :options="tagOptions" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+  <multiselect class="mb-3" v-model="tagValue" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="tag_text" track-by="tag_id" :options="tagOptions" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
 
   <label class="typo__label">Priority</label>
   <multiselect class="mb-3" v-model="priorityValue" placeholder="Choose priority of this task" label="pri_text" track-by="pri_id" :options="priorityOptions"></multiselect>
 
   <label class="typo__label">Deadline:</label>
-  <datetime type="datetime" v-model="deadline"></datetime>
+
+  <datetime type="datetime" v-model="deadline" class="mb-3 form-control"></datetime>
+
+
+  <button @click="submitChanges()" class="btn btn-success">Submit changes</button>
 
 
 
 
 
-  <!-- tsk_deadline tsk_urgent -->
 </div>
 </template>
 
@@ -52,7 +55,7 @@
 import {store} from "@/store/index.js";
 import axios from "axios";
 import Multiselect from "vue-multiselect";
-import { Datetime } from 'vue-datetime';
+import {Datetime} from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css'
 
 
@@ -86,6 +89,8 @@ export default {
     };
   },
 
+
+
   methods: {
     // addTag(newTag) {
     //   const tag = {
@@ -96,6 +101,10 @@ export default {
     //   this.tagValue.push(tag)
     // },
 
+    submitChanges() {
+
+    },
+
     addTag(newTag) {
       const tag = {
         tag_text: newTag,
@@ -105,7 +114,9 @@ export default {
       this.tagOptions.push(tag);
       this.tagValue.push(tag);
 
-      axios.post("http://671n121.mars-t.mars-hosting.com/testTags", {tag_text: newTag});
+      axios.post("http://671n121.mars-t.mars-hosting.com/testTags", {
+        tag_text: newTag
+      });
       this.loadTags();
     },
 
@@ -159,10 +170,10 @@ export default {
       return name + ' ' + surname + ' --- ' + email;
     },
 
-    loadTags(){
+    loadTags() {
       axios.get("http://671n121.mars-t.mars-hosting.com/testTags").then(response => {
-// console.log(response.data.data[0].tag_text);
-      // this.tagOptions = [{ name: response.data.data, code: 'js' }];
+        // console.log(response.data.data[0].tag_text);
+        // this.tagOptions = [{ name: response.data.data, code: 'js' }];
         //this.tagOptions = response.data.data;
         this.tagOptions = response.data.data;
 
@@ -170,14 +181,14 @@ export default {
       });
     },
 
-    loadPriority(){
+    loadPriority() {
       axios.get("http://671n121.mars-t.mars-hosting.com/testPriority").then(response => {
         this.priorityOptions = response.data.data;
       });
     }
   },
 
-  mounted(){
+  mounted() {
     this.loadTags();
     this.loadPriority();
   }
@@ -185,5 +196,7 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style><style scoped>
+</style>
+
+<style scoped>
 </style>
