@@ -1,10 +1,10 @@
 <template lang="html">
   <div id="wrapper">
       <side-bar/>
-
-    <div class="main-content">
+    <!-- <div class="main-content"> -->
       <div class="dynamic-center">
         <!-- <keep-alive> -->
+          <profile/>
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
@@ -61,6 +61,8 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
+
+import Profile from "@/components/UserOptions";
 import {
   api
 } from "@/api/index.js";
@@ -89,7 +91,8 @@ export default {
     CompanyView,
     TeamEdit,
     TeamView,
-    ParenttaskAdd
+    ParenttaskAdd,
+    Profile
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
@@ -112,13 +115,6 @@ export default {
     selectedItemEdit() {
       return store.state.itemAction.edit;
     },
-    //   ...mapGetters({
-    //     selectedTab: 'getTabIndex',
-    //     newItem: 'itemAdded',
-    //     selectedItemEdit: 'getEditItemID'
-    //   })
-    // },
-
   }
 }
 </script>
