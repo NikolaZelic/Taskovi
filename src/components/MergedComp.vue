@@ -1,28 +1,28 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
-    <!-- <div class="main-content"> -->
+      <!-- <side-bar/> -->
+    <div class="main-content">
       <div class="dynamic-center">
         <!-- <keep-alive> -->
           <profile/>
 
           <!-- Editing existing -->
-          <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
-          <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
-          <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+          <!-- <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit> -->
+          <!-- <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit> -->
+          <!-- <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit> -->
+          <!-- <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit> -->
 
           <!-- Adding new -->
-          <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
-          <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
-          <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-          <team-add v-if="selectedTab === 3 && newItem===1 && selectedItemEdit===undefined"></team-add>
+          <!-- <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add> -->
+          <!-- <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add> -->
+          <!-- <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add> -->
+          <!-- <team-add v-if="selectedTab === 3 && newItem===1 && selectedItemEdit===undefined"></team-add> -->
 
           <!-- Viewing existing -->
-          <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
-          <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
-          <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-          <team-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></team-view>
+          <!-- <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view> -->
+          <!-- <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view> -->
+          <!-- <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view> -->
+          <!-- <team-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></team-view> -->
 
           <!-- <parenttask-add/> -->
         <!-- </keep-alive> -->
@@ -176,7 +176,7 @@ export default {
   /* MAIN CONTENT */
   #wrapper > div {
     width: 55%;
-    margin-left: 45%;
+    /* margin-left: 45%; */
     min-height: 100vh;
   }
 }
