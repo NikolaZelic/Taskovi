@@ -41,8 +41,8 @@ import {
   store
 } from "@/store/index.js";
 import {
-  mapGetters
-} from "vuex";
+  mapState
+} from 'vuex'
 
 export default {
   data() {
@@ -62,11 +62,9 @@ export default {
             sid: window.localStorage.sid,
           }
         })
-        .then(response => {
-          console.log(response);
-          if (response.data.data[0] !== undefined)
-            this.companyInfo = response.data.data[0];
-          // console.log(response.data.data[0]);
+        .then(r => {
+          if (r.data.data !== undefined)
+            this.companyInfo = r.data.data[0];
         });
     },
 
@@ -104,9 +102,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      "getCompanyID",
-    ])
+    ...mapState({
+      getCompanyID: 'companyID',
+    }),
   },
 
   mounted() {

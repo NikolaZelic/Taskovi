@@ -14,9 +14,6 @@
               <td>Unread Messages: </td><td><span class="badge badge-danger">0</span></td>
             </tr>
     </table>
-    <p> </p>
-    <p> </p>
-    <p> </p>
   </div>
 </template>
 
@@ -24,6 +21,9 @@
 import {
   store
 } from "@/store/index.js";
+import {
+  mapState
+} from 'vuex'
 export default {
   data: {},
   computed: {
@@ -33,9 +33,9 @@ export default {
     lsSurname() {
       return localStorage.surname;
     },
-    companyName() {
-      return store.getters.getCompanyID;
-    }
+    ...mapState({
+      companyName: 'companyID',
+    }),
   }
 }
 </script>

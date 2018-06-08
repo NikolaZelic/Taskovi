@@ -88,9 +88,8 @@ export default {
           }
         })
         .then(response => {
-          if (response.data.data[0] !== undefined)
+          if (response.data.data !== undefined)
             this.projectInfo = response.data.data[0];
-          //console.log(response.data.data[0].title);
         });
     },
 

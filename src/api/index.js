@@ -78,13 +78,13 @@ export const api = {
         email: email,
         pass: password
       })
-      .then(response => {
-        var sid = response.data.sid;
+      .then(r => {
+        let sid = r.data.sid;
         if (sid != undefined || sid != null) {
           // Zapisujem sid u store
           window.localStorage.sid = sid;
-          window.localStorage.name = response.data.name;
-          window.localStorage.surname = response.data.surname;
+          window.localStorage.name = r.data.name;
+          window.localStorage.surname = r.data.surname;
         }
       })
       .catch(error => {
@@ -106,7 +106,7 @@ export const api = {
 
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks'
-    if (index === 0) link = '/users/projects';
+    if (index === 1) link = '/users/projects';
     return axios.get(link, {
       params: {
         sid: window.localStorage.sid,
