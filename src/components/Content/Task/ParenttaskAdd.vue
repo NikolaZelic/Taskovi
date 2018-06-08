@@ -57,9 +57,9 @@
 
           <!-- TESTIRANJE MULTYSELEKTA -->
           <multiselect v-model="selectedTags" id="ajax" label="text" track-by="id" placeholder="Select Tags"
-            open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true" :loading="isLoading"
-            :internal-search="false" :clear-on-select="false" :close-on-select="false" :limit="5"
-            :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="asyncFind">
+            open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true"
+            :internal-search="false" :clear-on-select="true" :close-on-select="true" :limit="5"
+            :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="searchTags">
             <template slot="clear" slot-scope="props">
               <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
             </template><span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
@@ -87,6 +87,8 @@ import Multiselect from "vue-multiselect";
 import {store} from "@/store/index";
 import {api} from "@/api/index";
 
+var interval;
+
 export default {
   components: {
     flatPickr,
@@ -112,7 +114,8 @@ export default {
       inputProps: {class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'},
       // tags: [{id:1, text:'Front-end'}],
       selectedTags: [],
-      isLoading: false,
+      inputTagHaveChange: 0,
+      tagSearchStr: null,
 
     }
   },
@@ -130,7 +133,15 @@ export default {
   },
 
   created: function(){
-    store.dispatch('suggestTags', {searchStr:'b', tagFor:'task'})
+    interval = setInterval(() => {
+      // Pozivanje sugestija za tagove
+      if ( this.inputTagHaveChange == 1 && this.tagSearchStr != null && this.tagSearchStr.length > 0 ) {
+        store.dispatch( 'suggestTags', {tagFor:'task', searchStr:this.tagSearchStr } );
+        this.inputTagHaveChange = 0;
+      }
+
+      // Poziv sugestija za user tj. timove
+    }, 500);
   },
 
   methods: {
@@ -167,8 +178,10 @@ export default {
         return i;
     },
 // MEtode za MultySelekt komponentu
-    asyncFind(query){
-      console.log(query);
+    searchTags(str){
+      // console.log('Input change');
+      this.inputTagHaveChange = 1;
+      this.tagSearchStr = str;
     },
     limitText (count) {
       return `and ${count} other countries`;

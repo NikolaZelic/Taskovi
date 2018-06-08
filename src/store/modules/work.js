@@ -47,10 +47,11 @@ const actions = {
     api.selectTask(params.id);
   },
 }
+
 const mutations = {
   // by Zelic
   setSuggestedTags: (state, params) => {
-    store.state.suggestedTags = params.suggestions;
+    state.suggestedTags = params.suggestions;
   },
 
   // by Zelic - koristi se u TeamAdd-u
@@ -69,7 +70,7 @@ const mutations = {
   //   store.state.usersCompanies = params.r.data;
   // },
 
-  // by nzelic
+  // by Zelic
   changeSelectedTask: (state, params) => {
     console.log('Change selected task');
     console.log(params.selectedTask);
@@ -77,6 +78,7 @@ const mutations = {
     // console.log(state.selectedTask);
   },
 }
+
 const getters = {
   getSelectedTask: state => {
     return store.state.selectedTask;
@@ -87,8 +89,9 @@ const getters = {
     return store.state.suggestedUsers;
   },
 
+  // by Zelic
   getSuggestedTags: state => {
-    return store.state.suggestedTags;
+    return state.suggestedTags;
   }
 }
 export default {
