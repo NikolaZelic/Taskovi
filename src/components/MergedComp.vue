@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="wrapper">
       <side-bar/>
-    <!-- <div class="main-content"> -->
+    <div class="main-content">
       <div class="dynamic-center">
           <!-- <user-options/> -->
 
@@ -9,7 +9,7 @@
           <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
           <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
           <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
 
           <!-- Adding new -->
           <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>

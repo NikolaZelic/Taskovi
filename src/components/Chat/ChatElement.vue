@@ -22,6 +22,7 @@
 </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import ChatMessage from "./ChatMessage";
 import {
   store
@@ -46,10 +47,10 @@ export default {
     };
   },
   computed: {
-    messages() {
-      return store.getters.getMessages;
-    },
-
+    ...mapState({
+    // arrow functions can make the code very succinct!
+    messages: state => state.messages,
+    }),
     taskid() {
       return store.getters.getTaskID;
     }

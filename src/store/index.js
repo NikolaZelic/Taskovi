@@ -10,6 +10,7 @@ import moduleteam from './modules/team';
 import moduleproject from './modules/project';
 import moduletask from './modules/task';
 import modulework from './modules/work';
+import moduleuser from './modules/user';
 import {api} from '@/api/index.js';
 
 Vue.use(Vuex);
@@ -26,6 +27,7 @@ export const store = new Vuex.Store({
     moduleproject,
     moduletask,
     modulework,
+    moduleuser,
   },
   strict: true,
   state: {
