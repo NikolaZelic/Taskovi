@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       uploadProgress: 0
-    };
+    }
   },
   methods: {
     icon(){

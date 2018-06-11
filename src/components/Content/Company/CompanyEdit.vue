@@ -47,6 +47,7 @@
 import axios from "axios";
 import { store } from "@/store/index.js";
 import { mapGetters } from "vuex";
+import {mapState} from 'vuex';
 import Multiselect from "vue-multiselect";
 
 export default {
@@ -74,7 +75,7 @@ export default {
         {
           companyname: this.companyname,
           companydesc: this.companydesc,
-          comid: this.getEditItemID,
+          comid: this.$store.state.itemAction.edit,
           sid: window.localStorage.getItem("sid")
         }
       );
@@ -93,11 +94,10 @@ export default {
     },
 
     addAdmin() {
-      axios
-        .post(
+      axios.post(
           "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
           {
-            comid: this.selectedCompanyID,
+            comid: this.$store.state.itemAction.edit,
             email: this.email,
             sid: window.localStorage.getItem("sid")
           }
@@ -109,7 +109,9 @@ export default {
           } else {
             this.notExistingAdmin = false;
           }
-          this.loadAdmins();
+          //this.loadAdmins();
+        }).then(response => {
+          this.loadAdmins(this.$store.state.itemAction.edit);
         });
     },
 
@@ -118,7 +120,7 @@ export default {
         .post(
           "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
           {
-            comid: this.selectedCompanyID,
+            comid: this.$store.state.itemAction.edit,
             email: this.email,
             sid: window.localStorage.getItem("sid")
           }
@@ -130,8 +132,9 @@ export default {
           } else {
             this.notExistingEmployee = false;
           }
-          this.loadEmployees();
-        });
+        }).then(response => {
+          this.loadEmployees(this.$store.state.itemAction.edit);
+        });;
     },
 
     loadAdmins(comID) {
@@ -169,15 +172,19 @@ export default {
 
   computed: {
     ...mapGetters({
-      selectedCompanyID: "selectedItemID",
-      getEditItemID: 'getEditItemID'
+      selectedCompanyID: "selectedItemID"
+      // getEditItemID: 'getEditItemID'
+    }),
+
+    ...mapState({
+      getEditCompanyID: 'itemAction.edit'
     })
   },
 
   mounted() {
     // getCompanyInfo(13);
-    this.loadAdmins(this.selectedCompanyID);
-    this.loadEmployees(this.selectedCompanyID);
+    this.loadAdmins(this.$store.state.itemAction.edit);
+    this.loadEmployees(this.$store.state.itemAction.edit);
   },
 
 

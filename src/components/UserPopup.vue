@@ -25,7 +25,9 @@ import {
   mapState
 } from 'vuex'
 export default {
-  data: {},
+  data() {
+    return {}
+  },
   computed: {
     lsName() {
       return localStorage.name;
