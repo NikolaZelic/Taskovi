@@ -176,15 +176,16 @@ export default {
       // getEditItemID: 'getEditItemID'
     }),
 
-    ...mapState({
-      getEditCompanyID: 'itemAction.edit'
-    })
+
+    editID(){
+      return store.state.itemAction.edit;
+    }
   },
 
   mounted() {
     // getCompanyInfo(13);
-    this.loadAdmins(this.$store.state.itemAction.edit);
-    this.loadEmployees(this.$store.state.itemAction.edit);
+    this.loadAdmins(store.state.itemAction.edit);
+    this.loadEmployees(store.state.itemAction.edit);
   },
 
 
@@ -198,12 +199,12 @@ export default {
   //   this.loadEmployees(getEditItemID);
   // }
 
-  // watch: {
-  //   selectedCompanyID: function(val, oldVal) {
-  //     this.loadAdmins(val);
-  //     this.loadEmployees(val);
-  //   }
-  // }
+  watch: {
+    editID: function(val, oldVal) {
+      this.loadAdmins(val);
+      this.loadEmployees(val);
+    }
+  }
 };
 </script>
 

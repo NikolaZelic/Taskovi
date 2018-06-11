@@ -86,7 +86,7 @@ export default {
   },
 
   watch: {
-    selectedItemID(val) {
+    selectedItemID(val, oldVal) {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
