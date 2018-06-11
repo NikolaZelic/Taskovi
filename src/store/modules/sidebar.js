@@ -1,5 +1,9 @@
-import {api} from '@/api/index.js';
-import {store} from '../index';
+import {
+  api
+} from '@/api/index.js';
+import {
+  store
+} from '../index';
 const actions = {
   getUserWork(commit, params) {
     api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
@@ -7,8 +11,11 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
-    }).catch(error => {
-      console.log('Greska pri ucitavanju podataka: ' + error);
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
+      });
     });
   },
 
@@ -18,6 +25,11 @@ const actions = {
         index: params.index,
         data: r.data.data
       });
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
+      });
     });
   },
 
@@ -26,6 +38,11 @@ const actions = {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
+      });
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: 'Greska pri ucitavanju podataka: ' + e,
       });
     });
   },
@@ -58,11 +75,11 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     // IMPROVE API - ZELIC
-    if (params.index === 1) {
-      store.dispatch('selectTask', {
-        id: params.id
-      })
-    }
+    // if (params.index === 1) {
+    //   store.dispatch('selectTask', {
+    //     id: params.id
+    //   })
+    // }
   },
 
   itemAddClick: (state, params) => {

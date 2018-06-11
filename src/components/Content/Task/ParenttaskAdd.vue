@@ -42,7 +42,7 @@
           <vue-autosuggest
             id='auto-suggestion'
             ref="suggestionTag"
-            :suggestions="[ { data: suggestions } ]"
+            :suggestions="[ { data: suggestedWorker } ]"
             :renderSuggestion="renderSuggestion"
             @click="clickHandler"
             :onSelected="onSelected"
@@ -54,22 +54,19 @@
 
         <!-- TAGS -->
         <div class="form-group">
-
-          <!-- TESTIRANJE MULTYSELEKTA -->
-          <multiselect v-model="selectedTags" id="ajax" label="text" track-by="id" placeholder="Select Tags"
-            open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true" :loading="isLoading"
-            :internal-search="false" :clear-on-select="false" :close-on-select="false" :limit="5"
-            :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="asyncFind">
+          <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Select Tags"
+            open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true"
+            :internal-search="false" :clear-on-select="true" :close-on-select="true" :limit="5"
+            :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="searchTags">
             <template slot="clear" slot-scope="props">
               <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
             </template><span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
           </multiselect>
-
         </div>
 
         <!-- SUBMIT -->
         <div class="form-group button-wrapper">
-          <button type="submit" class="btn btn-success">Create</button>
+          <button @click='createTask' type="submit" class="btn btn-success">Create</button>
         </div>
 
       </div>
@@ -86,6 +83,9 @@ import {
 import Multiselect from "vue-multiselect";
 import {store} from "@/store/index";
 import {api} from "@/api/index";
+import { mapState } from 'vuex';
+
+var interval;
 
 export default {
   components: {
@@ -106,31 +106,60 @@ export default {
           dateFormat: 'Y-m-d',
           // locale: "Hindi", // locale for this instance only
         },
-      teamSelect: false,
+      teamSelect: 0,
+      inputWorker: null,
+      inputWorkerHaveChange: 0,
+      choosenWorker: null,
       personClass: 'fas fa-user fas-selected',
       teamClass: 'fas fa-users',
       inputProps: {class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'},
-      // tags: [{id:1, text:'Front-end'}],
       selectedTags: [],
-      isLoading: false,
+      inputTagHaveChange: 0,
+      tagSearchStr: null,
 
+      proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
     }
   },
 
   computed: {
-    suggestions: function(){
-      return ["Pera","Mika","Zika"];
+    suggestedWorker: function(){
+      if( this.teamSelect == 1 )  // Selektovan tim
+        return store.getters.getSuggestedTeams;
+      else   // Selektovan korisnik
+        return store.getters.getSuggestedUsers;
     },
-    inputWorker: function(){
-      return this.$refs.suggestionTag.searchInput;
-    },
-    suggestedTags: function(){
-      return store.getters.getSuggestedTags;
-    }
+    ...mapState({
+      companyID: 'companyID',
+      suggestedTags: state => state.modulework.suggestedTags,
+    }),
   },
 
   created: function(){
-    store.dispatch('suggestTags', {searchStr:'b', tagFor:'task'})
+    interval = setInterval(() => {
+      // Pozivanje sugestija za tagove
+      if ( this.inputTagHaveChange == 1 && this.tagSearchStr != null && this.tagSearchStr.length > 0 ) {
+        store.dispatch( 'suggestTags', {tagFor:'task', searchStr:this.tagSearchStr } );
+        this.inputTagHaveChange = 0;
+      }
+      // Poziv sugestija za user tj. timove
+      if( this.inputWorkerHaveChange == 1 && this.inputWorker != null && this.inputWorker.length > 0 ){
+        if( this.teamSelect == 0 )
+          this.suggestUsers();
+        else
+          this.suggestTeams();
+        this.inputWorkerHaveChange = 0;
+      }
+    }, 500);
+  },
+
+  destroy: function() {
+    clearInterval(interval);
+  },
+
+  watch:{
+    selectedTags: function(){
+      store.dispatch('cleanSuggestedTags');
+    },
   },
 
   methods: {
@@ -140,6 +169,9 @@ export default {
       this.teamClass = 'fas fa-users';
       this.inputProps.placeholder = 'Enter User';
       this.$refs.suggestionTag.searchInput = null;
+      this.choosenWorker = null;
+      store.dispatch('cleanSuggestions');
+      store.dispatch('cleanSuggestedTeams');
     },
     selectTeam (){
       this.teamSelect = true;
@@ -147,33 +179,81 @@ export default {
       this.teamClass = 'fas fa-users fas-selected';
       this.inputProps.placeholder = 'Enter Team';
       this.$refs.suggestionTag.searchInput = null;
+      this.choosenWorker = null;
+      store.dispatch('cleanSuggestions');
+      store.dispatch('cleanSuggestedTeams');
     },
 // Metode u AutoSuggesion komponenti
     onInputChange: function(text, oldText){
+      this.inputWorker = text;
+      this.inputWorkerHaveChange = 1;
     },
     onSelected(item) {
       if( item == null || item == undefined )
         return;
+      this.choosenWorker = item.item;
+      this.inputWorker = null;
     },
     clickHandler(item) {
     },
     renderSuggestion(suggestion){
-       var i = suggestion.item;
-       return i;
+      var i = suggestion.item;
+      if( this.teamSelect == 0 ){  // Selektovan je korisnik
+        return i.name + " " + i.surname + " " + i.email;
+      }
+      else {
+        return i.name;
+      }
     },
     getSuggestionValue(item){
         var i = item.item;
-        // return i.name+' '+i.surname+' '+i.email;
-        return i;
+        if( this.teamSelect == 0 ){  // Selektovan je korisnik
+          return i.name + " " + i.surname + " " + i.email;
+        }
+        else {
+          return i.name;
+        }
     },
-// MEtode za MultySelekt komponentu
-    asyncFind(query){
-      console.log(query);
+    suggestUsers(){
+      // console.log('SUggest users');
+      store.dispatch('refreshSuggestions', {searchText: this.inputWorker, comId:this.companyID} );
+    },
+    suggestTeams(){
+      store.dispatch('suggestTeams', {searchStr: this.inputWorker, comId: this.companyID});
+    },
+
+// Metode za MultySelekt komponentu
+    searchTags(str){
+      // console.log('Input change');
+      this.inputTagHaveChange = 1;
+      this.tagSearchStr = str;
     },
     limitText (count) {
       return `and ${count} other countries`;
-    }
-  }
+    },
+
+// Kreiranje taska
+    createTask(){
+      // Provera ulaznih vrednosti
+      if(this.title == null || this.title.length == 0){
+        return;
+      }
+
+      var usrid = null;
+      var teamid = null;
+      if( this.teamSelect == 1 )
+        teamid = this.choosenWorker.id;
+      else
+        usrid = this.choosenWorker.id;
+
+      var tagarray = this.selectedTags.map( e => e.id );
+
+      api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray ).
+      then( result => {
+        console.log( result );
+      } );
+    },
+  },
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
@@ -333,5 +413,29 @@ export default {
 .autosuggest__results .autosuggest__results_item:focus,
 .autosuggest__results .autosuggest__results_item:hover {
   background-color: #2e3038;
+}
+
+.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly]{
+    background: #2e3038;
+}
+.tmp-content .multiselect .multiselect__tags,
+.tmp-content .multiselect .multiselect__single,
+.tmp-content .multiselect #tags-component {
+  background: #2e3038;
+  /* color: #eee; */
+}
+.tmp-content .multiselect #tags-component:focus {
+  color: #eee;
+}
+.tmp-content .multiselect .multiselect__option--highlight{
+  background: #454854;
+}
+.tmp-content .multiselect .multiselect__option--highlight:hover{
+  background: #2e3038;
+}
+.tmp-content .multiselect--active .multiselect__option--highlight::after,
+.tmp-content .multiselect .multiselect__tag span,
+.tmp-content .multiselect .multiselect__tag{
+  background: #cc6600;
 }
 </style>

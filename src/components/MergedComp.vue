@@ -3,32 +3,36 @@
       <side-bar/>
     <div class="main-content">
       <div class="dynamic-center">
+
         <!-- <keep-alive> -->
           <!-- <profile/> -->
+
+          <!-- <user-options/> -->
+
 
           <!-- Editing existing -->
           <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
           <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
           <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-          <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
 
           <!-- Adding new -->
           <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
           <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
           <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-          <team-add v-if="selectedTab === 3 && newItem===1 && selectedItemEdit===undefined"></team-add>
+          <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
 
           <!-- Viewing existing -->
           <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
           <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
           <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-          <team-view v-else-if='selectedTab === 3 && newItem===undefined && selectedItemEdit===undefined'></team-view>
+          <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
           <!-- <parenttask-add/> -->
-        <!-- </keep-alive> -->
 
       </div>
       <!-- <chat-element/> -->
+      <modal-error v-if="modalError"></modal-error>
     </div>
   </div>
 </template>
@@ -61,8 +65,9 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
+import ModalError from '@/components/Misc/ModalError';
 
-import Profile from "@/components/UserOptions";
+import UserOptions from "@/components/UserOptions";
 import {
   api
 } from "@/api/index.js";
@@ -92,7 +97,8 @@ export default {
     TeamEdit,
     TeamView,
     ParenttaskAdd,
-    Profile
+    UserOptions,
+    ModalError,
   },
   mounted() {
     // TEST LOGIN -- REMOVE FINAL
@@ -108,13 +114,10 @@ export default {
   computed: {
     ...mapState({
       selectedTab: 'currentTabIndex',
+      modalError: state => state.modalError.active,
+      newItem: state => state.itemAction.add,
+      selectedItemEdit: state => state.itemAction.edit,
     }),
-    newItem() {
-      return store.state.itemAction.add;
-    },
-    selectedItemEdit() {
-      return store.state.itemAction.edit;
-    },
   }
 }
 </script>
