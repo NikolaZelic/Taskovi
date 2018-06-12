@@ -64,12 +64,23 @@
           </multiselect>
         </div>
 
+        <!-- TaskAdd.vue -->
+        <div class="form-group">
+          <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' >
+            <option disabled value=null>Select Priorety</option>
+            <option value='1'>High</option>
+            <option value='2'>Low</option>
+            <option value='3'>Medium</option>
+          </select>
+        </div>
+
         <!-- SUBMIT -->
         <div class="form-group button-wrapper">
           <button @click='createTask' type="submit" class="btn btn-success">Create</button>
         </div>
 
-      </div>
+      </div><!-- cotent -->
+
   </div>
 </template>
 
@@ -118,6 +129,8 @@ export default {
       tagSearchStr: null,
 
       proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
+      task:  false,
+      selectedPrioretyClass: 'unselected form-control',
     }
   },
 
@@ -160,6 +173,10 @@ export default {
     selectedTags: function(){
       store.dispatch('cleanSuggestedTags');
     },
+    selectedPriorety: function(){
+      if( this.selectedPrioretyClass != 'form-control' )
+        this.selectedPrioretyClass = 'form-control';
+    },
   },
 
   methods: {
@@ -187,24 +204,40 @@ export default {
     onInputChange: function(text, oldText){
       this.inputWorker = text;
       this.inputWorkerHaveChange = 1;
+      this.choosenWorker = null;
     },
     onSelected(item) {
       if( item == null || item == undefined )
         return;
       this.choosenWorker = item.item;
       this.inputWorker = null;
+      store.dispatch('cleanSuggestions');
+      store.dispatch('cleanSuggestedTeams');
     },
     clickHandler(item) {
     },
     renderSuggestion(suggestion){
+      var str = this.inputWorker;
       var i = suggestion.item;
       if( this.teamSelect == 0 ){  // Selektovan je korisnik
-        return i.name + " " + i.surname + " " + i.email;
+        // Oznacavanje selektovanih slova
+        return <div class='sugestija'>{this.oznaciIme(i.name, str)} {this.oznaciIme(i.surname, str)} {this.oznaciIme(i.email, str)}</div>;
       }
       else {
-        return i.name;
+        return <div class='sugestija'>{this.oznaciIme(i.name, str)}</div>;
       }
     },
+    oznaciIme(ime, str){
+      var reg = new RegExp(str, 'i');
+      var m = ime.search(reg);
+      if(  m !=-1 ){
+        var ostalo = ime.replace( reg, '' );
+        var pocetak = ime.replace( new RegExp(".*("+str+").+",'i'), "$1" );
+        return <span class='rec'><span class='oznacen'>{pocetak}</span><span class='neoznacen'>{ostalo}</span></span>;
+      }
+      return <span class='rec'><span class='neoznacen'>{ime}</span></span>
+    },
+
     getSuggestionValue(item){
         var i = item.item;
         if( this.teamSelect == 0 ){  // Selektovan je korisnik
@@ -258,7 +291,21 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
+.sugestija{
 
+}
+.rec{
+
+}
+.neoznacen{
+
+}
+.oznacen{
+  color: #cc6600;
+}
+.unselected{
+  color: #6c757d !important;
+}
 .tmp-content{
   position: fixed;
   /* z-index: 9998; */
@@ -426,6 +473,11 @@ export default {
 }
 .tmp-content .multiselect #tags-component:focus {
   color: #eee;
+}
+.tmp-content .multiselect .multiselect__tags,
+.tmp-content .multiselect .multiselect__single,
+.tmp-content .multiselect #tags-component::placeholder {
+  color: #6c757d;
 }
 .tmp-content .multiselect .multiselect__option--highlight{
   background: #454854;
