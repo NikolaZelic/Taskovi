@@ -11,15 +11,27 @@
 
     </div>
     <div class="right-side">
-      <div>
-        <table>
-          <tr><td>Name:</td><td><input type="text" :value="name" :disabled="editable"/></td></tr>
-          <tr><td>Surname:</td><td><input type="text" :value="surname" :disabled="editable"/></td></tr>
-          <tr><td>Age:</td><td><input type="text" value="999" :disabled="editable"/></td></tr>
-          <tr><td>Phone number:</td><td><input type="text" value="06399999" :disabled="editable"/></td></tr>
-          <tr class="edit"><td colspan="2"><button v-on:click="edit">{{editable?"Edit":"Save"}}</button></td></tr>
-        </table>
-      </div>
+      <tabs>
+        <tab name="Personal">
+          <table>
+            <tr><td>Name:</td><td><input type="text" :value="name" :disabled="editable"/></td></tr>
+            <tr><td>Surname:</td><td><input type="text" :value="surname" :disabled="editable"/></td></tr>
+            <tr><td>Age:</td><td><input type="text" value="999" :disabled="editable"/></td></tr>
+            <tr><td>Phone number:</td><td><input type="text" value="06399999" :disabled="editable"/></td></tr>
+            <tr class="edit"><td colspan="2"><button v-on:click="edit">{{editable?"Edit":"Save"}}</button></td></tr>
+          </table>
+          </tab>
+          <tab name="Description">
+            <textarea></textarea>
+          </tab>
+          <tab name="Responsibility">
+
+          </tab>
+          <tab name="Company">
+
+          </tab>
+
+      </tabs>
     </div>
   </div>
 </div>
@@ -27,11 +39,16 @@
 
 
 <script>
+import { Tab ,Tabs } from "vue-tabs-component";
 import {
   store
 } from "@/store/index.js"
 
 export default {
+    components:{
+      Tab,
+      Tabs
+    },
     data(){
       return {
         editable : true
