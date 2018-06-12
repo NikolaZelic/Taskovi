@@ -10,7 +10,8 @@
       </svg>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index)" :disabled="tab.disabled">
+      <button v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
+        :disabled="tab.disabled">
         </button>
     </div>
 
@@ -180,6 +181,9 @@ export default {
     },
     activeItem(val) {
       if (this.currentTabIndex === 0) this.companyID = val;
+    },
+    sidebarCollapsed(val) {
+      store.commit('mainFocused', val);
     }
   },
   methods: {

@@ -91,6 +91,9 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.edit = params.id;
   },
+  mainFocused: (state, params) => {
+    store.state.mainFocused = params;
+  },
 };
 // const getters = {
 //

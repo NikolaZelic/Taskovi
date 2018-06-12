@@ -26,8 +26,12 @@
 </template>
 
 <script>
-import { store } from "@/store/index.js";
-import { mapState } from "vuex";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapState
+} from "vuex";
 export default {
   computed: {
     lsName() {
@@ -45,14 +49,13 @@ export default {
 
 <style scoped>
 .popup {
-  position: relative;
+  position: absolute;
   left: 66px;
   border-radius: 20px;
-  border: 1px solid #5555;
-  top: 60px;
+  border: 1px solid #e6e6e6d1;
+  bottom: 60px;
   display: inline-block;
-  background: #040201f4;
-  box-shadow: 0px 0px 20px 5px rgba(154, 79, 79, 0.2);
+  background: #1d1d1dff;
   width: 300px;
   height: 200px;
   user-select: none;
@@ -70,7 +73,7 @@ export default {
   border-radius: 6px;
   padding: 8px 0;
   position: absolute;
-  z-index: 1;
+  /* z-index: 1; */
   bottom: 125%;
   left: 50%;
   margin-left: -80px;

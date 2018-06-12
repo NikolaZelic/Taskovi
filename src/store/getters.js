@@ -7,6 +7,10 @@ const getters = {
   selectedItemID: state => {
     return store.state.sidebarItemSelection[store.state.currentTabIndex];
   },
+
+  isFocus: state =>{
+    return store.state.mainFocused;
+  }
 }
 
 export default {

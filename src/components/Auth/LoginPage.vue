@@ -103,7 +103,7 @@ export default {
 
 .form {
   margin: 40% auto 0;
-  padding: 40px;
+  padding: 40px 40px 0px;
   max-width: 550px;
   text-align: center;
 }
@@ -193,6 +193,6 @@ export default {
   color: #ef3b3a;
 }
 .preset button {
-  line-height: 10px;
+  line-height: 0px;
 }
 </style>
