@@ -1,25 +1,32 @@
 <template>
-  <div class="login-wrapper border border-light">
-    <form class="form-signin" @submit.prevent="login">
-      <div class="user-field">
-        <i class="fas fa-user"></i>
-        <input v-model="email" type="email" id="inputEmail" class="form-control dark-input" placeholder="Email address" required
-          autofocus>
-      </div>
-      <div class="pass-field">
-        <i class="fas fa-unlock-alt"></i>
-        <input v-model="password" type="password" id="inputPassword" class="form-control dark-input" placeholder="Password" required>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit" @click='login()'>
-        <span class="fas fa-sign-in-alt"></span> Sign in
-      </button>
+<div class="login">
+  <div class="form">
+    <form class="register-form">
+      <input type="text" placeholder="name" />
+      <input type="text" placeholder="surname" />
+      <input type="password" placeholder="password" />
+      <input type="text" placeholder="email address" />
+      <button>create</button>
+      <p class="message">Already registered?
+        <a href="#">Sign In</a>
+      </p>
+    </form>
+    <form class="login-form">
+      <input v-model="email" type="email" placeholder="email" />
+      <input v-model="password" type="password" placeholder="password" />
+      <button @click.prevent="login">login</button>
+      <p class="message">Not registered?
+        <a href="#" @click='signUp()'>Create an account</a>
+      </p>
     </form>
   </div>
+</div>
 </template>
 
 <script>
-// import axios from "axios";
-import { api } from "@/api/index.js";
+import {
+  api
+} from "@/api/index.js";
 export default {
   name: "Login",
   data() {
@@ -30,97 +37,132 @@ export default {
   },
   methods: {
     login() {
-      // console.log("click");
-      api.login(this.email, this.password);
+      let mail = this.email;
+      let pass = this.password;
+      if (mail.length < 4) {
+        alert('Email is not valid');
+        return;
+      }
+      if (pass.length < 2) {
+        alert('Password cannot be less then two characters');
+        return;
+      }
+      // alert(this.email + ' '+ this.password);
+      api.login(mail, pass).then(r => {
+          let sid = r.data.sid;
+          if (sid != undefined || sid != null) {
+            // WRITE SID TO STORE
+            window.localStorage.sid = sid;
+            window.localStorage.name = r.data.name;
+            window.localStorage.surname = r.data.surname;
+            this.$router.push('/');
+          } else {
+            alert(r.data.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
 </script>
 
 <style lang="css" scoped>
-body {
-  background: #605b56;
+.login-page {
+  padding: 8% 0 0;
+  margin: auto;
 }
 
-.login-wrapper {
-  width: 70%;
-  margin: 12% auto;
+.form {
+  margin: 40% auto 0;
+  padding: 40px;
+  max-width: 550px;
+  text-align: center;
 }
 
-.form-signin {
-  max-width: 330px;
-  padding: 10% 15px;
+.form input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  /* font-size: 14px; */
+}
+
+.form button {
+  text-transform: uppercase;
+  outline: 0;
+  background: #4caf50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #ffffff;
+  /* font-size: 14px; */
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.form button:hover,
+.form button:active,
+.form button:focus {
+  background: #43a047;
+}
+
+.form .message {
+  margin: 15px 0 0;
+  color: #efefef;
+}
+
+.form .message a {
+  color: #82ea86;
+  text-decoration: none;
+}
+
+.form .register-form {
+  display: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
   margin: 0 auto;
 }
 
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
+.container:before,
+.container:after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.form-signin .checkbox {
-  font-weight: normal;
+.container .info {
+  margin: 50px auto;
+  text-align: center;
 }
 
-.form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  /* font-size: 36px; */
+  font-weight: 300;
+  color: #1a1a1a;
 }
 
-.form-signin .form-control:focus {
-  z-index: 2;
+.container .info span {
+  color: #4d4d4d;
+  /* font-size: 12px; */
 }
 
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.dark-input {
-  background: #222;
-  color: white;
-}
-
-.dark-input::placeholder {
-  color: white;
-}
-
-i {
-  color: white;
-  position: absolute;
-  left: 10px;
-  width: 24px !important;
-  height: 24px;
-  top: 8px;
-  z-index: 5;
-}
-
-.user-field,
-.pass-field {
-  position: relative;
-}
-
-input {
-  margin: auto;
-  border-radius: 3px;
-  height: 40px;
-  background: #1d1d1d;
-  border: none;
-  padding-left: 10px;
-  font-size: 14px;
-  color: #fff;
+.container .info span a {
+  color: #000000;
   text-decoration: none;
-  text-indent: 35px;
+}
+
+.container .info span .fa {
+  color: #ef3b3a;
 }
 </style>

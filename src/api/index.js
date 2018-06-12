@@ -1,6 +1,6 @@
 import {
   instance as axios
-} from './config.js'
+} from './config.js';
 import {
   store
 } from '@/store/index.js';
@@ -9,21 +9,21 @@ import {
 export const api = {
 
   // by Zelic - Poziva se u ParenttaskAdd.vue
-  createParenttask(proid, title, description, deadline, userid, teamid, tagarray ){
-    return axios.post('project/'+proid+"/parenttasks?sid="+window.localStorage.sid,{
-        title: title,
-        description: description,
-        deadline: deadline,
-        userid: userid,
-        teamid: teamid,
-        tagarray: JSON.stringify(tagarray)
+  createParenttask(proid, title, description, deadline, userid, teamid, tagarray) {
+    return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
+      title: title,
+      description: description,
+      deadline: deadline,
+      userid: userid,
+      teamid: teamid,
+      tagarray: JSON.stringify(tagarray)
     });
   },
 
   // by Zelic - koristi se u ParenttaskAdd.vue
-  suggestGroup(grpType, searchStr, comId){
+  suggestGroup(grpType, searchStr, comId) {
     return axios.get('groups', {
-      params:{
+      params: {
         sid: window.localStorage.sid,
         searchstring: searchStr,
         comid: comId,
@@ -78,6 +78,7 @@ export const api = {
     });
   },
 
+  // SVETA
   readeFeeds(tasid, fedid, direction) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {
@@ -85,11 +86,11 @@ export const api = {
         pravac: direction,
         sid: window.localStorage.sid,
       }
-    })
+    });
   },
 
+  // SVETA
   postMessage(tasid, mess) {
-    // console.log('Ovo se desava');
     var msg = store.state.messages;
     var fd = new FormData();
     fd.append('type', 'text');
@@ -97,6 +98,7 @@ export const api = {
     return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
   },
 
+  // SVETA
   sendAttach(tasid, file) {
     var fd = new FormData();
     fd.append("type", "file");
@@ -108,25 +110,21 @@ export const api = {
     });
   },
 
-  login(email, password) {
-    axios.post('auth/login', {
-        email: email,
-        pass: password
-      })
-      .then(r => {
-        let sid = r.data.sid;
-        if (sid != undefined || sid != null) {
-          // Zapisujem sid u store
-          window.localStorage.sid = sid;
-          window.localStorage.name = r.data.name;
-          window.localStorage.surname = r.data.surname;
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  // ZX
+  sessionActive() {
+    let sid = window.localStorage.sid;
+    return axios.get('auth/users?sid=' + sid);
   },
 
+  // ZX
+  login(email, password) {
+    return axios.post('auth/login', {
+      email: email,
+      pass: password
+    });
+  },
+
+  // ZX
   register(email, password, name, surname, description) {
     axios.post('auth/singup', {
       email: email,
@@ -171,7 +169,7 @@ export const api = {
 
   // ZX
   getUserWork(index, state, type, archived) {
-    let link = '/users/tasks'
+    let link = '/users/tasks';
     if (index === 1) link = '/users/projects';
     return axios.get(link, {
       params: {
@@ -203,20 +201,4 @@ export const api = {
     });
   },
 
-
-  // ZELIC - PROMENI AXIOS U RETURN
-  selectTask(id) {
-    // console.log('API Selected Task');
-    axios({
-      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
-      url: "/tasks/" + id
-    }).
-    then(response => {
-      // console.log(response);
-      store.commit('changeSelectedTask', {
-        selectedTask: response.data.Data[0]
-      });
-    });
-  }
-
-}
+};

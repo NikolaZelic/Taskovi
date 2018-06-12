@@ -13,7 +13,8 @@
     "axios": "^0.18.0",
     "lodash": "^4.17.10",
     "luxon": "^1.2.1",
-    "npm": "^6.0.1",
+    "npm": "^6.1.0",
+    "velocity-animate": "^1.5.1",
     "vue": "^2.5.2",
     "vue-autosuggest": "^1.4.2-1",
     "vue-datetime": "^1.0.0-beta.3",
@@ -21,7 +22,6 @@
     "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1",
     "vue-tabs-component": "^1.4.0",
-    "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
     "weekstart": "^1.0.0"
   },

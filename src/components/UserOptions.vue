@@ -5,10 +5,10 @@
   </div>
   <div class="tail">
     <div class="left-side">
-      <img src="static\user.png" class="picture">
+      <img src="static\img\user.png" class="picture">
       </img>
       <a href="#" class="change-pic">Change Picture</a>
-      
+
     </div>
     <div class="right-side">
       <div>

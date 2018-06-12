@@ -129,7 +129,7 @@ export default {
         return store.getters.getSuggestedUsers;
     },
     ...mapState({
-      companyID: 'companyID',
+      companyID: state => state.modulecompany.id,
       suggestedTags: state => state.modulework.suggestedTags,
     }),
   },

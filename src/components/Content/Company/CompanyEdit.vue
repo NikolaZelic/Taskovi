@@ -26,7 +26,7 @@
     <!-- List of all company's admins -->
     <h4>Company's admins:</h4>
     <ul class="list-group list-group-flush mb-5">
-      <li class="list-group-item" v-for="admin in admins">
+      <li class="list-group-item" v-for="admin in admins" :key="admin">
         {{ admin.usr_name }} {{ admin.usr_surname }}
         <span class="small"> --- {{ admin.usr_email }}</span>
       </li>
@@ -35,7 +35,7 @@
     <!-- List of all company's employees -->
     <h4>Company's employees:</h4>
     <ul class="list-group list-group-flush mb-5">
-      <li class="list-group-item" v-for="employee in employees">
+      <li class="list-group-item" v-for="employee in employees" :key="employee">
         {{ employee.name }}
         <span class="small"> --- {{ employee.email }}</span>
       </li>
@@ -47,7 +47,6 @@
 import axios from "axios";
 import { store } from "@/store/index.js";
 import { mapGetters } from "vuex";
-import {mapState} from 'vuex';
 import Multiselect from "vue-multiselect";
 
 export default {
@@ -75,7 +74,7 @@ export default {
         {
           companyname: this.companyname,
           companydesc: this.companydesc,
-          comid: this.$store.state.itemAction.edit,
+          comid: this.getEditItemID,
           sid: window.localStorage.getItem("sid")
         }
       );
@@ -94,10 +93,11 @@ export default {
     },
 
     addAdmin() {
-      axios.post(
+      axios
+        .post(
           "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
           {
-            comid: this.$store.state.itemAction.edit,
+            comid: this.selectedCompanyID,
             email: this.email,
             sid: window.localStorage.getItem("sid")
           }
@@ -109,9 +109,7 @@ export default {
           } else {
             this.notExistingAdmin = false;
           }
-          //this.loadAdmins();
-        }).then(response => {
-          this.loadAdmins(this.$store.state.itemAction.edit);
+          this.loadAdmins();
         });
     },
 
@@ -120,7 +118,7 @@ export default {
         .post(
           "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
           {
-            comid: this.$store.state.itemAction.edit,
+            comid: this.selectedCompanyID,
             email: this.email,
             sid: window.localStorage.getItem("sid")
           }
@@ -132,59 +130,34 @@ export default {
           } else {
             this.notExistingEmployee = false;
           }
-        }).then(response => {
-          this.loadEmployees(this.$store.state.itemAction.edit);
-        });;
-    },
-
-    loadAdmins(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins",
-          {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
-          this.admins = response.data.data;
+          this.loadEmployees();
         });
     },
 
-    loadEmployees(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users",
-          {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
-          this.employees = response.data.data;
-        });
+    loadAdmins(compID) {
+      store.dispatch("loadAdmins", {
+        compID: compID
+      });
+    },
+
+    loadEmployees(compID) {
+      store.dispatch("loadEmployees", {
+        compID: compID
+      });
     }
   },
 
   computed: {
     ...mapGetters({
-      selectedCompanyID: "selectedItemID"
-      // getEditItemID: 'getEditItemID'
-    }),
-
-    ...mapState({
-      getEditCompanyID: 'itemAction.edit'
+      selectedCompanyID: "selectedItemID",
+      getEditItemID: 'getEditItemID'
     })
   },
 
   mounted() {
     // getCompanyInfo(13);
-    this.loadAdmins(this.$store.state.itemAction.edit);
-    this.loadEmployees(this.$store.state.itemAction.edit);
+    this.loadAdmins(this.selectedCompanyID);
+    this.loadEmployees(this.selectedCompanyID);
   },
 
 
@@ -208,5 +181,3 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-<style scoped>
-</style>

@@ -1,39 +1,34 @@
 <template lang="html">
   <div id="wrapper">
-      <side-bar/>
-    <div class="main-content">
-      <div class="dynamic-center">
+    <side-bar/>
+    <div class="rightside">
+      <div class="maincontent">
+        <!-- <user-options/> -->
 
-        <!-- <keep-alive> -->
-          <!-- <profile/> -->
+        <!-- Editing existing -->
+        <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
+        <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
+        <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
+        <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
 
-          <!-- <user-options/> -->
+        <!-- Adding new -->
+        <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
+        <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
+        <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
+        <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
 
+        <!-- Viewing existing -->
+        <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
+        <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
+        <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
+        <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
-          <!-- Editing existing -->
-          <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
-          <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
-          <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
-
-          <!-- Adding new -->
-          <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
-          <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
-          <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-          <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
-
-          <!-- Viewing existing -->
-          <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
-          <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
-          <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-          <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
-
-          <!-- <parenttask-add/> -->
+        <!-- <parenttask-add/> -->
 
       </div>
       <!-- <chat-element/> -->
-      <modal-error v-if="modalError"></modal-error>
     </div>
+    <modal-error v-if="modalError"></modal-error>
   </div>
 </template>
 
@@ -65,7 +60,7 @@ import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
-import ModalError from '@/components/Misc/ModalError';
+import ModalError from "@/components/Misc/ModalError";
 
 import UserOptions from "@/components/UserOptions";
 import {
@@ -76,8 +71,7 @@ import {
 } from "vuex";
 import {
   mapState
-} from 'vuex'
-
+} from "vuex";
 
 export default {
   components: {
@@ -98,89 +92,94 @@ export default {
     TeamView,
     ParenttaskAdd,
     UserOptions,
-    ModalError,
+    ModalError
   },
-  mounted() {
-    // TEST LOGIN -- REMOVE FINAL
-    // api.login("email1@gmail.com", "pass123");
-    api.login("admin2@gmail.com", "admin222");
-    // api.login("email2@yahoo.com", "pass111");
-    // api.login("email001@qqq.com", "qqq");
-    // api.login("email004@qqq.com", "qqq");
-    // api.login("email2@yahoo.com", "pass111");
-
+  created() {
+    let sid = localStorage.sid;
+    if (sid === undefined || sid === null) {
+      this.$router.push('/auth');
+    } else {
+      // TEST LOGIN -- REMOVE FINAL
+      api.login("email1@gmail.com", "pass123");
+      // api.login("admin2@gmail.com", "admin222");
+      // api.login("email2@yahoo.com", "pass111");
+      // api.login("email001@qqq.com", "qqq");
+      // api.login("email004@qqq.com", "qqq");
+      // api.login("email2@yahoo.com", "pass111");}
+    }
   },
 
   computed: {
     ...mapState({
-      selectedTab: 'currentTabIndex',
+      selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       newItem: state => state.itemAction.add,
-      selectedItemEdit: state => state.itemAction.edit,
-    }),
+      selectedItemEdit: state => state.itemAction.edit
+    })
   }
-}
+};
 </script>
 
 <style lang="css">
-#wrapper {
-  display: flex;
-  align-items: stretch;
-  flex-direction: column;
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.item-filter {
-  justify-content: unset;
-  flex-wrap: wrap;
-}
-
-.fas {
-  font-size: 125%;
-}
-
-.dynamic-center {
-  padding: 50px 30px 0;
-  flex: 1;
-}
-
-.dynamic-center h1 {
-  text-align: center;
-}
-
-@media only screen and (min-width: 1500px) {
-  .main-content {
-    flex-direction: row;
-  }
-}
-
-@media only screen and (min-width: 900px) {
-  body{
-    font-size: 0.9rem;
-  }
   #wrapper {
-    flex-direction: row;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
   }
-  /* SIDEBAR */
-  #wrapper > aside {
-    position: fixed;
-    height: 100vh;
-    width: 45%;
+
+  .rightside {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .item-filter {
-    justify-content: space-around;
+    justify-content: unset;
+    flex-wrap: wrap;
   }
-  /* MAIN CONTENT */
-  #wrapper > div {
-    width: 55%;
-    margin-left: 45%;
-    min-height: 100vh;
+
+  .fas {
+    font-size: 125%;
   }
-}
+
+  .maincontent {
+    padding: 50px 30px 0;
+    flex: 1;
+  }
+
+  .maincontent h1 {
+    text-align: center;
+  }
+
+  @media only screen and (min-width: 1500px) {
+    .rightside {
+      flex-direction: row;
+    }
+  }
+
+  @media only screen and (min-width: 900px) {
+    body {
+      font-size: 0.9rem;
+    }
+    #wrapper {
+      flex-direction: row;
+    }
+    /* SIDEBAR */
+    #wrapper>aside {
+      position: fixed;
+      height: 100vh;
+      width: 45%;
+    }
+
+    .item-filter {
+      justify-content: space-around;
+    }
+    /* MAIN CONTENT */
+    #wrapper>.rightside {
+      width: 55%;
+      margin-left: 45%;
+      min-height: 100vh;
+    }
+  }
+
 </style>
