@@ -26,7 +26,7 @@
         <!-- <parenttask-add/> -->
 
       </div>
-      <chat-element/>
+      <chat-element v-if="taskid != -1"/>
     </div>
     <modal-error v-if="modalError"></modal-error>
   </div>
@@ -118,11 +118,9 @@ export default {
       isFocus: state => state.mainFocused,
     }),
     ...mapGetters({
-      isFocus: 'isFocus'
-    }),
-    // mainMargin() {
-    //   this.isFocus = this.$store.state.mainExpandMarginTo;
-    // }
+      isFocus: 'isFocus',
+      taskid: 'getTaskID'
+    })
   }
 };
 </script>

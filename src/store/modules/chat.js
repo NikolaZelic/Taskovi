@@ -14,7 +14,7 @@ const actions = {
     api.postMessage(params.taskid, params.text).then(response => {
       // KORISTI GETTER UMESTO DIREKTNO STORE
       console.log("Dolazi ovde");
-      var msg = store.state.messages;
+      var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
       } else {
@@ -29,7 +29,7 @@ const actions = {
   sendAttach(commit, params){
     api.sendAttach(params.taskid, params.file).then(response =>{
       //For refresh new messages
-      var msg = store.state.messages;
+      var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
       } else {
@@ -50,12 +50,12 @@ const mutations = {
   addMessages: (state, params) => {
     if(params.data){
       if (params.direction === 'start') {
-        store.state.messages = params.data;
+        state.messages = params.data;
       } else if (params.direction === 'up') {
-        params.data.forEach(e => store.state.messages.unshift(e));
+        params.data.forEach(e => state.messages.unshift(e));
       } else if (params.direction === 'down') {
         if (params.data != undefined)
-          params.data.forEach(e => store.state.messages.push(e));
+          params.data.forEach(e => state.messages.push(e));
       }
     }
   }
@@ -72,8 +72,13 @@ const getters ={
   }
 }
 
+const state = {
+  messages: [],
+}
+
 export default {
   actions,
   mutations,
-  getters
+  getters,
+  state
 }

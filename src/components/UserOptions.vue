@@ -84,9 +84,10 @@ export default {
 
 <style scoped>
 .all {
-
   display: flex;
   flex-flow: column;
+  background-color: #333;
+  height: 100vh;
 }
 
 .head {
@@ -119,6 +120,7 @@ export default {
 }
 
 .tail .right-side {
+    background-color: #333;
   border-radius: 2px;
   background-color: white;
   flex: 3;

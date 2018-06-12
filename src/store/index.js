@@ -43,6 +43,6 @@ export const store = new Vuex.Store({
       add: undefined,
     },
     // companyID: undefined,
-    messages: [],
+    // messages: [],
   },
 });
