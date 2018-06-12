@@ -21,8 +21,16 @@
             <tr class="edit"><td colspan="2"><button v-on:click="edit">{{editable?"Edit":"Save"}}</button></td></tr>
           </table>
           </tab>
-          <tab name="Second">
+          <tab name="Description">
+            <textarea></textarea>
           </tab>
+          <tab name="Responsibility">
+
+          </tab>
+          <tab name="Company">
+
+          </tab>
+
       </tabs>
     </div>
   </div>
