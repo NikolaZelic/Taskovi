@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="wrapper">
     <side-bar/>
-    <div class="rightside">
+    <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent">
         <!-- <user-options/> -->
 
@@ -94,6 +94,11 @@ export default {
     UserOptions,
     ModalError
   },
+  data() {
+    return {
+      // isFocus: undefined,
+    };
+  },
   created() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
@@ -109,8 +114,15 @@ export default {
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       newItem: state => state.itemAction.add,
-      selectedItemEdit: state => state.itemAction.edit
-    })
+      selectedItemEdit: state => state.itemAction.edit,
+      isFocus: state => state.mainFocused,
+    }),
+    ...mapGetters({
+      isFocus: 'isFocus'
+    }),
+    // mainMargin() {
+    //   this.isFocus = this.$store.state.mainExpandMarginTo;
+    // }
   }
 };
 </script>
@@ -174,6 +186,12 @@ export default {
       width: 55%;
       margin-left: 45%;
       min-height: 100vh;
+      transition: all 0.4s ease;
+    }
+
+    #wrapper>.rightside.focus{
+      margin-left: 70px;
+      transition: all 0.8s ease;
     }
   }
 

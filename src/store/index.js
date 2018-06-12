@@ -31,12 +31,8 @@ export const store = new Vuex.Store({
   strict: true,
   state: {
     currentTabIndex: undefined,
-    sidebarTabData: [
-      [],
-      [],
-      [],
-      []
-    ],
+    mainFocused: undefined,
+    sidebarTabData: [],
     sidebarItemSelection: [],
     modalError: {
       active: false,
