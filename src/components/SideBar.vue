@@ -4,14 +4,14 @@
     <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class='[
     {"fas fa-angle-double-right":sidebarCollapsed},
     {"fas fa-angle-double-left":!sidebarCollapsed}]'>
-  </span>
+      </span>
     <svg height="3px" width="100%">
-      <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke:#636262;stroke-width:2" />
-    </svg>
+        <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke:#636262;stroke-width:2" />
+      </svg>
 
     <div class="tabs">
-      <button v-for="( tab, index ) in tabs" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index)" :disabled="tab.disabled === true">
-      </button>
+      <button v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index)" :disabled="tab.disabled">
+        </button>
     </div>
 
     <div class="user-sidebar">
@@ -20,9 +20,10 @@
         <popup v-show='activePopup' :class='{show: activePopup}' />
       </transition>
       <!-- <popup/> -->
-      <img title="User Options" src="@/assets/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+      <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
       <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
     </div>
+
   </div>
   <div class="sidebar-content" :class="{ collapsed: sidebarCollapsed }">
     <div class="sidebar-header">
@@ -64,7 +65,7 @@
       <div class="item-list">
         <table>
           <tbody>
-            <tr v-for="(item,index) in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+            <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
               <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
                     <input type="checkbox">
@@ -77,14 +78,20 @@
               </td>
               <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
               <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-              <td v-if="item.haveUnseenFeed ==='true'"><span title="Unread" class="badge badge-primary badge-pill">1</span></td>
-              <td v-if="item.isUrgent === 'urgent'"><span title="Urgent" class="badge badge-purple badge-pill">U</span></td>
+              <td v-if="item.haveUnseenFeed ==='true'">
+                <span title="Unread" class="badge badge-primary badge-pill">1</span>
+              </td>
+              <td v-if="item.isUrgent === 'urgent'">
+                <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+              </td>
               <td v-if="item.deadline !== undefined && item.deadline !== null">
                 <span title="Deadline" class="badge badge-danger">
                     {{ deadlineSplit(item.deadline) }}
                   </span>
               </td>
-              <td v-if="item.userscount !== undefined && item.userscount !== null"><span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span></td>
+              <td v-if="item.userscount !== undefined && item.userscount !== null">
+                <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -101,32 +108,37 @@ import {
   store
 } from "@/store/index.js";
 import {
+  api
+} from "@/api/index.js";
+import {
   mapGetters
 } from "vuex";
 import {
   mapState
-} from 'vuex'
-import popup from './UserPopup';
+} from "vuex";
+import popup from "./UserPopup";
 export default {
   components: {
-    popup,
+    popup
   },
   data() {
     return {
       renamingItem: {},
       sidebarCollapsed: false,
       searchData: "",
-      currentTabIndex: 1,
+      currentTabIndex: 0,
+      companyID: undefined,
       activePopup: false,
       activeItem: undefined,
       adminFilter: true,
       tabs: [{
           name: "Companies",
           icon: "fas fa-building",
-          isAdmin: true,
-        }, {
+          isAdmin: true
+        },
+        {
           name: "Projects",
-          icon: "fas fa-project-diagram",
+          icon: "fas fa-project-diagram"
         },
         {
           name: "Tasks",
@@ -139,13 +151,13 @@ export default {
         {
           name: "Teams",
           icon: "fas fa-users",
-          isAdmin: true,
+          isAdmin: true
         }
       ],
       activeArray: [],
       invokeFilterType: "as",
       backColorCache: {},
-      frontColorCache: {},
+      frontColorCache: {}
     };
   },
   watch: {
@@ -165,14 +177,17 @@ export default {
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
       this.actionTabDataPeople();
+    },
+    activeItem(val) {
+      if (this.currentTabIndex === 0) this.companyID = val;
     }
   },
   methods: {
     getTabData() {
       let index = this.currentTabIndex;
       let type = this.invokeFilterType;
-      let s = type === null ? 'assigned' : 'both';
-      let t = this.tabs[index].name === 'Issues' ? "bugfix" : "task";
+      let s = type === null ? "assigned" : "both";
+      let t = this.tabs[index].name === "Issues" ? "bugfix" : "task";
       let a = "false";
       switch (type) {
         case "cr":
@@ -249,10 +264,10 @@ export default {
     },
     actionTabDataPeople() {
       let i = this.currentTabIndex;
-      let name = i === 0 ? 'getUserCompanies' : 'getUserTeams';
+      let name = i === 0 ? "getUserCompanies" : "getUserTeams";
       store.dispatch(name, {
         index: i,
-        admin: this.tabs[i].isAdmin,
+        admin: this.tabs[i].isAdmin
         // comid: this.getCompanyID,
       });
     },
@@ -260,49 +275,20 @@ export default {
       this.activeArray = this.getActiveArray;
     },
     userOptions() {
-      alert('Avatar Kliknut');
+      alert("Avatar Kliknut");
     },
     signOut() {
-      alert('Sign out Kliknut');
+      window.localStorage.removeItem("sid");
+      api.sessionActive();
     },
     mouseOverPopup(val) {
       this.activePopup = val;
-    },
-    // beforeEnter: function(el) {
-    //   el.style.opacity = 0
-    //   el.style.height = 0
-    // },
-    // enter: function(el, done) {
-    //   var delay = el.dataset.index * 150
-    //   setTimeout(function() {
-    //     Velocity(
-    //       el, {
-    //         opacity: 1,
-    //         height: '1.6em'
-    //       }, {
-    //         complete: done
-    //       }
-    //     )
-    //   }, delay)
-    // },
-    // leave: function(el, done) {
-    //   var delay = el.dataset.index * 150
-    //   setTimeout(function() {
-    //     Velocity(
-    //       el, {
-    //         opacity: 0,
-    //         height: 0
-    //       }, {
-    //         complete: done
-    //       }
-    //     )
-    //   }, delay)
-    // },
+    }
   },
   computed: {
     ...mapState({
-      getTabIndex: 'currentTabIndex',
-      getCompanyID: 'companyID',
+      getTabIndex: "currentTabIndex",
+      getCompanyID: state => state.modulecompany.id
     }),
     getActiveArray() {
       return store.getters.currentTabData;
@@ -356,7 +342,7 @@ export default {
   min-width: 70px;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
+  overflow-x: hidden;
   border-right: 1px solid #444;
 }
 
@@ -466,7 +452,7 @@ export default {
 .item-list {
   width: 100%;
   flex: 1 0px;
-  overflow: auto;
+  overflow-x: hidden;
   margin: 0 0 10px 0;
 }
 
@@ -643,7 +629,7 @@ label {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 }
 
 .fade-enter,

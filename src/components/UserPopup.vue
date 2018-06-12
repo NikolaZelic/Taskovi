@@ -2,32 +2,33 @@
   <div class="popup">
     <table>
       <tr>
-        <td>User: </td><td>{{ lsSurname }} {{ lsName }}</td>
+        <td>User: </td>
+        <td>{{ lsSurname }} {{ lsName }}</td>
       </tr>
-        <tr>
-          <td>Company: </td><td>{{ companyName }}</td>
-        </tr>
-          <tr>
-            <td>Tasks working on: </td><td><span class="badge badge-warning">3</span></td>
-          </tr>
-            <tr>
-              <td>Unread Messages: </td><td><span class="badge badge-danger">0</span></td>
-            </tr>
+      <tr>
+        <td>Company: </td>
+        <td>{{ companyID }}</td>
+      </tr>
+      <tr>
+        <td>Tasks working on: </td>
+        <td>
+          <span class="badge badge-warning">3</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Unread Messages: </td>
+        <td>
+          <span class="badge badge-danger">0</span>
+        </td>
+      </tr>
     </table>
   </div>
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapState
-} from 'vuex'
+import { store } from "@/store/index.js";
+import { mapState } from "vuex";
 export default {
-  data() {
-    return {}
-  },
   computed: {
     lsName() {
       return localStorage.name;
@@ -36,10 +37,10 @@ export default {
       return localStorage.surname;
     },
     ...mapState({
-      companyName: 'companyID',
-    }),
+      companyID: state => state.modulecompany.name
+    })
   }
-}
+};
 </script>
 
 <style scoped>

@@ -11,7 +11,6 @@ import moduleproject from './modules/project';
 import moduletask from './modules/task';
 import modulework from './modules/work';
 import moduleuser from './modules/user';
-import {api} from '@/api/index.js';
 
 Vue.use(Vuex);
 
@@ -38,16 +37,16 @@ export const store = new Vuex.Store({
       [],
       []
     ],
+    sidebarItemSelection: [],
     modalError: {
       active: false,
       message: '',
     },
-    messages: [],
-    sidebarItemSelection: [],
-    itemAction : {
+    itemAction: {
       edit: undefined,
       add: undefined,
     },
-    companyID: undefined,
+    // companyID: undefined,
+    messages: [],
   },
-})
+});
