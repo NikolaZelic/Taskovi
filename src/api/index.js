@@ -4,6 +4,8 @@ import {
 import {
   store
 } from '@/store/index.js';
+import router from '../router/index.js'
+
 // KAD PRAVIS API OBAVEZN KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
 export const api = {
@@ -113,7 +115,18 @@ export const api = {
   // ZX
   sessionActive() {
     let sid = window.localStorage.sid;
-    return axios.get('auth/users?sid=' + sid);
+    axios.get('auth/users?sid=' + sid).then(r => {
+      let statusOK = r.data.status === 'OK';
+      if (statusOK) {
+        console.log(r.data.name + ' ' + r.data.surname + ' ulogovan');
+        window.localStorage.name = r.data.name;
+        window.localStorage.surname = r.data.surname;
+        router.push('/');
+      }
+      else{
+        router.push('/auth');
+      }
+    });
   },
 
   // ZX

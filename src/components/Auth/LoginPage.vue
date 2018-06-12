@@ -19,6 +19,9 @@
         <a href="#" @click='signUp()'>Create an account</a>
       </p>
     </form>
+    <div class="preset">
+      <button v-for="p in presets" @click.prevent="autologin(p)">{{p.l}}</button>
+    </div>
   </div>
 </div>
 </template>
@@ -31,11 +34,35 @@ export default {
   name: "Login",
   data() {
     return {
+      presets: [{
+        l: 'email1@gmail.com',
+        p: 'pass123',
+      }, {
+        l: 'admin2@gmail.com',
+        p: 'admin222',
+      }, {
+        l: 'email2@yahoo.com',
+        p: 'pass111',
+      }, {
+        l: 'email001@qqq.com',
+        p: 'qqq',
+      }, {
+        l: 'email004@qqq.com',
+        p: 'qqq',
+      }, {
+        l: 'email2@yahoo.com',
+        p: 'pass111',
+      }],
       email: "",
-      password: ""
+      password: "",
     };
   },
   methods: {
+    autologin(p) {
+      this.email = p.l;
+      this.password = p.p;
+      this.login();
+    },
     login() {
       let mail = this.email;
       let pass = this.password;
@@ -164,5 +191,8 @@ export default {
 
 .container .info span .fa {
   color: #ef3b3a;
+}
+.preset button {
+  line-height: 10px;
 }
 </style>

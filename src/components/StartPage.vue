@@ -41,15 +41,7 @@ export default {
     // IF SID EXIST AND SEASON ACTIVE EXIST ROUTE TO MAINPAGE
     let sid = localStorage.sid;
     if (sid !== undefined && sid !== null) {
-      api.sessionActive().then(r => {
-        let statusOK = r.data.status === 'OK';
-        if (statusOK) {
-          console.log(r.data.name + ' ' + r.data.surname + ' ulogovan');
-          window.localStorage.name = r.data.name;
-          window.localStorage.surname = r.data.surname;
-          this.$router.push('/');
-        }
-      })
+      api.sessionActive();
     }
   }
 };
