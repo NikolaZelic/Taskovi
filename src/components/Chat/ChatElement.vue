@@ -144,6 +144,7 @@ export default {
       this.fInterval = setInterval(() => {
         if(this.count % this.countNumber == 0 && this.taskid != -1){
           var msg = store.state.messages;
+
           if (msg.length > 0) {
             store.dispatch("readeFeeds", {
               taskid: this.taskid,

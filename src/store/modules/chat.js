@@ -63,7 +63,7 @@ const mutations = {
 const getters ={
   getTaskID:state=>{
     var item = store.getters.selectedItemID;
-    var tab = store.getters.getTabIndex;
+    var tab = store.state.currentTabIndex;
     if((tab  == 1  || tab == 2)&& item){
       return store.getters.selectedItemID;
     }else{
