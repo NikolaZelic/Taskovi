@@ -1,38 +1,30 @@
 <template>
-  <div>
-    <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
-    <template v-if="selectedItemID === undefined">
+<div>
+
+  <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
     </template>
 
-    <!-- Ako je konretna kompanija selektovana onda se prikazuje ovo -->
-    <template v-else>
+  <template v-else>
+    <h1>{{companyInfo.title}}</h1>
+    <span>{{companyInfo.description}}</span >
 
-      <!-- Osnovni podaci o kompaniji   -->
-      <h1>{{companyInfo.title}}</h1>
-      <span>{{companyInfo.description}}</span>
+    <h4 class="mt-5">Employees:</h4>
+    <ul class="list-group list-group-flush mb-5">
 
-      <!-- Lista svih zaposlenih u kompaniji -->
-      <h4 class="mt-5">Employees:</h4>
-      <ul class="list-group list-group-flush mb-5">
+    <li class="list-group-item" v-for="admin in admins">
+      {{ admin.usr_name }} {{ admin.usr_surname }} --- {{ admin.usr_email }}
+      <span class="badge badge-secondary">Admin</span>
+    </li>
 
-        <!-- Lista admina -->
-        <li class="list-group-item" v-for="admin in admins" :key="admin">
-          {{ admin.usr_name }} {{ admin.usr_surname }} --- {{ admin.usr_email }}
-          <span class="badge badge-secondary">Admin</span>
-        </li>
+    <li class="list-group-item" v-for="employee in employees">
+      {{ employee.name }} --- {{ employee.email }}
+    </li>
 
-        <!-- Lista zaposlenih koji nisu admini -->
-        <li class="list-group-item" v-for="employee in employees" :key="employee">
-          {{ employee.name }} --- {{ employee.email }}
-        </li>
+    </ul>
+  </template>
 
-      </ul>
-
-      <!-- <button type="button" class="btn btn-outline-secondary">Edit company</button> -->
-
-    </template>
-  </div>
+</div>
 </template>
 
 <script>
@@ -51,6 +43,7 @@ export default {
     }),
     ...mapGetters(["selectedItemID"])
   },
+
   methods: {
     getCompanyInfo(compID) {
       store.dispatch("getCompanyInfo", {
@@ -72,13 +65,13 @@ export default {
   },
 
   mounted() {
-    this.getCompanyInfo(this.getCompanyID);
-    this.loadAdmins(this.getCompanyID);
-    this.loadEmployees(this.getCompanyID);
+    this.getCompanyInfo(this.selectedItemID);
+    this.loadAdmins(this.selectedItemID);
+    this.loadEmployees(this.selectedItemID);
   },
 
   watch: {
-    selectedItemID(val) {
+    selectedItemID(val, oldVal) {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
@@ -88,7 +81,5 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  text-align: left;
-}
+  h1 {text-align: left;}
 </style>

@@ -122,8 +122,7 @@ export const api = {
         window.localStorage.name = r.data.name;
         window.localStorage.surname = r.data.surname;
         router.push('/');
-      }
-      else{
+      } else {
         router.push('/auth');
       }
     });
@@ -214,4 +213,25 @@ export const api = {
     });
   },
 
-};
+
+  //pocetak AXIOS poziva koji se koriste na COMPANY komponentama - VIEW, ADD, EDIT
+  //
+  //
+  //
+  addCompany(name, desc, sid) {
+    return axios.post('/companies', {
+      companyname: name,
+      companydesc: desc,
+      sid: sid
+    })
+  },
+
+  changeCompanyInfo(name, desc, comid, sid) {
+    axios.put("/companies/:comid", {
+      companyname: name,
+      companydesc: desc,
+      comid: comid,
+      sid: sid
+    });
+  },
+}
