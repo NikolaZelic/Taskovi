@@ -11,17 +11,17 @@
   <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5">Change company info</button>
 
   <h4>Add new user:</h4>
-  <div class="input-group mb-5">
+  <div class="input-group">
     <input type="text" class="form-control" placeholder="Enter user's email address" v-model="email">
     <div class="input-group-append">
       <button class="btn btn-outline-secondary" type="button" @click="addAdmin()">As admin</button>
       <button class="btn btn-outline-secondary" type="button" @click="addEmployees()">As employee</button>
     </div>
   </div>
-  <div class="mb-5" v-if="notExistingAdmin">{{message}}</div>
-  <div class="mb-5" v-if="notExistingEmployee">{{message}}</div>
+  <div class="text-danger" v-if="notExistingAdmin">{{message}}</div>
+  <div class="text-danger" v-if="notExistingEmployee">{{message}}</div>
 
-  <h4>Company's admins:</h4>
+  <h4 class="mt-5">Company's admins:</h4>
   <ul class="list-group list-group-flush mb-5">
     <li class="list-group-item" v-for="admin in admins">
       {{ admin.usr_name }} {{ admin.usr_surname }}
@@ -40,9 +40,17 @@
 </template>
 
 <script>
-import {api} from "@/api/index";
-import {store} from "@/store/index.js";
-import {mapGetters} from "vuex";
+import {
+  api
+} from "@/api/index";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapGetters
+} from "vuex";
+import axios from "axios";
+
 
 export default {
   data() {
@@ -60,17 +68,7 @@ export default {
 
   methods: {
     changeCompanyInfo() {
-
-
-      
-      axios.put(
-        "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
-          companyname: this.companyname,
-          companydesc: this.companydesc,
-          comid: this.$store.state.itemAction.edit,
-          sid: window.localStorage.getItem("sid")
-        }
-      );
+      api.changeCompanyInfo(this.companyname, this.companydesc, this.$store.state.itemAction.edit, window.localStorage.getItem("sid"));
     },
 
     removeAdmin(idAdmin) {
@@ -106,15 +104,7 @@ export default {
     },
 
     addEmployees() {
-      axios
-        .post(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-            comid: this.$store.state.itemAction.edit,
-            email: this.email,
-            sid: window.localStorage.getItem("sid")
-          }
-        )
-        .then(response => {
+      api.addEmployees(this.$store.state.itemAction.edit, this.email, window.localStorage.getItem("sid")).then(response => {
           if (response.data.status === "ERR") {
             this.notExistingEmployee = true;
             this.message = response.data.message;
@@ -127,31 +117,13 @@ export default {
     },
 
     loadAdmins(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
+      api.loadAdmins(comID, window.localStorage.getItem("sid")).then(response => {
           this.admins = response.data.data;
         });
     },
 
     loadEmployees(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
+      api.loadEmployees(comID, window.localStorage.getItem("sid")).then(response => {
           this.employees = response.data.data;
         });
     }

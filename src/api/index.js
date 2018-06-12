@@ -225,7 +225,7 @@ export const api = {
 //
 //
   addCompany(name, desc, sid) {
-      return axios.post('/companies', {
+      return axios.post('companies', {
         companyname: name,
         companydesc: desc,
         sid: sid
@@ -233,7 +233,7 @@ export const api = {
   },
 
   changeCompanyInfo(name, desc, comid, sid) {
-    axios.put("/companies/:comid", {
+    return axios.put("companies/:comid", {
         companyname: name,
         companydesc: desc,
         comid: comid,
@@ -241,6 +241,33 @@ export const api = {
       }
     );
   },
+
+  loadEmployees(compID, sid) {
+    return axios.get("companies/:comid/users", {
+          params: {
+            comid: compID,
+            sid: sid
+          }
+        })
+  },
+
+  loadAdmins(compID, sid) {
+    return axios.get("companies/:comid/admins", {
+          params: {
+            comid: compID,
+            sid: sid
+          }
+        })
+  },
+
+  addEmployees(compID, email, sid) {
+    return axios.post("companies/:comid/users", {
+          comid: compID,
+          email: email,
+          sid: sid
+        }
+      )
+  }
 
 
   //
