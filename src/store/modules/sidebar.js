@@ -14,7 +14,7 @@ const actions = {
     }).catch(e => {
       store.commit("modalError", {
         active: true,
-        message: 'Greska pri ucitavanju podataka: ' + e,
+        message: '' + e,
       });
     });
   },
@@ -28,7 +28,7 @@ const actions = {
     }).catch(e => {
       store.commit("modalError", {
         active: true,
-        message: 'Greska pri ucitavanju podataka: ' + e,
+        message: '' + e,
       });
     });
   },
@@ -42,7 +42,7 @@ const actions = {
     }).catch(e => {
       store.commit("modalError", {
         active: true,
-        message: 'Greska pri ucitavanju podataka: ' + e,
+        message: '' + e,
       });
     });
   },
@@ -57,7 +57,7 @@ const actions = {
     });
   },
 
-}
+};
 const mutations = {
   setSidebarData: (state, params) => {
     if (params.data !== undefined)
@@ -65,7 +65,7 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined
+    store.state.itemAction.add = undefined;
   },
 
   setSidebarItemSelection: (state, params) => {
@@ -74,7 +74,7 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    // IMPROVE API - ZELIC
+    // ZELIC - REMOVE IF NOT NEEDED
     // if (params.index === 1) {
     //   store.dispatch('selectTask', {
     //     id: params.id
@@ -91,7 +91,7 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.edit = params.id;
   },
-}
+};
 // const getters = {
 //
 // }
@@ -99,4 +99,4 @@ export default {
   actions,
   mutations,
   // getters,
-}
+};

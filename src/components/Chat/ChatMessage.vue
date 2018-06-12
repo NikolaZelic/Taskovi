@@ -23,15 +23,11 @@ export default {
   data() {
     return {
       uploadProgress: 0
-    }
+    };
   },
   methods: {
-    icon(){
-      if(this.mess.fed_type==='attachment'){
-        return 'static\\file-icon.png';
-      }else{
-        return 'static\\user.png';
-      }
+    icon() {
+      return this.mess.fed_type === 'attachment' ? 'static\\img\\file-icon.png' : 'static\\img\\user.png';
     },
     showFile() {
       return (

@@ -3,7 +3,7 @@
   <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
   <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
-  </template>
+    </template>
 
   <!-- Ako je konretna kompanija selektovana onda se prikazuje ovo -->
   <template v-else>
@@ -37,46 +37,38 @@
 
 <script>
 import axios from "axios";
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapState
-} from 'vuex';
-import {
-  mapGetters
-} from 'vuex'
+import { store } from "@/store/index.js";
+import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   computed: {
     ...mapState({
-      getCompanyID: 'companyID',
+      getCompanyID: state => state.modulecompany.id,
       admins: state => state.modulecompany.admins,
       employees: state => state.modulecompany.employees,
-      companyInfo: state => state.modulecompany.companyInfo,
+      companyInfo: state => state.modulecompany.companyInfo
     }),
-    ...mapGetters([
-      'selectedItemID',
-    ]),
+    ...mapGetters(["selectedItemID"])
   },
   methods: {
     getCompanyInfo(compID) {
-      store.dispatch('getCompanyInfo', {
-        compID: compID,
+      store.dispatch("getCompanyInfo", {
+        compID: compID
       });
     },
 
     loadAdmins(compID) {
-      store.dispatch('loadAdmins', {
-        compID: compID,
+      store.dispatch("loadAdmins", {
+        compID: compID
       });
     },
 
     loadEmployees(compID) {
-      store.dispatch('loadEmployees', {
-        compID: compID,
+      store.dispatch("loadEmployees", {
+        compID: compID
       });
-    },
+    }
   },
 
   mounted() {
