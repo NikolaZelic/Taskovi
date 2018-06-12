@@ -6,14 +6,14 @@
     {"fas fa-angle-double-left":!sidebarCollapsed}]'>
       </span>
     <svg height="3px" width="100%">
-        <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke:#636262;stroke-width:2" />
+        <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke: #666; stroke-width: 1;"></line>
       </svg>
 
-    <div class="tabs">
-      <button v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
+    <ul class="tabs">
+      <li :tabindex="index+1" v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
         :disabled="tab.disabled">
-        </button>
-    </div>
+      </li>
+    </ul>
 
     <div class="user-sidebar">
       <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
@@ -67,12 +67,12 @@
         <table>
           <tbody>
             <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-              <td v-if='showSubFilter()'>
+              <!-- <td v-if='showSubFilter()'>
                 <label title="Mark as Completed">
                     <input type="checkbox">
                     <span class="label-text"></span>
                   </label>
-              </td>
+              </td> -->
               <!-- @click="removeItem(item)" -->
               <td>
                 <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
@@ -390,7 +390,7 @@ export default {
 }
 
 .tablinks.active {
-  background: #212529;
+  background: #24262d;
   color: yellow;
   border-left: 3px solid yellow;
 }
@@ -495,7 +495,7 @@ export default {
 
 .item-list tr.active {
   border-left: 3px solid #baf52d;
-  background-color: #080808;
+  background-color:#1d1d1d;
 }
 
 .item-list td {

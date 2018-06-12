@@ -26,7 +26,7 @@
         <!-- <parenttask-add/> -->
 
       </div>
-      <chat-element/>
+      <!-- <chat-element/> -->
     </div>
     <modal-error v-if="modalError"></modal-error>
   </div>

@@ -194,8 +194,18 @@ export const api = {
   },
 
   // ZX
+  // getUserCompanies(admin) {
+  //   return axios.get('/users/companies', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //       isadmin: admin,
+  //     }
+  //   });
+  // },
+
+  // ZX NEW API TESTING
   getUserCompanies(admin) {
-    return axios.get('/users/companies', {
+    return axios.get('companies', {
       params: {
         sid: window.localStorage.sid,
         isadmin: admin,
