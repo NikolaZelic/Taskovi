@@ -1,6 +1,5 @@
 <template lang="html">
   <div id="wrapper">
-<<<<<<< HEAD
     <side-bar/>
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent">
@@ -25,45 +24,9 @@
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
         <!-- <parenttask-add/> -->
-=======
-      <side-bar/>
-    <div class="main-content">
-      <div class="dynamic-center">
-
-        <keep-alive/>
-          <!-- <profile/> -->
-
-          <user-options/>
-
-
-          <!-- Editing existing -->
-          <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
-          <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
-          <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-           <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
-
-          <!-- Adding new -->
-          <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
-          <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
-          <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-          <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
-
-          <!-- Viewing existing -->
-          <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
-          <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
-          <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-          <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
-
-          <!-- <parenttask-add/> -->
-          <task-add/>
->>>>>>> 9bb29b514c2cf7c9425af7891fa67c6debce9f66
 
       </div>
-<<<<<<< HEAD
-      <!-- <chat-element/> -->
-=======
       <chat-element v-if="taskid != -1"/>
->>>>>>> 56befdaaca1f59a2e56770ea8b2c981fe54ed7b4
     </div>
     <modal-error v-if="modalError"></modal-error>
   </div>
