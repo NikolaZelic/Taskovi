@@ -24,6 +24,7 @@
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
         <!-- <parenttask-add/> -->
+        <task-add/>
 
       </div>
       <chat-element v-if="taskid != -1"/>

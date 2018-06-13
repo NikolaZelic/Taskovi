@@ -1,4 +1,6 @@
-import {store} from './index';
+import {
+  store
+} from './index';
 const getters = {
   currentTabData: state => {
     return store.state.sidebarTabData[store.state.currentTabIndex];
@@ -8,9 +10,14 @@ const getters = {
     return store.state.sidebarItemSelection[store.state.currentTabIndex];
   },
 
-  isFocus: state =>{
+  isFocus: state => {
     return store.state.mainFocused;
+  },
+
+  getProjectFromTasks: state => {
+    return store.state.sidebarItemSelection[store.state.currentTabIndex-1];
   }
+
 }
 
 export default {
