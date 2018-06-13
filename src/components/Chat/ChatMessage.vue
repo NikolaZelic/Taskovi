@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   props: {
     mess: {
@@ -24,6 +25,11 @@ export default {
     return {
       uploadProgress: 0
     };
+  },
+  computed:{
+    ...mapState({
+      scrollDownMess: state => state.modulechat.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
+    })
   },
   methods: {
     icon() {
@@ -38,7 +44,8 @@ export default {
     }
   },
   mounted() {
-    document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight; //Uvek spusta na dno ekrana
+    if(this.scrollDownMess)
+      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
   }
 };
 </script>

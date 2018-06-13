@@ -50,10 +50,13 @@ const mutations = {
   addMessages: (state, params) => {
     if(params.data){
       if (params.direction === 'start') {
+        state.scrollDownMess = true;
         state.messages = params.data;
       } else if (params.direction === 'up') {
+        state.scrollDownMess = false;
         params.data.forEach(e => state.messages.unshift(e));
       } else if (params.direction === 'down') {
+        state.scrollDownMess = false;
         if (params.data != undefined)
           params.data.forEach(e => state.messages.push(e));
       }
@@ -64,7 +67,7 @@ const getters ={
   getTaskID:state=>{
     var item = store.getters.selectedItemID;
     var tab = store.state.currentTabIndex;
-    if((tab  == 1  || tab == 2)&& item){
+    if((tab  == 2  || tab == 3)&& item){
       return store.getters.selectedItemID;
     }else{
       return -1;
@@ -74,6 +77,7 @@ const getters ={
 
 const state = {
   messages: [],
+  scrollDownMess: true,
 }
 
 export default {

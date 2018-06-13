@@ -50,6 +50,7 @@ export default {
     ...mapState({
     // arrow functions can make the code very succinct!
     messages: state => state.modulechat.messages,
+
     }),
     taskid() {
       return store.getters.getTaskID;
@@ -64,7 +65,6 @@ export default {
       // }
     },
     messages() {
-      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
       this.countNumber = 3;
       this.count = 1;
     }
