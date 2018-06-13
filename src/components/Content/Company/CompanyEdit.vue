@@ -11,42 +11,61 @@
   <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5">Change company info</button>
 
   <h4>Add new user:</h4>
-  <div class="input-group mb-5">
+  <div class="input-group">
     <input type="text" class="form-control" placeholder="Enter user's email address" v-model="email">
     <div class="input-group-append">
       <button class="btn btn-outline-secondary" type="button" @click="addAdmin()">As admin</button>
       <button class="btn btn-outline-secondary" type="button" @click="addEmployees()">As employee</button>
     </div>
-</div>
-<div class="mb-5" v-if="notExistingAdmin">{{message}}</div>
-<div class="mb-5" v-if="notExistingEmployee">{{message}}</div>
 
-<h4>Company's admins:</h4>
-<ul class="list-group list-group-flush mb-5">
-  <li class="list-group-item" v-for="admin in admins">
-    {{ admin.usr_name }} {{ admin.usr_surname }}
-    <span class="small"> --- {{ admin.usr_email }}</span>
-  </li>
-</ul>
+  </div>
+  <div class="text-danger" v-if="notExistingAdmin">{{message}}</div>
+  <div class="text-danger" v-if="notExistingEmployee">{{message}}</div>
 
-<h4>Company's employees:</h4>
-<ul class="list-group list-group-flush mb-5">
-  <li class="list-group-item" v-for="employee in employees">
-    {{ employee.name }}
-    <span class="small"> --- {{ employee.email }}</span>
-  </li>
-</ul>
+  <h4 class="mt-5">Company's admins:</h4>
+  <ul class="list-group list-group-flush mb-5">
+    <li class="list-group-item" v-for="admin in admins">
+      {{ admin.usr_name }} {{ admin.usr_surname }}
+      <span class="small"> --- {{ admin.usr_email }}</span>
+    </li>
+  </ul>
+
+  <h4>Company's employees:</h4>
+  <ul class="list-group list-group-flush mb-5">
+    <li class="list-group-item" v-for="employee in employees">
+      {{ employee.name }}
+      <span class="small"> --- {{ employee.email }}</span>
+    </li>
+  </ul>
+
+  <multiselect v-model="value" :options="options" placeholder="Select one" :preserveSearch="true" label="name" :custom-label="nameWithLang" track-by="email" ref="inputField" @search-change="funkcija()"></multiselect>
+
+  <br><br><br><br><br>
+
 </div>
 </template>
 
 <script>
 import axios from "axios";
-import {api} from "@/api/index";
-import {store} from "@/store/index.js";
-import {mapGetters} from "vuex";
+import {
+  api
+} from "@/api/index";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapGetters
+} from "vuex";
+import Multiselect from "vue-multiselect";
+
 export default {
+  components: {
+    Multiselect
+  },
+
   data() {
     return {
+      em: 'pocetak',
       companyname: undefined,
       companydesc: undefined,
       email: "",
@@ -54,23 +73,53 @@ export default {
       employees: [],
       notExistingAdmin: false,
       notExistingEmployee: false,
-      message: "prazno"
+      message: "prazno",
+
+      value: {},
+      options: [],
     };
   },
 
   methods: {
-    changeCompanyInfo() {
+
+    nameWithLang({
+      name,
+      surname,
+      email
+    }) {
+      return name + ' ' + surname + ' --- ' + email
+    },
 
 
-
-      axios.put(
-        "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
-          companyname: this.companyname,
-          companydesc: this.companydesc,
-          comid: this.getEditItemID,
-          sid: window.localStorage.getItem("sid")
+    funkcija() {
+      axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users', {
+        params: {
+          searchstring: this.$refs.inputField.search,
+          sid: window.localStorage.sid,
         }
-      );
+      }).then(response => {
+        // console.log();
+        if (response.data.data != undefined) {
+          this.options = response.data.data;
+        }
+      });
+    },
+
+    pozivapija() {
+      store.dispatch('refreshSuggestions', {
+        searchText: '@',
+        comId: this.$store.state.itemAction.edit
+      }).then(response => {
+        this.options = store.getters.getSuggestedUsers;
+      });
+      // console.log();
+    },
+
+
+
+    changeCompanyInfo() {
+      api.changeCompanyInfo(this.companyname, this.companydesc, this.$store.state.itemAction.edit, window.localStorage.getItem("sid"));
+
     },
 
     removeAdmin(idAdmin) {
@@ -85,42 +134,27 @@ export default {
     },
 
     addAdmin() {
-      axios.post(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
-            comid: this.$store.state.itemAction.edit,
-            email: this.email,
-            sid: window.localStorage.getItem("sid")
-          }
-        )
-        .then(response => {
-          if (response.data.status === "ERR") {
-            this.notExistingAdmin = true;
-            this.message = response.data.message;
-          } else {
-            this.notExistingAdmin = false;
-          }
-          this.loadAdmins();
-        });
+      api.addAdmin(this.$store.state.itemAction.edit, this.email, window.localStorage.getItem("sid")).then(response => {
+        if (response.data.status === "ERR") {
+          this.notExistingAdmin = true;
+          this.message = response.data.message;
+        } else {
+          this.notExistingAdmin = false;
+        }
+        this.loadAdmins(this.$store.state.itemAction.edit);
+      });
     },
 
     addEmployees() {
-      axios
-        .post(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-            comid: this.$store.state.itemAction.edit,
-            email: this.email,
-            sid: window.localStorage.getItem("sid")
-          }
-        )
-        .then(response => {
-          if (response.data.status === "ERR") {
-            this.notExistingEmployee = true;
-            this.message = response.data.message;
-          } else {
-            this.notExistingEmployee = false;
-          }
-          this.loadEmployees();
-        });
+      api.addEmployee(this.$store.state.itemAction.edit, this.email, window.localStorage.getItem("sid")).then(response => {
+        if (response.data.status === "ERR") {
+          this.notExistingEmployee = true;
+          this.message = response.data.message;
+        } else {
+          this.notExistingEmployee = false;
+        }
+        this.loadEmployees(this.$store.state.itemAction.edit);
+      });
     },
 
     // NE BRISI!!!!
@@ -136,33 +170,15 @@ export default {
     //   });
 
     loadAdmins(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
-          this.admins = response.data.data;
-        });
+      api.loadAdmins(comID, window.localStorage.getItem("sid")).then(response => {
+        this.admins = response.data.data;
+      });
     },
 
     loadEmployees(comID) {
-      axios
-        .get(
-          "http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-            params: {
-              comid: comID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
-          this.employees = response.data.data;
-        });
+      api.loadEmployees(comID, window.localStorage.getItem("sid")).then(response => {
+        this.employees = response.data.data;
+      });
     }
   },
 
@@ -173,7 +189,11 @@ export default {
 
     editID() {
       return store.state.itemAction.edit;
-    }
+    },
+
+    // suggestions() {
+    //   this.options = store.getters.getSuggestedUsers;
+    // }
   },
 
   mounted() {

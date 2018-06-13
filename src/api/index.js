@@ -229,19 +229,68 @@ export const api = {
   //
   //
   addCompany(name, desc, sid) {
-    return axios.post('/companies', {
-      companyname: name,
-      companydesc: desc,
-      sid: sid
-    })
+
+      return axios.post('companies', {
+        companyname: name,
+        companydesc: desc,
+        sid: sid
+      })
   },
 
   changeCompanyInfo(name, desc, comid, sid) {
-    axios.put("/companies/:comid", {
-      companyname: name,
-      companydesc: desc,
-      comid: comid,
-      sid: sid
-    });
+    return axios.put("companies/:comid", {
+        companyname: name,
+        companydesc: desc,
+        comid: comid,
+        sid: sid
+      }
+    );
   },
+
+  loadEmployees(compID, sid) {
+    return axios.get("companies/:comid/users", {
+          params: {
+            comid: compID,
+            sid: sid
+          }
+        })
+  },
+
+  loadAdmins(compID, sid) {
+    return axios.get("companies/:comid/admins", {
+          params: {
+            comid: compID,
+            sid: sid
+          }
+        })
+  },
+
+  addEmployee(compID, email, sid) {
+    return axios.post("companies/:comid/users", {
+          comid: compID,
+          email: email,
+          sid: sid
+        }
+      )
+  },
+
+  addAdmin(compID, email, sid) {
+    return axios.post("companies/:comid/admins", {
+          comid: compID,
+          email: email,
+          sid: sid
+        }
+      )
+  }
+
+
+  //
+  //
+  //
+  //kraj AXIOS poziva koji se koriste na COMPANY komponentama - VIEW, ADD, EDIT
+
+
+
+
+
 }
