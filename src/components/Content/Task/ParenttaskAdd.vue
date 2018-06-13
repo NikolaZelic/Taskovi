@@ -21,18 +21,21 @@
         </div>
 
         <!-- DEADLINE -->
-        <div class="form-group">
-          <!-- <label for="tsk_deadline">Deadline</label> -->
-          <div class="calender-wrapper">
+        <div class="form-group" id='deadline'>
+          <span class="calender-icon" @click='calendarIconClicked' >
+            <i class="far fa-calendar-alt"></i>
+          </span>
+          <span class="calender-wrapper">
             <flat-pickr
+                ref='datepicker'
                 v-model="deadline"
                 :config="config"
-                id = 'id'
+                id = 'flatPickrId'
                 class="deadline"
                 placeholder="Pick Deadline (optional)"
                 name="date">
             </flat-pickr>
-          </div>
+          </span>
         </div>
 
         <!-- ADING WORKERS -->
@@ -54,7 +57,7 @@
 
         <!-- TAGS -->
         <div class="form-group">
-          <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Select Tags"
+          <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags"
             open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true"
             :internal-search="false" :clear-on-select="true" :close-on-select="true" :limit="5"
             :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="searchTags">
@@ -66,7 +69,7 @@
 
         <!-- TaskAdd.vue -->
         <div class="form-group">
-          <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' >
+          <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer' >
             <option disabled value=null>Select Priorety</option>
             <option value='1'>High</option>
             <option value='2'>Low</option>
@@ -79,6 +82,7 @@
           <button @click='createTask' type="submit" class="btn btn-success">Create</button>
         </div>
 
+        Ovde treba da je id projekta: {{ proId }}
       </div><!-- cotent -->
 
   </div>
@@ -97,6 +101,7 @@ import {api} from "@/api/index";
 import { mapState } from 'vuex';
 
 var interval;
+const flatpickr = require("flatpickr");
 
 export default {
   components: {
@@ -128,7 +133,7 @@ export default {
       inputTagHaveChange: 0,
       tagSearchStr: null,
 
-      proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
+      // proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
       task:  false,
       selectedPrioretyClass: 'unselected form-control',
     }
@@ -144,6 +149,7 @@ export default {
     ...mapState({
       companyID: 'companyID',
       suggestedTags: state => state.modulework.suggestedTags,
+      proId: state => state.sidebarItemSelection[1],
     }),
   },
 
@@ -161,6 +167,10 @@ export default {
         else
           this.suggestTeams();
         this.inputWorkerHaveChange = 0;
+      }
+      if( this.inputWorker != null && this.inputWorker.length == 0 ){
+        store.dispatch('cleanSuggestions');
+        store.dispatch('cleanSuggestedTeams');
       }
     }, 500);
   },
@@ -205,6 +215,10 @@ export default {
       this.inputWorker = text;
       this.inputWorkerHaveChange = 1;
       this.choosenWorker = null;
+      if( text != null && text.length == 0 ){
+          store.dispatch('cleanSuggestions');
+          store.dispatch('cleanSuggestedTeams');
+      }
     },
     onSelected(item) {
       if( item == null || item == undefined )
@@ -223,21 +237,47 @@ export default {
         // Oznacavanje selektovanih slova
         return <div class='sugestija'>{this.oznaciIme(i.name, str)} {this.oznaciIme(i.surname, str)} {this.oznaciIme(i.email, str)}</div>;
       }
-      else {
-        return <div class='sugestija'>{this.oznaciIme(i.name, str)}</div>;
+      else {  // Selektovana je kompanija
+        // return <div class='sugestija'>{this.oznaciIme(i.name, str)}</div>;
+        // var array = ['Pera', 'Mika', 'Laza'];
+        // const items = array.map((item, index) => {
+        //   return <li>{item}</li>
+        // });
+        // return <ul> {items} </ul>;
+        var items = this.oznaciTim(i.name, str);
+        return <div class='sugestija'>{items}</div>
       }
     },
     oznaciIme(ime, str){
       var reg = new RegExp(str, 'i');
       var m = ime.search(reg);
-      if(  m !=-1 ){
-        var ostalo = ime.replace( reg, '' );
-        var pocetak = ime.replace( new RegExp(".*("+str+").+",'i'), "$1" );
-        return <span class='rec'><span class='oznacen'>{pocetak}</span><span class='neoznacen'>{ostalo}</span></span>;
+      if(  m !=-1 ){  // Ako uopste ima preklapanja
+        var pre = ime.replace( new RegExp('(.*?)'+str+".*",'i'), '$1' );
+        var oznaceno = ime.replace( new RegExp('.*?('+str+').*','i'), '$1' );
+        var posle = ime.replace( new RegExp('.*?'+str+'(.*)','i'), '$1' );
+        return <span class='rec'><span class='neoznacen'>{pre}</span><span class='oznacen'>{oznaceno}</span><span class='neoznacen'>{posle}</span></span>;
       }
       return <span class='rec'><span class='neoznacen'>{ime}</span></span>
     },
-
+    oznaciTim(ime, str){
+      var reg = new RegExp(str, 'i');
+      var m = ime.search(reg);
+      if(  m !=-1 ){  // Ako uopste ima preklapanja
+        var array = ime.split(/\s+/);
+        var items = array.map( (item, index) => {
+          var a = item.trim();
+          if( a.length > 0 )
+            return this.oznaciIme(a, str);
+        } );
+        return items;
+      }
+      return <span class='rec'><span class='neoznacen'>{ime}</span></span>
+    },
+    calendarIconClicked(){
+      // console.log(this.$refs.datepicker._data.fp.open);
+      // console.log( flatpickr("#flatPickrId", {}) );
+      this.$refs.datepicker._data.fp.open();
+    },
     getSuggestionValue(item){
         var i = item.item;
         if( this.teamSelect == 0 ){  // Selektovan je korisnik
@@ -274,10 +314,12 @@ export default {
 
       var usrid = null;
       var teamid = null;
-      if( this.teamSelect == 1 )
-        teamid = this.choosenWorker.id;
-      else
-        usrid = this.choosenWorker.id;
+      if( this.choosenWorker != null ){
+        if( this.teamSelect == 1 )
+          teamid = this.choosenWorker.id;
+        else
+          usrid = this.choosenWorker.id;
+      }
 
       var tagarray = this.selectedTags.map( e => e.id );
 
@@ -295,7 +337,7 @@ export default {
 
 }
 .rec{
-
+  padding: 2px;
 }
 .neoznacen{
 
@@ -306,12 +348,15 @@ export default {
 .unselected{
   color: #6c757d !important;
 }
+.selected{
+  color: #eee !important;
+}
 .tmp-content{
   position: fixed;
   /* z-index: 9998; */
-  top: 0%;
-  left: 0%;
-  width: 80%;
+  top: 0px;
+  right: 0px;
+  width: 40%;
   /* height: 80%; */
   background: #24262d;
   color: #eee;
@@ -359,16 +404,24 @@ export default {
   border-radius: 10px;
 }
 .calender-wrapper{
-  position: relative;
+  position: absolute;
+  left: 50px;
+  right: 0px;
+}
+.calender-icon{
+  position: absolute;
+  width: 10%;
+  left: 0px;
+  cursor: pointer;
+}
+.fa-calendar-alt{
+  font-size: 38px;
 }
 .form-control{
   display: inline;
   position: relative;
   background-color : #2e3038;
   color: #eee;
-}
-.deadline{
-  background-color : #2e3038;
 }
 #tsk_deadline{
   width: 97%;
@@ -387,7 +440,7 @@ export default {
 #auto-suggestion{
   position: absolute;
   display: inline-block;
-  right: 15px;
+  right: 21px;
   left: 110px;
 }
 .tags-wrapper{
@@ -489,5 +542,13 @@ export default {
 .tmp-content .multiselect .multiselect__tag span,
 .tmp-content .multiselect .multiselect__tag{
   background: #cc6600;
+}
+.tmp-content .deadline{
+  color: #eee !important;
+  display: inline !important;
+}
+.tmp-content #deadline{
+  position: relative;
+  height: 40px;
 }
 </style>
