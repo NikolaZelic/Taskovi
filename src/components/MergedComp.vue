@@ -59,7 +59,11 @@
 >>>>>>> 9bb29b514c2cf7c9425af7891fa67c6debce9f66
 
       </div>
+<<<<<<< HEAD
       <!-- <chat-element/> -->
+=======
+      <chat-element v-if="taskid != -1"/>
+>>>>>>> 56befdaaca1f59a2e56770ea8b2c981fe54ed7b4
     </div>
     <modal-error v-if="modalError"></modal-error>
   </div>
@@ -151,11 +155,9 @@ export default {
       isFocus: state => state.mainFocused,
     }),
     ...mapGetters({
-      isFocus: 'isFocus'
-    }),
-    // mainMargin() {
-    //   this.isFocus = this.$store.state.mainExpandMarginTo;
-    // }
+      isFocus: 'isFocus',
+      taskid: 'getTaskID'
+    })
   }
 };
 </script>

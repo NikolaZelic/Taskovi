@@ -14,7 +14,7 @@ const actions = {
     api.postMessage(params.taskid, params.text).then(response => {
       // KORISTI GETTER UMESTO DIREKTNO STORE
       console.log("Dolazi ovde");
-      var msg = store.state.messages;
+      var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
       } else {
@@ -29,7 +29,7 @@ const actions = {
   sendAttach(commit, params){
     api.sendAttach(params.taskid, params.file).then(response =>{
       //For refresh new messages
-      var msg = store.state.messages;
+      var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
       } else {
@@ -50,12 +50,15 @@ const mutations = {
   addMessages: (state, params) => {
     if(params.data){
       if (params.direction === 'start') {
-        store.state.messages = params.data;
+        state.scrollDownMess = true;
+        state.messages = params.data;
       } else if (params.direction === 'up') {
-        params.data.forEach(e => store.state.messages.unshift(e));
+        state.scrollDownMess = false;
+        params.data.forEach(e => state.messages.unshift(e));
       } else if (params.direction === 'down') {
+        state.scrollDownMess = false;
         if (params.data != undefined)
-          params.data.forEach(e => store.state.messages.push(e));
+          params.data.forEach(e => state.messages.push(e));
       }
     }
   }
@@ -64,7 +67,7 @@ const getters ={
   getTaskID:state=>{
     var item = store.getters.selectedItemID;
     var tab = store.state.currentTabIndex;
-    if((tab  == 1  || tab == 2)&& item){
+    if((tab  == 2  || tab == 3)&& item){
       return store.getters.selectedItemID;
     }else{
       return -1;
@@ -72,8 +75,14 @@ const getters ={
   }
 }
 
+const state = {
+  messages: [],
+  scrollDownMess: true,
+}
+
 export default {
   actions,
   mutations,
-  getters
+  getters,
+  state
 }
