@@ -37,7 +37,7 @@ import {
   store
 } from "@/store/index.js";
 
-import SideBar from "@/components/SideBar";
+import SideBar from "@/components/SideBar/Sidebar";
 
 import ChatElement from "@/components/Chat/ChatElement";
 
@@ -175,7 +175,7 @@ export default {
     #wrapper>aside {
       position: fixed;
       height: 100vh;
-      width: 45%;
+      width: 37%;
     }
 
     .item-filter {
@@ -183,7 +183,7 @@ export default {
     }
     /* MAIN CONTENT */
     #wrapper>.rightside {
-      width: 55%;
+      width: 63%;
       margin-left: 45%;
       min-height: 100vh;
       transition: all 0.4s ease;

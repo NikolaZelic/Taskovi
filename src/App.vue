@@ -13,7 +13,8 @@ export default {
 <style>
 @import "./assets/css/bootstrap.min.css";
 @import "./assets/css/CustomToggles.css";
-@import "./assets/css/tabsComponent.css";
+@import "./assets/css/TabsComponent.css";
+@import "./assets/css/SidebarTable.css";
 body {
   margin: 0;
   padding: 0;

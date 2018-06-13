@@ -1,104 +1,107 @@
 <template>
 <aside id="sidebar">
-  <div class="static-side">
+  <div class="sidebar-header">
     <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class='[
     {"fas fa-angle-double-right":sidebarCollapsed},
     {"fas fa-angle-double-left":!sidebarCollapsed}]'>
       </span>
-    <svg height="3px" width="100%">
-        <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke: #666; stroke-width: 1;"></line>
-      </svg>
-
-    <ul class="tabs">
-      <li :tabindex="index+1" v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
-        :disabled="tab.disabled">
-      </li>
-    </ul>
-
-    <div class="user-sidebar">
-      <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
-      <transition name='fade'>
-        <popup v-show='activePopup' :class='{show: activePopup}' />
-      </transition>
-      <!-- <popup/> -->
-      <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
-      <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
-    </div>
-
+    <a>
+        <span :class="tabs[currentTabIndex].icon"></span>
+        <span>{{ tabs[currentTabIndex].name }}</span>
+        <span v-if='shownItemsCount !== 0' class='badge badge-light'>{{ shownItemsCount }}</span>
+      </a>
   </div>
-  <div class="sidebar-content" :class="{ collapsed: sidebarCollapsed }">
-    <div class="sidebar-header">
-      <a>
-          <span :class="tabs[currentTabIndex].icon"></span>
-          <span>{{ tabs[currentTabIndex].name }}</span>
-          <span v-if='shownItemsCount !== 0' class='badge badge-warning'>{{ shownItemsCount }}</span>
-        </a>
+  <div class="sidebar-lower">
+    <div class="static-side">
+      <!-- <svg height="3px" width="100%">
+         <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke: #666; stroke-width: 1;"></line>
+       </svg> -->
+
+      <ul class="tabs">
+        <li :tabindex="index+1" v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
+          :disabled="tab.disabled">
+        </li>
+      </ul>
+
+      <div class="user-sidebar">
+        <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
+        <transition name='fade'>
+          <user-popup v-show='activePopup' :class='{show: activePopup}' />
+        </transition>
+        <!-- <popup/> -->
+        <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+        <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
+      </div>
+
     </div>
-    <div class="sidebar-body">
-      <div class="form-filter">
-        <form class="form-block">
-          <div class="search">
-            <span class="fas fa-search"></span>
-            <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
-          </div>
-        </form>
-        <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-          <label>
-              <input type="radio" name="check" value="cs" v-model="invokeFilterType">
-              <span class="label-text">Created</span>
-            </label>
-          <label>
-              <input type="radio" name="check" value="as" v-model="invokeFilterType">
-              <span class="label-text">Assigned</span>
-            </label>
-          <label>
-              <input type="radio" name="check" value="ar" v-model="invokeFilterType">
-              <span class="label-text">Archived</span>
-            </label>
-        </form>
-        <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
-          <label>
-              <input type="checkbox" v-model="adminFilter">
-              <span class="label-text">is Admin</span>
-            </label>
-        </form>
+    <div class="sidebar-content" :class="{ collapsed: sidebarCollapsed }">
+      <div class="sidebar-body">
+        <div class="form-filter">
+          <form class="form-block">
+            <div class="search">
+              <span class="fas fa-search"></span>
+              <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+            </div>
+          </form>
+          <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
+            <label>
+               <input type="radio" name="check" value="cs" v-model="invokeFilterType">
+               <span class="label-text">Created</span>
+             </label>
+            <label>
+               <input type="radio" name="check" value="as" v-model="invokeFilterType">
+               <span class="label-text">Assigned</span>
+             </label>
+            <label>
+               <input type="radio" name="check" value="ar" v-model="invokeFilterType">
+               <span class="label-text">Archived</span>
+             </label>
+          </form>
+          <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
+            <label>
+               <input type="checkbox" v-model="adminFilter">
+               <span class="label-text">is Admin</span>
+             </label>
+          </form>
+        </div>
+        <div class="item-list">
+          <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
+          <table v-else>
+            <tbody>
+              <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+                <!-- <td v-if='showSubFilter()'>
+                 <label title="Mark as Completed">
+                     <input type="checkbox">
+                     <span class="label-text"></span>
+                   </label>
+               </td> -->
+                <!-- @click="removeItem(item)" -->
+                <td>
+                  <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
+                </td>
+                <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
+                <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
+                <td v-if="item.haveUnseenFeed ==='true'">
+                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
+                </td>
+                <td v-if="item.isUrgent === 'urgent'">
+                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+                </td>
+                <td v-if="item.deadline !== undefined && item.deadline !== null">
+                  <span title="Deadline" class="badge badge-danger">
+                     {{ deadlineSplit(item.deadline) }}
+                   </span>
+                </td>
+                <td v-if="item.userscount !== undefined && item.userscount !== null">
+                  <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
+           <span class="fas fa-plus-circle"></span> Add New</button>
       </div>
-      <div class="item-list">
-        <table>
-          <tbody>
-            <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-              <!-- <td v-if='showSubFilter()'>
-                <label title="Mark as Completed">
-                    <input type="checkbox">
-                    <span class="label-text"></span>
-                  </label>
-              </td> -->
-              <!-- @click="removeItem(item)" -->
-              <td>
-                <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
-              </td>
-              <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
-              <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-              <td v-if="item.haveUnseenFeed ==='true'">
-                <span title="Unread" class="badge badge-primary badge-pill">1</span>
-              </td>
-              <td v-if="item.isUrgent === 'urgent'">
-                <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-              </td>
-              <td v-if="item.deadline !== undefined && item.deadline !== null">
-                <span title="Deadline" class="badge badge-danger">
-                    {{ deadlineSplit(item.deadline) }}
-                  </span>
-              </td>
-              <td v-if="item.userscount !== undefined && item.userscount !== null">
-                <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add New</button>
     </div>
   </div>
 </aside>
@@ -117,13 +120,16 @@ import {
 import {
   mapState
 } from "vuex";
-import popup from "./UserPopup";
+import UserPopup from "./UserPopup";
+import TaskSidebar from './TaskSidebar';
 export default {
   components: {
-    popup
+    UserPopup,
+    TaskSidebar,
   },
   data() {
     return {
+      isTask: false,
       renamingItem: {},
       sidebarCollapsed: false,
       searchData: "",
@@ -190,7 +196,7 @@ export default {
     getTabData() {
       let index = this.currentTabIndex;
       let type = this.invokeFilterType;
-      let s = type === null ? "assigned" : "both";
+      let s = type === null ? "assigned" : "created";
       let t = this.tabs[index].name === "Issues" ? "bugfix" : "task";
       let a = "false";
       switch (type) {
@@ -335,6 +341,7 @@ export default {
 #sidebar {
   color: #eee;
   display: flex;
+  flex-direction: column;
   align-items: stretch;
 }
 
@@ -347,7 +354,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  border-right: 1px solid #444;
+  /* border-right: 1px solid #444; */
 }
 
 .static-side span {
@@ -431,16 +438,34 @@ export default {
   width: 100%;
 }
 
+.sidebar-lower {
+  display: flex;
+  flex: 1;
+}
+
 /* SIDEBAR HEADER */
 
 .sidebar-header {
   display: flex;
   justify-content: center;
-  background: #2d3436;
+  color: black;
+  background: #ffb037;
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
   width: 100%;
+  height: 45px;
+}
+
+.sidebar-header>a {
+
+  display: block;
+  margin: auto;
+}
+
+.sidebar-header>span {
+  margin: auto 0 auto 20px;
+  cursor: pointer;
 }
 
 .sidebar-header a .oi {
@@ -449,81 +474,6 @@ export default {
 
 .sidebar-header>a>.fas {
   margin-right: 15px;
-}
-
-/* TASK LIST START */
-
-.item-list {
-  width: 100%;
-  flex: 1 0px;
-  overflow-x: hidden;
-  margin: 0 0 10px 0;
-}
-
-.item-list>table {
-  padding: 0;
-  width: 100%;
-  /* border-collapse: collapse; */
-}
-
-.item-list>table td {
-  height: 100%;
-  /* overflow: hidden; */
-  /* overflow-y:auto; */
-}
-
-.item-list tr {
-  display: flex;
-  line-height: 32px;
-}
-
-.item-list tr:hover {
-  text-decoration: none;
-  color: #e2ff05;
-  background: #8e8e8e66 !important;
-}
-
-.item-list tr:active,
-.item-list tr:focus {
-  text-decoration: none;
-  background: rgba(128, 128, 128, 0.2);
-}
-
-.item-list tr:nth-child(even) {
-  background-color: #69696917;
-}
-
-.item-list tr.active {
-  border-left: 3px solid #baf52d;
-  background-color:#1d1d1d;
-}
-
-.item-list td {
-  /* border-left: 1px solid #333;
-  border-right: 1px solid #333; */
-  padding: 0 7px;
-}
-
-.item-list td:first-child {
-  border-left: none;
-}
-
-.item-list td:last-child {
-  border-right: none;
-}
-
-.td-flex {
-  flex: 1;
-}
-
-.item-list tr>input {
-  flex: 1;
-  line-height: initial;
-}
-
-.td-icons {
-  cursor: pointer;
-  font-size: 15px;
 }
 
 /* HOVER EFFECT */
