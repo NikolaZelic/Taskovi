@@ -1,0 +1,23 @@
+.darkBackground {
+  background-color: #24262d;
+  border-color: #ffb037;
+}
+
+.yellowText {
+  color: #ffb037;
+  border-color: #ffb037;
+}
+
+.lightGrayText {
+  color: #eee;
+}
+
+input.darktheme {
+  border: 1px solid #636567bf;
+  border-radius: 0;
+  color: #fff;
+  background: #2d3436;
+}
+input.darktheme:focus {
+  background: #2d3436;
+}

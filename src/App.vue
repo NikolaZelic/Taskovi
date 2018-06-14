@@ -15,6 +15,8 @@ export default {
 @import "./assets/css/CustomToggles.css";
 @import "./assets/css/TabsComponent.css";
 @import "./assets/css/SidebarTable.css";
+@import "./assets/css/DarkTheme.css";
+
 body {
   margin: 0;
   padding: 0;
