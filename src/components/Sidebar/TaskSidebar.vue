@@ -78,7 +78,7 @@ export default {
     }
   },
   mounted(){
-    // console.log('sd');
+    console.log('sd');
   }
 }
 </script>

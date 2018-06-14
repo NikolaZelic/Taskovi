@@ -25,11 +25,11 @@
 
         <!-- <parenttask-add/> -->
         <!-- <task-add/> -->
-
       </div>
       <chat-element v-if="taskid != -1"/>
     </div>
-    <modal-error v-if="modalError"></modal-error>
+    <modal-complete v-if="modalStatus"/>
+    <modal-error v-if="modalError"/>
   </div>
 </template>
 
@@ -62,6 +62,7 @@ import CompanyView from "@/components/Content/Company/CompanyView";
 
 import Registration from "@/components/Auth/Registration";
 import ModalError from "@/components/Misc/ModalError";
+import ModalComplete from "@/components/Misc/ModalComplete";
 
 import UserOptions from "@/components/UserOptions";
 import {
@@ -93,12 +94,8 @@ export default {
     TeamView,
     ParenttaskAdd,
     UserOptions,
-    ModalError
-  },
-  data() {
-    return {
-      // isFocus: undefined,
-    };
+    ModalError,
+    ModalComplete
   },
   created() {
     let sid = localStorage.sid;
@@ -109,11 +106,22 @@ export default {
       api.sessionActive();
     }
   },
-
+  watch: {
+    modalStatus(val) {
+      if (val === true) {
+        setTimeout(function() {
+          store.commit('modalStatus',{
+            active: false,
+          })
+        }, 20000);
+      }
+    }
+  },
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
+      modalStatus: state => state.modalStatus.active,
       newItem: state => state.itemAction.add,
       selectedItemEdit: state => state.itemAction.edit,
       isFocus: state => state.mainFocused,
@@ -132,7 +140,6 @@ export default {
     align-items: stretch;
     flex-direction: column;
     background-color: #24262d;
-
       }
 
   .rightside {
