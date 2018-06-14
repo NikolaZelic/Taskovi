@@ -1,14 +1,20 @@
 <script>
 import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
+import {
+  api
+} from "@/api/index";
 
 export default {
   mixins: [ParenttaskAdd],
   data() {
     return {
       task: true,
-      selectedPriorety: null,
-
     };
+  },
+  computed: {
+    parenttaskid(){
+      return 24;
+    }
   },
   methods: {
     createTask: function(){
@@ -28,7 +34,10 @@ export default {
 
       var tagarray = this.selectedTags.map( e => e.id );
 
-      
+      api.createTask(this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety, this.parenttaskid)
+      .then(result =>{
+        console.log(result.data);
+      });
     }
   },
 };

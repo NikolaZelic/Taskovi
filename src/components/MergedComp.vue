@@ -6,22 +6,22 @@
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
+        <!-- <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
         <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
         <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-        <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+        <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit> -->
 
         <!-- Adding new -->
-        <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
+        <!-- <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
         <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
         <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-        <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
+        <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add> -->
 
         <!-- Viewing existing -->
-        <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
+        <!-- <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
         <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
         <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-        <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
+        <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view> -->
 
         <!-- <parenttask-add/> -->
         <task-add/>
@@ -29,7 +29,7 @@
       </div>
       <chat-element v-if="taskid != -1"/>
     </div>
-    <modal-error v-if="modalError"></modal-error>
+    <!-- <modal-error v-if="modalError"></modal-error> -->
   </div>
 </template>
 

@@ -16,8 +16,11 @@ const getters = {
 
   getProjectFromTasks: state => {
     return store.state.sidebarItemSelection[store.state.currentTabIndex-1];
-  }
+  },
 
+  // getCompanyFromTask: state => {
+  //   return store.state.sidebarItemSelection[store.state.currentTabIndex-2];
+  // }
 }
 
 export default {

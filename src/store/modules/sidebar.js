@@ -69,17 +69,25 @@ const mutations = {
   },
 
   setSidebarItemSelection: (state, params) => {
-    store.state.sidebarItemSelection[params.index] = params.id;
-    store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined;
-    store.state.currentTabIndex = -1;
-    store.state.currentTabIndex = params.index;
+    // store.state.sidebarItemSelection[params.index] = params.id;
+    // store.state.itemAction.edit = undefined;
+    // store.state.itemAction.add = undefined;
+    // store.state.currentTabIndex = -1;
+    // store.state.currentTabIndex = params.index;
     // ZELIC - REMOVE IF NOT NEEDED
     // if (params.index === 1) {
     //   store.dispatch('selectTask', {
     //     id: params.id
     //   })
     // }
+    // Promena by ZELIC
+    var kopija = store.state.sidebarItemSelection.slice();
+    kopija[params.index] = params.id;
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined;
+    store.state.currentTabIndex = -1;
+    store.state.currentTabIndex = params.index;
+    store.state.sidebarItemSelection = kopija;
   },
 
   itemAddClick: (state, params) => {
