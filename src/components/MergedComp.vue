@@ -111,7 +111,7 @@ export default {
     modalStatus(val) {
       if (val === true) {
         setTimeout(function() {
-          store.commit('modalStatus',{
+          store.commit('modalStatus', {
             active: false,
           })
         }, 20000);
