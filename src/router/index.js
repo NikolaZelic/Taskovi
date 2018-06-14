@@ -3,6 +3,8 @@ import Router from 'vue-router';
 import MergedComp from '@/components/MergedComp';
 import StartPage from '@/components/StartPage';
 import UserOptions from '@/components/UserOptions.vue';
+import TaskAdd from '@/components/Content/Task/TaskAdd'
+import ParenttaskAdd from '@/components/Content/Task/ParenttaskAdd'
 
 Vue.use(Router);
 export default new Router({
@@ -21,6 +23,12 @@ export default new Router({
   }, {
     path: '*',
     component: StartPage
+  }, {
+    path: '/taskadd',
+    component: TaskAdd
+  }, {
+    path: '/parenttaskadd',
+    component: ParenttaskAdd
   }],
   mode: 'history',
 });

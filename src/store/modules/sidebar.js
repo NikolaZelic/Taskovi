@@ -88,17 +88,13 @@ const mutations = {
   },
 
   setSidebarItemSelection: (state, params) => {
-    store.state.sidebarItemSelection[params.index] = params.id;
+    var copy = store.state.sidebarItemSelection.slice();
+    copy[params.index] = params.id;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    // ZELIC - REMOVE IF NOT NEEDED
-    // if (params.index === 1) {
-    //   store.dispatch('selectTask', {
-    //     id: params.id
-    //   })
-    // }
+    store.state.sidebarItemSelection = copy;
   },
 
   itemAddClick: (state, params) => {

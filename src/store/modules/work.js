@@ -9,6 +9,8 @@ const state = {
   suggestedTeams: [],
   // by Zelic - korisceno u ParanttaskAdd.vue
   suggestedTags: [],
+  // by Zelic - korisceno u ParenttaskAdd.vue
+  suggestedProjects: [],
 }
 const actions = {
   // by Zelic - koristi se u ParenttaskAdd.vue
@@ -24,7 +26,6 @@ const actions = {
   cleanSuggestions(commit, params){
     store.commit('cleanSuggestions');
   },
-
   // by Zelic
   cleanSuggestedTeams(commit, params){
     store.commit('cleaneSuggestedTeams');
@@ -40,7 +41,9 @@ const actions = {
   //     store.commit( 'setUsersCompanies', {r:result.data} );
   //   } );
   // },
-
+  clleaneSuggestedProjects(commit, params){
+    store.commit('cleaneSuggestedProjects');
+  },
   // by Zelic - poziva se u TeamAdd
   refreshSuggestions(commit, params){
     // console.log('Action');
@@ -57,6 +60,14 @@ const actions = {
     api.suggestGroup('team', params.searchStr, params.comId).
     then( result => {
       store.commit('setSuggestedTeams', result) ;
+    } );
+  },
+
+  // by Zelic - korisceno u ParenttaskAdd.vue
+  suggestProjects(commit, params){
+    api.suggestGroup('project', params.searchStr, params.comId).
+    then( result => {
+      store.commit('setSuggestedProjects', result) ;
     } );
   },
 
@@ -77,6 +88,9 @@ const mutations = {
     state.suggestedTeams = [];
   },
 
+  cleaneSuggestedProjects: (state, params) => {
+    state.suggestedProjects = [];
+  },
   // by Zelic
   setSuggestedTags: (state, params) => {
     state.suggestedTags = params.suggestions;
@@ -93,6 +107,11 @@ const mutations = {
   setSuggestions: (state, params) => {
     // console.log(params.data.data);
     state.suggestedUsers = params.data.data;
+  },
+
+  // by Zelic - Korisyi se u ParenttaskAdd.vue
+  setSuggestedProjects: (state, params) => {
+    state.suggestedProjects = params.data.data;
   },
 
   // by Zelic - korisceno u TeamAdd.
