@@ -180,8 +180,20 @@ export const api = {
   },
 
   // ZX
+  getUserParentTask(index, state, type, archived) {
+    return axios.get('/users/parenttasks', {
+      params: {
+        sid: window.localStorage.sid,
+        state: state,
+        type: type,
+        archived: archived,
+      }
+    })
+  },
+
+  // ZX - USED LATER IN COMP
   getUserWork(index, state, type, archived) {
-    let link = '/users/tasks';
+    let link = '/users/parenttasks';
     if (index === 1) link = '/users/projects';
     return axios.get(link, {
       params: {
@@ -230,57 +242,54 @@ export const api = {
   //
   addCompany(name, desc, sid) {
 
-      return axios.post('companies', {
-        companyname: name,
-        companydesc: desc,
-        sid: sid
-      })
+    return axios.post('companies', {
+      companyname: name,
+      companydesc: desc,
+      sid: sid
+    })
   },
 
   changeCompanyInfo(name, desc, comid, sid) {
     return axios.put("companies/:comid", {
-        companyname: name,
-        companydesc: desc,
-        comid: comid,
-        sid: sid
-      }
-    );
+      companyname: name,
+      companydesc: desc,
+      comid: comid,
+      sid: sid
+    });
   },
 
   loadEmployees(compID, sid) {
     return axios.get("companies/:comid/users", {
-          params: {
-            comid: compID,
-            sid: sid
-          }
-        })
+      params: {
+        comid: compID,
+        sid: sid
+      }
+    })
   },
 
   loadAdmins(compID, sid) {
     return axios.get("companies/:comid/admins", {
-          params: {
-            comid: compID,
-            sid: sid
-          }
-        })
+      params: {
+        comid: compID,
+        sid: sid
+      }
+    })
   },
 
   addEmployee(compID, email, sid) {
     return axios.post("companies/:comid/users", {
-          comid: compID,
-          email: email,
-          sid: sid
-        }
-      )
+      comid: compID,
+      email: email,
+      sid: sid
+    })
   },
 
   addAdmin(compID, email, sid) {
     return axios.post("companies/:comid/admins", {
-          comid: compID,
-          email: email,
-          sid: sid
-        }
-      )
+      comid: compID,
+      email: email,
+      sid: sid
+    })
   }
 
 

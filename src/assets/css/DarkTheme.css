@@ -1,13 +1,49 @@
-.darkBackground{
+.darkBackground {
   background-color: #24262d;
   border-color: #ffb037;
 }
 
-.yellowText{
+.yellowText {
   color: #ffb037;
   border-color: #ffb037;
 }
 
-.lightGrayText{
+.lightGrayText {
   color: #eee;
+}
+
+.darkTheme {
+  border: 1px solid #ffb037;
+  border-radius: 0;
+  color: #ffb037;
+  background: #2d3436;
+}
+
+.darkTheme:focus {
+  background: #2d3436;
+  /* color: #eee; */
+}
+
+.form-control:focus{
+  border-color: #ffb037;
+  box-shadow: none;
+  color: #eee;
+}
+
+.form-control:focus::placeholder{
+  color: #ffb037;
+}
+
+.btn-outline-secondary:focus, .btn-outline-secondary:hover{
+  background-color:#ffb037;
+  border-color:#ffb037;
+  color: #2d3436;
+  box-shadow: none;
+}
+
+.btn-outline-secondary:active{
+  background-color:#2d3436 !important;
+  border-color:#2d3436 !important;
+  color: #ffb037 !important;
+  box-shadow: none !important;
 }
