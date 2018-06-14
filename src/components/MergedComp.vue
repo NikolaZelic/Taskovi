@@ -91,6 +91,7 @@ export default {
     CompanyView,
     TeamEdit,
     TeamView,
+    TeamAdd,
     ParenttaskAdd,
     UserOptions,
     ModalError
