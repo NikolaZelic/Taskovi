@@ -147,10 +147,6 @@ export default {
     flex-wrap: wrap;
   }
 
-  .fas {
-    font-size: 125%;
-  }
-
   .maincontent {
     padding: 50px 30px 0;
     flex: 1;
@@ -159,6 +155,7 @@ export default {
 
   .maincontent h1 {
     text-align: center;
+    color: #fff
   }
 
   @media only screen and (min-width: 1500px) {

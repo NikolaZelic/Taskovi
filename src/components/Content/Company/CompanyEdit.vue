@@ -3,16 +3,19 @@
 
   <h4 class="yellowText">Change company info:</h4>
   <label for="companyname" class="mt-3 yellowText">Company name</label>
-  <input type="text" class="form-control mb-3 darktheme" id="companyname" v-model="companyname" placeholder="Enter the name of the company you're creating">
+
+  <input type="text" class="form-control mb-3 darkTheme" id="companyname" v-model="companyname"  v-bind:placeholder="namePlaceholder">
+<!-- {{companyInfo.title}} -->
+<!-- placeholder="Enter the name of the company you're creating" -->
 
   <label for="companydesc" class="yellowText">Description</label>
-  <textarea class="form-control mb-3" id="companydesc" rows="3" v-model='companydesc' placeholder="Tell us a little something about your company..." spellcheck="false"></textarea>
+  <textarea class="form-control mb-3 darkTheme" id="companydesc" rows="3" v-model='companydesc' v-bind:placeholder="descriptionPlaceholder" spellcheck="false"></textarea>
 
   <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5 yellowText">Change company info</button>
 
   <h4 class="yellowText">Add new user:</h4>
   <div class="input-group">
-    <input type="text" class="form-control" placeholder="Enter user's email address" v-model="email">
+    <input type="text" class="form-control darkTheme" placeholder="Enter user's email address" v-model="email">
     <div class="input-group-append">
       <button class="btn btn-outline-secondary yellowText" type="button" @click="addAdmin()">As admin</button>
       <button class="btn btn-outline-secondary yellowText" type="button" @click="addEmployees()">As employee</button>
@@ -38,9 +41,9 @@
     </li>
   </ul>
 
-  <multiselect v-model="value" :options="options" placeholder="Select one" :preserveSearch="true" label="name" :custom-label="nameWithLang" track-by="email" ref="inputField" @search-change="funkcija()"></multiselect>
+  <!-- <multiselect v-model="value" :options="options" placeholder="Select one" :preserveSearch="true" label="name" :custom-label="nameWithLang" track-by="email" ref="inputField" @search-change="funkcija()"></multiselect> -->
 
-  <br><br><br><br><br>
+  <!-- <br><br><br><br><br> -->
 
 </div>
 </template>
@@ -56,7 +59,11 @@ import {
 import {
   mapGetters
 } from "vuex";
+import { mapState } from "vuex";
+
 import Multiselect from "vue-multiselect";
+
+
 
 export default {
   components: {
@@ -81,6 +88,11 @@ export default {
   },
 
   methods: {
+    getCompanyInfo(compID) {
+      store.dispatch("getCompanyInfo", {
+        compID: compID
+      });
+    },
 
     nameWithLang({
       name,
@@ -135,6 +147,7 @@ export default {
 
     addAdmin() {
       api.addAdmin(this.$store.state.itemAction.edit, this.email, window.localStorage.getItem("sid")).then(response => {
+        console.log(window.localStorage.getItem("sid"));
         if (response.data.status === "ERR") {
           this.notExistingAdmin = true;
           this.message = response.data.message;
@@ -183,6 +196,22 @@ export default {
   },
 
   computed: {
+    namePlaceholder(){
+      let name = this.companyInfo.title;
+      if(name==null) return "Enter the name of the company you're creating";
+      else return name;
+    },
+
+    descriptionPlaceholder(){
+      let description = this.companyInfo.description;
+      if(description==null) return "Tell us a little something about your company...";
+      else return description;
+    },
+
+    ...mapState({
+      companyInfo: state => state.modulecompany.companyInfo
+    }),
+
     ...mapGetters({
       selectedCompanyID: "selectedItemID"
     }),
@@ -197,12 +226,14 @@ export default {
   },
 
   mounted() {
+    this.getCompanyInfo(store.state.itemAction.edit);
     this.loadAdmins(store.state.itemAction.edit);
     this.loadEmployees(store.state.itemAction.edit);
   },
 
   watch: {
     editID: function(val, oldVal) {
+      this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
     }

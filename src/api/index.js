@@ -11,18 +11,33 @@ import router from '../router/index.js'
 export const api = {
 
   // by Zelic - Poziva se u ParenttaskAdd.vue
-  createParenttask(proid, title, description, deadline, userid, teamid, tagarray) {
+  createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
     return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
       title: title,
       description: description,
       deadline: deadline,
       userid: userid,
       teamid: teamid,
-      tagarray: JSON.stringify(tagarray)
+      tagarray: JSON.stringify(tagarray),
+      priority: priorety
     });
   },
 
-  // by Zelic - koristi se u ParenttaskAdd.vue
+  // by Zelic - Poziva se u TaskAdd.vue
+  createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin){
+    return axios.post('tasks?sid='+window.localStorage.sid, {
+      title: title,
+      description: description,
+      deadline: deadline,
+      userid: userid,
+      teamid: teamid,
+      tagarray: JSON.stringify(tagarray),
+      priority: priorety,
+      origintskid: origin,
+    });
+  },
+
+  // by Zelic - koristi se u ParenttaskAdd.vue, TaskAdd.vue
   suggestGroup(grpType, searchStr, comId) {
     return axios.get('groups', {
       params: {
@@ -179,21 +194,19 @@ export const api = {
     });
   },
 
+
   // ZX
   getUserParentTask(index, state, type, archived) {
     return axios.get('/users/parenttasks', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
       }
     })
   },
 
-  // ZX - USED LATER IN COMP
+  // ZX - Get items based on filter
   getUserWork(index, state, type, archived) {
-    let link = '/users/parenttasks';
+    let link = '/users/tasks';
     if (index === 1) link = '/users/projects';
     return axios.get(link, {
       params: {
@@ -203,6 +216,18 @@ export const api = {
         archived: archived,
       }
     });
+  },
+
+  // ZX - GET user tasks based on parent task
+  getUserTasks(index, state, type, archived) {
+    return axios.get('/users/tasks', {
+      params: {
+        sid: window.localStorage.sid,
+        state: state,
+        type: type,
+        archived: archived,
+      }
+    })
   },
 
   // ZX

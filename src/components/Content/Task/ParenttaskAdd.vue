@@ -9,6 +9,14 @@
   </div>
 
   <div class="content">
+    <!-- PROJECT -->
+    <div v-show='!task' class="form-group">
+      <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
+      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam"
+      />
+      </vue-autosuggest>
+    </div>
+
     <!-- TITLE -->
     <div class="form-group">
       <input v-model='title' type="text" class="form-control" id="tsk_title" placeholder="Title">
@@ -42,7 +50,8 @@
     <div class="form-group">
       <i :class="personClass" @click='selectUser'></i>
       <i :class="teamClass" @click='selectTeam'></i>
-      <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion" @click="clickHandler" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
+      <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
+      @click="clickHandler" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
       />
       </vue-autosuggest>
     </div>
@@ -71,8 +80,6 @@
     <div class="form-group button-wrapper">
       <button @click='createTask' type="submit" class="btn btn-success">Create</button>
     </div>
-
-    Ovde treba da je id projekta: {{ proId }}
   </div>
   <!-- cotent -->
 
@@ -139,6 +146,15 @@ export default {
       // proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
       task: false,
       selectedPrioretyClass: 'unselected form-control',
+      suggestedProjets: [],
+      inputPropsProject: {
+        class: 'autosuggest__input',
+        onInputChange: this.onInputChangeProject,
+        placeholder: 'Enter Project'
+      },
+      selectedPriorety: null,
+      projectSuggestionHaveChange: 0,
+
     }
   },
 
@@ -150,21 +166,22 @@ export default {
         return store.getters.getSuggestedUsers;
     },
     ...mapState({
-      companyID: state => state.modulecompany.id,
       suggestedTags: state => state.modulework.suggestedTags,
+      suggestedProjects: state => state.modulework.suggestedProjects,
+      companyID: state => state.sidebarItemSelection[0],
     }),
     proId(){
-      let a = store.getters.getProjectFromTasks;
-      // console.log(a);
-      if(a !== undefined && a!= null){
-        return a;
-      }
-      return null;
-    }
+      if( this.$refs.projectref._data.currentItem == null )
+        return null;
+      return this.$refs.projectref._data.currentItem.item.id;
+    },
   },
 
   created: function() {
+
+    // console.log(this.$refs.projectref);
     interval = setInterval(() => {
+      // Ovo bi trebalo stalno da poziva kompany ID
       // Pozivanje sugestija za tagove
       if (this.inputTagHaveChange == 1 && this.tagSearchStr != null && this.tagSearchStr.length > 0) {
         store.dispatch('suggestTags', {
@@ -173,6 +190,7 @@ export default {
         });
         this.inputTagHaveChange = 0;
       }
+
       // Poziv sugestija za user tj. timove
       if (this.inputWorkerHaveChange == 1 && this.inputWorker != null && this.inputWorker.length > 0) {
         if (this.teamSelect == 0)
@@ -184,6 +202,17 @@ export default {
       if (this.inputWorker != null && this.inputWorker.length == 0) {
         store.dispatch('cleanSuggestions');
         store.dispatch('cleanSuggestedTeams');
+      }
+
+      // Poziv sugestija za projekte
+      if( this.$refs.projectref != undefined ){
+        if( this.$refs.projectref._data.searchInput == null || this.$refs.projectref._data.searchInput.length == 0 ){
+          // store.dispatch('clleaneSuggestedProjects');
+        }
+        else if( this.projectSuggestionHaveChange == 1 ){
+          store.dispatch('suggestProjects', {searchStr: this.$refs.projectref._data.searchInput, comId: this.companyID} );
+          this.projectSuggestionHaveChange = 0;
+        }
       }
     }, 500);
   },
@@ -267,18 +296,19 @@ export default {
         } < /div>
       }
     },
+    renderProjectSuggestion(suggestion){
+      return this.oznaciIme(suggestion.item.name, this.$refs.projectref._data.searchInput );
+    },
     oznaciIme(ime, str) {
+      if( ime===undefined || ime===null )
+        return;
       var reg = new RegExp(str, 'i');
       var m = ime.search(reg);
       if (m != -1) { // Ako uopste ima preklapanja
         var pre = ime.replace(new RegExp('(.*?)' + str + ".*", 'i'), '$1');
         var oznaceno = ime.replace(new RegExp('.*?(' + str + ').*', 'i'), '$1');
         var posle = ime.replace(new RegExp('.*?' + str + '(.*)', 'i'), '$1');
-        return <span class = 'rec' > < span class = 'neoznacen' > {
-          pre
-        } < /span><span class='oznacen'>{oznaceno}</span > < span class = 'neoznacen' > {
-          posle
-        } < /span></span > ;
+        return <span class = 'rec' > < span class = 'neoznacen' >{pre}< /span><span class='oznacen'>{oznaceno}</span ><span class = 'neoznacen' >{posle}< /span></span > ;
       }
       return <span class = 'rec' > < span class = 'neoznacen' > {
         ime
@@ -310,8 +340,12 @@ export default {
       if (this.teamSelect == 0) { // Selektovan je korisnik
         return i.name + " " + i.surname + " " + i.email;
       } else {
-        return i.name;
+        return this.getSuggestionTeam(item);
       }
+    },
+    getSuggestionTeam(item){
+      var i = item.item;
+      return i.name;
     },
     suggestUsers() {
       // console.log('SUggest users');
@@ -340,7 +374,7 @@ export default {
     // Kreiranje taska
     createTask() {
       // Provera ulaznih vrednosti
-      if (this.title == null || this.title.length == 0) {
+      if (this.title == null || this.title.length == 0 || this.proId == null) {
         return;
       }
 
@@ -355,11 +389,17 @@ export default {
 
       var tagarray = this.selectedTags.map(e => e.id);
 
-      api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray).
+      api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety).
       then(result => {
         console.log(result);
       });
     },
+    onInputChangeProject(text, oldText){
+      if( text == null || text.length == 0){
+        store.dispatch('clleaneSuggestedProjects');
+      }
+      this.projectSuggestionHaveChange = 1;
+    }
   },
 };
 </script>
@@ -389,7 +429,7 @@ export default {
   /* z-index: 9998; */
   top: 0px;
   right: 0px;
-  width: 40%;
+  width: 600px;
   /* height: 80%; */
   background: #24262d;
   color: #eee;

@@ -16,7 +16,8 @@
        </svg> -->
 
       <ul class="tabs">
-        <li :tabindex="index+1" v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
+        <!-- :tabindex="index+1" -->
+        <li v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
           :disabled="tab.disabled">
         </li>
       </ul>
@@ -38,7 +39,7 @@
           <form class="form-block">
             <div class="search">
               <span class="fas fa-search"></span>
-              <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+              <input class="form-control mr-sm-2 hidden-md-down darktheme" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
             </div>
           </form>
           <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
@@ -64,39 +65,38 @@
         </div>
         <div class="item-list">
           <!-- <keep-alive> -->
-            <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
-            <table v-else>
-              <tbody>
-                <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-                  <!-- <td v-if='showSubFilter()'>
+          <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
+          <table v-else>
+            <tbody>
+              <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+                <!-- <td v-if='showSubFilter()'>
                  <label title="Mark as Completed">
                      <input type="checkbox">
                      <span class="label-text"></span>
                    </label>
                </td> -->
-                  <!-- @click="removeItem(item)" -->
-                  <td>
-                    <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
-                  </td>
-                  <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
-                  <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-                  <td v-if="item.haveUnseenFeed ==='true'">
-                    <span title="Unread" class="badge badge-primary badge-pill">1</span>
-                  </td>
-                  <td v-if="item.isUrgent === 'urgent'">
-                    <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                  </td>
-                  <td v-if="item.deadline !== undefined && item.deadline !== null">
-                    <span title="Deadline" class="badge badge-danger">
+                <!-- @click="removeItem(item)" -->
+                <td>
+                  <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
+                </td>
+                <td @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
+                <td v-if="item.haveUnseenFeed ==='true'">
+                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
+                </td>
+                <td v-if="item.isUrgent === 'urgent'">
+                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+                </td>
+                <td v-if="item.deadline !== undefined && item.deadline !== null">
+                  <span title="Deadline" class="badge badge-danger">
                      {{ deadlineSplit(item.deadline) }}
                    </span>
-                  </td>
-                  <td v-if="item.userscount !== undefined && item.userscount !== null">
-                    <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                </td>
+                <td v-if="item.userscount !== undefined && item.userscount !== null">
+                  <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <!-- </keep-alive> -->
         </div>
         <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
@@ -353,6 +353,13 @@ export default {
   align-items: stretch;
 }
 
+
+
+.static-side .fas,
+.sidebar-header .fas {
+  font-size: 125%;
+}
+
 /* SIDEBAR STATIC */
 
 .static-side {
@@ -411,8 +418,8 @@ export default {
 }
 
 .tablinks:hover {
-  background: #ccc;
-  color: #333;
+  background: #eadc903b;
+  color: #fff;
 }
 
 /* TABS END */
@@ -497,7 +504,7 @@ export default {
 /* HOVER EFFECT */
 
 #addItem:hover {
-  box-shadow: 0px 0px 17px 0px rgba(255, 248, 19, 0.2);
+  box-shadow: 0 0 20px 4px rgba(255, 248, 19, 0.2)
 }
 
 /* TASK LIST END */
@@ -551,8 +558,13 @@ h2 {
   background: #2d3436;
 }
 
-.search ::placeholder {
-  color: #bbb;
+.search input.darkTheme:focus {
+  background: #2d3436;
+  color: #fff;
+}
+
+.search input.darkTheme::placeholder {
+  color: #888;
 }
 
 /* SEARCH END*/
@@ -569,6 +581,7 @@ h2 {
   display: flex;
   flex-direction: column;
   padding: 15px;
+  border-right: 1px solid #ffc10742;
 }
 
 .form-filter>form {

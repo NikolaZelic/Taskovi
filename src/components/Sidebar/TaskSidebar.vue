@@ -15,9 +15,7 @@
         <td class='tasks'>
           <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
         </td>
-        <td colspan="10">
-          {{t}}
-        </td>
+        <td @click='selectItem(t.id, activeItem = t.id)' class='td-flex'>{{ t }}</td>
       </tr>
      </transition-group>
     </template>
@@ -25,6 +23,9 @@
 </template>
 
 <script>
+import {
+  store
+} from "@/store/index.js";
 import {
   mapGetters
 } from "vuex";
@@ -36,6 +37,7 @@ export default {
   data() {
     return {
       parentExpanded: [],
+      activeItem: undefined,
       taskList: ['taskic', 'taskicccc2', 'taskiiii'],
     }
   },
@@ -53,13 +55,30 @@ export default {
   methods: {
     expandParent(val, i) {
       Vue.set(this.parentExpanded, i, !val);
+      this.actionTasksFromParentTask(i);
+    },
+    actionTasksFromParentTask(i) {
+      store.dispatch('getUserTasks', {
+        index: this.currentTabIndex,
+        state: 'both',
+        type: 'task',
+        archived: 'false',
+        parentIndex: i,
+      });
+    },
+    selectItem(itemID) {
+      this.tabs[this.currentTabIndex].itemIndex = itemID;
+      store.commit("setSidebarItemSelection", {
+        index: this.currentTabIndex,
+        id: itemID
+      });
     },
     createTask() {
       console.log('create task CLICKED');
     }
   },
   mounted(){
-    console.log('sd');
+    // console.log('sd');
   }
 }
 </script>

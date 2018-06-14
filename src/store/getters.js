@@ -14,9 +14,9 @@ const getters = {
     return store.state.mainFocused;
   },
 
-  getProjectFromTasks: state => {
-    return store.state.sidebarItemSelection[store.state.currentTabIndex - 1];
-  }
+  // getProjectFromTasks: state => {
+  //   return store.state.sidebarItemSelection[store.state.currentTabIndex - 1];
+  // }
 }
 
 export default {
