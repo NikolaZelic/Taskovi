@@ -552,10 +552,19 @@ h2 {
 
 .search input {
   text-indent: 25px;
-  /* border: 1px solid #636567bf;
+  border: 1px solid #636567bf;
   border-radius: 0;
   color: #fff;
-  background: #2d3436; */
+  background: #2d3436;
+}
+
+.search input.darkTheme:focus {
+  background: #2d3436;
+  color: #fff;
+}
+
+.search input.darkTheme::placeholder {
+  color: #888;
 }
 
 /* SEARCH END*/

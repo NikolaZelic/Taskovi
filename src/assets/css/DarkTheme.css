@@ -12,18 +12,42 @@
   color: #eee;
 }
 
-input.darktheme {
-  border: 1px solid #636567bf;
+input.darkTheme,.form-control.darkTheme {
+  border: 1px solid #ffb037;
   border-radius: 0;
-  color: #fff;
+  color: #ffb037;
   background: #2d3436;
 }
 
-input.darktheme:focus {
+input.darkTheme:focus {
   background: #2d3436;
   color: #fff;
 }
 
-input.darktheme::placeholder{
-    color: #888; 
+input.darkTheme::placeholder {
+  color: #888;
+}
+
+.form-control.darkTheme:focus {
+  border-color: #ffb037;
+  box-shadow: none;
+  color: #eee;
+}
+
+.form-control.darkTheme:focus::placeholder {
+  color: #ffb037;
+}
+
+.btn-outline-secondary:focus, .btn-outline-secondary:hover {
+  background-color: #ffb037;
+  border-color: #ffb037;
+  color: #2d3436;
+  box-shadow: none;
+}
+
+.btn-outline-secondary:active {
+  background-color: #2d3436 !important;
+  border-color: #2d3436 !important;
+  color: #ffb037 !important;
+  box-shadow: none !important;
 }
