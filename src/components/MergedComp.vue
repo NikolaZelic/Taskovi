@@ -24,7 +24,7 @@
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
         <!-- <parenttask-add/> -->
-        <task-add/>
+        <!-- <task-add/> -->
 
       </div>
       <chat-element v-if="taskid != -1"/>
@@ -183,7 +183,7 @@ export default {
     /* MAIN CONTENT */
     #wrapper>.rightside {
       width: 63%;
-      margin-left: 45%;
+      margin-left: 37%;
       min-height: 100vh;
       transition: all 0.4s ease;
     }

@@ -15,9 +15,8 @@ const getters = {
   },
 
   getProjectFromTasks: state => {
-    return store.state.sidebarItemSelection[store.state.currentTabIndex-1];
+    return store.state.sidebarItemSelection[store.state.currentTabIndex - 1];
   }
-
 }
 
 export default {

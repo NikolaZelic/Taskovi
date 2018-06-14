@@ -52,6 +52,9 @@ export default {
       }, {
         l: 'email2@yahoo.com',
         p: 'pass111',
+      }, {
+        l: 'email002@qqq.com',
+        p: 'qqq',
       }],
       email: "",
       password: "",

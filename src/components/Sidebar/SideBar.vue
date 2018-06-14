@@ -1,9 +1,7 @@
 <template>
 <aside id="sidebar">
   <div class="sidebar-header">
-    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class='[
-    {"fas fa-angle-double-right":sidebarCollapsed},
-    {"fas fa-angle-double-left":!sidebarCollapsed}]'>
+    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarCollapsed}'>
       </span>
     <a>
         <span :class="tabs[currentTabIndex].icon"></span>
@@ -65,39 +63,41 @@
           </form>
         </div>
         <div class="item-list">
-          <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
-          <table v-else>
-            <tbody>
-              <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-                <!-- <td v-if='showSubFilter()'>
+          <!-- <keep-alive> -->
+            <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
+            <table v-else>
+              <tbody>
+                <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+                  <!-- <td v-if='showSubFilter()'>
                  <label title="Mark as Completed">
                      <input type="checkbox">
                      <span class="label-text"></span>
                    </label>
                </td> -->
-                <!-- @click="removeItem(item)" -->
-                <td>
-                  <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
-                </td>
-                <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
-                <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
-                <td v-if="item.haveUnseenFeed ==='true'">
-                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
-                </td>
-                <td v-if="item.isUrgent === 'urgent'">
-                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                </td>
-                <td v-if="item.deadline !== undefined && item.deadline !== null">
-                  <span title="Deadline" class="badge badge-danger">
+                  <!-- @click="removeItem(item)" -->
+                  <td>
+                    <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
+                  </td>
+                  <td v-if="renamingItem !== item" @dblclick="renameItem(item)" @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
+                  <input v-else type="text" @keyup.enter="endEditing(item)" @blur="endEditing(item)" v-model="item.title" v-focus/>
+                  <td v-if="item.haveUnseenFeed ==='true'">
+                    <span title="Unread" class="badge badge-primary badge-pill">1</span>
+                  </td>
+                  <td v-if="item.isUrgent === 'urgent'">
+                    <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+                  </td>
+                  <td v-if="item.deadline !== undefined && item.deadline !== null">
+                    <span title="Deadline" class="badge badge-danger">
                      {{ deadlineSplit(item.deadline) }}
                    </span>
-                </td>
-                <td v-if="item.userscount !== undefined && item.userscount !== null">
-                  <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td v-if="item.userscount !== undefined && item.userscount !== null">
+                    <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          <!-- </keep-alive> -->
         </div>
         <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
            <span class="fas fa-plus-circle"></span> Add New</button>
@@ -264,6 +264,14 @@ export default {
         dateTime.split(" ")[0] :
         "";
     },
+    // actionTabDataParentTask(name, s, t, a) {
+    //   store.dispatch(name, {
+    //     index: this.currentTabIndex,
+    //     state: s,
+    //     type: t,
+    //     archived: a
+    //   });
+    // },
     actionTabDataWork(name, s, t, a) {
       store.dispatch(name, {
         index: this.currentTabIndex,
@@ -410,6 +418,16 @@ export default {
 /* TABS END */
 
 /* COLLAPSED START */
+
+.collapse-btn {
+  transform: rotate(0);
+  transition: all .3s;
+}
+
+.collapse-btn.collapsed {
+  transform: rotate(180deg);
+  transition: all .3s;
+}
 
 .sidebar-content.collapsed {
   width: 0;

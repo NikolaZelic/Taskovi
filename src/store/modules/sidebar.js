@@ -5,7 +5,7 @@ import {
   store
 } from '../index';
 const actions = {
-  getUserWork(commit, params) {
+  getTasksFromParentTask(commit, params) {
     api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
@@ -18,6 +18,19 @@ const actions = {
       });
     });
   },
+    getUserWork(commit, params) {
+      api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
+        store.commit('setSidebarData', {
+          index: params.index,
+          data: r.data.data
+        });
+      }).catch(e => {
+        store.commit("modalError", {
+          active: true,
+          message: '' + e,
+        });
+      });
+    },
 
   getUserCompanies(commit, params) {
     api.getUserCompanies(params.admin).then(r => {
