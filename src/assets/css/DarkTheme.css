@@ -18,6 +18,12 @@ input.darktheme {
   color: #fff;
   background: #2d3436;
 }
+
 input.darktheme:focus {
   background: #2d3436;
+  color: #fff;
+}
+
+input.darktheme::placeholder{
+    color: #888; 
 }
