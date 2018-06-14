@@ -179,21 +179,19 @@ export const api = {
     });
   },
 
+
   // ZX
   getUserParentTask(index, state, type, archived) {
     return axios.get('/users/parenttasks', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
       }
     })
   },
 
-  // ZX - USED LATER IN COMP
+  // ZX - Get items based on filter
   getUserWork(index, state, type, archived) {
-    let link = '/users/parenttasks';
+    let link = '/users/tasks';
     if (index === 1) link = '/users/projects';
     return axios.get(link, {
       params: {
@@ -203,6 +201,18 @@ export const api = {
         archived: archived,
       }
     });
+  },
+
+  // ZX - GET user tasks based on parent task
+  getUserTasks(index, state, type, archived) {
+    return axios.get('/users/tasks', {
+      params: {
+        sid: window.localStorage.sid,
+        state: state,
+        type: type,
+        archived: archived,
+      }
+    })
   },
 
   // ZX

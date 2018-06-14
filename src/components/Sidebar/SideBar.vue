@@ -16,7 +16,8 @@
        </svg> -->
 
       <ul class="tabs">
-        <li :tabindex="index+1" v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
+        <!-- :tabindex="index+1" -->
+        <li v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
           :disabled="tab.disabled">
         </li>
       </ul>
@@ -350,7 +351,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* border-right: 1px solid #ffc10742; */
+}
+
+
+
+.static-side .fas,
+.sidebar-header .fas {
+  font-size: 125%;
 }
 
 /* SIDEBAR STATIC */
@@ -411,8 +418,8 @@ export default {
 }
 
 .tablinks:hover {
-  background: #ccc;
-  color: #333;
+  background: #eadc903b;
+  color: #fff;
 }
 
 /* TABS END */
@@ -497,7 +504,7 @@ export default {
 /* HOVER EFFECT */
 
 #addItem:hover {
-  box-shadow: 0px 0px 17px 0px rgba(255, 248, 19, 0.2);
+  box-shadow: 0 0 20px 4px rgba(255, 248, 19, 0.2)
 }
 
 /* TASK LIST END */
@@ -565,6 +572,7 @@ h2 {
   display: flex;
   flex-direction: column;
   padding: 15px;
+  border-right: 1px solid #ffc10742;
 }
 
 .form-filter>form {
