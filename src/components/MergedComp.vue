@@ -23,7 +23,7 @@
         <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
-        <!-- <parenttask-add/> -->
+        <parenttask-add/>
         <!-- <task-add/> -->
 
       </div>
