@@ -1,38 +1,38 @@
 <template>
-<div>
+<div class="lightGrayText">
 
-  <h4>Change company info:</h4>
-  <label for="companyname" class="mt-3">Company name</label>
+  <h4 class="yellowText">Change company info:</h4>
+  <label for="companyname" class="mt-3 yellowText">Company name</label>
   <input type="text" class="form-control mb-3" id="companyname" v-model="companyname" placeholder="Enter the name of the company you're creating">
 
-  <label for="companydesc">Description</label>
+  <label for="companydesc" class="yellowText">Description</label>
   <textarea class="form-control mb-3" id="companydesc" rows="3" v-model='companydesc' placeholder="Tell us a little something about your company..." spellcheck="false"></textarea>
 
-  <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5">Change company info</button>
+  <button @click="changeCompanyInfo()" class="btn btn-outline-secondary mb-5 yellowText">Change company info</button>
 
-  <h4>Add new user:</h4>
+  <h4 class="yellowText">Add new user:</h4>
   <div class="input-group">
     <input type="text" class="form-control" placeholder="Enter user's email address" v-model="email">
     <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button" @click="addAdmin()">As admin</button>
-      <button class="btn btn-outline-secondary" type="button" @click="addEmployees()">As employee</button>
+      <button class="btn btn-outline-secondary yellowText" type="button" @click="addAdmin()">As admin</button>
+      <button class="btn btn-outline-secondary yellowText" type="button" @click="addEmployees()">As employee</button>
     </div>
 
   </div>
   <div class="text-danger" v-if="notExistingAdmin">{{message}}</div>
   <div class="text-danger" v-if="notExistingEmployee">{{message}}</div>
 
-  <h4 class="mt-5">Company's admins:</h4>
+  <h4 class="mt-5 yellowText">Company's admins:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item" v-for="admin in admins">
+    <li class="list-group-item darkBackground" v-for="admin in admins">
       {{ admin.usr_name }} {{ admin.usr_surname }}
       <span class="small"> --- {{ admin.usr_email }}</span>
     </li>
   </ul>
 
-  <h4>Company's employees:</h4>
+  <h4 class="yellowText">Company's employees:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item" v-for="employee in employees">
+    <li class="list-group-item darkBackground" v-for="employee in employees">
       {{ employee.name }}
       <span class="small"> --- {{ employee.email }}</span>
     </li>

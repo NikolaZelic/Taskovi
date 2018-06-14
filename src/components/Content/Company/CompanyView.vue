@@ -1,29 +1,29 @@
 <template>
-<div>
+<div class="lightGrayText">
   <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
   <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
     </template>
 
   <!-- Ako je konretna kompanija selektovana onda se prikazuje ovo -->
-  <template v-else>
+  <template v-else >
 
     <!-- Osnovni podaci o kompaniji   -->
     <h1>{{companyInfo.title}}</h1>
-    <span>{{companyInfo.description}}</span >
+    <span class="yellowText">{{companyInfo.description}}</span >
 
     <!-- Lista svih zaposlenih u kompaniji -->
-    <h4 class="mt-5">Employees:</h4>
+    <h4 class="mt-5 yellowText">Employees:</h4>
     <ul class="list-group list-group-flush mb-5">
 
       <!-- Lista admina -->
-      <li class="list-group-item" v-for="admin in admins">
+      <li class="list-group-item darkBackground" v-for="admin in admins">
         {{ admin.usr_name }} {{ admin.usr_surname }} --- {{ admin.usr_email }}
-        <span class="badge badge-secondary">Admin</span>
+        <span class="badge yellowText">Admin</span>
     </li>
 
     <!-- Lista zaposlenih koji nisu admini -->
-    <li class="list-group-item" v-for="employee in employees">
+    <li class="list-group-item darkBackground" v-for="employee in employees">
       {{ employee.name }} --- {{ employee.email }}
     </li>
 

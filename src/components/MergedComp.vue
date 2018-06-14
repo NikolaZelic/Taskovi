@@ -24,7 +24,7 @@
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
         <!-- <parenttask-add/> -->
-        <task-add/>
+        <!-- <task-add/> -->
 
       </div>
       <chat-element v-if="taskid != -1"/>
@@ -131,12 +131,15 @@ export default {
     display: flex;
     align-items: stretch;
     flex-direction: column;
-  }
+    background-color: #24262d;
+
+      }
 
   .rightside {
     flex: 1;
     display: flex;
     flex-direction: column;
+    background-color: #24262d;
   }
 
   .item-filter {
@@ -151,6 +154,7 @@ export default {
   .maincontent {
     padding: 50px 30px 0;
     flex: 1;
+    background-color: #24262d;
   }
 
   .maincontent h1 {
