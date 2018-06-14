@@ -49,7 +49,8 @@ export default {
   computed: {
     ...mapState({
     // arrow functions can make the code very succinct!
-    messages: state => state.messages,
+    messages: state => state.modulechat.messages,
+
     }),
     taskid() {
       return store.getters.getTaskID;
@@ -64,7 +65,6 @@ export default {
       // }
     },
     messages() {
-      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
       this.countNumber = 3;
       this.count = 1;
     }
@@ -94,37 +94,7 @@ export default {
         file: f,
         taskid: this.taskid
       });
-      // axios
-      //   .post(
-      //     "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds",
-      //     fd, {
-      //       headers: {
-      //         "content-type": "multipart/form-data"
-      //       },
-      //       onUploadProgress: progressEvent => {
-      //         this.inProgress = true;
-      //         this.uploadProgress = Math.round(
-      //           progressEvent.loaded / progressEvent.total * 100
-      //         );
-      //       }
-      //     }
-      //   )
-      //   .then(res => {
-      //     this.inProgress = false;
-      //     console.log(res);
-      //     console.log("prikaz vracenog statusa");
-      //     api
-      //       .newFeed(
-      //         this.taskId,
-      //         this.messages[this.messages.length - 1].fed_id
-      //       )
-      //       .then(res1 => {
-      //         this.messages = this.messages.concat(res1.data.data);
-      //       });
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
+
     },
     addUp() {
       if (this.taskid === -1) return;
@@ -143,7 +113,8 @@ export default {
       //poziva api svaki put kada je count deljiv sa countNumber
       this.fInterval = setInterval(() => {
         if(this.count % this.countNumber == 0 && this.taskid != -1){
-          var msg = store.state.messages;
+          var msg = this.messages;
+
           if (msg.length > 0) {
             store.dispatch("readeFeeds", {
               taskid: this.taskid,

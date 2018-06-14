@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="wrapper">
     <side-bar/>
-    <div class="rightside">
+    <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent">
         <!-- <user-options/> -->
 
@@ -24,9 +24,10 @@
         <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
 
         <!-- <parenttask-add/> -->
+        <task-add/>
 
       </div>
-      <!-- <chat-element/> -->
+      <chat-element v-if="taskid != -1"/>
     </div>
     <modal-error v-if="modalError"></modal-error>
   </div>
@@ -37,7 +38,7 @@ import {
   store
 } from "@/store/index.js";
 
-import SideBar from "@/components/SideBar";
+import SideBar from "@/components/SideBar/Sidebar";
 
 import ChatElement from "@/components/Chat/ChatElement";
 
@@ -94,6 +95,11 @@ export default {
     UserOptions,
     ModalError
   },
+  data() {
+    return {
+      // isFocus: undefined,
+    };
+  },
   created() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
@@ -109,7 +115,12 @@ export default {
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       newItem: state => state.itemAction.add,
-      selectedItemEdit: state => state.itemAction.edit
+      selectedItemEdit: state => state.itemAction.edit,
+      isFocus: state => state.mainFocused,
+    }),
+    ...mapGetters({
+      isFocus: 'isFocus',
+      taskid: 'getTaskID'
     })
   }
 };
@@ -163,7 +174,7 @@ export default {
     #wrapper>aside {
       position: fixed;
       height: 100vh;
-      width: 45%;
+      width: 37%;
     }
 
     .item-filter {
@@ -171,9 +182,15 @@ export default {
     }
     /* MAIN CONTENT */
     #wrapper>.rightside {
-      width: 55%;
+      width: 63%;
       margin-left: 45%;
       min-height: 100vh;
+      transition: all 0.4s ease;
+    }
+
+    #wrapper>.rightside.focus{
+      margin-left: 70px;
+      transition: all 0.8s ease;
     }
   }
 
