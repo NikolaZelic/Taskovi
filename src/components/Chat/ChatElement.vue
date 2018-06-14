@@ -161,8 +161,8 @@ export default {
 }
 
 .feed-all {
-  background: #ebedf1;
-  border: 1px solid #ccc;
+
+  border-top: 1px solid #ffb037;
   width: 100%;
   display: flex;
   flex-flow: column;
