@@ -246,6 +246,28 @@ export const api = {
     });
   },
 
+  //Sveta
+  getTeam(teamId){
+    return axios.get("/teams/"+teamId,{
+      params:{
+        sid: window.localStorage.sid,
+      }
+    })
+  },
+  getTeamMembers(teamId){
+    return axios.get("/teams/"+teamId+"/users",{
+      params:{
+        sid: window.localStorage.sid,
+      }
+    })
+  },
+  getTeamAdmins(teamId){
+    return axios.get("/teams/"+teamId+"/admins",{
+      params:{
+        sid: window.localStorage.sid,
+      }
+    })
+  },
 
   //pocetak AXIOS poziva koji se koriste na COMPANY komponentama - VIEW, ADD, EDIT
   //
