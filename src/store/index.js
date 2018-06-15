@@ -34,6 +34,11 @@ export const store = new Vuex.Store({
     mainFocused: undefined,
     sidebarTabData: [],
     sidebarItemSelection: [],
+    modalStatus: {
+      active: false,
+      ok: true,
+      message: '',
+    },
     modalError: {
       active: false,
       message: '',
@@ -41,8 +46,7 @@ export const store = new Vuex.Store({
     itemAction: {
       edit: undefined,
       add: undefined,
+      addTask: undefined,
     },
-    // companyID: undefined,
-    // messages: [],
   },
 });

@@ -3,7 +3,7 @@
   <h1 class="display-4">Create team:</h1><br>
 
   <!-- IZBOR KOMPANIJE -->
-  <select v-if='usersCompanies!==undefined && usersCompanies.length>1' v-model="choosenCompany">
+  <select class="comp-select" v-if='usersCompanies!==undefined && usersCompanies.length>1' v-model="choosenCompany">
     <option value="" disabled selected>Choose company</option>
     <option v-for='company in usersCompanies' v-bind:value="company">{{ company.title }}</option>
   </select>
@@ -16,12 +16,12 @@
   <!-- TEAM NAME -->
   <div class="form-group">
     <label for="team_name">Team name</label>
-    <input v-model='teamName' type="text" class="form-control" id="team_name" placeholder="Enter the name of the team you're creating">
+    <input v-model='teamName' type="text" class="form-control grup-name" id="team_name" placeholder="Enter the name of the team you're creating">
   </div>
 
   <!-- ADDING MEMBERS -->
   <label for="pro_leader">Members</label>
-  <div class="form-group input-group">
+  <div class="form-group input-group member-choose">
     <vue-autosuggest ref="suggestionTag" :suggestions="[ { data: suggestions } ]" :renderSuggestion="renderSuggestion" @click="clickHandler" :onSelected="onSelected" :inputProps="{class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'}"
       :getSuggestionValue="getSuggestionValue" />
     </vue-autosuggest>
@@ -100,7 +100,8 @@ export default {
 
     usersCompanies() {
       // console.log('Computed za sugestije');
-      var a = store.getters.getAllTabData[3];
+      var a = store.state.sidebarTabData[0];
+      // console.log(a);
       // Ukoliko pripada samo jednoj kompaniji automatski je selektovana
       if (a !== undefined) {
         if (a.length === 1) {
@@ -129,7 +130,12 @@ export default {
     }
   },
 
+mounted:function(){
+  console.log(this.$refs.suggestionTag);
+},
+
   created: function() {
+
     interval = setInterval(() => {
       if (this.haveChange === 1 && this.inputText.length > 0 && this.choosenCompany.id !== undefined) {
         this.pozivapija();
@@ -205,7 +211,7 @@ export default {
     },
     // Metode za Auto
     onInputChange: function(text, oldText) {
-      this.inputText = text;
+      // this.inputText = text;
       this.haveChange = 1;
     },
     onSelected(item) {
@@ -227,6 +233,12 @@ export default {
 </script>
 
 <style scoped>
+.comp-select{
+  width: 80%;
+}
+.grup-name{
+  width:80%;
+}
 .task-add-section {
   padding-top: 50px;
 }
@@ -242,8 +254,17 @@ export default {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
+.member-data{
+  color:#eee;
+}
 </style>
 <style media="screen">
+.maincontent .member-choose #autosuggest {
+  flex:4;
+}
+.maincontent .member-choose .input-group-append {
+  flex:1;
+}
 .autosuggest__input {
   outline: none;
   position: relative;
@@ -312,4 +333,5 @@ export default {
 .autosuggest__results .autosuggest__results_item:hover {
   background-color: #ddd
 }
+
 </style>
