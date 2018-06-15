@@ -48,8 +48,11 @@ const actions = {
     });
   },
 
+
+  // WORKING on...
   getUserParentTasks(commit, params) {
-    api.getUserParentTasks().then(r => {
+    api.getTestFixed().then(r => {
+      // api.getUserParentTasks().then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -84,9 +87,8 @@ const actions = {
   itemAddClick(commit, params) {
     store.commit('itemAddClick');
   },
-  // not completed
   itemAddTaskClick(commit, params) {
-    store.commit('itemAddTaskClick',{
+    store.commit('itemAddTaskClick', {
       id: params.id,
     });
   },

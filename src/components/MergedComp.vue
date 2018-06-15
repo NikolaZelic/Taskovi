@@ -190,7 +190,7 @@ export default {
     color: #fff
   }
 
-  @media only screen and (min-width: 1500px) {
+  @media only screen and (min-width: 1350px) {
     .rightside {
       flex-direction: row;
     }

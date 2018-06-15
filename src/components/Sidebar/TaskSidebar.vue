@@ -11,11 +11,11 @@
         <td @click='createTask(ptask)'><span  class='fas fa-plus'></span> </td>
       </tr>
        <transition-group name="list" tag="div">
-      <tr v-if='parentExpanded[index]' v-for="t in taskList" :key='t' >
+      <tr v-if='parentExpanded[index]' v-for="task in ptask.children" :key='task.id' >
         <td class='tasks'>
           <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
         </td>
-        <td @click='selectItem(t.id, activeItem = t.id)' class='td-flex'>{{ t }}</td>
+        <td @click='selectItem(task.id, activeItem = task.id)' class='td-flex'>{{ task.title }}</td>
       </tr>
      </transition-group>
     </template>
@@ -38,16 +38,22 @@ export default {
     return {
       parentExpanded: [],
       activeItem: undefined,
-      taskList: ['taskic', 'taskicccc2', 'taskiiii'],
+      // taskList: ['taskic', 'taskicccc2', 'taskiiii'],
     }
   },
   watch: {
     parentTasks(val) {
-      // if (this.parentTasks.length !== this.parentExpanded.length)
-      this.parentExpanded = Array(this.parentTasks.length).fill(false);
+      // console.log(val);
+      if (this.parentTasks.length !== this.parentExpanded.length) {
+        this.parentExpanded = Array(this.parentTasks.length).fill(true);
+        this.taskList = this
+      }
     }
   },
   computed: {
+    ...mapState({
+      tabIndex : 'currentTabIndex',
+    }),
     ...mapGetters({
       parentTasks: 'currentTabData',
     })
@@ -67,9 +73,11 @@ export default {
     //   });
     // },
     selectItem(itemID) {
-      this.tabs[this.currentTabIndex].itemIndex = itemID;
+      // console.log(itemID);
+      // this.tabs[this.currentTabIndex].itemIndex = itemID;
+
       store.commit("setSidebarItemSelection", {
-        index: this.currentTabIndex,
+        index: this.tabIndex,
         id: itemID
       });
     },

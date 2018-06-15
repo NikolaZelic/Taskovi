@@ -24,8 +24,8 @@ export const api = {
   },
 
   // by Zelic - Poziva se u TaskAdd.vue
-  createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin){
-    return axios.post('tasks?sid='+window.localStorage.sid, {
+  createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin) {
+    return axios.post('tasks?sid=' + window.localStorage.sid, {
       title: title,
       description: description,
       deadline: deadline,
@@ -196,12 +196,17 @@ export const api = {
 
 
   // ZX
+  getTestFixed() {
+    return axios.get('/test/alltasks');
+  },
+
+  // ZX
   getUserParentTasks(index) {
     return axios.get('/users/parenttasks', {
       params: {
         sid: window.localStorage.sid,
       }
-    })
+    });
   },
 
   // ZX - Get items based on filter
