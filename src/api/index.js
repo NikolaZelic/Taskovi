@@ -202,7 +202,11 @@ export const api = {
 
   // ZX
   getTestFixed() {
-    return axios.get('/test/alltasks');
+    return axios.get('/users/alltasks', {
+      params: {
+        sid: window.localStorage.sid,
+      }
+    });
   },
 
   // ZX

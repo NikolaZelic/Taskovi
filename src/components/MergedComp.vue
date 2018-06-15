@@ -25,7 +25,7 @@
         <team-view v-else-if='checkShow(4,false,false)'/>
 
         <!-- <parenttask-add/> -->
-        <task-add/>
+        <!-- <task-add/> -->
 
       </div>
       <chat-element v-if="taskid != -1"/>

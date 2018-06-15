@@ -12,7 +12,7 @@
     <!-- PROJECT -->
     <div v-show='!task' class="form-group" @click='refreshProjectError'>
       <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam"
+      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"
       />
       </vue-autosuggest>
     </div>
@@ -452,7 +452,9 @@ export default {
       this.refreshProjectError();
       this.refreshTitleError();
     },
-
+    onProjectSelected(){
+      store.dispatch('clleaneSuggestedProjects');
+    },
   },
 };
 </script>
