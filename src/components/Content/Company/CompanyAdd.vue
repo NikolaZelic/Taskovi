@@ -14,7 +14,8 @@
 
   <h4 class="yellowText">Add new user:</h4>
   <div class="input-group">
-    <input type="text" class="form-control darkTheme" placeholder="Enter user's email address" v-model="email">
+    <!-- <input type="text" class="form-control darkTheme" placeholder="Enter user's email address" v-model="email"> -->
+    <multiselect v-model="value"  class="form-control darkTheme" :options="options" placeholder="Select one" label="name" :custom-label="fullName" track-by="id" ref="userInput" @search-change='populateUserList' @select='clearUserInput'></multiselect>
     <div class="input-group-append">
       <button class="btn btn-outline-secondary yellowText" type="button" @click="addAdminLocal()">As admin</button>
       <button class="btn btn-outline-secondary yellowText" type="button" @click="addEmployeesLocal()">As employee</button>
@@ -39,6 +40,16 @@
 
   <button @click="addCompany()" class="btn btn-outline-secondary yellowText">Add company</button>
 
+
+
+<br><br><br><br><br>
+<!-- <multiselect v-model="value" :options="options" placeholder="Select one" label="name" :custom-label="fullName" track-by="id" ref="userInput" @search-change='populateUserList' @select='clearUserInput'></multiselect> -->
+<br><br><br><br><br>
+
+
+
+
+
 </div>
 </template>
 
@@ -50,8 +61,14 @@ import {
   required,
   minLength
 } from 'vuelidate/lib/validators'
+import Multiselect from "vue-multiselect";
+import axios from "axios";
+var interval;
 
 export default {
+  components: {
+    Multiselect
+  },
 
   data() {
     return {
@@ -64,6 +81,10 @@ export default {
       notExistingAdmin: false,
       notExistingEmployee: false,
       message: "prazno",
+
+
+      value: [],
+      options: [],
     };
   },
 
@@ -75,6 +96,41 @@ export default {
   },
 
   methods: {
+
+        fullName({ name, surname, email }) {
+          return name + ' ' + surname + ' --- ' + email
+        },
+
+    populateUserList(){
+
+      // interval = setInterval(() => {
+
+          // this.populateUserList();
+
+
+
+      if(this.$refs.userInput.search !== ''){
+        axios.get('http://671n121.mars-t.mars-hosting.com/mngapi/users', {
+          params: {
+            sid: window.localStorage.sid,
+            searchstring: this.$refs.userInput.search
+          }
+        }).then(response => {
+          this.options = response.data.data;
+          // console.log(response.data.data)
+      });
+      // console.log();
+}
+
+    // }, 2500);
+
+
+},
+
+    clearUserInput(){
+      this.options = [];
+    },
+
     addCompany() {
       // if (!this.$v.$invalid) {
       api.addCompany(this.companyname, this.companydesc, window.localStorage.getItem('sid'));
@@ -83,18 +139,22 @@ export default {
 
     addAdminLocal() {
       this.users.push({
-        "name": this.email,
-        "id": "zameniti",
+        "name": this.value.name + ' ' + this.value.surname ,
+        "id": this.value.id,
         "isAdmin": true
       });
+
+      this.email = '';
     },
 
     addEmployeesLocal() {
       this.users.push({
-        "name": this.email,
-        "id": "zameniti",
+        "name": this.value.name + ' ' + this.value.surname ,
+        "id": this.value.id,
         "isAdmin": false
       });
+
+      this.email = '';
     }
   },
 
@@ -111,5 +171,16 @@ export default {
       })
     }
   }
+
+  // created: function() {
+  // if (this.$refs.userInput.search !== '') {
+  //   interval = setInterval(() => {
+  //
+  //       this.populateUserList();
+  //     }, 2500);
+  //   }
+  // },
 }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
