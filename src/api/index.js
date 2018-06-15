@@ -196,7 +196,7 @@ export const api = {
 
 
   // ZX
-  getUserParentTask(index, state, type, archived) {
+  getUserParentTasks(index) {
     return axios.get('/users/parenttasks', {
       params: {
         sid: window.localStorage.sid,

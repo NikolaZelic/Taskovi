@@ -6,24 +6,24 @@
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
-        <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
-        <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-        <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+        <company-edit v-if="selectedTab === 0 && itemEditButton!==undefined && itemAddButton===undefined"></company-edit>
+        <project-edit v-if="selectedTab === 1 && itemEditButton!==undefined && itemAddButton===undefined"></project-edit>
+        <task-edit v-if="selectedTab === 2 && itemEditButton!==undefined && itemAddButton===undefined"></task-edit>
+        <team-edit v-if="selectedTab === 4 && itemEditButton!==undefined && itemAddButton===undefined"></team-edit>
 
         <!-- Adding new -->
-        <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
-        <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
-        <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-        <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
+        <company-add v-if="selectedTab === 0 && itemAddButton===1 && itemEditButton===undefined"></company-add>
+        <project-add v-if="selectedTab === 1 && itemAddButton===1 && itemEditButton===undefined"></project-add>
+        <task-add v-if="(selectedTab === 2 || selectedTab === 3) && itemAddButton===1 && itemEditButton===undefined"></task-add>
+        <parenttask-add v-if="(selectedTab === 2 || selectedTab === 3) && itemAddButton===1 && itemEditButton===undefined"/>
+        <team-add v-if="selectedTab === 4 && itemAddButton===1 && itemEditButton===undefined"></team-add>
 
         <!-- Viewing existing -->
-        <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
-        <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
-        <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-        <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
+        <company-view v-else-if='selectedTab === 0 && itemAddButton===undefined && itemEditButton===undefined'></company-view>
+        <project-view v-if='selectedTab === 1 && itemAddButton===undefined && itemEditButton===undefined'></project-view>
+        <task-view v-else-if='selectedTab === 2 && itemAddButton===undefined && itemEditButton===undefined'></task-view>
+        <team-view v-else-if='selectedTab === 4 && itemAddButton===undefined && itemEditButton===undefined'></team-view>
 
-        <!-- <parenttask-add/> -->
         <!-- <task-add/> -->
       </div>
       <chat-element v-if="taskid != -1"/>
@@ -123,8 +123,9 @@ export default {
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       modalStatus: state => state.modalStatus.active,
-      newItem: state => state.itemAction.add,
-      selectedItemEdit: state => state.itemAction.edit,
+      itemAddButton: state => state.itemAction.add,
+      itemEditButton: state => state.itemAction.edit,
+      itemAddTaskButton: state => state.itemAction.addTask,
       isFocus: state => state.mainFocused,
     }),
     ...mapGetters({

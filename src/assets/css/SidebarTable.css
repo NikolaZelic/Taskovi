@@ -24,7 +24,7 @@
 
 .item-list tr:hover {
   text-decoration: none;
-  color: #e2ff05;
+  color: #ffc107;
   background: #8e8e8e66 !important;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .item-list tr.active {
-  border-left: 3px solid #baf52d;
+  border-left: 3px solid #ffc107;
   background-color: #1d1d1d;
 }
 

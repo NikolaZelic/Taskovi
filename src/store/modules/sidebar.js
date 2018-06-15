@@ -48,6 +48,20 @@ const actions = {
     });
   },
 
+  getUserParentTasks(commit, params) {
+    api.getUserParentTasks().then(r => {
+      store.commit('setSidebarData', {
+        index: params.index,
+        data: r.data.data
+      });
+    }).catch(e => {
+      store.commit("modalError", {
+        active: true,
+        message: '' + e,
+      });
+    });
+  },
+
   getUserTeams(commit, params) {
     api.getUserTeams(params.index, params.admin).then(r => {
       store.commit('setSidebarData', {
@@ -62,24 +76,28 @@ const actions = {
     });
   },
 
-  itemAddClick(commit, params) {
-    store.commit('itemAddClick');
-  },
-
   itemEditClick(commit, params) {
     store.commit('itemEditClick', {
       id: params.id,
     });
   },
+  itemAddClick(commit, params) {
+    store.commit('itemAddClick');
+  },
+  // not completed
+  itemAddTaskClick(commit, params) {
+    store.commit('itemAddTaskClick');
+  },
 
 };
 const mutations = {
   setSidebarData: (state, params) => {
-    if (params.data !== undefined){
-    if (params.parentIndex !== undefined && params.parentIndex !== null)
-      {store.state.sidebarTabData[params.index][params.parentindex].tasks = params.data;}
-    else
-      {store.state.sidebarTabData[params.index] = params.data;}
+    if (params.data !== undefined) {
+      if (params.parentIndex !== undefined && params.parentIndex !== null) {
+        store.state.sidebarTabData[params.index][params.parentindex].tasks = params.data;
+      } else {
+        store.state.sidebarTabData[params.index] = params.data;
+      }
     }
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
