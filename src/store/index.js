@@ -46,8 +46,7 @@ export const store = new Vuex.Store({
     itemAction: {
       edit: undefined,
       add: undefined,
+      addTask: undefined,
     },
-    // companyID: undefined,
-    // messages: [],
   },
 });

@@ -2,7 +2,7 @@
 <aside id="sidebar">
   <!-- <button @click="tts">Activate alert</button> -->
   <div class="sidebar-header">
-    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarCollapsed}'>
+    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarCollapsed}'>
       </span>
     <a>
         <span :class="tabs[currentTabIndex].icon"></span>
@@ -195,9 +195,9 @@ export default {
   },
   methods: {
     //REMOVE TTS() LATER
-    tts(){
-      store.commit('modalStatus',{
-        active:true,
+    tts() {
+      store.commit('modalStatus', {
+        active: true,
         message: 'no comment'
       })
       // console.log('s');
@@ -225,18 +225,42 @@ export default {
           this.actionTabDataPeople();
           break;
         case 1:
+          this.actionTabDataProject(s, t, a);
+          break;
         case 2:
         case 3:
-          this.actionTabDataWork("getUserWork", s, t, a);
+          this.actionTabDataParentTask();
           break;
       }
       this.setActiveArray();
     },
     selectItem(itemID) {
       this.tabs[this.currentTabIndex].itemIndex = itemID;
-      store.commit("setSidebarItemSelection", {
+      store.commit('setSidebarItemSelection', {
         index: this.currentTabIndex,
         id: itemID
+      });
+    },
+    actionTabDataParentTask() {
+      store.dispatch('getUserParentTasks', {
+        index: this.currentTabIndex,
+      });
+    },
+    actionTabDataProject(s, t, a) {
+      store.dispatch('getUserWork', {
+        index: this.currentTabIndex,
+        state: s,
+        type: t,
+        archived: a
+      });
+    },
+    actionTabDataPeople() {
+      let i = this.currentTabIndex;
+      let name = i === 0 ? 'getUserCompanies' : 'getUserTeams';
+      store.dispatch(name, {
+        index: i,
+        admin: this.tabs[i].isAdmin
+        // comid: this.getCompanyID,
       });
     },
     showSubFilter() {
@@ -253,50 +277,10 @@ export default {
     editItemButton(item) {
       store.dispatch("itemEditClick", item);
     },
-    // removeItem(item) {
-    //   var aa = this.getActiveArray(this.currentTabIndex);
-    //   // console.log(aa);
-    //   var index = aa.indexOf(item);
-    //   // console.log(index + "  |  " + aa.splice(index, 1));
-    // },
-    // endEditing(item) {
-    //   this.renamingItem = {};
-    //   if (item.title.trim() === "") {
-    //     this.removeItem(item);
-    //   }
-    // },
-    // renameItem(item) {
-    //   this.renamingItem = item;
-    // },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ?
         dateTime.split(" ")[0] :
         "";
-    },
-    // actionTabDataParentTask(name, s, t, a) {
-    //   store.dispatch(name, {
-    //     index: this.currentTabIndex,
-    //     state: s,
-    //     type: t,
-    //     archived: a
-    //   });
-    // },
-    actionTabDataWork(name, s, t, a) {
-      store.dispatch(name, {
-        index: this.currentTabIndex,
-        state: s,
-        type: t,
-        archived: a
-      });
-    },
-    actionTabDataPeople() {
-      let i = this.currentTabIndex;
-      let name = i === 0 ? "getUserCompanies" : "getUserTeams";
-      store.dispatch(name, {
-        index: i,
-        admin: this.tabs[i].isAdmin
-        // comid: this.getCompanyID,
-      });
     },
     setActiveArray() {
       this.activeArray = this.getActiveArray;
@@ -441,7 +425,7 @@ export default {
 }
 
 .collapse-btn.collapsed {
-  transform: rotate(180deg);
+  transform: rotate(-180deg);
   transition: all .3s;
 }
 

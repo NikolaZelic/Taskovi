@@ -6,24 +6,24 @@
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <project-edit v-if="selectedTab === 1 && selectedItemEdit!==undefined && newItem===undefined"></project-edit>
-        <task-edit v-if="selectedTab === 2 && selectedItemEdit!==undefined && newItem===undefined"></task-edit>
-        <company-edit v-if="selectedTab === 0 && selectedItemEdit!==undefined && newItem===undefined"></company-edit>
-        <team-edit v-if="selectedTab === 4 && selectedItemEdit!==undefined && newItem===undefined"></team-edit>
+        <company-edit v-if="checkShow(0,true)"/>
+        <project-edit v-if="checkShow(1,true)"/>
+        <task-edit v-if="checkShow(2,true) || checkShow(3,true)"/>
+        <team-edit v-if="checkShow(4,true)"/>
 
         <!-- Adding new -->
-        <project-add v-if="selectedTab === 1 && newItem===1 && selectedItemEdit===undefined"></project-add>
-        <task-add v-if="selectedTab === 2 && newItem===1 && selectedItemEdit===undefined"></task-add>
-        <company-add v-if="selectedTab === 0 && newItem===1 && selectedItemEdit===undefined"></company-add>
-        <team-add v-if="selectedTab === 4 && newItem===1 && selectedItemEdit===undefined"></team-add>
+        <company-add v-if="checkShow(0,false,true)"/>
+        <project-add v-if="checkShow(1,false,true)"/>
+        <task-add v-if="checkShow(2,false,false,true) || checkShow(3,false,false,true)"/>
+        <parenttask-add v-if="checkShow(2,false,true) || checkShow(3,false,true)"/>
+        <team-add v-if="checkShow(4,false,true)"/>
 
         <!-- Viewing existing -->
-        <project-view v-if='selectedTab === 1 && newItem===undefined && selectedItemEdit===undefined'></project-view>
-        <task-view v-else-if='selectedTab === 2 && newItem===undefined && selectedItemEdit===undefined'></task-view>
-        <company-view v-else-if='selectedTab === 0 && newItem===undefined && selectedItemEdit===undefined'></company-view>
-        <team-view v-else-if='selectedTab === 4 && newItem===undefined && selectedItemEdit===undefined'></team-view>
+        <company-view v-if='checkShow(0,false,false)'/>
+        <project-view v-else-if='checkShow(1,false,false)'/>
+        <task-view v-else-if='checkShow(2,false,false) || checkShow(3,false,false)'/>
+        <team-view v-else-if='checkShow(4,false,false)'/>
 
-        <!-- <parenttask-add/> -->
         <!-- <task-add/> -->
       </div>
       <chat-element v-if="taskid != -1"/>
@@ -37,7 +37,6 @@
 import {
   store
 } from "@/store/index.js";
-
 import SideBar from "@/components/SideBar/Sidebar";
 
 import ChatElement from "@/components/Chat/ChatElement";
@@ -98,6 +97,13 @@ export default {
     ModalError,
     ModalComplete
   },
+  data() {
+    return {
+      editBtn: false,
+      addBtn: false,
+      addTaskBtn: false,
+    }
+  },
   created() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
@@ -116,21 +122,39 @@ export default {
           })
         }, 20000);
       }
-    }
+    },
+    itemEditButton(val) {
+      this.editBtn = val !== undefined
+    },
+    itemAddButton(val) {
+      this.addBtn = val !== undefined
+    },
+    itemAddTaskButton(val) {
+      this.addTaskBtn = val !== undefined
+    },
   },
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       modalStatus: state => state.modalStatus.active,
-      newItem: state => state.itemAction.add,
-      selectedItemEdit: state => state.itemAction.edit,
+      itemEditButton: state => state.itemAction.edit,
+      itemAddButton: state => state.itemAction.add,
+      itemAddTaskButton: state => state.itemAction.addTask,
       isFocus: state => state.mainFocused,
     }),
     ...mapGetters({
       isFocus: 'isFocus',
       taskid: 'getTaskID'
     })
+  },
+  methods: {
+    checkShow(selectedTab, itemEdit = false, itemAdd = false, itemAddTask = false) {
+      return (selectedTab === this.selectedTab &&
+        itemEdit === this.editBtn &&
+        itemAdd === this.addBtn &&
+        itemAddTask === this.addTaskBtn);
+    },
   }
 };
 </script>
@@ -166,7 +190,7 @@ export default {
     color: #fff
   }
 
-  @media only screen and (min-width: 1500px) {
+  @media only screen and (min-width: 1350px) {
     .rightside {
       flex-direction: row;
     }
