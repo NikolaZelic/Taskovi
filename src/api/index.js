@@ -10,6 +10,11 @@ import router from '../router/index.js'
 
 export const api = {
 
+  // by Zelic - poziva se u ParenttaskAdd
+  getUserInfo(){
+    return axios.get('auth/users?sid='+ window.localStorage.sid);
+  },
+
   // by Zelic - Poziva se u ParenttaskAdd.vue
   createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
     return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
