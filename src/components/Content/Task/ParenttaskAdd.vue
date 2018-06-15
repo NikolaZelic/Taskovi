@@ -1,7 +1,7 @@
 <template>
 <div class='tmp-content'>
   <div class="header">
-    <h1 class="display-4">Creating Task</h1>
+    <h1 class="display-4 disable-selection">Creating Task</h1>
     <div class='exit-wrapper'>
       <i class="exit-position far fa-times-circle"></i>
       <div class="exit-text">ESC</div>
@@ -10,7 +10,7 @@
 
   <div class="content">
     <!-- PROJECT -->
-    <div v-show='!task' class="form-group">
+    <div v-show='!task' class="form-group" @click='refreshProjectError'>
       <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
       :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam"
       />
@@ -19,7 +19,7 @@
 
     <!-- TITLE -->
     <div class="form-group">
-      <input v-model='title' type="text" class="form-control" id="tsk_title" placeholder="Title">
+      <input v-model='title' type="text" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError' >
     </div>
 
     <!-- DESCRIPTION -->
@@ -43,20 +43,22 @@
                 placeholder="Pick Deadline (optional)"
                 name="date">
             </flat-pickr>
-            <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline'>
-              X
+            <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date' @click='deadline=null' >
+              <i class="fas fa-times-circle"></i>
             </div>
           </span>
     </div>
 
     <!-- ADING WORKERS -->
-    <div class="form-group">
+    <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave= 'mouseOverAddWorker=0' >
       <i :class="personClass" @click='selectUser'></i>
       <i :class="teamClass" @click='selectTeam'></i>
       <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
-      @click="clickHandler" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
-      />
-      </vue-autosuggest>
+      @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"/>
+      <!-- Dodavanje sebe na task -->
+      <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe' >
+        Just me
+      </div>
     </div>
 
     <!-- TAGS -->
@@ -145,8 +147,6 @@ export default {
       selectedTags: [],
       inputTagHaveChange: 0,
       tagSearchStr: null,
-
-      // proId: 14,  // Ovo treba da se prosledi komponenti prilikom kreiranja
       task: false,
       selectedPrioretyClass: 'unselected form-control',
       suggestedProjets: [],
@@ -158,6 +158,8 @@ export default {
       selectedPriorety: null,
       projectSuggestionHaveChange: 0,
       mouseOverDeadline: 0,
+      mouseOverAddWorker: 0,
+      titleClass: 'form-control',
 
     }
   },
@@ -260,7 +262,13 @@ export default {
     onInputChange: function(text, oldText) {
       this.inputWorker = text;
       this.inputWorkerHaveChange = 1;
-      this.choosenWorker = null;
+      if( this.choosenWorker != null){
+        if( this.choosenWorker.status === undefined )
+          this.choosenWorker = null;
+        else
+          this.choosenWorker.status = undefined;
+      }
+
       if (text != null && text.length == 0) {
         store.dispatch('cleanSuggestions');
         store.dispatch('cleanSuggestedTeams');
@@ -377,10 +385,20 @@ export default {
 
     // Kreiranje taska
     createTask() {
+      this.refreshErrors();
       // Provera ulaznih vrednosti
-      if (this.title == null || this.title.length == 0 || this.proId == null) {
-        return;
+      var stop = false;
+      if( this.title == null || this.title.length == 0 ){
+        this.titleError();
+        stop = true;
       }
+      if (this.proId == null) {
+        this.projectError();
+        stop = true;
+      }
+
+      if( stop )
+        return;
 
       var usrid = null;
       var teamid = null;
@@ -404,12 +422,64 @@ export default {
       }
       this.projectSuggestionHaveChange = 1;
     },
+    selectMe(){
+      // var choosenWorker = this.choosenWorker;
+      api.getUserInfo().then( result => {
+        var user = result.data;
+        this.choosenWorker = user;
+        this.$refs.suggestionTag.searchInput = user.name +' ' + user.surname + ' ' + user.email;
+      } );
+    },
+    titleError(){
+      this.titleClass = 'form-control error-input';
+    },
+    refreshTitleError(){
+      this.titleClass = 'form-control'
+    },
+    projectError(){
+      this.inputPropsProject.class = 'autosuggest__input error-input66682';
+    },
+    refreshProjectError(){
+      this.inputPropsProject.class = 'autosuggest__input';
+    },
+    workerError(){
+      this.inputProps.class = 'autosuggest__input error-input66682';
+    },
+    refreshWorkerError(){
+      this.inputProps.class = 'autosuggest__input';
+    },
+    refreshErrors(){
+      this.refreshProjectError();
+      this.refreshTitleError();
+    },
 
   },
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
 </style><style scoped>
+.error-input{
+  border-bottom: 3px solid #ff0000;
+}
+.disable-selection {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+#adding-worker{
+  position: relative;
+}
+.add-myself{
+  background: #cc6600;
+  border: 3px solid #cc6600;
+  border-radius: 15px;
+  position: absolute;
+  right: 3px;
+  top: 6px;
+  cursor: pointer;
+}
 .cleane-deadline-wrapper{
   position: absolute;
   right: 10px;
@@ -538,8 +608,8 @@ export default {
 #auto-suggestion {
   position: absolute;
   display: inline-block;
-  right: 21px;
-  left: 110px;
+  right: 0px;
+  left: 85px;
 }
 
 .tags-wrapper {
@@ -571,6 +641,9 @@ export default {
 }
 </style>
 <style media="screen">
+.error-input66682{
+  border-bottom: 3px solid #ff0000;
+}
 .autosuggest__input,
 .autosuggest__input:focus {
   color: #eee;
