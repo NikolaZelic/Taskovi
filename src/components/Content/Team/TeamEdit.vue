@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="edit-team">
 
   <!-- Changing team's name -->
   <h4>Change team name:</h4>
@@ -139,4 +139,7 @@ export default {
 </script>
 
 <style scoped>
+  .edit-team h4{
+    color:#eee;
+  }
 </style>
