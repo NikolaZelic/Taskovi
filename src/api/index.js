@@ -49,7 +49,8 @@ export const api = {
         sid: window.localStorage.sid,
         searchstring: searchStr,
         comid: comId,
-        type: grpType
+        type: grpType,
+        belongs: 'yes'
       }
     });
   },
@@ -86,18 +87,7 @@ export const api = {
 
   // by Zelic
   selectTask(id) {
-    console.log('API Selected Task');
-    axios({
-      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
-      url: "/tasks/" + id
-    }).
-    then(response => {
-      // console.log(response);
-      cosole.log('API response');
-      store.commit('changeSelectedTask', {
-        selectedTask: response.data.Data[0]
-      });
-    });
+    return axios.get('tasks/'+id);
   },
 
   // SVETA

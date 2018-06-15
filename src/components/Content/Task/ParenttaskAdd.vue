@@ -12,7 +12,7 @@
     <!-- PROJECT -->
     <div v-show='!task' class="form-group" @click='refreshProjectError'>
       <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam"
+      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"
       />
       </vue-autosuggest>
     </div>
@@ -413,8 +413,19 @@ export default {
 
       api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety).
       then(result => {
-        console.log(result);
+        this.reportWritingToDB(result);
       });
+    },
+    reportWritingToDB(result){
+      console.log(result);
+      var status = result.data.status;
+      console.log('Statis: ' + status);
+      if( status === 'OK' ){
+        store.commit('modalStatus', {active: true, message: 'Task Successful Cretaed !!!'});
+      }
+      else {
+        store.commit('modalStatus', {active: true, message: "Error! Task wasn't created."});
+      }
     },
     onInputChangeProject(text, oldText){
       if( text == null || text.length == 0){
@@ -452,7 +463,9 @@ export default {
       this.refreshProjectError();
       this.refreshTitleError();
     },
-
+    onProjectSelected(){
+      store.dispatch('clleaneSuggestedProjects');
+    },
   },
 };
 </script>
