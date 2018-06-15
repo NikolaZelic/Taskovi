@@ -6,23 +6,23 @@
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <company-edit v-if="selectedTab === 0 && itemEditButton!==undefined && itemAddButton===undefined"></company-edit>
-        <project-edit v-if="selectedTab === 1 && itemEditButton!==undefined && itemAddButton===undefined"></project-edit>
-        <task-edit v-if="selectedTab === 2 && itemEditButton!==undefined && itemAddButton===undefined"></task-edit>
-        <team-edit v-if="selectedTab === 4 && itemEditButton!==undefined && itemAddButton===undefined"></team-edit>
+        <company-edit v-if="checkShow(0,true)"/>
+        <project-edit v-if="checkShow(1,true)"/>
+        <task-edit v-if="checkShow(2,true) || checkShow(3,true)"/>
+        <team-edit v-if="checkShow(4,true)"/>
 
         <!-- Adding new -->
-        <company-add v-if="selectedTab === 0 && itemAddButton===1 && itemEditButton===undefined"></company-add>
-        <project-add v-if="selectedTab === 1 && itemAddButton===1 && itemEditButton===undefined"></project-add>
-        <task-add v-if="(selectedTab === 2 || selectedTab === 3) && itemAddButton===1 && itemEditButton===undefined"></task-add>
-        <parenttask-add v-if="(selectedTab === 2 || selectedTab === 3) && itemAddButton===1 && itemEditButton===undefined"/>
-        <team-add v-if="selectedTab === 4 && itemAddButton===1 && itemEditButton===undefined"></team-add>
+        <company-add v-if="checkShow(0,false,true)"/>
+        <project-add v-if="checkShow(1,false,true)"/>
+        <task-add v-if="checkShow(2,false,false,true) || checkShow(3,false,false,true)"/>
+        <parenttask-add v-if="checkShow(2,false,true) || checkShow(3,false,true)"/>
+        <team-add v-if="checkShow(4,false,true)"/>
 
         <!-- Viewing existing -->
-        <company-view v-else-if='selectedTab === 0 && itemAddButton===undefined && itemEditButton===undefined'></company-view>
-        <project-view v-if='selectedTab === 1 && itemAddButton===undefined && itemEditButton===undefined'></project-view>
-        <task-view v-else-if='selectedTab === 2 && itemAddButton===undefined && itemEditButton===undefined'></task-view>
-        <team-view v-else-if='selectedTab === 4 && itemAddButton===undefined && itemEditButton===undefined'></team-view>
+        <company-view v-if='checkShow(0,false,false)'/>
+        <project-view v-else-if='checkShow(1,false,false)'/>
+        <task-view v-else-if='checkShow(2,false,false) || checkShow(3,false,false)'/>
+        <team-view v-else-if='checkShow(4,false,false)'/>
 
         <!-- <task-add/> -->
       </div>
@@ -37,7 +37,6 @@
 import {
   store
 } from "@/store/index.js";
-
 import SideBar from "@/components/SideBar/Sidebar";
 
 import ChatElement from "@/components/Chat/ChatElement";
@@ -98,6 +97,13 @@ export default {
     ModalError,
     ModalComplete
   },
+  data() {
+    return {
+      editBtn: false,
+      addBtn: false,
+      addTaskBtn: false,
+    }
+  },
   created() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
@@ -116,15 +122,24 @@ export default {
           })
         }, 20000);
       }
-    }
+    },
+    itemEditButton(val) {
+      this.editBtn = val !== undefined
+    },
+    itemAddButton(val) {
+      this.addBtn = val !== undefined
+    },
+    itemAddTaskButton(val) {
+      this.addTaskBtn = val !== undefined
+    },
   },
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
       modalError: state => state.modalError.active,
       modalStatus: state => state.modalStatus.active,
-      itemAddButton: state => state.itemAction.add,
       itemEditButton: state => state.itemAction.edit,
+      itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
       isFocus: state => state.mainFocused,
     }),
@@ -132,6 +147,14 @@ export default {
       isFocus: 'isFocus',
       taskid: 'getTaskID'
     })
+  },
+  methods: {
+    checkShow(selectedTab, itemEdit = false, itemAdd = false, itemAddTask = false) {
+      return (selectedTab === this.selectedTab &&
+        itemEdit === this.editBtn &&
+        itemAdd === this.addBtn &&
+        itemAddTask === this.addTaskBtn);
+    },
   }
 };
 </script>

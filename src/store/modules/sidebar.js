@@ -86,7 +86,9 @@ const actions = {
   },
   // not completed
   itemAddTaskClick(commit, params) {
-    store.commit('itemAddTaskClick');
+    store.commit('itemAddTaskClick',{
+      id: params.id,
+    });
   },
 
 };
@@ -103,26 +105,32 @@ const mutations = {
     store.state.currentTabIndex = params.index;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
+    store.state.itemAction.addTask = undefined;
   },
-
   setSidebarItemSelection: (state, params) => {
     var copy = store.state.sidebarItemSelection.slice();
     copy[params.index] = params.id;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
+    store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
     store.state.sidebarItemSelection = copy;
   },
-
+  itemEditClick: (state, params) => {
+    store.state.itemAction.edit = params.id;
+    store.state.itemAction.add = undefined;
+    store.state.itemAction.addTask = undefined;
+  },
   itemAddClick: (state, params) => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = 1;
+    store.state.itemAction.addTask = undefined;
   },
-
-  itemEditClick: (state, params) => {
+  itemAddTaskClick: (state, params) => {
+    store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.edit = params.id;
+    store.state.itemAction.addTask = params.id;
   },
   mainFocused: (state, params) => {
     store.state.mainFocused = params;
