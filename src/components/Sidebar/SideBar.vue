@@ -1,5 +1,6 @@
 <template>
 <aside id="sidebar">
+  <!-- <button @click="tts">Activate alert</button> -->
   <div class="sidebar-header">
     <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarCollapsed}'>
       </span>
@@ -193,6 +194,14 @@ export default {
     }
   },
   methods: {
+    //REMOVE TTS() LATER
+    tts(){
+      store.commit('modalStatus',{
+        active:true,
+        message: 'no comment'
+      })
+      // console.log('s');
+    },
     getTabData() {
       let index = this.currentTabIndex;
       let type = this.invokeFilterType;
@@ -244,21 +253,21 @@ export default {
     editItemButton(item) {
       store.dispatch("itemEditClick", item);
     },
-    removeItem(item) {
-      var aa = this.getActiveArray(this.currentTabIndex);
-      // console.log(aa);
-      var index = aa.indexOf(item);
-      // console.log(index + "  |  " + aa.splice(index, 1));
-    },
-    endEditing(item) {
-      this.renamingItem = {};
-      if (item.title.trim() === "") {
-        this.removeItem(item);
-      }
-    },
-    renameItem(item) {
-      this.renamingItem = item;
-    },
+    // removeItem(item) {
+    //   var aa = this.getActiveArray(this.currentTabIndex);
+    //   // console.log(aa);
+    //   var index = aa.indexOf(item);
+    //   // console.log(index + "  |  " + aa.splice(index, 1));
+    // },
+    // endEditing(item) {
+    //   this.renamingItem = {};
+    //   if (item.title.trim() === "") {
+    //     this.removeItem(item);
+    //   }
+    // },
+    // renameItem(item) {
+    //   this.renamingItem = item;
+    // },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null ?
         dateTime.split(" ")[0] :

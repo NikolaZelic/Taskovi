@@ -266,7 +266,6 @@ export const api = {
   //
   //
   addCompany(name, desc, sid) {
-
     return axios.post('companies', {
       companyname: name,
       companydesc: desc,

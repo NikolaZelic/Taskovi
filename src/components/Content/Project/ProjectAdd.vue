@@ -47,7 +47,7 @@ export default {
 
   methods: {
     addProject() {
-      axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/project", {
+      axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/projects", {
         grpname: this.projectName,
         grpdesc: this.projectDescription,
         grporigin: this.value.id,
