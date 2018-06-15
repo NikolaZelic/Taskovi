@@ -33,7 +33,7 @@
       <span class="calender-icon" @click='calendarIconClicked'>
             <i class="far fa-calendar-alt"></i>
           </span>
-      <span class="calender-wrapper">
+      <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave= 'mouseOverDeadline=0' >
             <flat-pickr
                 ref='datepicker'
                 v-model="deadline"
@@ -43,6 +43,9 @@
                 placeholder="Pick Deadline (optional)"
                 name="date">
             </flat-pickr>
+            <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline'>
+              X
+            </div>
           </span>
     </div>
 
@@ -67,7 +70,7 @@
     </div>
 
     <!-- TaskAdd.vue -->
-    <div class="form-group">
+    <div v-show='task' class="form-group">
       <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
             <option disabled value=null>Select Priorety</option>
             <option value='1'>High</option>
@@ -154,6 +157,7 @@ export default {
       },
       selectedPriorety: null,
       projectSuggestionHaveChange: 0,
+      mouseOverDeadline: 0,
 
     }
   },
@@ -399,12 +403,19 @@ export default {
         store.dispatch('clleaneSuggestedProjects');
       }
       this.projectSuggestionHaveChange = 1;
-    }
+    },
+
   },
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style><style scoped>.sugestija {}
+</style><style scoped>
+.cleane-deadline-wrapper{
+  position: absolute;
+  right: 10px;
+  top: 0px;
+}
+.sugestija {}
 
 .rec {
   padding: 2px;
