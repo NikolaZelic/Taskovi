@@ -413,8 +413,19 @@ export default {
 
       api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety).
       then(result => {
-        console.log(result);
+        this.reportWritingToDB(result);
       });
+    },
+    reportWritingToDB(result){
+      console.log(result);
+      var status = result.data.status;
+      console.log('Statis: ' + status);
+      if( status === 'OK' ){
+        store.commit('modalStatus', {active: true, message: 'Task Successful Cretaed !!!'});
+      }
+      else {
+        store.commit('modalStatus', {active: true, message: "Error! Task wasn't created."});
+      }
     },
     onInputChangeProject(text, oldText){
       if( text == null || text.length == 0){

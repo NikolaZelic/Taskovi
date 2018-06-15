@@ -44,7 +44,7 @@ export default {
 
       api.createTask(this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety, this.parenttaskid)
       .then(result =>{
-        console.log(result.data);
+        this.reportWritingToDB(result);
       });
     }
   },

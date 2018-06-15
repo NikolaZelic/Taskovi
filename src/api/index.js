@@ -49,7 +49,8 @@ export const api = {
         sid: window.localStorage.sid,
         searchstring: searchStr,
         comid: comId,
-        type: grpType
+        type: grpType,
+        belongs: 'yes'
       }
     });
   },
@@ -86,18 +87,7 @@ export const api = {
 
   // by Zelic
   selectTask(id) {
-    console.log('API Selected Task');
-    axios({
-      // Promeniti hardcoded ID taska sa onim koji se dobije na klik - ovo je za testiranje
-      url: "/tasks/" + id
-    }).
-    then(response => {
-      // console.log(response);
-      cosole.log('API response');
-      store.commit('changeSelectedTask', {
-        selectedTask: response.data.Data[0]
-      });
-    });
+    return axios.get('tasks/'+id);
   },
 
   // SVETA
@@ -171,7 +161,7 @@ export const api = {
 
   // ZX
   getCompanyInfo(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
+    return axios.get("companies/"+compID, {
       params: {
         comid: compID,
         sid: window.localStorage.sid,
@@ -181,9 +171,8 @@ export const api = {
 
   // ZX
   getAdmins(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
+    return axios.get("companies/"+compID+"/admins", {
       params: {
-        comid: compID,
         sid: window.localStorage.sid,
       }
     });
@@ -191,9 +180,8 @@ export const api = {
 
   // ZX
   getEmployees(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
+    return axios.get("companies/"+compID+"/users", {
       params: {
-        comid: compID,
         sid: window.localStorage.sid,
       }
     });
