@@ -11,8 +11,8 @@ import router from '../router/index.js'
 export const api = {
 
   // by Zelic - poziva se u ParenttaskAdd
-  getUserInfo(){
-    return axios.get('auth/users?sid='+ window.localStorage.sid);
+  getUserInfo() {
+    return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
 
   // by Zelic - Poziva se u ParenttaskAdd.vue
@@ -132,7 +132,7 @@ export const api = {
     });
   },
 
-  // ZX
+  // ZX ============= AUTH
   sessionActive() {
     let sid = window.localStorage.sid;
     axios.get('auth/users?sid=' + sid).then(r => {
@@ -147,16 +147,12 @@ export const api = {
       }
     });
   },
-
-  // ZX
   login(email, password) {
     return axios.post('auth/login', {
       email: email,
       pass: password
     });
   },
-
-  // ZX
   register(email, password, name, surname, description) {
     axios.post('auth/singup', {
       email: email,
@@ -168,12 +164,10 @@ export const api = {
       console.log(error);
     });
   },
-
-  // ZX
+  // ZX ============= DATA
   getCompanyInfo(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid", {
+    return axios.get("companies/"+compID, {
       params: {
-        comid: compID,
         sid: window.localStorage.sid,
       }
     });
@@ -181,9 +175,8 @@ export const api = {
 
   // ZX
   getAdmins(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/admins", {
+    return axios.get("companies/"+compID+"/admins", {
       params: {
-        comid: compID,
         sid: window.localStorage.sid,
       }
     });
@@ -191,32 +184,21 @@ export const api = {
 
   // ZX
   getEmployees(compID) {
-    return axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/users", {
-      params: {
-        comid: compID,
-        sid: window.localStorage.sid,
-      }
-    });
-  },
-
-
-  // ZX
-  getTestFixed() {
-    return axios.get('/users/alltasks', {
+    return axios.get("companies/"+compID+"/users", {
       params: {
         sid: window.localStorage.sid,
       }
     });
   },
 
-  // ZX
-  getUserParentTasks(index) {
-    return axios.get('/users/parenttasks', {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // ZX - not used?
+  // getUserParentTasks(index) {
+  //   return axios.get('/users/parenttasks', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX - Get items based on filter
   getUserWork(index, state, type, archived) {
@@ -233,8 +215,8 @@ export const api = {
   },
 
   // ZX - GET user tasks based on parent task
-  getUserTasks(index, state, type, archived) {
-    return axios.get('/users/tasks', {
+  getUserAllTasks(state, type, archived) {
+    return axios.get('/users/alltasks', {
       params: {
         sid: window.localStorage.sid,
         state: state,
@@ -279,65 +261,54 @@ export const api = {
   //
   //
   //
-  addCompany(name, desc, sid) {
+  addCompany(name, desc) {
     return axios.post('companies', {
       companyname: name,
       companydesc: desc,
-      sid: sid
+      sid: window.localStorage.sid,
     })
   },
 
-  changeCompanyInfo(name, desc, comid, sid) {
-    return axios.put("companies/:comid", {
+  changeCompanyInfo(name, desc, comid) {
+    return axios.put("companies/"+comid, {
       companyname: name,
       companydesc: desc,
-      comid: comid,
-      sid: sid
+      sid: window.localStorage.sid,
     });
   },
 
-  loadEmployees(compID, sid) {
-    return axios.get("companies/:comid/users", {
+  loadEmployees(compID) {
+    return axios.get("companies/"+compID+"/users", {
       params: {
-        comid: compID,
-        sid: sid
+        sid: window.localStorage.sid,
       }
     })
   },
 
-  loadAdmins(compID, sid) {
-    return axios.get("companies/:comid/admins", {
+  loadAdmins(compID) {
+    return axios.get("companies/"+compID+"/admins", {
       params: {
-        comid: compID,
-        sid: sid
+        sid:window.localStorage.sid,
       }
     })
   },
 
   addEmployee(compID, email, sid) {
-    return axios.post("companies/:comid/users", {
-      comid: compID,
+    return axios.post("companies/"+compID+"/users", {
       email: email,
-      sid: sid
+      sid: window.localStorage.sid,
     })
   },
 
   addAdmin(compID, email, sid) {
-    return axios.post("companies/:comid/admins", {
-      comid: compID,
+    return axios.post("companies/"+compID+"/admins", {
       email: email,
-      sid: sid
+      sid: window.localStorage.sid,
     })
   }
-
 
   //
   //
   //
   //kraj AXIOS poziva koji se koriste na COMPANY komponentama - VIEW, ADD, EDIT
-
-
-
-
-
 }
