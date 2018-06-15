@@ -39,7 +39,7 @@ input[type="checkbox"]+.label-text:before {
 
 input[type="checkbox"]:checked+.label-text:before {
   content: "\f14a";
-  color: #a7d300;
+  color: #ffc107;
   animation: effect 250ms ease-in;
 }
 
@@ -60,7 +60,7 @@ input[type="radio"]+.label-text:before {
 
 input[type="radio"]:checked+.label-text:before {
   content: "\f192";
-  color: #a7d300;
+  color: #ffc107;
   animation: effect 250ms ease-in;
 }
 

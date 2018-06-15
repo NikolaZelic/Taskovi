@@ -1,21 +1,21 @@
 <template lang="html">
   <table>
-    <template v-for="(data,index) in currentTabData">
+    <template v-for="(ptask,index) in parentTasks">
       <tr>
         <td @click='expandParent(parentExpanded[index],index)'><span class='fas fa-angle-right expandarrow'
           :class='{"expanded":parentExpanded[index]}'></span> </td>
-        <td @click='expandParent(parentExpanded[index],index)' class='parent-task'>{{data.title}} </td>
-         <!-- <td @click='expandParent(data.taskExpanded,index)'><span class='fas fa-angle-right'
-            :class='{"expanded":data.taskExpanded}'></span> </td>
-          <td @click='expandParent(data.taskExpanded,index)' class='parent-task'>{{data.title}} </td> -->
-        <td @click='createTask'><span  class='fas fa-plus'></span> </td>
+        <td @click='expandParent(parentExpanded[index],index)' class='parent-task'>{{ptask.title}} </td>
+         <!-- <td @click='expandParent(ptask.taskExpanded,index)'><span class='fas fa-angle-right'
+            :class='{"expanded":ptask.taskExpanded}'></span> </td>
+          <td @click='expandParent(ptask.taskExpanded,index)' class='parent-task'>{{ptask.title}} </td> -->
+        <td @click='createTask(ptask)'><span  class='fas fa-plus'></span> </td>
       </tr>
        <transition-group name="list" tag="div">
-      <tr v-if='parentExpanded[index]' v-for="t in taskList" :key='t' >
+      <tr v-if='parentExpanded[index]' v-for="task in ptask.children" :key='task.id' >
         <td class='tasks'>
           <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
         </td>
-        <td @click='selectItem(t.id, activeItem = t.id)' class='td-flex'>{{ t }}</td>
+        <td @click='selectItem(task.id, activeItem = task.id)' class='td-flex'>{{ task.title }}</td>
       </tr>
      </transition-group>
     </template>
@@ -38,47 +38,57 @@ export default {
     return {
       parentExpanded: [],
       activeItem: undefined,
-      taskList: ['taskic', 'taskicccc2', 'taskiiii'],
+      // taskList: ['taskic', 'taskicccc2', 'taskiiii'],
     }
   },
   watch: {
-    currentTabData(val) {
-      // if (this.currentTabData.length !== this.parentExpanded.length)
-        this.parentExpanded = Array(this.currentTabData.length).fill(false);
+    parentTasks(val) {
+      // console.log(val);
+      if (this.parentTasks.length !== this.parentExpanded.length) {
+        this.parentExpanded = Array(this.parentTasks.length).fill(true);
+        this.taskList = this
+      }
     }
   },
   computed: {
+    ...mapState({
+      tabIndex : 'currentTabIndex',
+    }),
     ...mapGetters({
-      currentTabData: 'currentTabData',
+      parentTasks: 'currentTabData',
     })
   },
   methods: {
     expandParent(val, i) {
       Vue.set(this.parentExpanded, i, !val);
-      this.actionTasksFromParentTask(i);
+      // this.actionTasksFromParentTask(i);
     },
-    actionTasksFromParentTask(i) {
-      store.dispatch('getUserTasks', {
-        index: this.currentTabIndex,
-        state: 'both',
-        type: 'task',
-        archived: 'false',
-        parentIndex: i,
-      });
-    },
+    // actionTasksFromParentTask(i) {
+    //   store.dispatch('getUserTasks', {
+    //     index: this.currentTabIndex,
+    //     state: 'both',
+    //     type: 'task',
+    //     archived: 'false',
+    //     parentIndex: i,
+    //   });
+    // },
     selectItem(itemID) {
-      this.tabs[this.currentTabIndex].itemIndex = itemID;
+      // console.log(itemID);
+      // this.tabs[this.currentTabIndex].itemIndex = itemID;
+
       store.commit("setSidebarItemSelection", {
-        index: this.currentTabIndex,
+        index: this.tabIndex,
         id: itemID
       });
     },
-    createTask() {
-      console.log('create task CLICKED');
+    createTask(item) {
+      // console.log(item);
+      // invoke TaskAdd component
+      store.dispatch("itemAddTaskClick", item);
     }
   },
-  mounted(){
-    console.log('sd');
+  mounted() {
+    // console.log('sd');
   }
 }
 </script>
