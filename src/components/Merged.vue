@@ -7,9 +7,11 @@
       <!-- <task-add></task-add> -->
       <!-- <project-add></project-add> -->
       <!-- <project-view></project-view> -->
-      <team-add></team-add>
+      <!-- <team-add></team-add> -->
+      <!-- <company-add></company-add> -->
+      <company-edit></company-edit>
      </div>
-     <chat/>
+     <!-- <chat/> -->
    </div>
   </div>
 </template>
@@ -22,6 +24,8 @@ import TaskAdd from "@/components/TaskAdd"
 import ProjectAdd from "@/components/ProjectAdd"
 import ProjectView from "@/components/ProjectView"
 import TeamAdd from "@/components/TeamAdd"
+import CompanyAdd from "@/components/CompanyAdd"
+import CompanyEdit from "@/components/CompanyEdit"
 
 
 export default {
@@ -33,6 +37,8 @@ export default {
     ProjectAdd,
     ProjectView,
     TeamAdd,
+    CompanyAdd,
+    CompanyEdit
   },
 }
 </script>
