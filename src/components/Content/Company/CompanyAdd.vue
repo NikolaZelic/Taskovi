@@ -13,6 +13,8 @@
   <textarea class="form-control darkTheme mb-3" id="companydesc" rows="3" v-model='companydesc' placeholder="Tell us a little something about your company..." spellcheck="false"></textarea>
 
 
+
+
   <h4 class="yellowText">Add new user:</h4>
   <div class="input-group">
     <!-- <input type="text" class="form-control darkTheme" placeholder="Enter user's email address" v-model="email"> -->
