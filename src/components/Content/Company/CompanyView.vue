@@ -34,7 +34,7 @@
     <ul class="list-group list-group-flush mb-5">
       <!-- Lista timova -->
       <li class="list-group-item darkBackground" v-for="team in teams">
-        {{ team.title }} --- <span class="badge yellowText">Admin</span> {{ team.admin }}
+        {{ team.title }}<br /><span class="badge yellowText">Admin</span> {{ team.admin }}
       </li>
 
       </ul>
