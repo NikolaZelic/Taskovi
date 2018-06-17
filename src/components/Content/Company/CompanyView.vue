@@ -1,5 +1,5 @@
 <template>
-<div class="lightGrayText">
+<div class="lightGrayText top_padding">
   <!-- U slucaju da nije selektovana niti jedna konkretna kompanija prikazuje se ovo jer se ne salje axios zahtev -->
   <template v-if="selectedItemID === undefined">
       <h1>Select company first...</h1>
@@ -27,8 +27,17 @@
       {{ employee.name }} --- {{ employee.email }}
     </li>
 
-    </ul>
+  </ul>
 
+
+    <h4 class="mt-5 yellowText">Teams:</h4>
+    <ul class="list-group list-group-flush mb-5">
+      <!-- Lista timova -->
+      <li class="list-group-item darkBackground" v-for="team in teams">
+        {{ team.title }} --- <span class="badge yellowText">Admin</span> {{ team.admin }}
+      </li>
+
+      </ul>
     <!-- <button type="button" class="btn btn-outline-secondary">Edit company</button> -->
 
   </template>
@@ -42,6 +51,12 @@ import { mapState } from "vuex";
 import { mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      teams: []
+    }
+  },
+
   computed: {
     ...mapState({
       getCompanyID: state => state.modulecompany.id,
@@ -68,13 +83,26 @@ export default {
       store.dispatch("loadEmployees", {
         compID: compID
       });
+    },
+
+    loadTeams(compID){
+      axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/teams", {
+        params: {
+          comid: compID,
+          sid: window.localStorage.sid
+        }
+      }).then(response => {
+        this.teams = response.data.data;
+      });
     }
+
   },
 
   mounted() {
     this.getCompanyInfo(this.selectedItemID);
     this.loadAdmins(this.selectedItemID);
     this.loadEmployees(this.selectedItemID);
+    this.loadTeams(this.selectedItemID);
   },
 
   watch: {
@@ -82,6 +110,7 @@ export default {
       this.getCompanyInfo(val);
       this.loadAdmins(val);
       this.loadEmployees(val);
+      this.loadTeams(val);
     }
   }
 };
