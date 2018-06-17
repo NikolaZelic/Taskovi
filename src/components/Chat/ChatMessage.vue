@@ -1,6 +1,6 @@
 <template>
 <div v-bind:class="mess.right?'cont right-con':'cont left-con'" :id="mess.fed_id">
-  <img src="@/assets/user.png" />
+  <img :src="icon()" />
   <div class="message-body">
     <div class="message-body-header">
       <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
@@ -9,34 +9,45 @@
     <p class="message">{{mess.fed_text}}</p>
     <div class="attachment"></div>
     <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'">Show file</a>
-    <!-- samo za attachment -->
-
   </div>
 </div>
 </template>
 
 <script>
-
+import { mapState } from 'vuex';
 export default {
   props: {
     mess: {
       type: Object
     }
   },
-  data: function() {
+  data() {
     return {
       uploadProgress: 0
-    }
+    };
+  },
+  computed:{
+    ...mapState({
+      scrollDownMess: state => state.modulechat.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
+    })
   },
   methods: {
+    icon() {
+      return this.mess.fed_type === 'attachment' ? 'static\\img\\file-icon.png' : 'static\\img\\user.png';
+    },
     showFile() {
-      return "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/" + this.mess.fed_id + "/attachment";
+      return (
+        "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/" +
+        this.mess.fed_id +
+        "/attachment"
+      );
     }
   },
-  mounted: function() {
-    document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight; //Uvek spusta na dno ekrana
+  mounted() {
+    if(this.scrollDownMess)
+      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
   }
-}
+};
 </script>
 
 <style scoped>
@@ -47,19 +58,15 @@ export default {
 }
 
 .cont img {
-  /* width: 7%; */
   height: 30px;
-  /* padding: 3px; */
   border-radius: 50%;
   margin: auto 0;
-
 }
 
 .cont .name {
   font-size: 12px;
   font-style: oblique;
   width: 93%;
-
 }
 
 .cont .message {
@@ -78,7 +85,6 @@ export default {
 .right-con {
   border-color: #ccc;
   background-color: #e6e5bb;
-  /* text-align: right; */
   margin-left: 20px;
   display: flex;
 }
@@ -99,8 +105,6 @@ export default {
   font-size: 12px;
   width: 100%;
   text-align: right;
-
-
 }
 
 .left-con p {
@@ -108,11 +112,7 @@ export default {
   text-align: left;
 }
 
-
-
-/* attachment */
-
-. .progress {
+.progress {
   margin: 0 auto;
   position: relative;
   width: 90%;

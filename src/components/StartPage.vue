@@ -1,47 +1,90 @@
 <template>
 <div class="start">
-  <h1>Welcome to our Task Management App</h1>
-  <div>
-    <login></login>
-    <button class="btn btn-warning" @click='signUp()'>Sign Up</button>
+  <div id='main'>
+    <login-page/>
+    <!-- <button class="btn btn-warning" @click='signUp()'>
+        <span class="fas fa-sign-up-alt"></span> Sign Up
+      </button> -->
+    <!-- <login v-if="showSignIn" @close="showModal = false"></login> -->
   </div>
-  <login v-if="showSignIn" @close="showModal = false"></login>
+
+  <div id='side'>
+    <div id='apptitle'>
+      <h2>Welcome to our</h2>
+      <h1>Task Management App</h1>
+    </div>
+    <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
+  </div>
 </div>
 </template>
 
 <script>
-import login from "@/components/Login";
-
+import LoginPage from "@/components/Auth/LoginPage";
+import {
+  api
+} from "@/api/index.js";
 export default {
   components: {
-    login
+    LoginPage
   },
   data() {
     return {
-      showSignIn: false
-    }
+      signedIn: false,
+    };
   },
   methods: {
-    signIn() {
-      this.showSignIn = true;
-    }
+    // signIn() {
+    //   this.showSignIn = true;
+    // }
   },
-  beforecreated: function() {
-    var sid = window.localStorage.getItem('sid');
+  created() {
+    // IF SID EXIST AND SEASON ACTIVE EXIST ROUTE TO MAINPAGE
+    let sid = localStorage.sid;
     if (sid !== undefined && sid !== null) {
-      alert(sid);
+      api.sessionActive();
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>
 .start {
   text-align: center;
-  /* background: url("~assets/StartPageWallpaper.jpg"); */
+  display: flex;
+  height: 100vh;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background: #000 url(~@/assets/img/Start/StartPage.jpg);
 }
 
-h1 {
-  color: #fff
+h1,
+h2 {
+  color: #fff;
+  background: #0007;
+}
+
+.start>* {
+  width: 50%;
+}
+
+#side {}
+
+#main {
+  background: #256b276e;
+}
+
+#apptitle {
+  margin: 45% 0 0;
+}
+
+#creators {
+  position: absolute;
+  background: #28a745;
+  height: 30px;
+  width: 30px;
+  opacity: 0.2;
+  border-radius: 50%;
+  bottom: 5%;
+  right: 5%;
 }
 </style>
