@@ -1,5 +1,5 @@
 {
-  "name": "taskovi-projekat",
+  "name": "taskovi",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "nikolazelic <nzelic@ymail.com>",
@@ -71,5 +71,15 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".postcssrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikolaZelic/Taskovi.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NikolaZelic/Taskovi/issues"
+  },
+  "homepage": "https://github.com/NikolaZelic/Taskovi#readme"
 }

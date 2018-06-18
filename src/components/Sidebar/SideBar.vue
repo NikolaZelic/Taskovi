@@ -2,7 +2,7 @@
 <aside id="sidebar">
   <!-- <button @click="tts">Activate alert</button> -->
   <div class="sidebar-header">
-    <span title="Collapse Sidebar" @click="sidebarCollapsed = !sidebarCollapsed" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarCollapsed}'>
+    <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarActive}'>
       </span>
     <a>
         <span :class="tabs[currentTabIndex].icon"></span>
@@ -18,8 +18,7 @@
 
       <ul class="tabs">
         <!-- :tabindex="index+1" -->
-        <li v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarCollapsed=false"
-          :disabled="tab.disabled">
+        <li v-for="( tab, index ) in tabs" v-if="index === 0 || companyID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarActive=true" :disabled="tab.disabled">
         </li>
       </ul>
 
@@ -34,7 +33,7 @@
       </div>
 
     </div>
-    <div class="sidebar-content" :class="{ collapsed: sidebarCollapsed }">
+    <div class="sidebar-content" :class="{ collapsed: !sidebarActive }">
       <div class="sidebar-body">
         <div class="form-filter">
           <form class="form-block">
@@ -131,8 +130,7 @@ export default {
   data() {
     return {
       isTask: false,
-      renamingItem: {},
-      sidebarCollapsed: false,
+      sidebarActive: true,
       searchData: "",
       currentTabIndex: 0,
       companyID: undefined,
@@ -164,8 +162,6 @@ export default {
       ],
       activeArray: [],
       invokeFilterType: "as",
-      backColorCache: {},
-      frontColorCache: {}
     };
   },
   watch: {
@@ -178,8 +174,9 @@ export default {
       this.activeArray = val;
     },
     currentTabIndex(val) {
-      this.sidebarCollapsed = false;
-      this.activeItem = this.tabs[val].itemIndex;
+      // this.sidebarActive = true; // MAYBE USED LATER FOR ACTIVATING SIDE FROM MAIN
+      let tabItem = this.tabs[val].itemIndex;
+      this.activeItem = tabItem === tabItem;
     },
     adminFilter(val) {
       let i = this.currentTabIndex;
@@ -189,19 +186,20 @@ export default {
     activeItem(val) {
       if (this.currentTabIndex === 0) this.companyID = val;
     },
-    sidebarCollapsed(val) {
-      store.commit('mainFocused', val);
+    sidebarActive(val) {
+      store.commit('mainFocused', !val);
+      window.sessionStorage.sidebarActive = val;
     }
   },
   methods: {
     //REMOVE TTS() LATER
-    tts() {
-      store.commit('modalStatus', {
-        active: true,
-        message: 'no comment'
-      })
-      // console.log('s');
-    },
+    // tts() {
+    //   store.commit('modalStatus', {
+    //     active: true,
+    //     message: 'no comment'
+    //   })
+    //   // console.log('s');
+    // },
     getTabData() {
       let index = this.currentTabIndex;
       let type = this.invokeFilterType;
@@ -229,7 +227,7 @@ export default {
           break;
         case 2:
         case 3:
-          this.actionTabDataParentTask();
+          this.actionTabDataParentTask(s, t, a);
           break;
       }
       this.setActiveArray();
@@ -241,9 +239,12 @@ export default {
         id: itemID
       });
     },
-    actionTabDataParentTask() {
-      store.dispatch('getUserParentTasks', {
+    actionTabDataParentTask(s, t, a) {
+      store.dispatch('getUserAllTasks', {
         index: this.currentTabIndex,
+        state: s,
+        type: t,
+        archived: a
       });
     },
     actionTabDataProject(s, t, a) {
@@ -330,6 +331,15 @@ export default {
     }
   },
   mounted() {
+    let sidebarActive = window.sessionStorage.sidebarActive;
+    if (sidebarActive !== undefined) {
+      try {
+        let parsed = JSON.parse(sidebarActive)
+        this.sidebarActive = parsed;
+      } catch (e) {
+        console.log('Browser Storage is invalid ' + e);
+      }
+    }
     store.commit("setSidebarData", {
       index: this.currentTabIndex
     });
@@ -345,8 +355,6 @@ export default {
   flex-direction: column;
   align-items: stretch;
 }
-
-
 
 .static-side .fas,
 .sidebar-header .fas {
@@ -471,7 +479,8 @@ export default {
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
-  width: 100%;
+  /* width: 100%; */
+  width: 276%;
   height: 45px;
 }
 

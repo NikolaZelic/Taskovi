@@ -24,6 +24,11 @@ input.darkTheme:focus {
   color: #fff;
 }
 
+/* .darkTheme *{
+  background: #2d3436;
+  border: 0;
+} */
+
 input.darkTheme::placeholder {
   color: #888;
 }
