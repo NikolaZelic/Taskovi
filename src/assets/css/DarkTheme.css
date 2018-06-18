@@ -56,3 +56,8 @@ input.darkTheme::placeholder {
   color: #ffb037 !important;
   box-shadow: none !important;
 }
+
+
+.top_padding{
+  padding-top: 30px;
+}
