@@ -149,6 +149,7 @@ export default {
 .chat {
   display: flex;
   flex: 1;
+  border-left: 1px solid #ffc10742;
 }
 
 .trans {
