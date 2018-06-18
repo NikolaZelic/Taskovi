@@ -3,6 +3,9 @@ import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
 import {
   api
 } from "@/api/index";
+import {
+  store
+} from "@/store/index";
 
 export default {
   mixins: [ParenttaskAdd],
@@ -13,8 +16,9 @@ export default {
   },
   computed: {
     parenttaskid(){
-      return 24;
-    }
+      return store.state.sidebarItemSelection[2];
+    },
+
   },
   methods: {
     createTask: function(){

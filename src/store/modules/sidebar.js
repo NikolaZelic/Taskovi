@@ -108,14 +108,13 @@ const mutations = {
     store.state.itemAction.addTask = undefined;
   },
   setSidebarItemSelection: (state, params) => {
-    var copy = store.state.sidebarItemSelection.slice();
-    copy[params.index] = params.id;
+    store.state.sidebarItemSelection[params.index] = params.id;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    store.state.sidebarItemSelection = copy;
+    store.state.sidebarItemSelection = store.state.sidebarItemSelection;  // Ovo stvarno radi !!!
   },
   itemEditClick: (state, params) => {
     store.state.itemAction.edit = params.id;
