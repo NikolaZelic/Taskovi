@@ -13,7 +13,7 @@
        <transition-group name="list" tag="div">
       <tr v-if='parentExpanded[index]' v-for="task in ptask.children" :key='task.id' >
         <td class='tasks'>
-          <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
+          <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(task, activeItem = task.id)"></span>
         </td>
         <td @click='selectItem(task.id, activeItem = task.id)' class='td-flex'>{{ task.title }}</td>
       </tr>
@@ -81,9 +81,10 @@ export default {
         id: itemID
       });
     },
+    editItemButton(item) {
+      store.dispatch("itemEditClick", item);
+    },
     createTask(item) {
-      // console.log(item);
-      // invoke TaskAdd component
       store.dispatch("itemAddTaskClick", item);
     }
   },

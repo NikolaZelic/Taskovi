@@ -61,7 +61,6 @@ import CompanyAdd from "@/components/Content/Company/CompanyAdd";
 import CompanyEdit from "@/components/Content/Company/CompanyEdit";
 import CompanyView from "@/components/Content/Company/CompanyView";
 
-import Registration from "@/components/Auth/Registration";
 import ModalError from "@/components/Misc/ModalError";
 import ModalComplete from "@/components/Misc/ModalComplete";
 
@@ -89,7 +88,6 @@ export default {
     TeamAdd,
     CompanyAdd,
     CompanyEdit,
-    Registration,
     CompanyView,
     TeamEdit,
     TeamView,
