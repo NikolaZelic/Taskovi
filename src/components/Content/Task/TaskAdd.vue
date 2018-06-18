@@ -18,12 +18,20 @@ export default {
   },
   methods: {
     createTask: function(){
+      this.refreshErrors();
+
+      var stop = false;
       if( this.title == null || this.title.length == 0 ){
-        return;
+        stop = true;
+        this.titleError();
       }
       if( this.choosenWorker == null ){
-        return;
+        stop = true;
+        this.workerError();
       }
+
+      if( stop )
+        return;
 
       var usrid = null;
       var teamid = null;
@@ -36,7 +44,7 @@ export default {
 
       api.createTask(this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety, this.parenttaskid)
       .then(result =>{
-        console.log(result.data);
+        this.reportWritingToDB(result);
       });
     }
   },
