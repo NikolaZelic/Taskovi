@@ -1,5 +1,5 @@
 <template>
-<div class="lightGrayText">
+<div class="lightGrayText top_padding">
 
   <h4 class="yellowText">Change company info:</h4>
   <label for="companyname" class="mt-3 yellowText">Company name</label>
