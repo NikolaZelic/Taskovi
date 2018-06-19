@@ -8,18 +8,15 @@
 .item-list>table {
   padding: 0;
   width: 100%;
-  /* border-collapse: collapse; */
 }
 
 .item-list>table td {
   height: 100%;
-  /* overflow: hidden; */
-  /* overflow-y:auto; */
 }
 
 .item-list tr {
   display: flex;
-  line-height: 32px;
+  line-height: 30px;
 }
 
 .item-list tr:hover {
@@ -44,8 +41,6 @@
 }
 
 .item-list td {
-  /* border-left: 1px solid #333;
-  border-right: 1px solid #333; */
   padding: 0 7px;
 }
 

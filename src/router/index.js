@@ -2,9 +2,10 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import MergedComp from '@/components/MergedComp';
 import StartPage from '@/components/StartPage';
+// REMOVE BELOW IN FINAL
 import UserOptions from '@/components/UserOptions.vue';
-import TaskAdd from '@/components/Content/Task/TaskAdd'
-import ParenttaskAdd from '@/components/Content/Task/ParenttaskAdd'
+import TaskAdd from '@/components/Content/Task/TaskAdd';
+import ParenttaskAdd from '@/components/Content/Task/ParenttaskAdd';
 
 Vue.use(Router);
 export default new Router({
