@@ -5,8 +5,7 @@
   </div>
   <div class="tail">
     <div class="left-side">
-      <img src="static\img\user.png" class="picture">
-      </img>
+      <img src="static\img\user.png" class="picture"/>
       <a href="#" class="change-pic">Change Picture</a>
 
     </div>
@@ -25,41 +24,35 @@
 
 
 <script>
-import {
-  store
-} from "@/store/index.js"
+import { store } from "@/store/index.js";
 
 export default {
-    data(){
-      return {
-        editable : true
-      }
+  data() {
+    return {
+      editable: true
+    };
+  },
+  computed: {
+    name() {
+      return localStorage.name;
     },
-    computed:{
-      name(){
-        return localStorage.name
-      },
-      surname(){
-        return localStorage.surname
-      },
-      fullname(){
-        return " "+this.name+ " "+ this.surname;
-      }
+    surname() {
+      return localStorage.surname;
     },
-    methods:{
-      edit(){
-        if(this.editable){
-          this.editable= false;
-        }else{
-          this.editable= true;
-        }
-
+    fullname() {
+      return " " + this.name + " " + this.surname;
+    }
+  },
+  methods: {
+    edit() {
+      if (this.editable) {
+        this.editable = false;
+      } else {
+        this.editable = true;
       }
     }
-
-
-
-}
+  }
+};
 </script>
 
 
@@ -79,7 +72,6 @@ export default {
 .head .name {
   text-decoration: none;
   font-size: 30px;
-
 }
 
 .tail {
@@ -109,32 +101,28 @@ export default {
   display: flex;
   flex-flow: column;
 }
-.tail .right-side table{
+.tail .right-side table {
   border-radius: 2px;
   display: block;
   margin: 40px;
   font-size: 20px;
-
-
-
 }
-.tail .right-side tr, td{
+.tail .right-side tr,
+td {
   margin: 20px;
-  border-collapse:collapse;
+  border-collapse: collapse;
   border: 1px solid #aaa;
-
 }
-.tail .right-side table input{
+.tail .right-side table input {
   width: 100%;
   height: 100%;
   padding: 15px;
-
 }
-table .edit{
+table .edit {
   text-align: right;
 }
-.tail .right-side tr td:first-child{
-  padding:15px;
+.tail .right-side tr td:first-child {
+  padding: 15px;
 }
 .tail .left-side .picture {
   width: 100%;
@@ -149,5 +137,4 @@ table .edit{
   text-align: center;
   padding: 10px;
 }
-
 </style>

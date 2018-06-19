@@ -20,7 +20,7 @@
     </p>
   </form>
   <div class="preset">
-    <button v-for="p in presets" @click.prevent="autologin(p)">{{p.l}}</button>
+    <button v-for="p in presets" :key='p.l' @click.prevent="autologin(p)">{{p.l}}</button>
   </div>
   <!-- </div> -->
 </div>
@@ -49,9 +49,6 @@ export default {
       }, {
         l: 'email004@qqq.com',
         p: 'qqq',
-      }, {
-        l: 'email2@yahoo.com',
-        p: 'pass111',
       }, {
         l: 'email002@qqq.com',
         p: 'qqq',

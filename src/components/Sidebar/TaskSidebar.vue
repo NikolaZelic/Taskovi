@@ -10,7 +10,7 @@
           <td @click='expandParent(ptask.taskExpanded,index)' class='parent-task'>{{ptask.title}} </td> -->
         <td @click='createTask(ptask)'><span  class='fas fa-plus'></span> </td>
       </tr>
-       <transition-group name="list" tag="div">
+       <transition-group name="list" tag="div" class="task-list">
       <tr v-if='parentExpanded[index]' v-for="task in ptask.children" :key='task.id' >
         <td class='tasks'>
           <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(task, activeItem = task.id)"></span>
@@ -23,39 +23,33 @@
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapGetters
-} from "vuex";
-import {
-  mapState
-} from "vuex";
-import Vue from 'vue';
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
+import { mapState } from "vuex";
+import Vue from "vue";
 export default {
   data() {
     return {
       parentExpanded: [],
-      activeItem: undefined,
+      activeItem: undefined
       // taskList: ['taskic', 'taskicccc2', 'taskiiii'],
-    }
+    };
   },
   watch: {
     parentTasks(val) {
       // console.log(val);
       if (this.parentTasks.length !== this.parentExpanded.length) {
         this.parentExpanded = Array(this.parentTasks.length).fill(true);
-        this.taskList = this
+        this.taskList = this;
       }
     }
   },
   computed: {
     ...mapState({
-      tabIndex : 'currentTabIndex',
+      tabIndex: "currentTabIndex"
     }),
     ...mapGetters({
-      parentTasks: 'currentTabData',
+      parentTasks: "currentTabData"
     })
   },
   methods: {
@@ -91,32 +85,39 @@ export default {
   mounted() {
     // console.log('sd');
   }
-}
+};
 </script>
 
 <style lang="css">
-.parent-task{
+.parent-task {
   flex: 1;
 }
-.tasks{
-  text-indent: 12px;
+.tasks {
+  text-indent: 2px;
 }
-tr span{
+.task-list {
+  border-left: 1px solid gray;
+  left: 20px;
+  position: relative;
+}
+tr span {
   cursor: pointer;
 }
-.list-enter-active, .list-leave-active {
-  transition: all .3s;
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s;
 }
-.list-enter, .list-leave-to {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(-30px);
 }
-.expandarrow{
+.expandarrow {
   transform: rotate(0);
-  transition: all .3s;
+  transition: all 0.3s;
 }
-.expandarrow.expanded{
+.expandarrow.expanded {
   transform: rotate(90deg);
-  transition: all .3s;
+  transition: all 0.3s;
 }
 </style>

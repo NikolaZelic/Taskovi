@@ -11,7 +11,6 @@ export default {
 </script>
 
 <style>
-@import "./assets/css/bootstrap.min.css";
 @import "./assets/css/CustomToggles.css";
 @import "./assets/css/TabsComponent.css";
 @import "./assets/css/SidebarTable.css";
