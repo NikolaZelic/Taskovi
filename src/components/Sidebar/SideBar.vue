@@ -1,7 +1,7 @@
 <template>
   <aside id="sidebar">
     <!-- <button @click="tts">Activate alert</button> -->
-    <div class="sidebar-header">
+    <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarActive}'>
       </span>
       <a>
@@ -450,11 +450,19 @@
     max-width: 0;
   }
 
+  .sidebar-header.collapsed {
+    width: 70px;
+  }
+
+  /* .sidebar-header.collapsed > span {
+    margin: 0;
+  } */
+
   #sidebar.collapsed {
     width: unset;
   }
 
-  .sidebar-content.collapsed * {
+  .sidebar-content.collapsed *, .sidebar-header.collapsed > a {
     display: none;
   }
 
@@ -480,14 +488,13 @@
 
   .sidebar-header {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    align-items: center;
     color: black;
     background: #ffb037;
     padding: 5px 5px 3px;
     font-size: 18px;
     text-align: center;
-    /* width: 100%; */
-    width: 276%;
     height: 45px;
   }
 
