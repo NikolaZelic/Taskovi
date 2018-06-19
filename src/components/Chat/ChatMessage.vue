@@ -1,5 +1,5 @@
 <template>
-<div v-bind:class="mess.right?'cont right-con':'cont left-con'" :id="mess.fed_id">
+<div v-bind:class="mojaPoruka()?'cont right-con':'cont left-con'" :id="mess.fed_id">
   <img :src="icon()" />
   <div class="message-body">
     <div class="message-body-header">
@@ -29,11 +29,27 @@ export default {
   computed:{
     ...mapState({
       scrollDownMess: state => state.modulechat.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
-    })
+    }),
+    name(){return window.localStorage.name},
+    surname(){return window.localStorage.surname}
   },
   methods: {
+    mojaPoruka(){
+       if(this.name == this.mess.usr_name && this.surname == this.mess.usr_surname)return true;
+       else return false;
+
+    },
     icon() {
-      return this.mess.fed_type === 'attachment' ? 'static\\img\\file-icon.png' : 'static\\img\\user.png';
+      switch (this.mess.fed_type) {
+        case 'attachment':
+          return 'static\\img\\file-icon.png';
+        case 'message':
+          return  'static\\img\\user.png';
+        default:
+          return "";
+        }
+
+
     },
     showFile() {
       return (
@@ -51,10 +67,14 @@ export default {
 </script>
 
 <style scoped>
+.cont * {
+  color: #eee;
+}
 .cont {
-  background-color: #ddd;
+  /* background-color: #ddd; */
   padding: 5px 10px;
   margin: 7px;
+  border-top: 1px solid #ffc10742;
 }
 
 .cont img {
@@ -67,10 +87,15 @@ export default {
   font-size: 12px;
   font-style: oblique;
   width: 93%;
+  color:#ffb037;
+
+}
+.cont .attach{
+  color:#139cbf;
 }
 
 .cont .message {
-  color: black;
+  /* color: black; */
 }
 
 .message-body {
@@ -83,8 +108,8 @@ export default {
 }
 
 .right-con {
-  border-color: #ccc;
-  background-color: #e6e5bb;
+  border-top: 1px solid #ffc10742;
+
   margin-left: 20px;
   display: flex;
 }

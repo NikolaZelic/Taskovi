@@ -31,6 +31,7 @@ input.darkTheme:focus {
 
 input.darkTheme::placeholder {
   color: #888;
+  /* color: #ffb037; */
 }
 
 .form-control.darkTheme:focus {
@@ -55,4 +56,9 @@ input.darkTheme::placeholder {
   border-color: #2d3436 !important;
   color: #ffb037 !important;
   box-shadow: none !important;
+}
+
+
+.top_padding{
+  padding-top: 30px;
 }

@@ -43,17 +43,9 @@
             </div>
           </form>
           <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-            <label>
-               <input type="radio" name="check" value="cs" v-model="invokeFilterType">
-               <span class="label-text">Created</span>
-             </label>
-            <label>
-               <input type="radio" name="check" value="as" v-model="invokeFilterType">
-               <span class="label-text">Assigned</span>
-             </label>
-            <label>
-               <input type="radio" name="check" value="ar" v-model="invokeFilterType">
-               <span class="label-text">Archived</span>
+            <label v-for='f in radioFilter'>
+               <input type="radio" name="check" :value="f.value" v-model="invokeFilterType">
+               <span class="label-text">{{f.name}}</span>
              </label>
           </form>
           <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
@@ -137,6 +129,19 @@ export default {
       activePopup: false,
       activeItem: undefined,
       adminFilter: true,
+      radioFilter: [{
+        name: 'Created',
+        value: 'cr',
+      }, {
+        name: 'Assigned',
+        value: 'as',
+      }, {
+        name: 'Archived',
+        value: 'ar',
+      }, {
+        name: 'All',
+        value: 'all',
+      }, ],
       tabs: [{
           name: "Companies",
           icon: "fas fa-building",
@@ -215,6 +220,9 @@ export default {
           break;
         case "ar":
           a = "true";
+          break;
+        case "all":
+          s = "all";
           break;
       }
       switch (index) {
