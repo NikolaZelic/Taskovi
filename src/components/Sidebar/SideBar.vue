@@ -134,11 +134,6 @@ export default {
         }
       ],
       tabs: [
-        // {
-        //   name: "Companies",
-        //   icon: "fas fa-building",
-        //   isAdmin: true
-        // },
         {
           name: "Projects",
           icon: "fas fa-project-diagram"
@@ -227,7 +222,7 @@ export default {
           break;
         case 1:
         case 2:
-          this.actionTabDataParentTask(s, t, a);
+          this.actionTabDataTask(s, t, a);
           break;
       }
       this.setActiveArray();
@@ -239,7 +234,7 @@ export default {
         id: itemID
       });
     },
-    actionTabDataParentTask(s, t, a) {
+    actionTabDataTask(s, t, a) {
       store.dispatch("getUserAllTasks", {
         index: this.currentTabIndex,
         state: s,

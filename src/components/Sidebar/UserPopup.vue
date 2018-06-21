@@ -3,7 +3,7 @@
     <table>
       <tr>
         <td>User: </td>
-        <td>{{ lsSurname }} {{ lsName }}</td>
+        <td>{{ SurnameAndName }}</td>
       </tr>
       <!-- <tr>
         <td>Company: </td>
@@ -34,11 +34,8 @@ import {
 } from "vuex";
 export default {
   computed: {
-    lsName() {
-      return localStorage.name;
-    },
-    lsSurname() {
-      return localStorage.surname;
+    SurnameAndName() {
+      return localStorage.surname + ' ' +localStorage.name;
     },
     // ...mapState({
     //   companyID: state => state.modulecompany.name

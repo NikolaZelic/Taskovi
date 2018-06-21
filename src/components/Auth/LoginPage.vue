@@ -1,79 +1,77 @@
 <template>
   <div class="login">
-    <!-- <div class="form-auth"> -->
-    <!-- <form class="register-form">
-      <input type="text" placeholder="name" />
-      <input type="text" placeholder="surname" />
-      <input type="password" placeholder="password" />
-      <input type="text" placeholder="email address" />
-      <button>create</button>
-      <p class="message">Already registered?
-        <a href="#">Sign In</a>
-      </p>
-    </form> -->
-    <form class="login-form">
-      <input v-model="email" type="email" placeholder="email" />
-      <input v-model="password" type="password" placeholder="password" />
-      <button @click.prevent="login">login</button>
+    <form class="login-form was-validated" novalidate>
+      <div class="form-group">
+        <input v-model="user.email" type="email" name='email' placeholder="email" class="form-control" required minlength="3" />
+      </div>
+      <div class="form-group">
+        <input v-model="user.pass" type="password" name='pass' placeholder="password" class="form-control" required minlength="3"
+        />
+      </div>
+      <button @click.prevent="login" class='btn btn-success'>login</button>
       <p class="message">Not registered?
         <a @click='switchComp'>Create an account</a>
       </p>
     </form>
     <div class="preset">
-      <button v-for="p in presets" :key='p.l' @click.prevent="autologin(p)">{{p.l}}</button>
+      <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-success'>{{p.email}}</button>
     </div>
-    <!-- </div> -->
   </div>
 </template>
 
 <script>
 import { api } from "@/api/index.js";
+// import VueForm from "vue-form";
 export default {
   name: "Login",
+  // mixins: [
+  //   new VueForm({
+  //     inputClasses: {
+  //       valid: "is-valid",
+  //       invalid: "is-invalid"
+  //     }
+  //   })
+  // ],
   data() {
     return {
+      formstate: {},
       presets: [
         {
-          l: "email1@gmail.com",
-          p: "pass123"
+          email: "nzelic@ymail.com",
+          pass: "123"
         },
         {
-          l: "admin2@gmail.com",
-          p: "admin222"
+          email: "danilopusic@ymail.com",
+          pass: "123"
         },
         {
-          l: "email2@yahoo.com",
-          p: "pass111"
+          email: "dime@gmail.com",
+          pass: "123"
         },
         {
-          l: "email001@qqq.com",
-          p: "qqq"
+          email: "email001@qqq.com",
+          pass: "qqq"
         },
         {
-          l: "email004@qqq.com",
-          p: "qqq"
-        },
-        {
-          l: "email002@qqq.com",
-          p: "qqq"
+          email: "email004@qqq.com",
+          pass: "qqq"
         }
       ],
-      email: "",
-      password: ""
+      user: {}
     };
   },
   methods: {
     autologin(p) {
-      this.email = p.l;
-      this.password = p.p;
+      // REMOVE IN FINAL
+      this.user = p;
       this.login();
     },
     switchComp() {
       this.$emit("clicked", false);
     },
     login() {
-      let mail = this.email;
-      let pass = this.password;
+      let mail = this.user.email;
+      let pass = this.user.pass;
       if (mail.length < 4) {
         alert("Email is not valid");
         return;
