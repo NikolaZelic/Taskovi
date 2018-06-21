@@ -27,7 +27,7 @@
 
   <h4 class="mt-5 yellowText">Company's admins:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item darkBackground" v-for="admin in admins">
+    <li class="list-group-item darkBackground" v-for="admin in admins" :key='admin'>
       {{ admin.usr_name }} {{ admin.usr_surname }}
       <span class="small"> --- {{ admin.usr_email }}</span>
     </li>
@@ -35,7 +35,7 @@
 
   <h4 class="yellowText">Company's employees:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item darkBackground" v-for="employee in employees">
+    <li class="list-group-item darkBackground" v-for="employee in employees" :key='employee'>
       {{ employee.name }}
       <span class="small"> --- {{ employee.email }}</span>
     </li>

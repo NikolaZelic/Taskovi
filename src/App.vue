@@ -13,6 +13,7 @@ export default {
 <style>
 @import "./assets/css/CustomToggles.css";
 /* @import "./assets/css/TabsComponent.css"; */
+
 @import "./assets/css/SidebarTable.css";
 @import "./assets/css/DarkTheme.css";
 @import "./assets/css/CssVars.css";
@@ -22,11 +23,13 @@ body {
   padding: 0;
   font-family: "TitilliumWeb";
 }
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
 @font-face {
   font-family: TitilliumWeb;
   src: url(~./assets/fonts/TitilliumWeb.ttf);

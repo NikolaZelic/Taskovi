@@ -12,9 +12,7 @@
     <!-- PROJECT -->
     <div v-show='!task' class="form-group" @click='refreshProjectError'>
       <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"
-      />
-      </vue-autosuggest>
+      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"/>
     </div>
 
     <!-- TITLE -->
@@ -92,24 +90,14 @@
 </template>
 
 <script>
-import flatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
-import {
-  VueAutosuggest
-} from 'vue-autosuggest';
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+import { VueAutosuggest } from "vue-autosuggest";
 import Multiselect from "vue-multiselect";
-import {
-  store
-} from "@/store/index";
-import {
-  api
-} from "@/api/index";
-import {
-  mapState
-} from 'vuex';
-import {
-  mapGetters
-} from "vuex";
+import { store } from "@/store/index";
+import { api } from "@/api/index";
+import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 var interval;
 const flatpickr = require("flatpickr");
@@ -123,100 +111,108 @@ export default {
 
   data() {
     return {
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       deadline: null,
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
-        altFormat: 'M	j, Y',
+        altFormat: "M	j, Y",
         altInput: true,
-        dateFormat: 'Y-m-d',
+        dateFormat: "Y-m-d"
         // locale: "Hindi", // locale for this instance only
       },
       teamSelect: 0,
       inputWorker: null,
       inputWorkerHaveChange: 0,
       choosenWorker: null,
-      personClass: 'fas fa-user fas-selected',
-      teamClass: 'fas fa-users',
+      personClass: "fas fa-user fas-selected",
+      teamClass: "fas fa-users",
       inputProps: {
-        class: 'autosuggest__input',
+        class: "autosuggest__input",
         onInputChange: this.onInputChange,
-        placeholder: 'Enter user'
+        placeholder: "Enter user"
       },
       selectedTags: [],
       inputTagHaveChange: 0,
       tagSearchStr: null,
       task: false,
-      selectedPrioretyClass: 'unselected form-control',
+      selectedPrioretyClass: "unselected form-control",
       suggestedProjets: [],
       inputPropsProject: {
-        class: 'autosuggest__input',
+        class: "autosuggest__input",
         onInputChange: this.onInputChangeProject,
-        placeholder: 'Enter Project'
+        placeholder: "Enter Project"
       },
       selectedPriorety: null,
       projectSuggestionHaveChange: 0,
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
-      titleClass: 'form-control',
-
-    }
+      titleClass: "form-control"
+    };
   },
 
   computed: {
     suggestedWorker: function() {
-      if (this.teamSelect == 1) // Selektovan tim
-        return store.getters.getSuggestedTeams;
-      else // Selektovan korisnik
-        return store.getters.getSuggestedUsers;
+      if (this.teamSelect == 1)
+        // Selektovan tim
+        return store.getters.getSuggestedTeams; // Selektovan korisnik
+      else return store.getters.getSuggestedUsers;
     },
     ...mapState({
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
-      companyID: state => state.sidebarItemSelection[0],
+      companyID: state => state.sidebarItemSelection[0]
     }),
-    proId(){
-      if( this.$refs.projectref._data.currentItem == null )
-        return null;
+    proId() {
+      if (this.$refs.projectref._data.currentItem == null) return null;
       return this.$refs.projectref._data.currentItem.item.id;
-    },
+    }
   },
 
   created: function() {
-
     // console.log(this.$refs.projectref);
     interval = setInterval(() => {
       // Ovo bi trebalo stalno da poziva kompany ID
       // Pozivanje sugestija za tagove
-      if (this.inputTagHaveChange == 1 && this.tagSearchStr != null && this.tagSearchStr.length > 0) {
-        store.dispatch('suggestTags', {
-          tagFor: 'task',
+      if (
+        this.inputTagHaveChange == 1 &&
+        this.tagSearchStr != null &&
+        this.tagSearchStr.length > 0
+      ) {
+        store.dispatch("suggestTags", {
+          tagFor: "task",
           searchStr: this.tagSearchStr
         });
         this.inputTagHaveChange = 0;
       }
 
       // Poziv sugestija za user tj. timove
-      if (this.inputWorkerHaveChange == 1 && this.inputWorker != null && this.inputWorker.length > 0) {
-        if (this.teamSelect == 0)
-          this.suggestUsers();
-        else
-          this.suggestTeams();
+      if (
+        this.inputWorkerHaveChange == 1 &&
+        this.inputWorker != null &&
+        this.inputWorker.length > 0
+      ) {
+        if (this.teamSelect == 0) this.suggestUsers();
+        else this.suggestTeams();
         this.inputWorkerHaveChange = 0;
       }
       if (this.inputWorker != null && this.inputWorker.length == 0) {
-        store.dispatch('cleanSuggestions');
-        store.dispatch('cleanSuggestedTeams');
+        store.dispatch("cleanSuggestions");
+        store.dispatch("cleanSuggestedTeams");
       }
 
       // Poziv sugestija za projekte
-      if( this.$refs.projectref != undefined ){
-        if( this.$refs.projectref._data.searchInput == null || this.$refs.projectref._data.searchInput.length == 0 ){
+      if (this.$refs.projectref != undefined) {
+        if (
+          this.$refs.projectref._data.searchInput == null ||
+          this.$refs.projectref._data.searchInput.length == 0
+        ) {
           // store.dispatch('clleaneSuggestedProjects');
-        }
-        else if( this.projectSuggestionHaveChange == 1 ){
-          store.dispatch('suggestProjects', {searchStr: this.$refs.projectref._data.searchInput, comId: this.companyID} );
+        } else if (this.projectSuggestionHaveChange == 1) {
+          store.dispatch("suggestProjects", {
+            searchStr: this.$refs.projectref._data.searchInput,
+            comId: this.companyID
+          });
           this.projectSuggestionHaveChange = 0;
         }
       }
@@ -229,73 +225,72 @@ export default {
 
   watch: {
     selectedTags: function() {
-      store.dispatch('cleanSuggestedTags');
+      store.dispatch("cleanSuggestedTags");
     },
     selectedPriorety: function() {
-      if (this.selectedPrioretyClass != 'form-control')
-        this.selectedPrioretyClass = 'form-control';
-    },
+      if (this.selectedPrioretyClass != "form-control")
+        this.selectedPrioretyClass = "form-control";
+    }
   },
 
   methods: {
     selectUser() {
       this.teamSelect = false;
-      this.personClass = 'fas fa-user fas-selected';
-      this.teamClass = 'fas fa-users';
-      this.inputProps.placeholder = 'Enter User';
+      this.personClass = "fas fa-user fas-selected";
+      this.teamClass = "fas fa-users";
+      this.inputProps.placeholder = "Enter User";
       this.$refs.suggestionTag.searchInput = null;
       this.choosenWorker = null;
-      store.dispatch('cleanSuggestions');
-      store.dispatch('cleanSuggestedTeams');
+      store.dispatch("cleanSuggestions");
+      store.dispatch("cleanSuggestedTeams");
     },
     selectTeam() {
       this.teamSelect = true;
-      this.personClass = 'fas fa-user';
-      this.teamClass = 'fas fa-users fas-selected';
-      this.inputProps.placeholder = 'Enter Team';
+      this.personClass = "fas fa-user";
+      this.teamClass = "fas fa-users fas-selected";
+      this.inputProps.placeholder = "Enter Team";
       this.$refs.suggestionTag.searchInput = null;
       this.choosenWorker = null;
-      store.dispatch('cleanSuggestions');
-      store.dispatch('cleanSuggestedTeams');
+      store.dispatch("cleanSuggestions");
+      store.dispatch("cleanSuggestedTeams");
     },
     // Metode u AutoSuggesion komponenti
     onInputChange: function(text, oldText) {
       this.inputWorker = text;
       this.inputWorkerHaveChange = 1;
-      if( this.choosenWorker != null){
-        if( this.choosenWorker.status === undefined )
-          this.choosenWorker = null;
-        else
-          this.choosenWorker.status = undefined;
+      if (this.choosenWorker != null) {
+        if (this.choosenWorker.status === undefined) this.choosenWorker = null;
+        else this.choosenWorker.status = undefined;
       }
 
       if (text != null && text.length == 0) {
-        store.dispatch('cleanSuggestions');
-        store.dispatch('cleanSuggestedTeams');
+        store.dispatch("cleanSuggestions");
+        store.dispatch("cleanSuggestedTeams");
       }
     },
     onSelected(item) {
-      if (item == null || item == undefined)
-        return;
+      if (item == null || item == undefined) return;
       this.choosenWorker = item.item;
       this.inputWorker = null;
-      store.dispatch('cleanSuggestions');
-      store.dispatch('cleanSuggestedTeams');
+      store.dispatch("cleanSuggestions");
+      store.dispatch("cleanSuggestedTeams");
     },
     clickHandler(item) {},
     renderSuggestion(suggestion) {
       var str = this.inputWorker;
       var i = suggestion.item;
-      if (this.teamSelect == 0) { // Selektovan je korisnik
+      if (this.teamSelect == 0) {
+        // Selektovan je korisnik
         // Oznacavanje selektovanih slova
-        return <div class = 'sugestija' > {
-          this.oznaciIme(i.name, str)
-        } {
-          this.oznaciIme(i.surname, str)
-        } {
-          this.oznaciIme(i.email, str)
-        } < /div>;
-      } else { // Selektovana je kompanija
+        return (
+          <div class="sugestija">
+            {" "}
+            {this.oznaciIme(i.name, str)} {this.oznaciIme(i.surname, str)}{" "}
+            {this.oznaciIme(i.email, str)}{" "}
+          </div>
+        );
+      } else {
+        // Selektovana je kompanija
         // return <div class='sugestija'>{this.oznaciIme(i.name, str)}</div>;
         // var array = ['Pera', 'Mika', 'Laza'];
         // const items = array.map((item, index) => {
@@ -303,44 +298,58 @@ export default {
         // });
         // return <ul> {items} </ul>;
         var items = this.oznaciTim(i.name, str);
-        return <div class = 'sugestija' > {
-          items
-        } < /div>
+        return <div class="sugestija"> {items} </div>;
       }
     },
-    renderProjectSuggestion(suggestion){
-      return this.oznaciIme(suggestion.item.name, this.$refs.projectref._data.searchInput );
+    renderProjectSuggestion(suggestion) {
+      return this.oznaciIme(
+        suggestion.item.name,
+        this.$refs.projectref._data.searchInput
+      );
     },
     oznaciIme(ime, str) {
-      if( ime===undefined || ime===null )
-        return;
-      var reg = new RegExp(str, 'i');
+      if (ime === undefined || ime === null) return;
+      var reg = new RegExp(str, "i");
       var m = ime.search(reg);
-      if (m != -1) { // Ako uopste ima preklapanja
-        var pre = ime.replace(new RegExp('(.*?)' + str + ".*", 'i'), '$1');
-        var oznaceno = ime.replace(new RegExp('.*?(' + str + ').*', 'i'), '$1');
-        var posle = ime.replace(new RegExp('.*?' + str + '(.*)', 'i'), '$1');
-        return <span class = 'rec' > < span class = 'neoznacen' >{pre}< /span><span class='oznacen'>{oznaceno}</span ><span class = 'neoznacen' >{posle}< /span></span > ;
+      if (m != -1) {
+        // Ako uopste ima preklapanja
+        var pre = ime.replace(new RegExp("(.*?)" + str + ".*", "i"), "$1");
+        var oznaceno = ime.replace(new RegExp(".*?(" + str + ").*", "i"), "$1");
+        var posle = ime.replace(new RegExp(".*?" + str + "(.*)", "i"), "$1");
+        return (
+          <span class="rec">
+            {" "}
+            <span class="neoznacen">{pre}</span>
+            <span class="oznacen">{oznaceno}</span>
+            <span class="neoznacen">{posle}</span>
+          </span>
+        );
       }
-      return <span class = 'rec' > < span class = 'neoznacen' > {
-        ime
-      } < /span></span >
+      return (
+        <span class="rec">
+          {" "}
+          <span class="neoznacen"> {ime} </span>
+        </span>
+      );
     },
     oznaciTim(ime, str) {
-      var reg = new RegExp(str, 'i');
+      var reg = new RegExp(str, "i");
       var m = ime.search(reg);
-      if (m != -1) { // Ako uopste ima preklapanja
+      if (m != -1) {
+        // Ako uopste ima preklapanja
         var array = ime.split(/\s+/);
         var items = array.map((item, index) => {
           var a = item.trim();
-          if (a.length > 0)
-            return this.oznaciIme(a, str);
+          if (a.length > 0) return this.oznaciIme(a, str);
         });
         return items;
       }
-      return <span class = 'rec' > < span class = 'neoznacen' > {
-        ime
-      } < /span></span >
+      return (
+        <span class="rec">
+          {" "}
+          <span class="neoznacen"> {ime} </span>
+        </span>
+      );
     },
     calendarIconClicked() {
       // console.log(this.$refs.datepicker._data.fp.open);
@@ -349,25 +358,26 @@ export default {
     },
     getSuggestionValue(item) {
       var i = item.item;
-      if (this.teamSelect == 0) { // Selektovan je korisnik
+      if (this.teamSelect == 0) {
+        // Selektovan je korisnik
         return i.name + " " + i.surname + " " + i.email;
       } else {
         return this.getSuggestionTeam(item);
       }
     },
-    getSuggestionTeam(item){
+    getSuggestionTeam(item) {
       var i = item.item;
       return i.name;
     },
     suggestUsers() {
       // console.log('SUggest users');
-      store.dispatch('refreshSuggestions', {
+      store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
         comId: this.companyID
       });
     },
     suggestTeams() {
-      store.dispatch('suggestTeams', {
+      store.dispatch("suggestTeams", {
         searchStr: this.inputWorker,
         comId: this.companyID
       });
@@ -388,7 +398,7 @@ export default {
       this.refreshErrors();
       // Provera ulaznih vrednosti
       var stop = false;
-      if( this.title == null || this.title.length == 0 ){
+      if (this.title == null || this.title.length == 0) {
         this.titleError();
         stop = true;
       }
@@ -397,81 +407,94 @@ export default {
         stop = true;
       }
 
-      if( stop )
-        return;
+      if (stop) return;
 
       var usrid = null;
       var teamid = null;
       if (this.choosenWorker != null) {
-        if (this.teamSelect == 1)
-          teamid = this.choosenWorker.id;
-        else
-          usrid = this.choosenWorker.id;
+        if (this.teamSelect == 1) teamid = this.choosenWorker.id;
+        else usrid = this.choosenWorker.id;
       }
 
       var tagarray = this.selectedTags.map(e => e.id);
 
-      api.createParenttask(this.proId, this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety).
-      then(result => {
-        this.reportWritingToDB(result);
-      });
+      api
+        .createParenttask(
+          this.proId,
+          this.title,
+          this.description,
+          this.deadline,
+          usrid,
+          teamid,
+          tagarray,
+          this.selectedPriorety
+        )
+        .then(result => {
+          this.reportWritingToDB(result);
+        });
     },
-    reportWritingToDB(result){
+    reportWritingToDB(result) {
       console.log(result);
       var status = result.data.status;
-      console.log('Statis: ' + status);
-      if( status === 'OK' ){
-        store.commit('modalStatus', {active: true, message: 'Task Successful Cretaed !!!'});
-      }
-      else {
-        store.commit('modalStatus', {active: true, message: "Error! Task wasn't created."});
+      console.log("Statis: " + status);
+      if (status === "OK") {
+        store.commit("modalStatus", {
+          active: true,
+          message: "Task Successful Cretaed !!!"
+        });
+      } else {
+        store.commit("modalStatus", {
+          active: true,
+          message: "Error! Task wasn't created."
+        });
       }
     },
-    onInputChangeProject(text, oldText){
-      if( text == null || text.length == 0){
-        store.dispatch('clleaneSuggestedProjects');
+    onInputChangeProject(text, oldText) {
+      if (text == null || text.length == 0) {
+        store.dispatch("clleaneSuggestedProjects");
       }
       this.projectSuggestionHaveChange = 1;
     },
-    selectMe(){
+    selectMe() {
       // var choosenWorker = this.choosenWorker;
-      api.getUserInfo().then( result => {
+      api.getUserInfo().then(result => {
         var user = result.data;
         this.choosenWorker = user;
-        this.$refs.suggestionTag.searchInput = user.name +' ' + user.surname + ' ' + user.email;
-      } );
+        this.$refs.suggestionTag.searchInput =
+          user.name + " " + user.surname + " " + user.email;
+      });
     },
-    titleError(){
-      this.titleClass = 'form-control error-input';
+    titleError() {
+      this.titleClass = "form-control error-input";
     },
-    refreshTitleError(){
-      this.titleClass = 'form-control'
+    refreshTitleError() {
+      this.titleClass = "form-control";
     },
-    projectError(){
-      this.inputPropsProject.class = 'autosuggest__input error-input66682';
+    projectError() {
+      this.inputPropsProject.class = "autosuggest__input error-input66682";
     },
-    refreshProjectError(){
-      this.inputPropsProject.class = 'autosuggest__input';
+    refreshProjectError() {
+      this.inputPropsProject.class = "autosuggest__input";
     },
-    workerError(){
-      this.inputProps.class = 'autosuggest__input error-input66682';
+    workerError() {
+      this.inputProps.class = "autosuggest__input error-input66682";
     },
-    refreshWorkerError(){
-      this.inputProps.class = 'autosuggest__input';
+    refreshWorkerError() {
+      this.inputProps.class = "autosuggest__input";
     },
-    refreshErrors(){
+    refreshErrors() {
       this.refreshProjectError();
       this.refreshTitleError();
     },
-    onProjectSelected(){
-      store.dispatch('clleaneSuggestedProjects');
-    },
-  },
+    onProjectSelected() {
+      store.dispatch("clleaneSuggestedProjects");
+    }
+  }
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
 </style><style scoped>
-.error-input{
+.error-input {
   border-bottom: 3px solid #ff0000;
 }
 .disable-selection {
@@ -481,10 +504,10 @@ export default {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-#adding-worker{
+#adding-worker {
   position: relative;
 }
-.add-myself{
+.add-myself {
   background: #cc6600;
   border: 3px solid #cc6600;
   border-radius: 15px;
@@ -493,18 +516,20 @@ export default {
   top: 6px;
   cursor: pointer;
 }
-.cleane-deadline-wrapper{
+.cleane-deadline-wrapper {
   position: absolute;
   right: 10px;
   top: 0px;
 }
-.sugestija {}
+.sugestija {
+}
 
 .rec {
   padding: 2px;
 }
 
-.neoznacen {}
+.neoznacen {
+}
 
 .oznacen {
   color: #cc6600;
@@ -627,7 +652,6 @@ export default {
 
 .tags-wrapper {
   font-size: 18px;
-
 }
 
 .tag {
@@ -636,7 +660,8 @@ export default {
   border-radius: 5px;
 }
 
-.tag-text {}
+.tag-text {
+}
 
 .fa-times {
   font-size: 16px;
@@ -654,7 +679,7 @@ export default {
 }
 </style>
 <style media="screen">
-.error-input66682{
+.error-input66682 {
   border-bottom: 3px solid #ff0000;
 }
 .autosuggest__input,
@@ -665,12 +690,12 @@ export default {
 
 #autosuggest__input.autosuggest__input-open {
   border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0
+  border-bottom-right-radius: 0;
 }
 
 .autosuggest__results-container {
   position: relative;
-  width: 100%
+  width: 100%;
 }
 
 .autosuggest__results {
@@ -679,22 +704,22 @@ export default {
   z-index: 10000001;
   width: 100%;
   background-color: #454854;
-  padding: 0
+  padding: 0;
 }
 
 .autosuggest__results ul {
   list-style: none;
   padding-left: 0;
-  margin: 0
+  margin: 0;
 }
 
 .autosuggest__results .autosuggest__results_item {
   cursor: pointer;
-  padding: 15px
+  padding: 15px;
 }
 
-#autosuggest ul:first-child>.autosuggest__results_title {
-  border-top: none
+#autosuggest ul:first-child > .autosuggest__results_title {
+  border-top: none;
 }
 
 .autosuggest__results .autosuggest__results_title {
@@ -702,10 +727,11 @@ export default {
   font-size: 11px;
   margin-left: 0;
   padding: 15px 13px 5px;
-  border-top: 1px solid #d3d3d3
+  border-top: 1px solid #d3d3d3;
 }
 
-.autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted,
+.autosuggest__results
+  .autosuggest__results_item.autosuggest__results_item-highlighted,
 .autosuggest__results .autosuggest__results_item:active,
 .autosuggest__results .autosuggest__results_item:focus,
 .autosuggest__results .autosuggest__results_item:hover {
