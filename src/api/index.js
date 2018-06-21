@@ -193,7 +193,7 @@ export const api = {
   // ZX - Get items based on filter
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks';
-    if (index === 1) link = '/users/projects';
+    if (index === 0) link = '/users/projects';
     return axios.get(link, {
       params: {
         sid: window.localStorage.sid,

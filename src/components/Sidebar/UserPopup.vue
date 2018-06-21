@@ -52,7 +52,7 @@ export default {
   position: absolute;
   left: 66px;
   border-radius: 20px;
-  border: 1px solid #e6e6e6d1;
+  border: 1px solid #f5ee0cc7;
   bottom: 60px;
   display: inline-block;
   background: #1d1d1dff;

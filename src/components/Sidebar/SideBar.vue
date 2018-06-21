@@ -18,7 +18,7 @@
 
         <ul class="tabs">
           <!-- :tabindex="index+1" -->
-          <li v-for="( tab, index ) in tabs" v-if="index === 0" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]"
+          <li v-for="( tab, index ) in tabs" v-if="index === 0 || projectID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]"
             @click="getTabData(currentTabIndex = index), sidebarActive=true" :disabled="tab.disabled">
           </li>
         </ul>
@@ -59,7 +59,7 @@
             </form>
           </div>
           <div class="item-list">
-            <task-sidebar v-if="currentTabIndex === 2 || currentTabIndex === 3" />
+            <task-sidebar v-if="currentTabIndex === 1 || currentTabIndex === 2" />
             <table v-else>
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
@@ -111,7 +111,7 @@ export default {
       sidebarActive: true,
       searchData: "",
       currentTabIndex: 0,
-      // companyID: undefined,
+      projectID: undefined,
       activePopup: false,
       activeItem: undefined,
       adminFilter: true,
@@ -180,9 +180,9 @@ export default {
       this.tabs[i].isAdmin = val;
       this.actionTabDataPeople();
     },
-    // activeItem(val) {
-    //   if (this.currentTabIndex === 0) this.companyID = val;
-    // },
+    activeItem(val) {
+      if (this.currentTabIndex === 0) this.projectID = val;
+    },
     sidebarActive(val) {
       store.commit("mainFocused", !val);
       window.sessionStorage.sidebarActive = val;
@@ -266,11 +266,11 @@ export default {
     },
     showSubFilter() {
       let i = this.currentTabIndex;
-      return i === 0 || i === 1 || i === 2;
+      return i === 1 || i === 2;
     },
     showAdminFilter() {
       let i = this.currentTabIndex;
-      return i === 2;
+      return i === 3;
     },
     addItemButton() {
       store.dispatch("itemAddClick");

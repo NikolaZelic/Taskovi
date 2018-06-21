@@ -5,7 +5,7 @@ import actions from './actions';
 import getters from './getters';
 import modulesidebar from './modules/sidebar';
 import modulechat from './modules/chat';
-import modulecompany from './modules/company';
+// import modulecompany from './modules/company';
 import moduleteam from './modules/team';
 import moduleproject from './modules/project';
 import moduletask from './modules/task';
@@ -21,7 +21,7 @@ export const store = new Vuex.Store({
     getters,
     modulesidebar,
     modulechat,
-    modulecompany,
+    // modulecompany,
     moduleteam,
     moduleproject,
     moduletask,

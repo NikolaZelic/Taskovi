@@ -192,7 +192,12 @@ export default {
   .maincontent {
     padding: 50px 30px 0;
     flex: 1;
-    background-color: #24262d;
+    background-color: var(--main-bg-color);
+    color: var(--main-color);
+  }
+
+  .maincontent label {    
+    color: var(--main-color);
   }
 
   .maincontent h1 {
