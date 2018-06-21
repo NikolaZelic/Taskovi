@@ -143,13 +143,12 @@ export const api = {
       pass: password
     });
   },
-  register(email, password, name, surname, description) {
+  register(user) {
     axios.post('auth/singup', {
-      email: email,
-      pass: password,
-      name: name,
-      surname: surname,
-      description: description
+      email: user.email,
+      pass: user.password,
+      name: user.name,
+      surname: user.surname
     }).catch(error => {
       console.log(error);
     });
