@@ -5,10 +5,10 @@
         <td>User: </td>
         <td>{{ lsSurname }} {{ lsName }}</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td>Company: </td>
         <td>{{ companyID }}</td>
-      </tr>
+      </tr> -->
       <tr>
         <td>Tasks working on: </td>
         <td>
@@ -40,9 +40,9 @@ export default {
     lsSurname() {
       return localStorage.surname;
     },
-    ...mapState({
-      companyID: state => state.modulecompany.name
-    })
+    // ...mapState({
+    //   companyID: state => state.modulecompany.name
+    // })
   }
 };
 </script>

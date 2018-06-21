@@ -6,23 +6,23 @@
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <company-edit v-if="checkShow(0,true)"/>
-        <project-edit v-if="checkShow(1,true)"/>
-        <task-edit v-if="checkShow(2,true) || checkShow(3,true)"/>
-        <team-edit v-if="checkShow(4,true)"/>
+        <!-- <company-edit v-if="checkShow(0,true)"/> -->
+        <project-edit v-if="checkShow(0,true)"/>
+        <task-edit v-if="checkShow(1,true) || checkShow(2,true)"/>
+        <team-edit v-if="checkShow(3,true)"/>
 
         <!-- Adding new -->
-        <company-add v-if="checkShow(0,false,true)"/>
-        <project-add v-if="checkShow(1,false,true)"/>
-        <task-add v-if="checkShow(2,false,false,true) || checkShow(3,false,false,true)"/>
-        <parenttask-add v-if="checkShow(2,false,true) || checkShow(3,false,true)"/>
-        <team-add v-if="checkShow(4,false,true)"/>
+        <!-- <company-add v-if="checkShow(0,false,true)"/> -->
+        <project-add v-if="checkShow(0,false,true)"/>
+        <task-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)"/>
+        <parenttask-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
+        <team-add v-if="checkShow(3,false,true)"/>
 
         <!-- Viewing existing -->
-        <company-view v-if='checkShow(0,false,false)'/>
-        <project-view v-else-if='checkShow(1,false,false)'/>
-        <task-view v-else-if='checkShow(2,false,false) || checkShow(3,false,false)'/>
-        <team-view v-else-if='checkShow(4,false,false)'/>
+        <!-- <company-view v-if='checkShow(0,false,false)'/> -->
+        <project-view v-else-if='checkShow(0,false,false)'/>
+        <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)'/>
+        <team-view v-else-if='checkShow(3,false,false)'/>
 
         <!-- <parenttask-add/> -->
         <!-- <task-add/> -->
@@ -57,9 +57,9 @@ import ProjectAdd from "@/components/Content/Project/ProjectAdd";
 import ProjectView from "@/components/Content/Project/ProjectView";
 import ProjectEdit from "@/components/Content/Project/ProjectEdit";
 
-import CompanyAdd from "@/components/Content/Company/CompanyAdd";
-import CompanyEdit from "@/components/Content/Company/CompanyEdit";
-import CompanyView from "@/components/Content/Company/CompanyView";
+// import CompanyAdd from "@/components/Content/Company/CompanyAdd";
+// import CompanyEdit from "@/components/Content/Company/CompanyEdit";
+// import CompanyView from "@/components/Content/Company/CompanyView";
 
 import ModalError from "@/components/Misc/ModalError";
 import ModalComplete from "@/components/Misc/ModalComplete";
@@ -86,9 +86,9 @@ export default {
     ProjectView,
     ProjectEdit,
     TeamAdd,
-    CompanyAdd,
-    CompanyEdit,
-    CompanyView,
+    // CompanyAdd,
+    // CompanyEdit,
+    // CompanyView,
     TeamEdit,
     TeamView,
     TeamAdd,
@@ -158,6 +158,16 @@ export default {
   }
 };
 </script>
+
+<style>
+/* :root {
+  --main-bg-color: #262729;
+  --main-color: #eeeeee;
+  --sec-bg-color: #f3f4f7;
+  --sec-color: #222222;
+} */
+</style>
+
 
 <style lang="css">
   #wrapper {

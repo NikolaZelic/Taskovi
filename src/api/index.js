@@ -67,12 +67,12 @@ export const api = {
   },
 
   // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
-  createTeam(comid, users, teamname) {
-    return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
-      teamname: teamname,
-      users: JSON.stringify(users)
-    });
-  },
+  // createTeam(comid, users, teamname) {
+  //   return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
+  //     teamname: teamname,
+  //     users: JSON.stringify(users)
+  //   });
+  // },
 
   // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
   refreshSuggestions(searchText, comId) {
@@ -155,31 +155,31 @@ export const api = {
     });
   },
   // ZX ============= DATA
-  getCompanyInfo(compID) {
-    return axios.get("companies/"+compID, {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getCompanyInfo(compID) {
+  //   return axios.get("companies/"+compID, {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX
-  getAdmins(compID) {
-    return axios.get("companies/"+compID+"/admins", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getAdmins(compID) {
+  //   return axios.get("companies/"+compID+"/admins", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX
-  getEmployees(compID) {
-    return axios.get("companies/"+compID+"/users", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getEmployees(compID) {
+  //   return axios.get("companies/"+compID+"/users", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX - not used?
   // getUserParentTasks(index) {
@@ -227,14 +227,14 @@ export const api = {
   // },
 
   // ZX NEW API TESTING
-  getUserCompanies(admin) {
-    return axios.get('companies', {
-      params: {
-        sid: window.localStorage.sid,
-        isadmin: admin,
-      }
-    });
-  },
+  // getUserCompanies(admin) {
+  //   return axios.get('companies', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //       isadmin: admin,
+  //     }
+  //   });
+  // },
 
   // ZX
   getUserTeams(index, admin) {
@@ -273,51 +273,51 @@ export const api = {
   //
   //
   //
-  addCompany(name, desc) {
-    return axios.post('companies', {
-      companyname: name,
-      companydesc: desc,
-      sid: window.localStorage.sid,
-    })
-  },
+  // addCompany(name, desc) {
+  //   return axios.post('companies', {
+  //     companyname: name,
+  //     companydesc: desc,
+  //     sid: window.localStorage.sid,
+  //   })
+  // },
 
-  changeCompanyInfo(name, desc, comid) {
-    return axios.put("companies/"+comid, {
-      companyname: name,
-      companydesc: desc,
-      sid: window.localStorage.sid,
-    });
-  },
+  // changeCompanyInfo(name, desc, comid) {
+  //   return axios.put("companies/"+comid, {
+  //     companyname: name,
+  //     companydesc: desc,
+  //     sid: window.localStorage.sid,
+  //   });
+  // },
 
-  loadEmployees(compID) {
-    return axios.get("companies/"+compID+"/users", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    })
-  },
+  // loadEmployees(compID) {
+  //   return axios.get("companies/"+compID+"/users", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   })
+  // },
 
-  loadAdmins(compID) {
-    return axios.get("companies/"+compID+"/admins", {
-      params: {
-        sid:window.localStorage.sid,
-      }
-    })
-  },
+  // loadAdmins(compID) {
+  //   return axios.get("companies/"+compID+"/admins", {
+  //     params: {
+  //       sid:window.localStorage.sid,
+  //     }
+  //   })
+  // },
 
-  addEmployee(compID, email, sid) {
-    return axios.post("companies/"+compID+"/users", {
-      email: email,
-      sid: window.localStorage.sid,
-    })
-  },
+  // addEmployee(compID, email, sid) {
+  //   return axios.post("companies/"+compID+"/users", {
+  //     email: email,
+  //     sid: window.localStorage.sid,
+  //   })
+  // },
 
-  addAdmin(compID, email, sid) {
-    return axios.post("companies/"+compID+"/admins", {
-      email: email,
-      sid: window.localStorage.sid,
-    })
-  }
+  // addAdmin(compID, email, sid) {
+  //   return axios.post("companies/"+compID+"/admins", {
+  //     email: email,
+  //     sid: window.localStorage.sid,
+  //   })
+  // }
 
   //
   //
