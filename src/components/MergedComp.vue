@@ -197,7 +197,7 @@ export default {
 
   .maincontent h1 {
     text-align: center;
-    color: #fff
+    /* color: #fff */
   }
 
   @media only screen and (min-width: 1350px) {

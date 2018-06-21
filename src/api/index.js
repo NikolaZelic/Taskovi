@@ -87,7 +87,7 @@ export const api = {
 
   // by Zelic
   selectTask(id) {
-    return axios.get('tasks/'+id);
+    return axios.get('tasks/' + id);
   },
 
   // SVETA
@@ -247,23 +247,23 @@ export const api = {
   },
 
   //Sveta
-  getTeam(teamId){
-    return axios.get("/teams/"+teamId,{
-      params:{
+  getTeam(teamId) {
+    return axios.get("/teams/" + teamId, {
+      params: {
         sid: window.localStorage.sid,
       }
     })
   },
-  getTeamMembers(teamId){
-    return axios.get("/teams/"+teamId+"/users",{
-      params:{
+  getTeamMembers(teamId) {
+    return axios.get("/teams/" + teamId + "/users", {
+      params: {
         sid: window.localStorage.sid,
       }
     })
   },
-  getTeamAdmins(teamId){
-    return axios.get("/teams/"+teamId+"/admins",{
-      params:{
+  getTeamAdmins(teamId) {
+    return axios.get("/teams/" + teamId + "/admins", {
+      params: {
         sid: window.localStorage.sid,
       }
     })

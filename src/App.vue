@@ -12,9 +12,10 @@ export default {
 
 <style>
 @import "./assets/css/CustomToggles.css";
-@import "./assets/css/TabsComponent.css";
+/* @import "./assets/css/TabsComponent.css"; */
 @import "./assets/css/SidebarTable.css";
 @import "./assets/css/DarkTheme.css";
+@import "./assets/css/CssVars.css";
 
 body {
   margin: 0;
