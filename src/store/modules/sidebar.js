@@ -36,7 +36,6 @@ const actions = {
 
   getUserAllTasks(commit, params) {
     api.getUserAllTasks(params.state, params.type, params.archived).then(r => {
-      // api.getUserParentTasks().then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -49,19 +48,19 @@ const actions = {
     });
   },
 
-  getUserCompanies(commit, params) {
-    api.getUserCompanies(params.admin).then(r => {
-      store.commit('setSidebarData', {
-        index: params.index,
-        data: r.data.data
-      });
-    }).catch(e => {
-      store.commit("modalError", {
-        active: true,
-        message: '' + e,
-      });
-    });
-  },
+  // getUserCompanies(commit, params) {
+  //   api.getUserCompanies(params.admin).then(r => {
+  //     store.commit('setSidebarData', {
+  //       index: params.index,
+  //       data: r.data.data
+  //     });
+  //   }).catch(e => {
+  //     store.commit("modalError", {
+  //       active: true,
+  //       message: '' + e,
+  //     });
+  //   });
+  // },
 
   getUserTeams(commit, params) {
     api.getUserTeams(params.index, params.admin).then(r => {

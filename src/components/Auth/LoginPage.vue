@@ -103,11 +103,6 @@ export default {
 </script>
 
 <style>
-/* .login-page {
-  padding: 8% 0 0;
-  margin: auto;
-} */
-
 .preset button {
   line-height: 0px;
 }

@@ -9,6 +9,7 @@
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='shownItemsCount !== 0' class='badge badge-light'>{{ shownItemsCount }}</span>
       </a>
+      <span @click='changeTheme'>DS</span>
     </div>
     <div class="sidebar-lower">
       <div class="static-side">
@@ -290,6 +291,9 @@ export default {
     },
     mouseOverPopup(val) {
       this.activePopup = val;
+    },
+    changeTheme(val) {
+      console.log(val);
     }
   },
   computed: {
@@ -353,7 +357,7 @@ export default {
 
 .static-side .fas,
 .sidebar-header .fas {
-  font-size: 125%;
+  font-size: 140%;
 }
 
 /* SIDEBAR STATIC */
@@ -413,8 +417,8 @@ export default {
 
 .tablinks:hover {
   background: #eadc903b;
-  color: #fff;
-  border-left: 3px solid #a7a7a7;
+  color: var(--ac-light-color);
+  /* border-left: 3px solid #a7a7a7; */
 }
 
 /* TABS END */

@@ -1,23 +1,26 @@
 <template lang="html">
   <table>
-    <template v-for="(ptask,index) in parentTasks">
+    <template v-for="(task,index) in tasks">
       <tr>
-        <td @click='expandParent(parentExpanded[index],index)'><span class='fas fa-angle-right expandarrow'
-          :class='{"expanded":parentExpanded[index]}'></span> </td>
-        <td @click='expandParent(parentExpanded[index],index)' class='parent-task'>{{ptask.title}} </td>
-         <!-- <td @click='expandParent(ptask.taskExpanded,index)'><span class='fas fa-angle-right'
-            :class='{"expanded":ptask.taskExpanded}'></span> </td>
-          <td @click='expandParent(ptask.taskExpanded,index)' class='parent-task'>{{ptask.title}} </td> -->
-        <td @click='createTask(ptask)'><span  class='fas fa-plus'></span> </td>
-      </tr>
-       <transition-group name="list" tag="div" class="task-list">
-      <tr v-if='parentExpanded[index]' v-for="task in ptask.children" :key='task.id' >
-        <td class='tasks'>
-          <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(task, activeItem = task.id)"></span>
+        <td @click='expandParent(taskExpanded[index],index)'>
+          <span class='fas fa-angle-right expandarrow' :class='{"expanded":taskExpanded[index]}'></span>
         </td>
-        <td @click='selectItem(task.id, activeItem = task.id)' class='td-flex'>{{ task.title }}</td>
+        <td @click='expandParent(taskExpanded[index],index)' class='parent-task'>{{task.title}} </td>
+        <!-- <td @click='expandParent(task.taskExpanded,index)'><span class='fas fa-angle-right'
+            :class='{"expanded":task.taskExpanded}'></span> </td>
+          <td @click='expandParent(task.taskExpanded,index)' class='parent-task'>{{task.title}} </td> -->
+        <td @click='createTask(task)'>
+          <span class='fas fa-plus'></span>
+        </td>
       </tr>
-     </transition-group>
+      <transition-group name="list" tag="div" class="task-list">
+        <tr v-if='taskExpanded[index]' v-for="step in task.children" :key='step.id'>
+          <td class='steps'>
+            <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(step, activeItem = step.id)"></span>
+          </td>
+          <td @click='selectItem(step.id, activeItem = step.id)' class='td-flex'>{{ step.title }}</td>
+        </tr>
+      </transition-group>
     </template>
   </table>
 </template>
@@ -30,16 +33,19 @@ import Vue from "vue";
 export default {
   data() {
     return {
-      parentExpanded: [],
+      taskExpanded: [],
       activeItem: undefined
       // taskList: ['taskic', 'taskicccc2', 'taskiiii'],
     };
   },
   watch: {
-    parentTasks(val) {
-      // console.log(val);
-      if (this.parentTasks.length !== this.parentExpanded.length) {
-        this.parentExpanded = Array(this.parentTasks.length).fill(true);
+    tasks(val) {
+      if (val === undefined) {
+        console.log(val + " tasks(val) watcher");
+        return;
+      }
+      if (this.tasks.length !== this.taskExpanded.length) {
+        this.taskExpanded = Array(this.tasks.length).fill(true);
         this.taskList = this;
       }
     }
@@ -49,12 +55,12 @@ export default {
       tabIndex: "currentTabIndex"
     }),
     ...mapGetters({
-      parentTasks: "currentTabData"
+      tasks: "currentTabData"
     })
   },
   methods: {
     expandParent(val, i) {
-      Vue.set(this.parentExpanded, i, !val);
+      Vue.set(this.taskExpanded, i, !val);
       // this.actionTasksFromParentTask(i);
     },
     // actionTasksFromParentTask(i) {
@@ -92,30 +98,37 @@ export default {
 .parent-task {
   flex: 1;
 }
-.tasks {
+
+.steps {
   text-indent: 2px;
 }
+
 .task-list {
   border-left: 1px solid gray;
   left: 20px;
   position: relative;
 }
+
 tr span {
   cursor: pointer;
 }
+
 .list-enter-active,
 .list-leave-active {
   transition: all 0.3s;
 }
+
 .list-enter,
 .list-leave-to {
   opacity: 0;
   transform: translateY(-30px);
 }
+
 .expandarrow {
   transform: rotate(0);
   transition: all 0.3s;
 }
+
 .expandarrow.expanded {
   transform: rotate(90deg);
   transition: all 0.3s;

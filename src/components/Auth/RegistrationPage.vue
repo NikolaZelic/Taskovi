@@ -66,7 +66,11 @@ export default {
   },
   methods: {
     register() {
-      api.register(this.user);
+      let valid = this.formstate.$valid;
+      console.log(valid);
+      if (valid) {
+        api.register(this.user);
+      }
     },
     switchComp() {
       this.$emit("clicked", true);
