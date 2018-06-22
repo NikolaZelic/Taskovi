@@ -1,24 +1,26 @@
 <template>
   <aside id="sidebar">
-    <!-- <button @click="tts">Activate alert</button> -->
+
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarActive}'>
       </span>
-      <a>
-        <span :class="tabs[currentTabIndex].icon"></span>
+      <div>
+        <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
+          <strong>{{ project.title }}</strong> / </a>
         <span>{{ tabs[currentTabIndex].name }}</span>
-        <span v-if='shownItemsCount !== 0' class='badge badge-light'>{{ shownItemsCount }}</span>
-      </a>
-      <div title='Change Theme' @click='changeTheme' class='theme-changer'></div>
+        <span v-if='shownItemsCount !== 0' class='badge badge-dark'>{{ shownItemsCount }}</span>
+      </div>
+      <span title='Change Theme' @click='changeTheme' class='theme-changer'></span>
     </div>
 
     <div class="sidebar-lower">
- 
+
       <div class="static-side">
-   
+
         <ul class="tabs">
-          <li v-for="( tab, index ) in tabs" v-if="index === 0 || projectID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]"
-            @click="getTabData(currentTabIndex = index), sidebarActive=true" :disabled="tab.disabled">
+          <li v-for="( tab, index ) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" :title="tab.name" class="tablinks"
+            :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarActive=true"
+            :disabled="tab.disabled">
           </li>
         </ul>
 
@@ -34,26 +36,24 @@
         </div>
 
       </div>
-   
+
       <div class="sidebar-content" :class="{ collapsed: !sidebarActive }">
         <div class="sidebar-body">
           <div class="form-filter">
             <form class="form-block">
-              <div class="search">
+              <div class="search custom-modern">
                 <span class="fas fa-search"></span>
                 <input class="form-control mr-sm-2 hidden-md-down darktheme" v-model.trim="searchData" type="search" placeholder="Search"
                   aria-label="Search">
               </div>
             </form>
             <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-              
-              
 
-     <b-form-group>
-      <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-      </b-form-checkbox-group>
-    </b-form-group>
-              
+              <b-form-group>
+                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+                </b-form-checkbox-group>
+              </b-form-group>
+
               <!-- <label v-for='f in radioFilter' :key='f.value'>
                 <input type="checkbox" name="check" :value="f.value" v-model="invokeFilterType">
                 <span class="label-text">{{f.text}}</span>
@@ -73,9 +73,9 @@
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
                   <td>
-                    <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
+                    <span @click="editItemButton(item)" class="td-icons fas fa-edit" title="Edit Item"></span>
                   </td>
-                  <td @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
+                  <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
                   <td v-if="item.haveUnseenFeed ==='true'">
                     <span title="Unread" class="badge badge-primary badge-pill">1</span>
                   </td>
@@ -120,11 +120,14 @@ export default {
       sidebarActive: true,
       searchData: "",
       currentTabIndex: 0,
-      projectID: undefined,
+      project: {
+        title: undefined,
+        id: undefined
+      },
       activePopup: false,
       activeItem: undefined,
       adminFilter: true,
-      selectedFilter: [],
+      selectedFilter: ["as"],
       radioFilter: [
         {
           text: "Created",
@@ -158,21 +161,24 @@ export default {
           isAdmin: true
         }
       ],
-      activeArray: [],
-      invokeFilterType: "as"
+      activeArray: []
+      // invokeFilterType: "as"
     };
   },
   watch: {
-    invokeFilterType(val, oldVal) {
-      console.log(val);
-      delete this.tabs[this.currentTabIndex].itemIndex;
-      this.activeItem = undefined;
-      this.getTabData();
-    },
+    // invokeFilterType(val, oldVal) {
+    //   console.log(val);
+    //   delete this.tabs[this.currentTabIndex].itemIndex;
+    //   this.activeItem = undefined;
+    //   this.getTabData();
+    // },
     getActiveArray(val, oldVal) {
       this.activeArray = val;
     },
     selectedFilter() {
+      //   console.log(val);
+      //   delete this.tabs[this.currentTabIndex].itemIndex;
+      //   this.activeItem = undefined;
       this.getFilterData();
     },
     currentTabIndex(val) {
@@ -188,13 +194,7 @@ export default {
     adminFilter(val) {
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
-      this.actionTabDataPeople();
-    },
-    activeItem(val) {
-      if (this.currentTabIndex === 0) {
-        this.projectID = val;
-        // this.currentTabIndex = 1;
-      }
+      this.actionTabDataTeam();
     },
     sidebarActive(val) {
       store.commit("mainFocused", !val);
@@ -202,45 +202,28 @@ export default {
     }
   },
   methods: {
-    //REMOVE TTS() LATER
-    // tts() {
-    //   store.commit('modalStatus', {
-    //     active: true,
-    //     message: 'no comment'
-    //   })
-    //   // console.log('s');
-    // },
+    selectAndSet(item) {
+      this.selectItem(item.id);
+      this.activeItem = item.id;
+      if (this.currentTabIndex === 0) {
+        this.project = item;
+        this.currentTabIndex = 1;
+        this.getTabData();
+      }
+    },
     getTabData() {
+      // console.log('request data');
       let index = this.currentTabIndex;
-      // let type = this.invokeFilterType;
-      // let s = type === null ? "assigned" : "created";
-      // let t = this.tabs[index].name === "Issues" ? "bugfix" : "task";
-      // let a = "false";
-      // switch (type) {
-      //   case "cr":
-      //     s = "created";
-      //     break;
-      //   case "as":
-      //     s = "assigned";
-      //     break;
-      //   case "ar":
-      //     a = "true";
-      //     break;
-      //   case "all":
-      //     s = "all";
-      //     break;
-      // }
       switch (index) {
-        // case 0:
-        case 3:
-          this.actionTabDataPeople();
-          break;
         case 0:
           this.actionTabDataProject();
           break;
         case 1:
         case 2:
           this.getFilterData();
+          break;
+        case 3:
+          this.actionTabDataTeam();
           break;
       }
       this.setActiveArray();
@@ -261,7 +244,7 @@ export default {
     actionTabDataTask(cr, as, ar) {
       store.dispatch("getUserAllTasks", {
         index: this.currentTabIndex,
-        pro_id: this.projectID,
+        pro_id: this.project.id,
         created: cr,
         assigned: as,
         archived: ar
@@ -270,18 +253,13 @@ export default {
     actionTabDataProject() {
       store.dispatch("getUserWork", {
         index: this.currentTabIndex
-        // state: s,
-        // type: t,
-        // archived: a
       });
     },
-    actionTabDataPeople() {
+    actionTabDataTeam() {
       let i = this.currentTabIndex;
-      let name = i === 0 ? "getUserCompanies" : "getUserTeams";
-      store.dispatch(name, {
+      store.dispatch("getUserTeams", {
         index: i,
         admin: this.tabs[i].isAdmin
-        // comid: this.getprojectID,
       });
     },
     showSubFilter() {
@@ -306,15 +284,15 @@ export default {
     setActiveArray() {
       this.activeArray = this.getActiveArray;
     },
-    userOptions() {
-      alert("Avatar Kliknut");
-    },
     signOut() {
       window.localStorage.removeItem("sid");
       api.sessionActive();
     },
     mouseOverPopup(val) {
       this.activePopup = val;
+    },
+    userOptions() {
+      alert("Avatar Kliknut");
     },
     changeTheme() {
       // console.log(val);
@@ -345,13 +323,13 @@ export default {
       return filtered;
     }
   },
-  directives: {
-    focus: {
-      inserted(el) {
-        el.focus();
-      }
-    }
-  },
+  // directives: {
+  //   focus: {
+  //     inserted(el) {
+  //       el.focus();
+  //     }
+  //   }
+  // },
   mounted() {
     let sidebarActive = window.sessionStorage.sidebarActive;
     if (sidebarActive !== undefined) {
@@ -362,10 +340,15 @@ export default {
         console.log("Browser Storage is invalid " + e);
       }
     }
+    // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
       index: this.currentTabIndex
     });
+    // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
+    // SET TASK VIEW IF ONLY ONE PROJECT
+    if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1)
+      selectAndSet(this.itemsFiltered[0]);
   }
 };
 </script>
@@ -477,8 +460,8 @@ export default {
 }
 
 .sidebar-content.collapsed *,
-.sidebar-header.collapsed > a,
-.sidebar-header.collapsed > div {
+.sidebar-header.collapsed > div,
+.sidebar-header.collapsed .theme-changer {
   display: none;
 }
 
@@ -504,7 +487,7 @@ export default {
 
 .sidebar-header {
   display: flex;
-  /* justify-content: center; */
+  justify-content: space-between;
   align-items: center;
   color: black;
   background: var(--ac-light-color);
@@ -514,10 +497,10 @@ export default {
   height: 45px;
 }
 
-.sidebar-header > a {
+/* .sidebar-header > a {
   display: block;
   margin: auto;
-}
+} */
 
 .sidebar-header > span {
   margin: auto 0 auto 20px;
@@ -587,20 +570,15 @@ h2 {
 
 .search input {
   text-indent: 25px;
-  border: 1px solid #636567bf;
-  border-radius: 0;
-  color: #fff;
-  background: #2d3436;
 }
 
-.search input.darkTheme:focus {
+/* .search input.darkTheme:focus {
   background: #2d3436;
-  color: #fff;
-}
+} */
 
-.search input.darkTheme::placeholder {
+/* .search input.darkTheme::placeholder {
   color: #888;
-}
+} */
 
 /* SEARCH END*/
 

@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-@import "./assets/css/CustomToggles.css";
+@import "./assets/css/CustomControls.css";
 @import "./assets/css/FormAuth.css";
 @import "./assets/css/SidebarTable.css";
 @import "./assets/css/DarkTheme.css";

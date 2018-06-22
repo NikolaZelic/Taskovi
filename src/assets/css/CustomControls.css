@@ -1,4 +1,5 @@
 /* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"); */
+
 /* @import url("https://use.fontawesome.com/releases/v5.0.13/css/all.css"); */
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
@@ -18,6 +19,20 @@
 .custom-checkbox {
   transform: scale(0.9);
 }
+
+input.custom-modern,
+textarea.custom-modern {
+  border: 1px solid #636567bf;
+  border-radius: 0;
+  color: #fff;
+  background: #2d3436;
+}
+
+input.custom-modern::placeholder,
+textarea.custom-modern::placeholder {
+  color: #888;
+}
+
 /* 
 body {
   padding: 50px;

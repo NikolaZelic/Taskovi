@@ -1,92 +1,97 @@
 <template>
-<div class='tmp-content'>
-  <div class="header">
-    <h1 class="display-4 disable-selection">Creating Task</h1>
-    <div class='exit-wrapper'>
-      <i class="exit-position far fa-times-circle"></i>
-      <div class="exit-text">ESC</div>
-    </div>
-  </div>
-
-  <div class="content">
-    <!-- PROJECT -->
-    <div v-show='!task' class="form-group" @click='refreshProjectError'>
-      <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"/>
-    </div>
-
-    <!-- TITLE -->
-    <div class="form-group">
-      <input v-model='title' type="text" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError' >
-    </div>
-
-    <!-- DESCRIPTION -->
-    <div class="form-group">
-      <!-- <label for="tsk_desc">Task description</label> -->
-      <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
-    </div>
-
-    <!-- DEADLINE -->
-    <div class="form-group" id='deadline'>
-      <span class="calender-icon" @click='calendarIconClicked'>
-            <i class="far fa-calendar-alt"></i>
-          </span>
-      <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave= 'mouseOverDeadline=0' >
-            <flat-pickr
-                ref='datepicker'
-                v-model="deadline"
-                :config="config"
-                id = 'flatPickrId'
-                class="deadline"
-                placeholder="Pick Deadline (optional)"
-                name="date">
-            </flat-pickr>
-            <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date' @click='deadline=null' >
-              <i class="fas fa-times-circle"></i>
+  <transition name="modal">
+    <div class="tmp-content-mask">
+      <div class="tmp-content-wrapper">
+        <div class='tmp-content'>
+          <div class="header">
+            <h1 class="display-4 disable-selection">Creating Task</h1>
+            <div class='exit-wrapper'>
+              <i class="exit-position far fa-times-circle" @click='closeModal'></i>
+              <!-- <div class="exit-text">ESC</div> -->
             </div>
-          </span>
-    </div>
+          </div>
 
-    <!-- ADING WORKERS -->
-    <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave= 'mouseOverAddWorker=0' >
-      <i :class="personClass" @click='selectUser'></i>
-      <i :class="teamClass" @click='selectTeam'></i>
-      <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
-      @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"/>
-      <!-- Dodavanje sebe na task -->
-      <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe' >
-        Just me
+          <div class="content">
+            <!-- PROJECT -->
+            <div v-show='!task' class="form-group" @click='refreshProjectError'>
+              <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
+                :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected" />
+            </div>
+
+            <!-- TITLE -->
+            <div class="form-group">
+              <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError'>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+              <!-- <label for="tsk_desc">Task description</label> -->
+              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
+            </div>
+
+            <!-- DEADLINE -->
+            <div class="form-group" id='deadline'>
+              <span class="calender-icon" @click='calendarIconClicked'>
+                <i class="far fa-calendar-alt"></i>
+              </span>
+              <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
+                <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick Deadline (optional)"
+                  name="date">
+                </flat-pickr>
+                <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
+                  @click='deadline=null'>
+                  <i class="fas fa-times-circle"></i>
+                </div>
+              </span>
+            </div>
+
+            <!-- ADING WORKERS -->
+            <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
+              <i :class="personClass" @click='selectUser'></i>
+              <i :class="teamClass" @click='selectTeam'></i>
+              <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
+                @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
+              />
+              <!-- Dodavanje sebe na task -->
+              <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe'>
+                Just me
+              </div>
+            </div>
+
+            <!-- TAGS -->
+            <div class="form-group">
+              <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags" open-direction="bottom"
+                :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
+                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                @search-change="searchTags">
+                <template slot="clear" slot-scope="props">
+                  <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
+                </template>
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+              </multiselect>
+            </div>
+
+            <!-- TaskAdd.vue -->
+            <div v-show='task' class="form-group">
+              <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
+                <option disabled value=null>Select Priorety</option>
+                <option value='1'>High</option>
+                <option value='2'>Low</option>
+                <option value='3'>Medium</option>
+              </select>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="form-group button-wrapper">
+              <button @click='createTask' type="submit" class="btn btn-success">Create</button>
+            </div>
+          </div>
+          <!-- cotent -->
+
+        </div>
       </div>
     </div>
-
-    <!-- TAGS -->
-    <div class="form-group">
-      <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags" open-direction="bottom" :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
-        :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" @search-change="searchTags">
-        <template slot="clear" slot-scope="props">
-              <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
-            </template><span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
-      </multiselect>
-    </div>
-
-    <!-- TaskAdd.vue -->
-    <div v-show='task' class="form-group">
-      <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
-            <option disabled value=null>Select Priorety</option>
-            <option value='1'>High</option>
-            <option value='2'>Low</option>
-            <option value='3'>Medium</option>
-          </select>
-    </div>
-
-    <!-- SUBMIT -->
-    <div class="form-group button-wrapper">
-      <button @click='createTask' type="submit" class="btn btn-success">Create</button>
-    </div>
-  </div>
-  <!-- cotent -->
-
-</div>
+  </transition>
 </template>
 
 <script>
@@ -319,16 +324,16 @@ export default {
         return (
           <span class="rec">
             {" "}
-            <span class="neoznacen">{pre}</span>
-            <span class="oznacen">{oznaceno}</span>
-            <span class="neoznacen">{posle}</span>
+            <span class="neoznacen"> {pre} </span>{" "}
+            <span class="oznacen"> {oznaceno} </span>{" "}
+            <span class="neoznacen"> {posle} </span>{" "}
           </span>
         );
       }
       return (
         <span class="rec">
           {" "}
-          <span class="neoznacen"> {ime} </span>
+          <span class="neoznacen"> {ime} </span>{" "}
         </span>
       );
     },
@@ -347,7 +352,7 @@ export default {
       return (
         <span class="rec">
           {" "}
-          <span class="neoznacen"> {ime} </span>
+          <span class="neoznacen"> {ime} </span>{" "}
         </span>
       );
     },
@@ -488,200 +493,20 @@ export default {
     },
     onProjectSelected() {
       store.dispatch("clleaneSuggestedProjects");
+    },
+    closeModal() {
+      store.commit("itemAddTaskReset");
     }
   }
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style><style scoped>
-.error-input {
-  border-bottom: 3px solid #ff0000;
-}
-.disable-selection {
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-}
-#adding-worker {
-  position: relative;
-}
-.add-myself {
-  background: #cc6600;
-  border: 3px solid #cc6600;
-  border-radius: 15px;
-  position: absolute;
-  right: 3px;
-  top: 6px;
-  cursor: pointer;
-}
-.cleane-deadline-wrapper {
-  position: absolute;
-  right: 10px;
-  top: 0px;
-}
-.sugestija {
-}
-
-.rec {
-  padding: 2px;
-}
-
-.neoznacen {
-}
-
-.oznacen {
-  color: #cc6600;
-}
-
-.unselected {
-  color: #6c757d !important;
-}
-
-.selected {
-  color: #eee !important;
-}
-
-.tmp-content {
-  position: fixed;
-  /* z-index: 9998; */
-  top: 0px;
-  right: 0px;
-  width: 600px;
-  /* height: 80%; */
-  background: #24262d;
-  color: #eee;
-  padding: 5px;
-  /* background-color: rgba(0, 0, 0, .5); */
-  /* display: table; */
-  /* transition: opacity .3s ease; */
-}
-
-.task-add-section {
-  padding-top: 50px;
-}
-
-.header {
-  position: relative;
-  margin: 20px;
-}
-
-.exit-wrapper {
-  right: 0px;
-  top: 0px;
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-}
-
-.exit-text {
-  position: absolute;
-  top: 50px;
-  right: 30px;
-  font-size: 20px;
-}
-
-.exit-position {
-  position: absolute;
-  right: 20px;
-  font-size: 50px;
-}
-
-.display-4 {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-}
-
-.content {
-  position: relative;
-  padding: 20px;
-  margin: 10px;
-  border: 2px solid #cc6600;
-  border-radius: 10px;
-}
-
-.calender-wrapper {
-  position: absolute;
-  left: 50px;
-  right: 0px;
-}
-
-.calender-icon {
-  position: absolute;
-  width: 10%;
-  left: 0px;
-  cursor: pointer;
-}
-
-.fa-calendar-alt {
-  font-size: 38px;
-}
-
-.form-control {
-  display: inline;
-  position: relative;
-  background-color: #2e3038;
-  color: #eee;
-}
-
-#tsk_deadline {
-  width: 97%;
-  cursor: pointer;
-}
-
-.fas {
-  font-size: 25px;
-  margin: 3px;
-  padding: 3px;
-  cursor: pointer;
-}
-
-.fas-selected {
-  color: #cc6600;
-  border-bottom: 2px solid #cc6600;
-}
-
-#auto-suggestion {
-  position: absolute;
-  display: inline-block;
-  right: 0px;
-  left: 85px;
-}
-
-.tags-wrapper {
-  font-size: 18px;
-}
-
-.tag {
-  background-color: #cc6600;
-  border: 1px solid #cc6600;
-  border-radius: 5px;
-}
-
-.tag-text {
-}
-
-.fa-times {
-  font-size: 16px;
-}
-
-.button-wrapper {
-  position: relative;
-  height: 30px;
-}
-
-.btn-success {
-  position: absolute;
-  right: 0px;
-  bottom: -13px;
-}
 </style>
 <style media="screen">
 .error-input66682 {
   border-bottom: 3px solid #ff0000;
 }
+
 .autosuggest__input,
 .autosuggest__input:focus {
   color: #eee;
@@ -770,7 +595,7 @@ export default {
 .tmp-content .multiselect--active .multiselect__option--highlight::after,
 .tmp-content .multiselect .multiselect__tag span,
 .tmp-content .multiselect .multiselect__tag {
-  background: #cc6600;
+  background: var(--ac-light-color);
 }
 
 .tmp-content .deadline {
@@ -781,5 +606,223 @@ export default {
 .tmp-content #deadline {
   position: relative;
   height: 40px;
+}
+</style>
+
+<style scoped>
+.error-input {
+  border-bottom: 3px solid #ff0000;
+}
+
+.disable-selection {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#adding-worker {
+  position: relative;
+}
+
+.add-myself {
+  background: var(--ac-light-color);
+  border: 3px solid var(--ac-light-color);
+  color: black;
+  border-radius: 15px;
+  position: absolute;
+  right: 3px;
+  top: 6px;
+  cursor: pointer;
+}
+
+.cleane-deadline-wrapper {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+}
+
+.sugestija {
+}
+
+.rec {
+  padding: 2px;
+}
+
+.neoznacen {
+}
+
+.oznacen {
+  color: var(--ac-light-color);
+}
+
+.unselected {
+  color: #6c757d !important;
+}
+
+.selected {
+  color: #eee !important;
+}
+
+.tmp-content {
+  width: 600px;
+  /* color: #eee; */
+}
+
+.tmp-content-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.tmp-content-wrapper {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-add-section {
+  padding-top: 50px;
+}
+
+.header {
+  position: relative;
+  padding: 20px 0 0;
+  border-radius: 15px 15px 0 0;
+  background: var(--ac-color);
+  color: black;
+}
+
+.exit-wrapper {
+  right: 0px;
+  top: 0px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.exit-text {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  font-size: 20px;
+}
+
+.exit-position {
+  position: absolute;
+  right: 20px;
+  font-size: 30px;
+}
+
+.display-4 {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  position: relative;
+  padding: 20px;
+  background: #24262d;
+  border-radius: 0 0 15px 15px;
+  padding: 15px;
+}
+
+.calender-wrapper {
+  position: absolute;
+  left: 50px;
+  right: 0px;
+}
+
+.calender-icon {
+  position: absolute;
+  width: 10%;
+  left: 0px;
+  cursor: pointer;
+}
+
+.fa-calendar-alt {
+  font-size: 38px;
+}
+
+.form-control {
+  display: inline;
+  position: relative;
+  background-color: #2e3038;
+  color: #eee;
+}
+
+#tsk_deadline {
+  width: 97%;
+  cursor: pointer;
+}
+
+.fas {
+  font-size: 25px;
+  margin: 3px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.fas-selected {
+  color: var(--ac-light-color);
+  border-bottom: 2px solid var(--ac-light-color);
+}
+
+#auto-suggestion {
+  position: absolute;
+  display: inline-block;
+  right: 0px;
+  left: 85px;
+}
+
+.tags-wrapper {
+  font-size: 18px;
+}
+
+.tag {
+  background-color: var(--ac-light-color);
+  border: 1px solid var(--ac-light-color);
+  border-radius: 5px;
+}
+
+.tag-text {
+}
+
+.fa-times {
+  font-size: 16px;
+}
+
+.button-wrapper {
+  position: relative;
+  height: 30px;
+}
+
+.btn-success {
+  position: absolute;
+  right: 0px;
+  bottom: -13px;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>

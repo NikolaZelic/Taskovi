@@ -48,20 +48,6 @@ const actions = {
     });
   },
 
-  // getUserCompanies(commit, params) {
-  //   api.getUserCompanies(params.admin).then(r => {
-  //     store.commit('setSidebarData', {
-  //       index: params.index,
-  //       data: r.data.data
-  //     });
-  //   }).catch(e => {
-  //     store.commit("modalError", {
-  //       active: true,
-  //       message: '' + e,
-  //     });
-  //   });
-  // },
-
   getUserTeams(commit, params) {
     api.getUserTeams(params.index, params.admin).then(r => {
       store.commit('setSidebarData', {
@@ -112,8 +98,7 @@ const mutations = {
     store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    // console.log('2')
-    store.state.sidebarItemSelection = store.state.sidebarItemSelection;  // Ovo stvarno radi !!!
+    store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!!
   },
   itemEditClick: (state, params) => {
     store.state.itemAction.edit = params.id;
@@ -129,6 +114,9 @@ const mutations = {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = params.id;
+  },
+  itemAddTaskReset: (state, params) => {
+    store.state.itemAction.addTask = undefined;
   },
   mainFocused: (state, params) => {
     store.state.mainFocused = params;
