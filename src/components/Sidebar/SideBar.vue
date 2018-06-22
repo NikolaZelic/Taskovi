@@ -9,16 +9,14 @@
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='shownItemsCount !== 0' class='badge badge-light'>{{ shownItemsCount }}</span>
       </a>
-      <span @click='changeTheme'>DS</span>
+      <div title='Change Theme' @click='changeTheme' class='theme-changer'></div>
     </div>
-    <div class="sidebar-lower">
-      <div class="static-side">
-        <!-- <svg height="3px" width="100%">
-         <line stroke-linecap="round" x1="10%" y1="0" x2="90%" y2="0" style="stroke: #666; stroke-width: 1;"></line>
-       </svg> -->
 
+    <div class="sidebar-lower">
+ 
+      <div class="static-side">
+   
         <ul class="tabs">
-          <!-- :tabindex="index+1" -->
           <li v-for="( tab, index ) in tabs" v-if="index === 0 || projectID !== undefined" :key="index" :title="tab.name" class="tablinks" :class="[{active:currentTabIndex === index}, tab.icon]"
             @click="getTabData(currentTabIndex = index), sidebarActive=true" :disabled="tab.disabled">
           </li>
@@ -36,6 +34,7 @@
         </div>
 
       </div>
+   
       <div class="sidebar-content" :class="{ collapsed: !sidebarActive }">
         <div class="sidebar-body">
           <div class="form-filter">
@@ -47,10 +46,19 @@
               </div>
             </form>
             <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
-              <label v-for='f in radioFilter' :key='f.value'>
-                <input type="radio" name="check" :value="f.value" v-model="invokeFilterType">
-                <span class="label-text">{{f.name}}</span>
-              </label>
+              
+              
+
+     <b-form-group>
+      <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+      </b-form-checkbox-group>
+    </b-form-group>
+              
+              <!-- <label v-for='f in radioFilter' :key='f.value'>
+                <input type="checkbox" name="check" :value="f.value" v-model="invokeFilterType">
+                <span class="label-text">{{f.text}}</span>
+              </label> -->
+
             </form>
             <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
               <label>
@@ -65,7 +73,7 @@
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
                   <td>
-                    <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item, activeItem = item.id)"></span>
+                    <span class="td-icons fas fa-edit" title="Edit Item" @click="editItemButton(item)"></span>
                   </td>
                   <td @click='selectItem(item.id, activeItem = item.id)' class='td-flex'>{{ item.title }}</td>
                   <td v-if="item.haveUnseenFeed ==='true'">
@@ -116,22 +124,19 @@ export default {
       activePopup: false,
       activeItem: undefined,
       adminFilter: true,
+      selectedFilter: [],
       radioFilter: [
         {
-          name: "Created",
+          text: "Created",
           value: "cr"
         },
         {
-          name: "Assigned",
+          text: "Assigned",
           value: "as"
         },
         {
-          name: "Archived",
+          text: "Archived",
           value: "ar"
-        },
-        {
-          name: "All",
-          value: "all"
         }
       ],
       tabs: [
@@ -159,6 +164,7 @@ export default {
   },
   watch: {
     invokeFilterType(val, oldVal) {
+      console.log(val);
       delete this.tabs[this.currentTabIndex].itemIndex;
       this.activeItem = undefined;
       this.getTabData();
@@ -166,10 +172,18 @@ export default {
     getActiveArray(val, oldVal) {
       this.activeArray = val;
     },
+    selectedFilter() {
+      this.getFilterData();
+    },
     currentTabIndex(val) {
       // this.sidebarActive = true; // MAYBE USED LATER FOR ACTIVATING SIDE FROM MAIN
       let tabItem = this.tabs[val].itemIndex;
-      this.activeItem = tabItem === tabItem;
+      // console.log(tabItem);
+      // console.log(this.activeItem);
+
+      this.activeItem = tabItem; // >?
+      // console.log(tabItem);
+      // console.log(this.activeItem)
     },
     adminFilter(val) {
       let i = this.currentTabIndex;
@@ -177,7 +191,10 @@ export default {
       this.actionTabDataPeople();
     },
     activeItem(val) {
-      if (this.currentTabIndex === 0) this.projectID = val;
+      if (this.currentTabIndex === 0) {
+        this.projectID = val;
+        // this.currentTabIndex = 1;
+      }
     },
     sidebarActive(val) {
       store.commit("mainFocused", !val);
@@ -195,38 +212,44 @@ export default {
     // },
     getTabData() {
       let index = this.currentTabIndex;
-      let type = this.invokeFilterType;
-      let s = type === null ? "assigned" : "created";
-      let t = this.tabs[index].name === "Issues" ? "bugfix" : "task";
-      let a = "false";
-      switch (type) {
-        case "cr":
-          s = "created";
-          break;
-        case "as":
-          s = "assigned";
-          break;
-        case "ar":
-          a = "true";
-          break;
-        case "all":
-          s = "all";
-          break;
-      }
+      // let type = this.invokeFilterType;
+      // let s = type === null ? "assigned" : "created";
+      // let t = this.tabs[index].name === "Issues" ? "bugfix" : "task";
+      // let a = "false";
+      // switch (type) {
+      //   case "cr":
+      //     s = "created";
+      //     break;
+      //   case "as":
+      //     s = "assigned";
+      //     break;
+      //   case "ar":
+      //     a = "true";
+      //     break;
+      //   case "all":
+      //     s = "all";
+      //     break;
+      // }
       switch (index) {
         // case 0:
         case 3:
           this.actionTabDataPeople();
           break;
         case 0:
-          this.actionTabDataProject(s, t, a);
+          this.actionTabDataProject();
           break;
         case 1:
         case 2:
-          this.actionTabDataTask(s, t, a);
+          this.getFilterData();
           break;
       }
       this.setActiveArray();
+    },
+    getFilterData() {
+      let cr = this.selectedFilter.includes("cr");
+      let as = this.selectedFilter.includes("as");
+      let ar = this.selectedFilter.includes("ar");
+      this.actionTabDataTask(cr, as, ar);
     },
     selectItem(itemID) {
       this.tabs[this.currentTabIndex].itemIndex = itemID;
@@ -235,20 +258,21 @@ export default {
         id: itemID
       });
     },
-    actionTabDataTask(s, t, a) {
+    actionTabDataTask(cr, as, ar) {
       store.dispatch("getUserAllTasks", {
         index: this.currentTabIndex,
-        state: s,
-        type: t,
-        archived: a
+        pro_id: this.projectID,
+        created: cr,
+        assigned: as,
+        archived: ar
       });
     },
-    actionTabDataProject(s, t, a) {
+    actionTabDataProject() {
       store.dispatch("getUserWork", {
-        index: this.currentTabIndex,
-        state: s,
-        type: t,
-        archived: a
+        index: this.currentTabIndex
+        // state: s,
+        // type: t,
+        // archived: a
       });
     },
     actionTabDataPeople() {
@@ -257,7 +281,7 @@ export default {
       store.dispatch(name, {
         index: i,
         admin: this.tabs[i].isAdmin
-        // comid: this.getCompanyID,
+        // comid: this.getprojectID,
       });
     },
     showSubFilter() {
@@ -292,14 +316,13 @@ export default {
     mouseOverPopup(val) {
       this.activePopup = val;
     },
-    changeTheme(val) {
-      console.log(val);
+    changeTheme() {
+      // console.log(val);
     }
   },
   computed: {
     ...mapState({
       getTabIndex: "currentTabIndex"
-      // getCompanyID: state => state.modulecompany.id
     }),
     getActiveArray() {
       return store.getters.currentTabData;
@@ -412,7 +435,7 @@ export default {
 .tablinks.active {
   background: #24262d;
   color: yellow;
-  border-left: 3px solid yellow;
+  border-left: 3px solid var(--ac-light-color);
 }
 
 .tablinks:hover {
@@ -454,7 +477,8 @@ export default {
 }
 
 .sidebar-content.collapsed *,
-.sidebar-header.collapsed > a {
+.sidebar-header.collapsed > a,
+.sidebar-header.collapsed > div {
   display: none;
 }
 
@@ -483,7 +507,7 @@ export default {
   /* justify-content: center; */
   align-items: center;
   color: black;
-  background: #ffb037;
+  background: var(--ac-light-color);
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
@@ -628,16 +652,22 @@ label {
   margin: 0;
 }
 
+.theme-changer {
+  border-radius: 50%;
+  border: 1px solid #fff03799;
+  box-shadow: 0 0 2px #fff81d;
+  background: var(--main-bg-color);
+  height: 25px;
+  width: 25px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
 
 .fade-enter,
-  .fade-leave-to
-  /* .fade-leave-active below version 2.1.8 */
-
- {
+.fade-leave-to {
   opacity: 0;
 }
 </style>

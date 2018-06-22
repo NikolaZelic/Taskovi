@@ -192,7 +192,7 @@ export const api = {
   // ZX - Get items based on filter
   getUserWork(index, state, type, archived) {
     let link = '/users/tasks';
-    if (index === 0) link = '/projects';
+    if (index === 0) link = '/users/projects';
     // if (index === 0) link = '/users/projects';
     return axios.get(link, {
       params: {
@@ -205,13 +205,14 @@ export const api = {
   },
 
   // ZX - GET user tasks based on parent task
-  getUserAllTasks(state, type, archived) {
-    return axios.get('/users/alltasks', {
+  getUserAllTasks(params) {
+    return axios.get('/users/tasks', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
+        pro_id: params.pro_id,
+        created: params.created,
+        assigned: params.assigned,
+        archived: params.archived,
       }
     })
   },

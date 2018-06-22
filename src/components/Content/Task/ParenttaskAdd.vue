@@ -161,7 +161,7 @@ export default {
     ...mapState({
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
-      companyID: state => state.sidebarItemSelection[0]
+      projectID: state => state.sidebarItemSelection[0]
     }),
     proId() {
       if (this.$refs.projectref._data.currentItem == null) return null;
@@ -211,7 +211,7 @@ export default {
         } else if (this.projectSuggestionHaveChange == 1) {
           store.dispatch("suggestProjects", {
             searchStr: this.$refs.projectref._data.searchInput,
-            comId: this.companyID
+            comId: this.projectID
           });
           this.projectSuggestionHaveChange = 0;
         }
@@ -373,13 +373,13 @@ export default {
       // console.log('SUggest users');
       store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
-        comId: this.companyID
+        comId: this.projectID
       });
     },
     suggestTeams() {
       store.dispatch("suggestTeams", {
         searchStr: this.inputWorker,
-        comId: this.companyID
+        comId: this.projectID
       });
     },
 

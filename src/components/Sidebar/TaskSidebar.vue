@@ -2,9 +2,9 @@
   <table>
     <template v-for="(task,index) in tasks">
       <tr>
-        <td @click='expandParent(taskExpanded[index],index)'>
+        <!-- <td @click='expandParent(taskExpanded[index],index)'>
           <span class='fas fa-angle-right expandarrow' :class='{"expanded":taskExpanded[index]}'></span>
-        </td>
+        </td> -->
         <td @click='expandParent(taskExpanded[index],index)' class='parent-task'>{{task.title}} </td>
         <!-- <td @click='expandParent(task.taskExpanded,index)'><span class='fas fa-angle-right'
             :class='{"expanded":task.taskExpanded}'></span> </td>

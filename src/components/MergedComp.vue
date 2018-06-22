@@ -36,9 +36,7 @@
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
+import { store } from "@/store/index.js";
 import SideBar from "@/components/SideBar/Sidebar";
 
 import ChatElement from "@/components/Chat/ChatElement";
@@ -65,15 +63,9 @@ import ModalError from "@/components/Misc/ModalError";
 import ModalComplete from "@/components/Misc/ModalComplete";
 
 import UserOptions from "@/components/UserOptions";
-import {
-  api
-} from "@/api/index.js";
-import {
-  mapGetters
-} from "vuex";
-import {
-  mapState
-} from "vuex";
+import { api } from "@/api/index.js";
+import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -101,13 +93,13 @@ export default {
     return {
       editBtn: false,
       addBtn: false,
-      addTaskBtn: false,
-    }
+      addTaskBtn: false
+    };
   },
   created() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
-      this.$router.push('/auth');
+      this.$router.push("/auth");
       return;
     } else {
       api.sessionActive();
@@ -117,21 +109,21 @@ export default {
     modalStatus(val) {
       if (val === true) {
         setTimeout(function() {
-          store.commit('modalStatus', {
-            active: false,
-          })
+          store.commit("modalStatus", {
+            active: false
+          });
         }, 20000);
       }
     },
     itemEditButton(val) {
-      this.editBtn = val !== undefined
+      this.editBtn = val !== undefined;
     },
     itemAddButton(val) {
-      this.addBtn = val !== undefined
+      this.addBtn = val !== undefined;
     },
     itemAddTaskButton(val) {
-      this.addTaskBtn = val !== undefined
-    },
+      this.addTaskBtn = val !== undefined;
+    }
   },
   computed: {
     ...mapState({
@@ -141,20 +133,27 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
-      isFocus: state => state.mainFocused,
+      isFocus: state => state.mainFocused
     }),
     ...mapGetters({
-      isFocus: 'isFocus',
-      taskid: 'getTaskID'
+      isFocus: "isFocus",
+      taskid: "getTaskID"
     })
   },
   methods: {
-    checkShow(selectedTab, itemEdit = false, itemAdd = false, itemAddTask = false) {
-      return (selectedTab === this.selectedTab &&
+    checkShow(
+      selectedTab,
+      itemEdit = false,
+      itemAdd = false,
+      itemAddTask = false
+    ) {
+      return (
+        selectedTab === this.selectedTab &&
         itemEdit === this.editBtn &&
         itemAdd === this.addBtn &&
-        itemAddTask === this.addTaskBtn);
-    },
+        itemAddTask === this.addTaskBtn
+      );
+    }
   }
 };
 </script>
@@ -170,76 +169,79 @@ export default {
 
 
 <style lang="css">
-  #wrapper {
-    display: flex;
-    align-items: stretch;
-    flex-direction: column;
-    background-color: #24262d;
-      }
+#wrapper {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  background-color: #24262d;
+}
 
+.rightside {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #24262d;
+}
+
+.item-filter {
+  justify-content: unset;
+  flex-wrap: wrap;
+}
+
+.maincontent {
+  padding: 50px 30px 0;
+  flex: 1;
+  background-color: var(--main-bg-color);
+  color: var(--main-color);
+}
+
+.maincontent label {
+  color: var(--main-color);
+}
+
+.maincontent h1 {
+  text-align: center;
+  /* color: #fff */
+}
+
+@media only screen and (min-width: 1350px) {
   .rightside {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #24262d;
+    flex-direction: row;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  /* body {
+    font-size: 0.9rem;
+  }
+  td {
+    font-size: 1rem;
+  } */
+  #wrapper {
+    flex-direction: row;
+    min-height: 100vh;
+  }
+  /* SIDEBAR */
+  #wrapper > aside {
+    position: fixed;
+    height: 100vh;
+    width: 37%;
   }
 
   .item-filter {
-    justify-content: unset;
-    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  /* MAIN CONTENT */
+  #wrapper > .rightside {
+    width: 63%;
+    margin-left: 37%;
+    min-height: 100vh;
+    transition: all 0.4s ease;
   }
 
-  .maincontent {
-    padding: 50px 30px 0;
-    flex: 1;
-    background-color: var(--main-bg-color);
-    color: var(--main-color);
+  #wrapper > .rightside.focus {
+    margin-left: 70px;
+    transition: all 0.8s ease;
   }
-
-  .maincontent label {    
-    color: var(--main-color);
-  }
-
-  .maincontent h1 {
-    text-align: center;
-    /* color: #fff */
-  }
-
-  @media only screen and (min-width: 1350px) {
-    .rightside {
-      flex-direction: row;
-    }
-  }
-
-  @media only screen and (min-width: 900px) {
-    body {
-      font-size: 0.9rem;
-    }
-    #wrapper {
-      flex-direction: row;
-    }
-    /* SIDEBAR */
-    #wrapper>aside {
-      position: fixed;
-      height: 100vh;
-      width: 37%;
-    }
-
-    .item-filter {
-      justify-content: space-around;
-    }
-    /* MAIN CONTENT */
-    #wrapper>.rightside {
-      width: 63%;
-      margin-left: 37%;
-      min-height: 100vh;
-      transition: all 0.4s ease;
-    }
-
-    #wrapper>.rightside.focus{
-      margin-left: 70px;
-      transition: all 0.8s ease;
-    }
-  }
-
+}
 </style>

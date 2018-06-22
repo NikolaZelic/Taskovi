@@ -34,6 +34,10 @@ export const store = new Vuex.Store({
     mainFocused: undefined,
     sidebarTabData: [],
     sidebarItemSelection: [],
+    theme: {
+      back: '--sec-bg-color',
+      front: '--sec-color'
+    },
     modalStatus: {
       active: false,
       ok: true,

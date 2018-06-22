@@ -35,7 +35,7 @@ const actions = {
   },
 
   getUserAllTasks(commit, params) {
-    api.getUserAllTasks(params.state, params.type, params.archived).then(r => {
+    api.getUserAllTasks(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -112,6 +112,7 @@ const mutations = {
     store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
+    // console.log('2')
     store.state.sidebarItemSelection = store.state.sidebarItemSelection;  // Ovo stvarno radi !!!
   },
   itemEditClick: (state, params) => {
