@@ -10,12 +10,12 @@ import router from '../router/index.js'
 
 export const api = {
 
-  // by Zelic - poziva se u ParenttaskAdd
+  // by Zelic - poziva se u TaskAdd
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
 
-  // by Zelic - Poziva se u ParenttaskAdd.vue
+  // by Zelic - Poziva se u TaskAdd.vue
   createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
     return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
       title: title,
@@ -42,7 +42,7 @@ export const api = {
     });
   },
 
-  // by Zelic - koristi se u ParenttaskAdd.vue, TaskAdd.vue
+  // by Zelic - koristi se u TaskAdd.vue, TaskAdd.vue
   suggestGroup(grpType, searchStr, comId) {
     return axios.get('groups', {
       params: {
@@ -55,7 +55,7 @@ export const api = {
     });
   },
 
-  // by Zelic - Koristi se u ParenttaskAdd.vue
+  // by Zelic - Koristi se u TaskAdd.vue
   suggestTags(tagFor, searchStr) {
     return axios.get("tags", {
       params: {

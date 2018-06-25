@@ -15,7 +15,7 @@
         <!-- <company-add v-if="checkShow(0,false,true)"/> -->
         <project-add v-if="checkShow(0,false,true)"/>
         <task-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)"/>
-        <parenttask-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
+        <step-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
         <team-add v-if="checkShow(3,false,true)"/>
 
         <!-- Viewing existing -->
@@ -23,9 +23,6 @@
         <project-view v-else-if='checkShow(0,false,false)'/>
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)'/>
         <team-view v-else-if='checkShow(3,false,false)'/>
-
-        <!-- <parenttask-add/> -->
-        <!-- <task-add/> -->
 
       </div>
       <chat-element v-if="taskid != -1"/>
@@ -42,10 +39,10 @@ import SideBar from "@/components/SideBar/Sidebar";
 import ChatElement from "@/components/Chat/ChatElement";
 
 import TaskView from "@/components/Content/Task/TaskView";
-import TaskAdd from "@/components/Content/Task/TaskAdd";
+import StepAdd from "@/components/Content/Task/StepAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
 
-import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
+import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import TeamView from "@/components/Content/Team/TeamView";
 import TeamAdd from "@/components/Content/Team/TeamAdd";
@@ -72,7 +69,7 @@ export default {
     SideBar,
     ChatElement,
     TaskView,
-    TaskAdd,
+    StepAdd,
     TaskEdit,
     ProjectAdd,
     ProjectView,
@@ -84,7 +81,7 @@ export default {
     TeamEdit,
     TeamView,
     TeamAdd,
-    ParenttaskAdd,
+    TaskAdd,
     UserOptions,
     ModalError,
     ModalComplete

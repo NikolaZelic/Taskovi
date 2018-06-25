@@ -5,7 +5,7 @@ import StartPage from '@/components/StartPage';
 // REMOVE BELOW IN FINAL
 import UserOptions from '@/components/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
-import ParenttaskAdd from '@/components/Content/Task/ParenttaskAdd';
+import StepAdd from '@/components/Content/Task/StepAdd';
 
 Vue.use(Router);
 export default new Router({
@@ -28,8 +28,8 @@ export default new Router({
     path: '/taskadd',
     component: TaskAdd
   }, {
-    path: '/parenttaskadd',
-    component: ParenttaskAdd
+    path: '/stepadd',
+    component: StepAdd
   }],
   mode: 'history',
 });

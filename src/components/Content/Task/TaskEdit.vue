@@ -1,5 +1,5 @@
 <script>
-import ParenttaskAdd from "@/components/Content/Task/ParenttaskAdd";
+import TaskAdd from "@/components/Content/Task/TaskAdd";
 import {
   api
 } from "@/api/index";
@@ -8,7 +8,7 @@ import {
 } from "@/store/index";
 
 export default {
-  mixins: [ParenttaskAdd],
+  mixins: [TaskAdd],
   data() {
     return {
       task: true,
