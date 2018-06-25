@@ -1,7 +1,7 @@
 <template>
 <div class='tmp-content'>
   <div class="header">
-    <h1 class="display-4 disable-selection">Creating Task</h1>
+    <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
     <div class='exit-wrapper'>
       <i class="exit-position far fa-times-circle"></i>
       <div class="exit-text">ESC</div>
@@ -10,7 +10,7 @@
 
   <div class="content">
     <!-- PROJECT -->
-    <div v-show='!task' class="form-group" @click='refreshProjectError'>
+    <div v-show='!task && !edit' class="form-group" @click='refreshProjectError'>
       <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
       :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"
       />
@@ -148,6 +148,7 @@ export default {
       inputTagHaveChange: 0,
       tagSearchStr: null,
       task: false,
+      edit: false,
       selectedPrioretyClass: 'unselected form-control',
       suggestedProjets: [],
       inputPropsProject: {
@@ -160,6 +161,7 @@ export default {
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
       titleClass: 'form-control',
+      componentTitle: 'Creating Task',
 
     }
   },

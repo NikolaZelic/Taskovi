@@ -13,6 +13,8 @@ export default {
     return {
       task: true,
       haveChange: false,
+      edit: true,
+      componentTitle: 'Edit Task',
     };
   },
   computed: {
