@@ -10,7 +10,6 @@
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='shownItemsCount !== 0' class='badge badge-dark'>{{ shownItemsCount }}</span>
       </div>
-      <span title='Change Theme' @click='changeTheme' class='theme-changer'></span>
     </div>
 
     <div class="sidebar-lower">
@@ -25,6 +24,7 @@
         </ul>
 
         <div class="user-sidebar">
+      <span title='Change Theme' @click='changeTheme' class='theme-changer'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
           <transition name='fade'>
             <user-popup v-show='activePopup' :class='{show: activePopup}' />
@@ -43,7 +43,7 @@
             <form class="form-block">
               <div class="search custom-modern">
                 <span class="fas fa-search"></span>
-                <input class="form-control mr-sm-2 hidden-md-down darktheme" v-model.trim="searchData" type="search" placeholder="Search"
+                <input class="form-control mr-sm-2 hidden-md-down darkTheme" v-model.trim="searchData" type="search" placeholder="Search"
                   aria-label="Search">
               </div>
             </form>
@@ -150,16 +150,16 @@ export default {
         {
           name: "Tasks",
           icon: "fas fa-tasks"
-        },
-        {
-          name: "Issues",
-          icon: "fas fa-bug"
-        },
-        {
-          name: "Teams",
-          icon: "fas fa-users",
-          isAdmin: true
         }
+        // {
+        //   name: "Issues",
+        //   icon: "fas fa-bug"
+        // }
+        // {
+        //   name: "Teams",
+        //   icon: "fas fa-users",
+        //   isAdmin: true
+        // }
       ],
       activeArray: []
       // invokeFilterType: "as"
@@ -386,11 +386,6 @@ export default {
   color: #fff;
 }
 
-.static-side span:hover {
-  background: #ccc;
-  color: #333;
-}
-
 .static-side > * {
   padding: 5px 0;
 }
@@ -421,7 +416,8 @@ export default {
   border-left: 3px solid var(--ac-light-color);
 }
 
-.tablinks:hover {
+.tablinks:hover,
+.static-side span:hover {
   background: #eadc903b;
   color: var(--ac-light-color);
   /* border-left: 3px solid #a7a7a7; */
@@ -460,8 +456,9 @@ export default {
 }
 
 .sidebar-content.collapsed *,
-.sidebar-header.collapsed > div,
-.sidebar-header.collapsed .theme-changer {
+.sidebar-header.collapsed > div
+/* .sidebar-header.collapsed .theme-changer  */
+ {
   display: none;
 }
 
@@ -637,6 +634,8 @@ label {
   background: var(--main-bg-color);
   height: 25px;
   width: 25px;
+  margin: 20px auto;
+  /* padding: auto; */
 }
 
 .fade-enter-active,

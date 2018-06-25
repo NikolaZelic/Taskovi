@@ -495,7 +495,7 @@ export default {
       store.dispatch("clleaneSuggestedProjects");
     },
     closeModal() {
-      store.commit("itemAddTaskReset");
+      store.commit("itemAddAllReset");
     }
   }
 };
