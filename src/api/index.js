@@ -190,22 +190,22 @@ export const api = {
   // },
 
   // ZX - Get items based on filter
-  getUserWork(index, state, type, archived) {
-    let link = '/users/tasks';
-    if (index === 0) link = '/users/projects';
+  getUserProjects(index, state, type, archived) {
+    // let link = '/users/tasks';
     // if (index === 0) link = '/users/projects';
-    return axios.get(link, {
+    // if (index === 0) link = '/users/projects';
+    return axios.get('/users/projects', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
+        // state: state,
+        // type: type,
+        // archived: archived,
       }
     });
   },
 
-  // ZX - GET user tasks based on parent task
-  getUserAllTasks(params) {
+  // ZX - GET user tasks based on parent task?? is it used?
+  getUserTaskList(params) {
     return axios.get('/users/tasks', {
       params: {
         sid: window.localStorage.sid,

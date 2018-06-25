@@ -38,10 +38,10 @@ export default {
         return;
 
       var usrid = null;
-      var teamid = null;
-      if( this.teamSelect == 1 )
-        teamid = this.choosenWorker.id;
-      else
+       var teamid = null;
+      // if( this.teamSelect == 1 )
+      //   teamid = this.choosenWorker.id;
+      // else
         usrid = this.choosenWorker.id;
 
       var tagarray = this.selectedTags.map( e => e.id );
