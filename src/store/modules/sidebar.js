@@ -20,8 +20,8 @@ const actions = {
     });
   },
 
-  getUserWork(commit, params) {
-    api.getUserWork(params.index, params.state, params.type, params.archived).then(r => {
+  getUserProjects(commit, params) {
+    api.getUserProjects(params.index, params.state, params.type, params.archived).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -34,8 +34,8 @@ const actions = {
     });
   },
 
-  getUserAllTasks(commit, params) {
-    api.getUserAllTasks(params).then(r => {
+  getUserTaskList(commit, params) {
+    api.getUserTaskList(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -48,19 +48,19 @@ const actions = {
     });
   },
 
-  getUserTeams(commit, params) {
-    api.getUserTeams(params.index, params.admin).then(r => {
-      store.commit('setSidebarData', {
-        index: params.index,
-        data: r.data.data
-      });
-    }).catch(e => {
-      store.commit("modalError", {
-        active: true,
-        message: '' + e,
-      });
-    });
-  },
+  // getUserTeams(commit, params) {
+  //   api.getUserTeams(params.index, params.admin).then(r => {
+  //     store.commit('setSidebarData', {
+  //       index: params.index,
+  //       data: r.data.data
+  //     });
+  //   }).catch(e => {
+  //     store.commit("modalError", {
+  //       active: true,
+  //       message: '' + e,
+  //     });
+  //   });
+  // },
   itemEditClick(commit, params) {
     store.commit('itemEditClick', {
       id: params.id,

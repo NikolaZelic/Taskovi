@@ -1,83 +1,90 @@
 <template>
-<div class='tmp-content'>
-  <div class="header">
-    <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
-    <div class='exit-wrapper'>
-      <i class="exit-position far fa-times-circle"></i>
-      <div class="exit-text">ESC</div>
-    </div>
-  </div>
-
-  <div class="content">
-            <!-- TITLE -->
-            <div class="form-group">
-              <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError'>
+  <transition name="modal">
+    <div class="tmp-content-mask">
+      <div class="tmp-content-wrapper">
+        <div class='tmp-content'>
+          <div class="header">
+            <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
+            <div class='exit-wrapper'>
+              <i class="exit-position far fa-times-circle"></i>
+              <div class="exit-text">ESC</div>
             </div>
+          </div>
 
-            <!-- DESCRIPTION -->
-            <div class="form-group">
-              <!-- <label for="tsk_desc">Task description</label> -->
-              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
-            </div>
 
-            <!-- DEADLINE -->
-            <div class="form-group" id='deadline'>
-              <span class="calender-icon" @click='calendarIconClicked'>
-                <i class="far fa-calendar-alt"></i>
-              </span>
-              <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
-                <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick Deadline (optional)"
-                  name="date">
-                </flat-pickr>
-                <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
-                  @click='deadline=null'>
-                  <i class="fas fa-times-circle"></i>
+            <div class="content">
+
+              <!-- TITLE -->
+              <div class="form-group">
+                <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError'>
+              </div>
+
+              <!-- DESCRIPTION -->
+              <div class="form-group">
+                <!-- <label for="tsk_desc">Task description</label> -->
+                <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
+              </div>
+
+              <!-- DEADLINE -->
+              <div class="form-group" id='deadline'>
+                <span class="calender-icon" @click='calendarIconClicked'>
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+                <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
+                  <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick Deadline (optional)"
+                    name="date">
+                  </flat-pickr>
+                  <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
+                    @click='deadline=null'>
+                    <i class="fas fa-times-circle"></i>
+                  </div>
+                </span>
+              </div>
+
+              <!-- ADING WORKERS -->
+              <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
+                <i :class="personClass" @click='selectUser'></i>
+                <i :class="teamClass" @click='selectTeam'></i>
+                <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
+                  @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
+                />
+                <!-- Dodavanje sebe na task -->
+                <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe'>
+                  Just me
                 </div>
-              </span>
-            </div>
+              </div>
 
-            <!-- ADING WORKERS -->
-            <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
-              <i :class="personClass" @click='selectUser'></i>
-              <i :class="teamClass" @click='selectTeam'></i>
-              <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
-                @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
-              />
-              <!-- Dodavanje sebe na task -->
-              <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe'>
-                Just me
+              <!-- TAGS -->
+              <div class="form-group">
+                <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags" open-direction="bottom"
+                  :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
+                  :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                  @search-change="searchTags">
+                  <template slot="clear" slot-scope="props">
+                    <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
+                  </template>
+                  <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                </multiselect>
+              </div>
+
+              <!-- TaskAdd.vue -->
+              <div v-show='task' class="form-group">
+                <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
+                  <option disabled value=null>Select Priorety</option>
+                  <option value='1'>High</option>
+                  <option value='2'>Low</option>
+                  <option value='3'>Medium</option>
+                </select>
+              </div>
+
+              <!-- SUBMIT -->
+              <div class="form-group button-wrapper">
+                <button @click='createTask' type="submit" class="btn btn-success">Create</button>
               </div>
             </div>
-
-            <!-- TAGS -->
-            <div class="form-group">
-              <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags" open-direction="bottom"
-                :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
-                @search-change="searchTags">
-                <template slot="clear" slot-scope="props">
-                  <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
-                </template>
-                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
-              </multiselect>
-            </div>
-
-            <!-- TaskAdd.vue -->
-            <div v-show='task' class="form-group">
-              <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
-                <option disabled value=null>Select Priorety</option>
-                <option value='1'>High</option>
-                <option value='2'>Low</option>
-                <option value='3'>Medium</option>
-              </select>
-            </div>
-
-            <!-- SUBMIT -->
-            <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-success">Create</button>
-            </div>
+        </div>
+      </div>
     </div>
-  </div>
 </transition>
 </template>
 

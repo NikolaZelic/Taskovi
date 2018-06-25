@@ -17,13 +17,12 @@
 
 <script>
 import LoginPage from "@/components/Auth/LoginPage";
-// Nisam siguran sta je ovaj import tu. Zelic.
-// import RegistrationPage from "@/components/Auth/RegistrationPage";
+import RegistrationPage from "@/components/Auth/RegistrationPage";
 import { api } from "@/api/index.js";
 export default {
   components: {
     LoginPage,
-    // RegistrationPage
+    RegistrationPage
   },
   data() {
     return {

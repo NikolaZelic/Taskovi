@@ -28,7 +28,7 @@ export default {
   },
   computed:{
     ...mapState({
-      scrollDownMess: state => state.modulechat.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
+      scrollDownMess: state => state.modulefeed.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
     }),
     name(){return window.localStorage.name},
     surname(){return window.localStorage.surname}
@@ -92,10 +92,6 @@ export default {
 }
 .cont .attach{
   color:#139cbf;
-}
-
-.cont .message {
-  /* color: black; */
 }
 
 .message-body {

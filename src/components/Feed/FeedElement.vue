@@ -1,9 +1,9 @@
 <template>
-<div class="chat">
+<div class="feed">
   <div class="feed-all" v-show="showFeeds">
     <div id="all" v-on:scroll="handleScroll()" class="feed-back">
       <div class="messages">
-        <chat-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
     </div>
     <div class="progress" v-show="inProgress">
@@ -23,7 +23,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import ChatMessage from "./ChatMessage";
+import FeedMessage from "./FeedMessage";
 import {
   store
 } from "@/store/index.js";
@@ -33,7 +33,7 @@ import {
 
 export default {
   components: {
-    ChatMessage
+   FeedMessage
   },
   data() {
     return {
@@ -49,7 +49,7 @@ export default {
   computed: {
     ...mapState({
     // arrow functions can make the code very succinct!
-    messages: state => state.modulechat.messages,
+    messages: state => state.modulefeed.messages,
 
     }),
     taskid() {
@@ -146,7 +146,7 @@ export default {
 };
 </script>
 <style scoped>
-.chat {
+.feed {
   display: flex;
   flex: 1;
   border-left: 1px solid #ffc10742;

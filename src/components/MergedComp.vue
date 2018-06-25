@@ -25,7 +25,7 @@
         <team-view v-else-if='checkShow(3,false,false)'/>
 
       </div>
-      <chat-element v-if="taskid != -1"/>
+      <feed-element v-if="taskid != -1"/>
     </div>
     <modal-complete v-if="modalStatus"/>
     <modal-error v-if="modalError"/>
@@ -36,7 +36,7 @@
 import { store } from "@/store/index.js";
 import SideBar from "@/components/SideBar/Sidebar";
 
-import ChatElement from "@/components/Chat/ChatElement";
+import FeedElement from "@/components/Feed/FeedElement";
 
 import TaskView from "@/components/Content/Task/TaskView";
 import StepAdd from "@/components/Content/Task/StepAdd";
@@ -44,9 +44,9 @@ import TaskEdit from "@/components/Content/Task/TaskEdit";
 
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
-import TeamView from "@/components/Content/Team/TeamView";
-import TeamAdd from "@/components/Content/Team/TeamAdd";
-import TeamEdit from "@/components/Content/Team/TeamEdit";
+// import TeamView from "@/components/Content/Team/TeamView";
+// import TeamAdd from "@/components/Content/Team/TeamAdd";
+// import TeamEdit from "@/components/Content/Team/TeamEdit";
 
 import ProjectAdd from "@/components/Content/Project/ProjectAdd";
 import ProjectView from "@/components/Content/Project/ProjectView";
@@ -67,20 +67,13 @@ import { mapState } from "vuex";
 export default {
   components: {
     SideBar,
-    ChatElement,
+    FeedElement,
     TaskView,
     StepAdd,
     TaskEdit,
     ProjectAdd,
     ProjectView,
     ProjectEdit,
-    TeamAdd,
-    // CompanyAdd,
-    // CompanyEdit,
-    // CompanyView,
-    TeamEdit,
-    TeamView,
-    TeamAdd,
     TaskAdd,
     UserOptions,
     ModalError,
