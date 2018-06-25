@@ -17,13 +17,13 @@
     <ul class="list-group list-group-flush mb-5">
 
       <!-- Lista admina -->
-      <li class="list-group-item darkBackground" v-for="admin in admins">
+      <li class="list-group-item darkBackground" v-for="admin in admins" :key='admin'>
         {{ admin.usr_name }} {{ admin.usr_surname }} --- {{ admin.usr_email }}
         <span class="badge yellowText">Admin</span>
     </li>
 
     <!-- Lista zaposlenih koji nisu admini -->
-    <li class="list-group-item darkBackground" v-for="employee in employees">
+    <li class="list-group-item darkBackground" v-for="employee in employees" :key='employee'>
       {{ employee.name }} --- {{ employee.email }}
     </li>
 
@@ -33,7 +33,7 @@
     <h4 class="mt-5 yellowText">Teams:</h4>
     <ul class="list-group list-group-flush mb-5">
       <!-- Lista timova -->
-      <li class="list-group-item darkBackground" v-for="team in teams">
+      <li class="list-group-item darkBackground" v-for="team in teams" :key='team'>
         {{ team.title }}<br /><span class="badge yellowText">Admin</span> {{ team.admin }}
       </li>
 

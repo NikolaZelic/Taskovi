@@ -18,7 +18,7 @@
           <ul class="list-group list-group-flush">
 
             <!-- Lista admina -->
-            <li class="list-group-item" v-for="ptask in parentTasks" @click="tasks(ptask.par_id); subTaskShow = !subTaskShow">
+            <li class="list-group-item" v-for="ptask in parentTasks" :key='ptask' @click="tasks(ptask.par_id); subTaskShow = !subTaskShow">
               <h4>{{ ptask.par_title }}</h4>
               <p>{{ ptask.par_description }}</p>
               <span class="badge badge-secondary">Deadline: {{ ptask.par_duedate }}</span>
@@ -31,7 +31,7 @@
           <span v-if='!subTaskShow'>Select certain task to see everything that came after...</span>
           <div v-else>
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item" v-for="task in tasksList">
+                  <li class="list-group-item" v-for="task in tasksList" :key='task'>
                     <h4>{{ task.title }}</h4>
                     <p>{{ task.description }}</p>
                     <span class="badge badge-secondary">Deadline: {{ task.duedate }}</span>

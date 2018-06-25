@@ -35,22 +35,7 @@ const actions = {
   },
 
   getUserAllTasks(commit, params) {
-    api.getUserAllTasks(params.state, params.type, params.archived).then(r => {
-      // api.getUserParentTasks().then(r => {
-      store.commit('setSidebarData', {
-        index: params.index,
-        data: r.data.data
-      });
-    }).catch(e => {
-      store.commit("modalError", {
-        active: true,
-        message: '' + e,
-      });
-    });
-  },
-
-  getUserCompanies(commit, params) {
-    api.getUserCompanies(params.admin).then(r => {
+    api.getUserAllTasks(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -113,7 +98,7 @@ const mutations = {
     store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.index;
-    store.state.sidebarItemSelection = store.state.sidebarItemSelection;  // Ovo stvarno radi !!!
+    store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!!
   },
   itemEditClick: (state, params) => {
     store.state.itemAction.edit = params.id;
@@ -129,6 +114,10 @@ const mutations = {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = params.id;
+  },
+  itemAddAllReset: (state, params) => {
+    store.state.itemAction.add = undefined;
+    store.state.itemAction.addTask = undefined;
   },
   mainFocused: (state, params) => {
     store.state.mainFocused = params;

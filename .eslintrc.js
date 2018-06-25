@@ -17,8 +17,8 @@ export default {
             "windows"
         ],
         "quotes": [
-            "error",
-            "single"
+            "off",
+            "double"
         ],
         "semi": [
             "error",
