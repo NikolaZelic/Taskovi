@@ -6,7 +6,7 @@
           <div class="header">
             <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
             <div class='exit-wrapper'>
-              <i class="exit-position far fa-times-circle"></i>
+              <i class="exit-position far fa-times-circle" @click='closeModal'></i>
               <div class="exit-text">ESC</div>
             </div>
           </div>
