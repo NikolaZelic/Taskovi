@@ -5,15 +5,15 @@ const state = {
   selectedTask: {},
   // by Zelic - korisceno u TeamAdd
   suggestedUsers: [],
-  // by Zelic - korisceno u: ParenttaskAdd.vue
+  // by Zelic - korisceno u: TaskAdd.vue
   suggestedTeams: [],
   // by Zelic - korisceno u ParanttaskAdd.vue
   suggestedTags: [],
-  // by Zelic - korisceno u ParenttaskAdd.vue
+  // by Zelic - korisceno u TaskAdd.vue
   suggestedProjects: [],
 }
 const actions = {
-  // by Zelic - koristi se u ParenttaskAdd.vue
+  // by Zelic - koristi se u TaskAdd.vue
   suggestTags(commit, params){
     api.suggestTags(params.tagFor, params.searchStr).
     then( result => {
@@ -55,7 +55,7 @@ const actions = {
      } );
   },
 
-  // by Zelic - kotsiti se u ParenttaskAdd.vue
+  // by Zelic - kotsiti se u TaskAdd.vue
   suggestTeams(commit, params){
     api.suggestGroup('team', params.searchStr, params.comId).
     then( result => {
@@ -63,7 +63,7 @@ const actions = {
     } );
   },
 
-  // by Zelic - korisceno u ParenttaskAdd.vue
+  // by Zelic - korisceno u TaskAdd.vue
   suggestProjects(commit, params){
     api.suggestGroup('project', params.searchStr, params.comId).
     then( result => {
@@ -109,7 +109,7 @@ const mutations = {
     state.suggestedUsers = params.data.data;
   },
 
-  // by Zelic - Korisyi se u ParenttaskAdd.vue
+  // by Zelic - Korisyi se u TaskAdd.vue
   setSuggestedProjects: (state, params) => {
     state.suggestedProjects = params.data.data;
   },

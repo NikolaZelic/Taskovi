@@ -94,10 +94,6 @@ export default {
   color:#139cbf;
 }
 
-.cont .message {
-  /* color: black; */
-}
-
 .message-body {
   margin-left: 10px;
   flex: 1;
