@@ -9,21 +9,6 @@
   </div>
 
   <div class="content">
-    <!-- PROJECT -->
-    <div v-show='!task && !edit' class="form-group" @click='refreshProjectError'>
-      <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-      :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected"
-      />
-      </vue-autosuggest>
-    </div>
-
-          <div class="content">
-            <!-- PROJECT -->
-            <div v-show='!task' class="form-group" @click='refreshProjectError'>
-              <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-                :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected" />
-            </div>
-
             <!-- TITLE -->
             <div class="form-group">
               <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError'>
@@ -91,13 +76,9 @@
             <div class="form-group button-wrapper">
               <button @click='createTask' type="submit" class="btn btn-success">Create</button>
             </div>
-          </div>
-          <!-- cotent -->
-
-        </div>
-      </div>
     </div>
-  </transition>
+  </div>
+</transition>
 </template>
 
 <script>
@@ -148,7 +129,7 @@ export default {
       tagSearchStr: null,
       task: false,
       edit: false,
-      selectedPrioretyClass: 'unselected form-control',
+      selectedPrioretyClass: "unselected form-control",
       suggestedProjets: [],
       inputPropsProject: {
         class: "autosuggest__input",
@@ -159,10 +140,9 @@ export default {
       projectSuggestionHaveChange: 0,
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
-      titleClass: 'form-control',
-      componentTitle: 'Creating Task',
-
-    }
+      titleClass: "form-control",
+      componentTitle: "Creating Task"
+    };
   },
 
   computed: {
@@ -178,8 +158,7 @@ export default {
       projectID: state => state.sidebarItemSelection[0]
     }),
     proId() {
-      if (this.$refs.projectref._data.currentItem == null) return null;
-      return this.$refs.projectref._data.currentItem.item.id;
+      return state.sidebarItemSelection[0];
     }
   },
 

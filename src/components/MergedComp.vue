@@ -14,8 +14,8 @@
         <!-- Adding new -->
         <!-- <company-add v-if="checkShow(0,false,true)"/> -->
         <project-add v-if="checkShow(0,false,true)"/>
-        <task-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)"/>
-        <step-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
+        <step-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)"/>
+        <task-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
         <team-add v-if="checkShow(3,false,true)"/>
 
         <!-- Viewing existing -->
