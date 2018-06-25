@@ -10,12 +10,12 @@ import router from '../router/index.js'
 
 export const api = {
 
-  // by Zelic - poziva se u ParenttaskAdd
+  // by Zelic - poziva se u TaskAdd
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
 
-  // by Zelic - Poziva se u ParenttaskAdd.vue
+  // by Zelic - Poziva se u TaskAdd.vue
   createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
     return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
       title: title,
@@ -42,7 +42,7 @@ export const api = {
     });
   },
 
-  // by Zelic - koristi se u ParenttaskAdd.vue, TaskAdd.vue
+  // by Zelic - koristi se u TaskAdd.vue, TaskAdd.vue
   suggestGroup(grpType, searchStr, comId) {
     return axios.get('groups', {
       params: {
@@ -55,7 +55,7 @@ export const api = {
     });
   },
 
-  // by Zelic - Koristi se u ParenttaskAdd.vue
+  // by Zelic - Koristi se u TaskAdd.vue
   suggestTags(tagFor, searchStr) {
     return axios.get("tags", {
       params: {
@@ -67,12 +67,12 @@ export const api = {
   },
 
   // by Zelic - Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
-  createTeam(comid, users, teamname) {
-    return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
-      teamname: teamname,
-      users: JSON.stringify(users)
-    });
-  },
+  // createTeam(comid, users, teamname) {
+  //   return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
+  //     teamname: teamname,
+  //     users: JSON.stringify(users)
+  //   });
+  // },
 
   // by Zelic - pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
   refreshSuggestions(searchText, comId) {
@@ -87,7 +87,7 @@ export const api = {
 
   // by Zelic
   selectTask(id) {
-    return axios.get('tasks/'+id);
+    return axios.get('tasks/' + id);
   },
 
   // SVETA
@@ -143,43 +143,42 @@ export const api = {
       pass: password
     });
   },
-  register(email, password, name, surname, description) {
+  register(user) {
     axios.post('auth/singup', {
-      email: email,
-      pass: password,
-      name: name,
-      surname: surname,
-      description: description
+      email: user.email,
+      pass: user.password,
+      name: user.name,
+      surname: user.surname
     }).catch(error => {
       console.log(error);
     });
   },
   // ZX ============= DATA
-  getCompanyInfo(compID) {
-    return axios.get("companies/"+compID, {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getCompanyInfo(compID) {
+  //   return axios.get("companies/"+compID, {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX
-  getAdmins(compID) {
-    return axios.get("companies/"+compID+"/admins", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getAdmins(compID) {
+  //   return axios.get("companies/"+compID+"/admins", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX
-  getEmployees(compID) {
-    return axios.get("companies/"+compID+"/users", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    });
-  },
+  // getEmployees(compID) {
+  //   return axios.get("companies/"+compID+"/users", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   });
+  // },
 
   // ZX - not used?
   // getUserParentTasks(index) {
@@ -191,27 +190,29 @@ export const api = {
   // },
 
   // ZX - Get items based on filter
-  getUserWork(index, state, type, archived) {
-    let link = '/users/tasks';
-    if (index === 1) link = '/users/projects';
-    return axios.get(link, {
+  getUserProjects(index, state, type, archived) {
+    // let link = '/users/tasks';
+    // if (index === 0) link = '/users/projects';
+    // if (index === 0) link = '/users/projects';
+    return axios.get('/users/projects', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
+        // state: state,
+        // type: type,
+        // archived: archived,
       }
     });
   },
 
-  // ZX - GET user tasks based on parent task
-  getUserAllTasks(state, type, archived) {
-    return axios.get('/users/alltasks', {
+  // ZX - GET user tasks based on parent task?? is it used?
+  getUserTaskList(params) {
+    return axios.get('/users/tasks', {
       params: {
         sid: window.localStorage.sid,
-        state: state,
-        type: type,
-        archived: archived,
+        pro_id: params.pro_id,
+        created: params.created,
+        assigned: params.assigned,
+        archived: params.archived,
       }
     })
   },
@@ -227,14 +228,14 @@ export const api = {
   // },
 
   // ZX NEW API TESTING
-  getUserCompanies(admin) {
-    return axios.get('companies', {
-      params: {
-        sid: window.localStorage.sid,
-        isadmin: admin,
-      }
-    });
-  },
+  // getUserCompanies(admin) {
+  //   return axios.get('companies', {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //       isadmin: admin,
+  //     }
+  //   });
+  // },
 
   // ZX
   getUserTeams(index, admin) {
@@ -247,23 +248,23 @@ export const api = {
   },
 
   //Sveta
-  getTeam(teamId){
-    return axios.get("/teams/"+teamId,{
-      params:{
+  getTeam(teamId) {
+    return axios.get("/teams/" + teamId, {
+      params: {
         sid: window.localStorage.sid,
       }
     })
   },
-  getTeamMembers(teamId){
-    return axios.get("/teams/"+teamId+"/users",{
-      params:{
+  getTeamMembers(teamId) {
+    return axios.get("/teams/" + teamId + "/users", {
+      params: {
         sid: window.localStorage.sid,
       }
     })
   },
-  getTeamAdmins(teamId){
-    return axios.get("/teams/"+teamId+"/admins",{
-      params:{
+  getTeamAdmins(teamId) {
+    return axios.get("/teams/" + teamId + "/admins", {
+      params: {
         sid: window.localStorage.sid,
       }
     })
@@ -273,51 +274,51 @@ export const api = {
   //
   //
   //
-  addCompany(name, desc) {
-    return axios.post('companies', {
-      companyname: name,
-      companydesc: desc,
-      sid: window.localStorage.sid,
-    })
-  },
+  // addCompany(name, desc) {
+  //   return axios.post('companies', {
+  //     companyname: name,
+  //     companydesc: desc,
+  //     sid: window.localStorage.sid,
+  //   })
+  // },
 
-  changeCompanyInfo(name, desc, comid) {
-    return axios.put("companies/"+comid, {
-      companyname: name,
-      companydesc: desc,
-      sid: window.localStorage.sid,
-    });
-  },
+  // changeCompanyInfo(name, desc, comid) {
+  //   return axios.put("companies/"+comid, {
+  //     companyname: name,
+  //     companydesc: desc,
+  //     sid: window.localStorage.sid,
+  //   });
+  // },
 
-  loadEmployees(compID) {
-    return axios.get("companies/"+compID+"/users", {
-      params: {
-        sid: window.localStorage.sid,
-      }
-    })
-  },
+  // loadEmployees(compID) {
+  //   return axios.get("companies/"+compID+"/users", {
+  //     params: {
+  //       sid: window.localStorage.sid,
+  //     }
+  //   })
+  // },
 
-  loadAdmins(compID) {
-    return axios.get("companies/"+compID+"/admins", {
-      params: {
-        sid:window.localStorage.sid,
-      }
-    })
-  },
+  // loadAdmins(compID) {
+  //   return axios.get("companies/"+compID+"/admins", {
+  //     params: {
+  //       sid:window.localStorage.sid,
+  //     }
+  //   })
+  // },
 
-  addEmployee(compID, email, sid) {
-    return axios.post("companies/"+compID+"/users", {
-      email: email,
-      sid: window.localStorage.sid,
-    })
-  },
+  // addEmployee(compID, email, sid) {
+  //   return axios.post("companies/"+compID+"/users", {
+  //     email: email,
+  //     sid: window.localStorage.sid,
+  //   })
+  // },
 
-  addAdmin(compID, email, sid) {
-    return axios.post("companies/"+compID+"/admins", {
-      email: email,
-      sid: window.localStorage.sid,
-    })
-  }
+  // addAdmin(compID, email, sid) {
+  //   return axios.post("companies/"+compID+"/admins", {
+  //     email: email,
+  //     sid: window.localStorage.sid,
+  //   })
+  // }
 
   //
   //

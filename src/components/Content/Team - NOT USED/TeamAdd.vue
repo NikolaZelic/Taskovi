@@ -5,7 +5,7 @@
   <!-- IZBOR KOMPANIJE -->
   <select class="comp-select" v-if='usersCompanies!==undefined && usersCompanies.length>1' v-model="choosenCompany">
     <option value="" disabled selected>Choose company</option>
-    <option v-for='company in usersCompanies' v-bind:value="company">{{ company.title }}</option>
+    <option v-for='company in usersCompanies' v-bind:value="company" :key='company'>{{ company.title }}</option>
   </select>
   <div class="" v-if='usersCompanies!==undefined && usersCompanies.length===1'>
     <span>Company: </span><span>{{ choosenCompany.title }}</span>
@@ -24,7 +24,6 @@
   <div class="form-group input-group member-choose">
     <vue-autosuggest ref="suggestionTag" :suggestions="[ { data: suggestions } ]" :renderSuggestion="renderSuggestion" @click="clickHandler" :onSelected="onSelected" :inputProps="{class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'}"
       :getSuggestionValue="getSuggestionValue" />
-    </vue-autosuggest>
     <div class="input-group-append">
       <button @click='addUser()' class="btn btn-outline-secondary" type="button">Add</button>
     </div>
@@ -32,7 +31,7 @@
 
   <!-- LIST OF ADDED MEMBERS -->
   <div class="form-group">
-    <ul v-for='(member, i) in addedMembers' class="list-group list-group-flush">
+    <ul v-for='(member, i) in addedMembers' :key='i' class="list-group list-group-flush">
       <!-- <li class="list-group-item"><img class="rounded-circle"  width='40' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_0vsuZqoaKVIUsjkshzBaVCI3MnbjpWE6U89CcfnBDAThVPFrJA"> Nikola Tesla</li>
             <li class="list-group-item"><img class="rounded-circle"  width='40' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1X8vC7CuE73-54q6KhtS61VyGRd7_ZmKZK7Rxyl9PZ8U6rj_pPQ"> Milutin Milankovic</li>
             <li class="list-group-item"><img class="rounded-circle"  width='40' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7xe3UC_yHpG9nFYfasqFHBHDWBoyr3B4UM80d9VId52f9i7O2_Q"> Milan Obrenovic</li> -->
@@ -60,35 +59,27 @@
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import {
-  VueAutosuggest
-} from 'vue-autosuggest';
-import {
-  mapGetters
-} from "vuex";
-import {
-  api
-} from '@/api/index.js';
+import { store } from "@/store/index.js";
+import { VueAutosuggest } from "vue-autosuggest";
+import { mapGetters } from "vuex";
+import { api } from "@/api/index.js";
 
 var interval;
 
 export default {
   components: {
-    VueAutosuggest,
+    VueAutosuggest
   },
   data() {
     return {
       teamName: "",
       userToAdd: null,
       addedMembers: [],
-      errorMsg: '', // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
+      errorMsg: "", // Ovo treba podesiti na prazan string svaki put kada korisnik neto uradi, cisto kaku mu ne bi stalno stajao error na ekranu
       // inputText: '',
       haveChange: 0,
-      choosenCompany: '',
-      success: undefined,
+      choosenCompany: "",
+      success: undefined
     };
   },
   computed: {
@@ -123,21 +114,24 @@ export default {
     },
 
     errorMsg: function() {
-      if (this.errorMsg != '')
+      if (this.errorMsg != "")
         setTimeout(() => {
-          this.errorMsg = '';
+          this.errorMsg = "";
         }, 3000);
     }
   },
 
-mounted:function(){
-  console.log(this.$refs.suggestionTag);
-},
+  mounted: function() {
+    console.log(this.$refs.suggestionTag);
+  },
 
   created: function() {
-
     interval = setInterval(() => {
-      if (this.haveChange === 1 && this.inputText.length > 0 && this.choosenCompany.id !== undefined) {
+      if (
+        this.haveChange === 1 &&
+        this.inputText.length > 0 &&
+        this.choosenCompany.id !== undefined
+      ) {
         this.pozivapija();
         this.haveChange = 0;
       }
@@ -150,7 +144,7 @@ mounted:function(){
 
   methods: {
     pozivapija() {
-      store.dispatch('refreshSuggestions', {
+      store.dispatch("refreshSuggestions", {
         searchText: this.inputText,
         comId: this.choosenCompany.id
       });
@@ -158,9 +152,10 @@ mounted:function(){
 
     addUser() {
       if (this.userToAdd === null) {
-        this.errorMsg = this.inputText != null && this.inputText.length > 0 ?
-          'Unknown user' :
-          'You have to enter user';
+        this.errorMsg =
+          this.inputText != null && this.inputText.length > 0
+            ? "Unknown user"
+            : "You have to enter user";
         return;
       }
       // Provera da li je user vec dodat
@@ -168,18 +163,17 @@ mounted:function(){
       var duplikat = false;
       this.addedMembers.forEach(e => {
         if (e.id == id) {
-          this.errorMsg = 'User is already added';
+          this.errorMsg = "User is already added";
           this.userToAdd = null;
-          store.dispatch('cleanSuggestions');
+          store.dispatch("cleanSuggestions");
           duplikat = true;
           this.$refs.suggestionTag.searchInput = "";
         }
       });
-      if (duplikat)
-        return;
+      if (duplikat) return;
       this.addedMembers.push(this.userToAdd);
       this.userToAdd = null;
-      store.dispatch('cleanSuggestions');
+      store.dispatch("cleanSuggestions");
       this.$refs.suggestionTag.searchInput = "";
     },
     createTeam() {
@@ -192,22 +186,26 @@ mounted:function(){
         return;
       }
       if (this.choosenCompany.id === undefined) {
-        this.errorMsg = 'You have to choose company';
+        this.errorMsg = "You have to choose company";
         return;
       }
 
       // Poziv API-ja
 
-      api.createTeam(this.choosenCompany.id, this.addedMembers.map((e) => {
-        return {
-          id: e.id
-        }
-      }), this.teamName).then(r => {
-        if (r.data.status == 'OK')
-          this.success = true;
-        else
-          this.success = false;
-      });
+      api
+        .createTeam(
+          this.choosenCompany.id,
+          this.addedMembers.map(e => {
+            return {
+              id: e.id
+            };
+          }),
+          this.teamName
+        )
+        .then(r => {
+          if (r.data.status == "OK") this.success = true;
+          else this.success = false;
+        });
     },
     // Metode za Auto
     onInputChange: function(text, oldText) {
@@ -215,8 +213,7 @@ mounted:function(){
       this.haveChange = 1;
     },
     onSelected(item) {
-      if (item == null || item == undefined)
-        return;
+      if (item == null || item == undefined) return;
       this.userToAdd = item.item;
     },
     clickHandler(item) {},
@@ -226,18 +223,18 @@ mounted:function(){
     },
     getSuggestionValue(item) {
       var i = item.item;
-      return i.name + ' ' + i.surname + ' ' + i.email;
+      return i.name + " " + i.surname + " " + i.email;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.comp-select{
+.comp-select {
   width: 80%;
 }
-.grup-name{
-  width:80%;
+.grup-name {
+  width: 80%;
 }
 .task-add-section {
   padding-top: 50px;
@@ -254,16 +251,16 @@ mounted:function(){
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
-.member-data{
-  color:#eee;
+.member-data {
+  color: #eee;
 }
 </style>
 <style media="screen">
 .maincontent .member-choose #autosuggest {
-  flex:4;
+  flex: 4;
 }
 .maincontent .member-choose .input-group-append {
-  flex:1;
+  flex: 1;
 }
 .autosuggest__input {
   outline: none;
@@ -278,17 +275,17 @@ mounted:function(){
   width: 100%;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box
+  -moz-box-sizing: border-box;
 }
 
 #autosuggest__input.autosuggest__input-open {
   border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0
+  border-bottom-right-radius: 0;
 }
 
 .autosuggest__results-container {
   position: relative;
-  width: 100%
+  width: 100%;
 }
 
 .autosuggest__results {
@@ -301,22 +298,22 @@ mounted:function(){
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   background: #fff;
-  padding: 0
+  padding: 0;
 }
 
 .autosuggest__results ul {
   list-style: none;
   padding-left: 0;
-  margin: 0
+  margin: 0;
 }
 
 .autosuggest__results .autosuggest__results_item {
   cursor: pointer;
-  padding: 15px
+  padding: 15px;
 }
 
-#autosuggest ul:first-child>.autosuggest__results_title {
-  border-top: none
+#autosuggest ul:first-child > .autosuggest__results_title {
+  border-top: none;
 }
 
 .autosuggest__results .autosuggest__results_title {
@@ -324,14 +321,14 @@ mounted:function(){
   font-size: 11px;
   margin-left: 0;
   padding: 15px 13px 5px;
-  border-top: 1px solid #d3d3d3
+  border-top: 1px solid #d3d3d3;
 }
 
-.autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted,
+.autosuggest__results
+  .autosuggest__results_item.autosuggest__results_item-highlighted,
 .autosuggest__results .autosuggest__results_item:active,
 .autosuggest__results .autosuggest__results_item:focus,
 .autosuggest__results .autosuggest__results_item:hover {
-  background-color: #ddd
+  background-color: #ddd;
 }
-
 </style>

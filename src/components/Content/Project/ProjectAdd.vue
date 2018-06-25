@@ -9,13 +9,13 @@
   <label for="description">Description</label>
   <textarea class="form-control mb-3" id="description" rows="3" name="description" v-model='projectDescription' placeholder="Tell us a little something about your project..." spellcheck="false"></textarea>
 
-  <multiselect v-model="value" :options="options" placeholder="Select one" label="title" track-by="id"></multiselect>
-  <small class="form-text text-muted mb-3">It's not mandatory to choose company; projects can exist without one.</small>
+  <!-- <multiselect v-model="value" :options="options" placeholder="Select one" label="title" track-by="id"></multiselect>
+  <small class="form-text text-muted mb-3">It's not mandatory to choose company; projects can exist without one.</small> -->
 
   <button @click="addProject()" class="btn btn-success">Create project</button>
 
 
-<br><br><br><br><br>
+<!-- <br><br><br><br><br> -->
 
 <!-- <multiselect  :options="users" placeholder="Search for user you want to add..." label="name"></multiselect> -->
 
@@ -24,11 +24,11 @@
 
 <script>
 import axios from "axios";
-import Multiselect from "vue-multiselect";
+// import Multiselect from "vue-multiselect";
 
 export default {
   components: {
-    Multiselect
+    // Multiselect
   },
 
   data() {
@@ -46,8 +46,6 @@ export default {
   },
 
   methods: {
-
-
     addProject() {
       axios.post("http://671n121.mars-t.mars-hosting.com/mngapi/companies/:comid/projects", {
         grpname: this.projectName,
@@ -57,18 +55,18 @@ export default {
       });
     },
 
-    getAdminCompanies() {
-      axios
-        .get("http://671n121.mars-t.mars-hosting.com/mngapi/users/companies", {
-          params: {
-            isadmin: true,
-            sid: window.localStorage.sid
-          }
-        })
-        .then(response => {
-          this.options = response.data.data;
-        });
-    },
+    // getAdminCompanies() {
+    //   axios
+    //     .get("http://671n121.mars-t.mars-hosting.com/mngapi/users/companies", {
+    //       params: {
+    //         isadmin: true,
+    //         sid: window.localStorage.sid
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.options = response.data.data;
+    //     });
+    // },
 
     getUsers() {
       axios
@@ -80,12 +78,10 @@ export default {
   },
 
   mounted() {
-    this.getAdminCompanies();
+    // this.getAdminCompanies();
     this.getUsers();
   }
 };
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style><style scoped>
+<style scoped>
 </style>

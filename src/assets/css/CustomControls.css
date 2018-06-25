@@ -1,6 +1,39 @@
-@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+/* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"); */
+
 /* @import url("https://use.fontawesome.com/releases/v5.0.13/css/all.css"); */
 
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+  background-color: #ffd827;
+  border: 0;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+  filter: invert(100%);
+  transform: scale(1.4);
+}
+
+.custom-control-label {
+  color: white;
+}
+
+.custom-checkbox {
+  transform: scale(0.9);
+}
+
+input.custom-modern,
+textarea.custom-modern {
+  border: 1px solid #636567bf;
+  border-radius: 0;
+  color: #fff;
+  background: #2d3436;
+}
+
+input.custom-modern::placeholder,
+textarea.custom-modern::placeholder {
+  color: #888;
+}
+
+/* 
 body {
   padding: 50px;
 }
@@ -31,7 +64,6 @@ input[type="radio"]+.label-text:before {
   margin-right: 5px;
 }
 
-/*Check box*/
 
 input[type="checkbox"]+.label-text:before {
   content: "\f096";
@@ -39,7 +71,7 @@ input[type="checkbox"]+.label-text:before {
 
 input[type="checkbox"]:checked+.label-text:before {
   content: "\f14a";
-  color: #ffc107;
+  color: var(--ac-light-color);
   animation: effect 250ms ease-in;
 }
 
@@ -52,7 +84,6 @@ input[type="checkbox"]:disabled+.label-text:before {
   color: #ccc;
 }
 
-/*Radio box*/
 
 input[type="radio"]+.label-text:before {
   content: "\f10c";
@@ -60,7 +91,7 @@ input[type="radio"]+.label-text:before {
 
 input[type="radio"]:checked+.label-text:before {
   content: "\f192";
-  color: #ffc107;
+  color: var(--ac-light-color);
   animation: effect 250ms ease-in;
 }
 
@@ -86,4 +117,4 @@ input[type="radio"]:disabled+.label-text:before {
   100% {
     transform: scale(1);
   }
-}
+} */

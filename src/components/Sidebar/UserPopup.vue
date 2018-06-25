@@ -3,12 +3,12 @@
     <table>
       <tr>
         <td>User: </td>
-        <td>{{ lsSurname }} {{ lsName }}</td>
+        <td>{{ SurnameAndName }}</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td>Company: </td>
         <td>{{ companyID }}</td>
-      </tr>
+      </tr> -->
       <tr>
         <td>Tasks working on: </td>
         <td>
@@ -34,15 +34,12 @@ import {
 } from "vuex";
 export default {
   computed: {
-    lsName() {
-      return localStorage.name;
+    SurnameAndName() {
+      return localStorage.surname + ' ' +localStorage.name;
     },
-    lsSurname() {
-      return localStorage.surname;
-    },
-    ...mapState({
-      companyID: state => state.modulecompany.name
-    })
+    // ...mapState({
+    //   companyID: state => state.modulecompany.name
+    // })
   }
 };
 </script>
@@ -52,7 +49,7 @@ export default {
   position: absolute;
   left: 66px;
   border-radius: 20px;
-  border: 1px solid #e6e6e6d1;
+  border: 1px solid #f5ee0cc7;
   bottom: 60px;
   display: inline-block;
   background: #1d1d1dff;

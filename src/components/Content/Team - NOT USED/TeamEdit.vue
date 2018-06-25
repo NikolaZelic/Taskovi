@@ -13,12 +13,11 @@
   <!-- Adding new team members -->
   <vue-autosuggest ref="suggestionTag" :suggestions="[ { data: suggestions } ]" :renderSuggestion="renderSuggestion" @click="clickHandler" :onSelected="onSelected" :inputProps="{class:'autosuggest__input', onInputChange: this.onInputChange, placeholder:'Enter user'}"
     :getSuggestionValue="getSuggestionValue" />
-  </vue-autosuggest>
 
   <!-- List of team's admins -->
   <h4>Team's admins:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item" v-for="admin in admins">
+    <li class="list-group-item" v-for="admin in admins" :key='admin'>
       {{admin.usr_name}} {{admin.usr_surname}}<span class="small"> --- {{admin.usr_email}}</span>
     </li>
   </ul>
@@ -26,7 +25,7 @@
   <!-- List of team's employees -->
   <h4>Team's employees:</h4>
   <ul class="list-group list-group-flush mb-5">
-    <li class="list-group-item" v-for="employee in members">
+    <li class="list-group-item" v-for="employee in members" :key='employee'>
       {{employee.name}}<span class="small"> --- {{employee.email}}</span>
     </li>
   </ul>

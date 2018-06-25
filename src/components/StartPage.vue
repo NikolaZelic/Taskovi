@@ -1,13 +1,10 @@
 <template>
 <div class="start">
   <div id='main'>
-    <login-page/>
-    <!-- <button class="btn btn-warning" @click='signUp()'>
-        <span class="fas fa-sign-up-alt"></span> Sign Up
-      </button> -->
-    <!-- <login v-if="showSignIn" @close="showModal = false"></login> -->
+    <div class="form-auth">
+      <component @clicked='formSwitch' :is='form'></component>
+    </div>
   </div>
-
   <div id='side'>
     <div id='apptitle'>
       <h2>Welcome to our</h2>
@@ -20,22 +17,28 @@
 
 <script>
 import LoginPage from "@/components/Auth/LoginPage";
-import {
-  api
-} from "@/api/index.js";
+import RegistrationPage from "@/components/Auth/RegistrationPage";
+import { api } from "@/api/index.js";
 export default {
   components: {
-    LoginPage
+    LoginPage,
+    RegistrationPage
   },
   data() {
     return {
       signedIn: false,
+      login: true
     };
   },
   methods: {
-    // signIn() {
-    //   this.showSignIn = true;
-    // }
+    formSwitch(val) {
+      this.login = val;
+    }
+  },
+  computed: {
+    form() {
+      return this.login ? "login-page" : "registration-page";
+    }
   },
   created() {
     // IF SID EXIST AND SEASON ACTIVE EXIST ROUTE TO MAINPAGE
@@ -63,19 +66,28 @@ h2 {
   background: #0007;
 }
 
-.start>* {
+.start > * {
   width: 50%;
 }
 
-#side {}
+#side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 #main {
-  background: #256b276e;
+  background: #25881442;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#apptitle {
+/* #apptitle {
   margin: 45% 0 0;
-}
+} */
 
 #creators {
   position: absolute;

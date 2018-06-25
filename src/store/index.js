@@ -4,9 +4,7 @@ import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
 import modulesidebar from './modules/sidebar';
-import modulechat from './modules/chat';
-import modulecompany from './modules/company';
-import moduleteam from './modules/team';
+import modulefeed from './modules/feed';  
 import moduleproject from './modules/project';
 import moduletask from './modules/task';
 import modulework from './modules/work';
@@ -20,9 +18,7 @@ export const store = new Vuex.Store({
     actions,
     getters,
     modulesidebar,
-    modulechat,
-    modulecompany,
-    moduleteam,
+    modulefeed,
     moduleproject,
     moduletask,
     modulework,
@@ -34,6 +30,10 @@ export const store = new Vuex.Store({
     mainFocused: undefined,
     sidebarTabData: [],
     sidebarItemSelection: [],
+    theme: {
+      back: '--sec-bg-color',
+      front: '--sec-color'
+    },
     modalStatus: {
       active: false,
       ok: true,
