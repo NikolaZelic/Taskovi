@@ -6,57 +6,86 @@
   <!-- Prikaz podataka pojedinacnog taska -->
     <template v-else>
 
-
-
       <div class="card">
+        <div class="card-header task-header">
+          Database &amp; APIs
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless text-center text-dark table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <!-- <th scope="col">Description</th> -->
+                <th scope="col">Deadline</th>
+                <th scope="col">Tags</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Working</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- ovedddd -->
+              <tr data-toggle="modal" data-target="#exampleModal">
+                <td>Kupovina monitora</td>
+                <!-- <td>Otto</td> -->
+                <td>
+                  25/08/2018 16:30
+                </td>
+                <td>
+                  <!-- <span class="badge badge-success">Front</span> -->
+                  <span class="badge badge-success">MARS</span>
+                  <span class="badge badge-success">Header</span>
+                </td>
+                <td>
+                  <span class="badge badge-danger">High</span>
+                </td>
+                <td>
+                  <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
+                  <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px"> +3
+                </td>
+              </tr>
+              <tr data-toggle="modal" data-target="#exampleModal">
+                <td>Kupovina sijalice</td>
+                <!-- <td>Thornton</td> -->
+                <td> 09/03/2018 16:30
+                </td>
+                <td>
+                  <span class="badge badge-success">Back</span>
+                  <span class="badge badge-success">MARS</span>
+                  <span class="badge badge-success">API</span> +4
+                </td>
+                <td>
+                  <span class="badge badge-warning">Medium</span>
+                </td>
+                <td>
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px">
 
-        <!-- Prikaz imena parent taska -->
-        <ul class="list-group list-group-flush lead"><li class="list-group-item">{{taskInfo["parenttask-tittle"]}}</li></ul>
+                  <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
+                  <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px"> +11
+                </td>
+              </tr>
+              <tr data-toggle="modal" data-target="#exampleModal">
+                <td>Neki naslov</td>
+                <!-- <td>the Bird</td> -->
+                <td> 11/03/2018 19:30
+                </td>
+                <td><span class="badge badge-success">MARS</span>
+                  <!-- <span class="badge badge-success">Header</span></td> -->
+                  <td>
+                    <span class="badge badge-info">Low</span>
+                  </td>
+                  <td>
+                    <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
+                  </td>
+              </tr>
+            </tbody>
+          </table>
 
-        <!-- Prikaz imena datog taska -->
-        <div class="card-header"><h1 class="display-4">{{taskInfo["task-tittle"]}}</h1></div>
-
-        <!-- Prikaz podataka o datom tasku -->
-        <ul class="list-group list-group-flush lead">
-
-          <!-- Opis taska i eventualna URGENT labela u slucaju da postoji -->
-          <li class="list-group-item">
-
-            <span class="badge badge-warning" v-if="taskInfo.priority !== null">{{ taskInfo.priority }}</span>
-
-            {{taskInfo["task-description"]}}</li>
-
-          <!-- Prikaz vremena kreiranja taksa i informacija o USER-u koji ga je napravio -->
-          <li class="list-group-item"><strong>Created: </strong> {{ createdDate }} by {{taskInfo["user-created"]}}</li>
-
-          <!-- Prikaz informacije kome je dati task dodeljen -->
-          <li class="list-group-item"><strong>Assigned to: </strong>{{taskInfo["user-working"]}} {{taskInfo["group-working"]}}</li>
-
-          <!-- Rok za zavrsavanje datog taska -->
-          <li class="list-group-item"><strong>Deadline: </strong>{{ deadlineDate }}</li>
-
-          <!-- Red sa akcijama za task -->
-          <li class="list-group-item text-center">
-            <div class="row">
-
-              <div class="col-md-6 text-left">
-                <a href="#" class="btn btn-info">Edit</a>
-                <a href="#" class="btn btn-danger">Remove</a>
-                <a href="#" class="btn btn-warning">Reject</a>
-              </div>
-
-              <div class="col-md-6 input-group">
-                <input type="number" class="form-control text-center" placeholder="Time spent [minutes]" required>
-                <div class="input-group-append"><button class="btn btn-success" type="button">Submit</button></div>
-              </div>
-
-            </div>
-          </li>
-
-        </ul>
-
+        </div>
       </div>
-    </template></div>
+
+    </template>
+  </div>
 </template>
 
 <script>
@@ -134,5 +163,9 @@ export default {
 <style scoped>
 h1{
   text-align: left;
+}
+
+.task-header{
+  color: #333 !important;
 }
 </style>
