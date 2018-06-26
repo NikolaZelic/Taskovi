@@ -120,7 +120,7 @@ export default {
   },
   data() {
     return {
-      isTask: false,
+      // isTask: false,
       sidebarActive: true,
       searchData: "",
       currentTabIndex: 0,
@@ -189,12 +189,28 @@ export default {
     currentTabIndex(val) {
       // this.sidebarActive = true; // MAYBE USED LATER FOR ACTIVATING SIDE FROM MAIN
       let tabItem = this.tabs[val].itemIndex;
-      // console.log(tabItem);
-      // console.log(this.activeItem);
 
-      this.activeItem = tabItem; // >?
+      // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
       // console.log(tabItem);
-      // console.log(this.activeItem)
+      if (tabItem === undefined) {
+        store.commit("setSidebarItemSelection", {
+          index: this.currentTabIndex,
+          id: undefined
+        });
+      } else {
+        for (var i = 0; i < this.itemsFiltered; i++) {
+          if (this.itemsFiltered[i].id === tabItem) {
+            // ID FOUND
+            this.activeItem = tabItem; // MERGE ACTIVEITEM AND TABITEM IN FUTURE IF U CAN
+            return;
+          }
+        }
+        this.activeItem = undefined;
+        store.commit("setSidebarItemSelection", {
+          index: this.currentTabIndex,
+          id: undefined
+        });
+      }
     },
     adminFilter(val) {
       let i = this.currentTabIndex;
@@ -273,7 +289,7 @@ export default {
     },
     editItemButton(item) {
       this.selectItem(item.id);
-      store.dispatch("itemEditClick", -1);
+      this.activeItem = item.id;
       store.dispatch("itemEditClick", item.id);
     },
     deadlineSplit(dateTime) {
