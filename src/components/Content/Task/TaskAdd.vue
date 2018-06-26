@@ -41,7 +41,8 @@
 
             <!-- ADING WORKERS -->
             <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
-              <i :class="personClass" @click='selectUser'></i>
+              <i class="fas fa-user"></i>
+               <!-- @click='selectUser' -->
               <!-- <i :class="teamClass" @click='selectTeam'></i> -->
               <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
                 @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
@@ -77,7 +78,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-success">Create</button>
+              <button @click='createTask' type="submit" class="btn btn-warning">Create</button>
             </div>
           </div>
         </div>
@@ -122,8 +123,8 @@ export default {
       inputWorker: null,
       inputWorkerHaveChange: 0,
       choosenWorker: null,
-      personClass: "fas fa-user fas-selected",
-      teamClass: "fas fa-users",
+      // personClass: "fas fa-user fas-selected",
+      // teamClass: "fas fa-users",
       inputProps: {
         class: "autosuggest__input",
         onInputChange: this.onInputChange,
@@ -500,11 +501,11 @@ export default {
   border-bottom: 3px solid #ff0000;
 }
 
-.autosuggest__input,
+/* .autosuggest__input,
 .autosuggest__input:focus {
   color: #eee;
   background-color: #2e3038;
-}
+} */
 
 #autosuggest__input.autosuggest__input-open {
   border-bottom-left-radius: 0;
@@ -710,6 +711,7 @@ export default {
 }
 
 .exit-position {
+  color: black !important;
   position: absolute;
   right: 20px;
   font-size: 30px;
@@ -729,28 +731,28 @@ export default {
   padding: 15px;
 }
 
-.calender-wrapper {
+/* .calender-wrapper {
   position: absolute;
   left: 50px;
   right: 0px;
-}
+} */
 
-.calender-icon {
+/* .calender-icon {
   position: absolute;
   width: 10%;
   left: 0px;
   cursor: pointer;
-}
+} */
 
-.fa-calendar-alt {
+/* .fa-calendar-alt {
   font-size: 38px;
-}
+} */
 
 .form-control {
   display: inline;
   position: relative;
-  background-color: #2e3038;
-  color: #eee;
+  background-color: #2e3038 !important;
+  color: #eee !important;
 }
 
 #tsk_deadline {
@@ -758,23 +760,34 @@ export default {
   cursor: pointer;
 }
 
-.fas {
+.fas,.far {
+  color: #fff;
   font-size: 25px;
   margin: 3px;
   padding: 3px;
   cursor: pointer;
 }
 
-.fas-selected {
+/* .fas.fa-user {
+  position: absolute;
+} */
+
+/* .fas-selected {
   color: var(--ac-light-color);
   border-bottom: 2px solid var(--ac-light-color);
+} */
+
+div.form-group{
+  display: flex;
+  
 }
 
-#auto-suggestion {
-  position: absolute;
-  display: inline-block;
-  right: 0px;
-  left: 85px;
+#auto-suggestion, .calender-wrapper {
+  padding-left: 10px;
+  width: 100%;
+}
+#auto-suggestion .form-control {
+     text-indent: 30px;
 }
 
 .tags-wrapper {
@@ -795,15 +808,14 @@ export default {
 }
 
 .button-wrapper {
-  position: relative;
-  height: 30px;
+  justify-content: right;
 }
 
-.btn-success {
+/* .btn-success {
   position: absolute;
   right: 0px;
   bottom: -13px;
-}
+} */
 
 .modal-enter {
   opacity: 0;
