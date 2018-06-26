@@ -10,6 +10,7 @@
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='shownItemsCount !== 0' class='badge badge-dark'>{{ shownItemsCount }}</span>
       </div>
+      <span></span>
     </div>
 
     <div class="sidebar-lower">
