@@ -2,7 +2,7 @@
   <aside id="sidebar">
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
-      <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-right collapse-btn' :class='{"collapsed":!sidebarActive}'>
+      <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
       </span>
       <div>
         <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
@@ -24,7 +24,7 @@
         </ul>
 
         <div class="user-sidebar">
-          <span title='Change Theme' @click='changeTheme' class='theme-changer'></span>
+          <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
           <transition name='fade'>
             <user-popup v-show='activePopup' :class='{show: activePopup}' />
@@ -60,16 +60,19 @@
               </label> -->
 
             </form>
-            <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
+            <!-- <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
               <label>
                 <input type="checkbox" v-model="adminFilter">
                 <span class="label-text">is Admin</span>
               </label>
-            </form>
+            </form> -->
           </div>
           <div class="item-list">
             <!-- <task-sidebar v-if="currentTabIndex === 1 || currentTabIndex === 2" /> -->
             <table>
+              <thead v-if='currentTabIndex === 0'>
+                <tr><th>Project</th><th>Desc</th><th>DeadLine</th></tr>
+              </thead>
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
                   <td>
@@ -124,6 +127,7 @@ export default {
         title: undefined,
         id: undefined
       },
+      // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
       // darkTheme: false,
@@ -160,8 +164,8 @@ export default {
         //   icon: "fas fa-users",
         //   isAdmin: true
         // }
-      ],
-      activeArray: []
+      ]
+      // activeArray: []
       // invokeFilterType: "as"
     };
   },
@@ -172,9 +176,9 @@ export default {
     //   this.activeItem = undefined;
     //   this.getTabData();
     // },
-    getActiveArray(val, oldVal) {
-      this.activeArray = val;
-    },
+    // getActiveArray(val, oldVal) {
+    //   this.activeArray = val;
+    // },
     selectedFilter() {
       //   console.log(val);
       //   delete this.tabs[this.currentTabIndex].itemIndex;
@@ -226,7 +230,7 @@ export default {
           this.actionTabDataTeam();
           break;
       }
-      this.setActiveArray();
+      // this.setActiveArray();
     },
     getFilterData() {
       let cr = this.selectedFilter.includes("cr");
@@ -255,25 +259,19 @@ export default {
         index: this.currentTabIndex
       });
     },
-    // actionTabDataTeam() {
-    //   let i = this.currentTabIndex;
-    //   store.dispatch("getUserTeams", {
-    //     index: i,
-    //     admin: this.tabs[i].isAdmin
-    //   });
-    // },
     showSubFilter() {
       let i = this.currentTabIndex;
       return i === 1 || i === 2;
     },
-    showAdminFilter() {
-      let i = this.currentTabIndex;
-      return i === 3;
-    },
+    // showAdminFilter() {
+    //   let i = this.currentTabIndex;
+    //   return i === 3;
+    // },
     addItemButton() {
       store.dispatch("itemAddClick");
     },
     editItemButton(item) {
+      this.selectItem(item.id);
       store.dispatch("itemEditClick", item);
     },
     deadlineSplit(dateTime) {
@@ -281,9 +279,9 @@ export default {
         ? dateTime.split(" ")[0]
         : "";
     },
-    setActiveArray() {
-      this.activeArray = this.getActiveArray;
-    },
+    // setActiveArray() {
+    //   this.activeArray = this.getActiveArray;
+    // },
     signOut() {
       window.localStorage.removeItem("sid");
       api.sessionActive();
@@ -291,12 +289,12 @@ export default {
     mouseOverPopup(val) {
       this.activePopup = val;
     },
-    userOptions() {
-      alert("Avatar Kliknut");
-    },
     changeTheme() {
       localStorage.dark = !this.darkTheme;
       store.commit("darkTheme", !this.darkTheme);
+    },
+    userOptions() {
+      alert("Avatar Kliknut");
     }
   },
   computed: {
@@ -304,7 +302,7 @@ export default {
       getTabIndex: "currentTabIndex",
       darkTheme: "darkTheme"
     }),
-    getActiveArray() {
+    activeArray() {
       return store.getters.currentTabData;
     },
     shownItemsCount() {
@@ -629,6 +627,14 @@ h2 {
 
 label {
   margin: 0;
+}
+
+.theme-changer.darkTheme {
+  background: var(--main-bg-color);
+}
+
+.theme-changer.darkTheme:hover {
+  background: rgba(228, 228, 228, 0.7);
 }
 
 .theme-changer {

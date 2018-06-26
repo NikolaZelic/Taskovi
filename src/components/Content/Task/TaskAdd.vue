@@ -489,7 +489,7 @@ export default {
       store.dispatch("clleaneSuggestedProjects");
     },
     closeModal() {
-      store.commit("itemAddAllReset");
+      store.commit("itemActionReset");
     }
   }
 };

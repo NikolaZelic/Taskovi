@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar/>
+    <side-bar :class="{max: checkShow(0,false,false)}"/>
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent" :class='{darkTheme: darkTheme}'>
         <!-- <user-options/> -->
@@ -20,7 +20,7 @@
 
         <!-- Viewing existing -->
         <!-- <company-view v-if='checkShow(0,false,false)'/> -->
-        <project-view v-else-if='checkShow(0,false,false)'/>
+        <!-- <project-view v-else-if='checkShow(0,false,false)'/> -->
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)'/>
         <team-view v-else-if='checkShow(3,false,false)'/>
 
@@ -49,7 +49,7 @@ import TaskAdd from "@/components/Content/Task/TaskAdd";
 // import TeamEdit from "@/components/Content/Team/TeamEdit";
 
 import ProjectAdd from "@/components/Content/Project/ProjectAdd";
-import ProjectView from "@/components/Content/Project/ProjectView";
+// import ProjectView from "@/components/Content/Project/ProjectView";
 import ProjectEdit from "@/components/Content/Project/ProjectEdit";
 
 // import CompanyAdd from "@/components/Content/Company/CompanyAdd";
@@ -72,7 +72,7 @@ export default {
     StepAdd,
     TaskEdit,
     ProjectAdd,
-    ProjectView,
+    // ProjectView,
     ProjectEdit,
     TaskAdd,
     UserOptions,
@@ -153,16 +153,6 @@ export default {
 };
 </script>
 
-<style>
-/* :root {
-  --main-bg-color: #262729;
-  --main-color: #eeeeee;
-  --sec-bg-color: #f3f4f7;
-  --sec-color: #222222;
-} */
-</style>
-
-
 <style lang="css">
 #wrapper {
   display: flex;
@@ -195,13 +185,8 @@ export default {
   color: var(--sec-color);
 }
 
-/* .maincontent label {
-  color: var(--main-color);
-} */
-
 .maincontent h1 {
   text-align: center;
-  /* color: #fff */
 }
 
 @media only screen and (min-width: 1350px) {
@@ -226,6 +211,11 @@ export default {
     position: fixed;
     height: 100vh;
     width: 37%;
+  }
+  #wrapper > aside.max {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
   }
 
   .item-filter {

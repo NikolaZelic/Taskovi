@@ -21,7 +21,7 @@ const actions = {
   },
 
   getUserProjects(commit, params) {
-    api.getUserProjects(params.index, params.state, params.type, params.archived).then(r => {
+    api.getUserProjects(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -115,7 +115,7 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = params.id;
   },
-  itemAddAllReset: (state, params) => {
+  itemActionReset: (state, params) => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
