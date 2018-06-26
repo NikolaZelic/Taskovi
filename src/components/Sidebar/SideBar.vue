@@ -272,7 +272,8 @@ export default {
     },
     editItemButton(item) {
       this.selectItem(item.id);
-      store.dispatch("itemEditClick", item);
+      store.dispatch("itemEditClick", -1);
+      store.dispatch("itemEditClick", item.id);
     },
     deadlineSplit(dateTime) {
       return dateTime !== undefined && dateTime !== null

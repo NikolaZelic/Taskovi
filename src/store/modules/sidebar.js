@@ -63,7 +63,7 @@ const actions = {
   // },
   itemEditClick(commit, params) {
     store.commit('itemEditClick', {
-      id: params.id,
+      id: params,
     });
   },
   itemAddClick(commit, params) {

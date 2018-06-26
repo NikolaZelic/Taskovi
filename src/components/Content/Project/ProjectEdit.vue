@@ -85,6 +85,9 @@ export default {
     ...mapState({
       tabIndex: "currentTabIndex"
     })
+  },
+  mounted() {
+    this.projectInfo();
   }
 };
 </script>

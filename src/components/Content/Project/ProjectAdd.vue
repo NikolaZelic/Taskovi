@@ -1,7 +1,8 @@
 <template>
   <div>
 
-    <button class='btn btn-warning' @click='resetProjectView'>BACK</button>
+    <button class='btn btn-warning' @click='resetProjectView'>
+      <span class='fas fa-arrow-left'></span> BACK</button>
     <h4>Adding project:</h4>
 
      <label for="projectname" class="mt-3">Project name</label>
@@ -108,7 +109,7 @@ export default {
 
   mounted() {
     // this.getAdminCompanies();
-    this.getUsers();
+    // this.getUsers();
   }
 };
 </script>
