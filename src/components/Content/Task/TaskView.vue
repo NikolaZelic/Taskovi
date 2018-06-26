@@ -8,7 +8,7 @@
 
       <div class="card">
         <div class="card-header task-header">
-          Database &amp; APIs
+          {{ $store.getters.currentTabData }}
         </div>
         <div class="card-body">
           <table class="table table-borderless text-center text-dark table-hover">
@@ -104,17 +104,17 @@ export default {
   },
 
   methods: {
-    getTaskInfo(taskID) {
-      axios.get("http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+    getTaskInfo() {
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
           params: {
-            tasid: taskID,
+            tasid: 61,
             sid: window.localStorage.getItem("sid")
           }
         })
         .then(response => {
           if (response.data.data !== undefined)
-            this.taskInfo = response.data.data[0];
-            // console.log(response.data.data[0]);
+            this.taskInfo = response.data.data;
+            console.log(response.data.data);
         });
     }
   },
