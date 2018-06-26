@@ -2,7 +2,7 @@
   <div id="wrapper">
     <side-bar/>
     <div class="rightside" :class="{focus: isFocus}">
-      <div class="maincontent">
+      <div class="maincontent" :class='{darkTheme: darkTheme}'>
         <!-- <user-options/> -->
 
         <!-- Editing existing -->
@@ -94,6 +94,10 @@ export default {
     } else {
       api.sessionActive();
     }
+    let dark = localStorage.dark;
+    if (dark === 'true') {
+      store.commit('darkTheme',true);
+    } 
   },
   watch: {
     modalStatus(val) {
@@ -123,7 +127,8 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
-      isFocus: state => state.mainFocused
+      isFocus: state => state.mainFocused,
+      darkTheme: state => state.darkTheme
     }),
     ...mapGetters({
       isFocus: "isFocus",
@@ -185,9 +190,14 @@ export default {
   color: var(--main-color);
 }
 
-.maincontent label {
-  color: var(--main-color);
+.maincontent.darkTheme {
+  background-color: var(--sec-bg-color);
+  color: var(--sec-color);
 }
+
+/* .maincontent label {
+  color: var(--main-color);
+} */
 
 .maincontent h1 {
   text-align: center;

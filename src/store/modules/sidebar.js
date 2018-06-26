@@ -116,8 +116,12 @@ const mutations = {
     store.state.itemAction.addTask = params.id;
   },
   itemAddAllReset: (state, params) => {
+    store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
+  },
+  darkTheme: (state, params) => {
+    store.state.darkTheme = params;
   },
   mainFocused: (state, params) => {
     store.state.mainFocused = params;
