@@ -6,6 +6,7 @@
   <!-- Prikaz podataka pojedinacnog taska -->
   <template v-else>
 
+
       <div class="card">
         <div class="card-header task-header">
           {{ taskInfo[0].taskname }}
@@ -23,7 +24,7 @@
             </thead>
             <tbody>
 
-              <tr v-for="(task, index) in taskInfo">
+              <tr v-for="(task, index) in taskInfo"> <!--@click="getStepInfo(task.tsk_id)"-->
                 <td>{{ task.tsk_title}}</td>
                 <td>
                   {{ task.tsk_deadline }}
@@ -62,11 +63,76 @@
         </div>
       </div>
 
+
+<!-- modal start -->
+<!-- <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-body tab-content">
+        <div id="info" class="tab-pane fade show active" role="tabpanel">
+
+
+          <p><strong>Title: </strong>Nabavljanje sijalice za ucionicu 23</p>
+
+          <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <p><strong>Deadline:</strong> 25/08/2018 16:45</p>
+          <p><strong>Tags:</strong>
+            <span class="badge badge-success">Front</span>
+            <span class="badge badge-success">MARS</span>
+            <span class="badge badge-success">Header</span>
+            <span class="badge badge-success">MARS</span>
+            <span class="badge badge-success">Header</span>
+          </p>
+          <p><strong>Priority:</strong> <span class="badge badge-danger">High</span></p>
+          <p><strong>Working:</strong>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px">
+
+            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
+            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA"
+              class="rounded-circle" width="30px">
+
+            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
+            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px">
+          </p>
+          <p><strong>Status:</strong> In progress</p>
+
+
+
+        </div>
+
+
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- modal end -->
+
+
+
+
+
+
+
+
+
     </template>
 </div>
 </template>
 
 <script>
+
 import {
   store
 } from "@/store/index.js";
@@ -79,6 +145,8 @@ import {
 // var now = moment();
 
 export default {
+
+
   data() {
     return {
       taskInfo: [],
@@ -88,6 +156,10 @@ export default {
   },
 
   methods: {
+    // getStepInfo(stepID){
+    //   console.log(stepID);
+    // },
+
     getTaskInfo(taskID) {
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
           params: {
