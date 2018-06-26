@@ -1,21 +1,20 @@
 <template>
-  <div>
+<div>
   <template v-if="selectedItemID <= 0">
     <h1>Select task first...</h1>
   </template>
   <!-- Prikaz podataka pojedinacnog taska -->
-    <template v-else>
+  <template v-else>
 
       <div class="card">
         <div class="card-header task-header">
-          {{ $store.getters.currentTabData }}
+          {{ taskInfo[0].taskname }}
         </div>
         <div class="card-body">
           <table class="table table-borderless text-center text-dark table-hover">
             <thead>
               <tr>
                 <th scope="col">Title</th>
-                <!-- <th scope="col">Description</th> -->
                 <th scope="col">Deadline</th>
                 <th scope="col">Tags</th>
                 <th scope="col">Priority</th>
@@ -23,61 +22,40 @@
               </tr>
             </thead>
             <tbody>
-              <!-- ovedddd -->
-              <tr data-toggle="modal" data-target="#exampleModal">
-                <td>Kupovina monitora</td>
-                <!-- <td>Otto</td> -->
-                <td>
-                  25/08/2018 16:30
-                </td>
-                <td>
-                  <!-- <span class="badge badge-success">Front</span> -->
-                  <span class="badge badge-success">MARS</span>
-                  <span class="badge badge-success">Header</span>
-                </td>
-                <td>
-                  <span class="badge badge-danger">High</span>
-                </td>
-                <td>
-                  <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-                  <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px"> +3
-                </td>
-              </tr>
-              <tr data-toggle="modal" data-target="#exampleModal">
-                <td>Kupovina sijalice</td>
-                <!-- <td>Thornton</td> -->
-                <td> 09/03/2018 16:30
-                </td>
-                <td>
-                  <span class="badge badge-success">Back</span>
-                  <span class="badge badge-success">MARS</span>
-                  <span class="badge badge-success">API</span> +4
-                </td>
-                <td>
-                  <span class="badge badge-warning">Medium</span>
-                </td>
-                <td>
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px">
 
-                  <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-                  <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px"> +11
+              <tr v-for="(task, index) in taskInfo">
+                <td>{{ task.tsk_title}}</td>
+                <td>
+                  {{ task.tsk_deadline }}
                 </td>
-              </tr>
-              <tr data-toggle="modal" data-target="#exampleModal">
-                <td>Neki naslov</td>
-                <!-- <td>the Bird</td> -->
-                <td> 11/03/2018 19:30
+
+
+                <td>
+
+                  <div v-if='showAllTags && showAllTagsID === index'>
+                    <span class="badge badge-success" v-for="tag in task.tags">{{ tag.tag_text }}</span>
+                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
+                  </div>
+
+                  <div v-else>
+                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)">{{ tag.tag_text }}</span>
+                    <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
+                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
+                  </div>
+
                 </td>
-                <td><span class="badge badge-success">MARS</span>
-                  <!-- <span class="badge badge-success">Header</span></td> -->
-                  <td>
-                    <span class="badge badge-info">Low</span>
-                  </td>
-                  <td>
-                    <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-                  </td>
+
+
+
+                <td>
+                  <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
+                </td>
+                <td>
+                {{task.usrworking}}
+              </td>
               </tr>
+
+
             </tbody>
           </table>
 
@@ -85,36 +63,67 @@
       </div>
 
     </template>
-  </div>
+</div>
 </template>
 
 <script>
-import { store } from "@/store/index.js";
+import {
+  store
+} from "@/store/index.js";
 import axios from "axios";
 
-import { mapGetters } from "vuex";
+import {
+  mapGetters
+} from "vuex";
 
 // var now = moment();
 
 export default {
   data() {
     return {
-      taskInfo: []
+      taskInfo: [],
+      showAllTags: false,
+      showAllTagsID: undefined
     };
   },
 
   methods: {
-    getTaskInfo() {
+    getTaskInfo(taskID) {
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
           params: {
-            tasid: 61,
+            tasid: taskID,
             sid: window.localStorage.getItem("sid")
           }
         })
         .then(response => {
-          if (response.data.data !== undefined)
+          if (response.data.data !== undefined) {
+
+
             this.taskInfo = response.data.data;
-            console.log(response.data.data);
+
+            for (var i = 0; i < response.data.data.length; i++) {
+              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+
+              if (this.taskInfo[i].tsk_deadline === null) {
+                this.taskInfo[i].tsk_deadline = ''
+              } else {
+                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.taskInfo[i].pri_text === 'High') {
+                this.taskInfo[i].pri_badge = 'badge-danger'
+              } else if (this.taskInfo[i].pri_text === 'Medium') {
+                this.taskInfo[i].pri_badge = 'badge-warning'
+              } else if (this.taskInfo[i].pri_text === 'Low') {
+                this.taskInfo[i].pri_badge = 'badge-info'
+              }
+            }
+
+
+
+            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
+          }
         });
     }
   },
@@ -127,27 +136,27 @@ export default {
       else return a;
     },
 
-    deadlineDate(){
+    deadlineDate() {
       return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
     },
 
-    createdDate(){
+    createdDate() {
       return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
     }
 
   },
 
-  mounted(){
-      if(this.selectedItemID !== 0){
-        this.getTaskInfo(this.selectedItemID);
-      }
+  mounted() {
+    if (this.selectedItemID !== 0) {
+      this.getTaskInfo(this.selectedItemID);
+    }
 
 
   },
 
   watch: {
     'selectedItemID': function(val, oldVal) {
-      if(val!==0){
+      if (val !== 0) {
         this.getTaskInfo(val);
       }
       // this.getCompanyInfo(val);
@@ -161,11 +170,19 @@ export default {
 </script>
 
 <style scoped>
-h1{
+h1 {
   text-align: left;
 }
 
-.task-header{
+.task-header {
   color: #333 !important;
+}
+
+.badge {
+  margin: 0.125rem;
+}
+
+.pointer {
+  cursor: pointer;
 }
 </style>
