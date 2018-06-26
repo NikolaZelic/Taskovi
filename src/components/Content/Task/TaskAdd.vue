@@ -11,19 +11,8 @@
             </div>
           </div>
 
-          <div class="content">
-            <!-- PROJECT -->
-            <div v-show='!task && !edit' class="form-group" @click='refreshProjectError'>
-              <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-                :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected" />
-            </div>
 
             <div class="content">
-              <!-- PROJECT -->
-              <div v-show='!task' class="form-group" @click='refreshProjectError'>
-                <vue-autosuggest ref='projectref' :suggestions="[ { data: suggestedProjects } ]" :renderSuggestion="renderProjectSuggestion"
-                  :inputProps="inputPropsProject" :getSuggestionValue="getSuggestionTeam" :onSelected="onProjectSelected" />
-              </div>
 
               <!-- TITLE -->
               <div class="form-group">
@@ -93,13 +82,10 @@
                 <button @click='createTask' type="submit" class="btn btn-success">Create</button>
               </div>
             </div>
-            <!-- content -->
-
-          </div>
         </div>
       </div>
     </div>
-  </transition>
+</transition>
 </template>
 
 <script>
@@ -179,8 +165,7 @@ export default {
       projectID: state => state.sidebarItemSelection[0]
     }),
     proId() {
-      if (this.$refs.projectref._data.currentItem == null) return null;
-      return this.$refs.projectref._data.currentItem.item.id;
+      return state.sidebarItemSelection[0];
     }
   },
 
