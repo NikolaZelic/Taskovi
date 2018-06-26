@@ -33,7 +33,11 @@
     <h4 class="mt-5 yellowText">Teams:</h4>
     <ul class="list-group list-group-flush mb-5">
       <!-- Lista timova -->
+<<<<<<< HEAD:src/components/Content/Company/CompanyView.vue
+      <li class="list-group-item darkBackground" v-for="team in teams">
+=======
       <li class="list-group-item darkBackground" v-for="team in teams" :key='team'>
+>>>>>>> 06b3b156f3ce51594a4d5dce49ba44413a4c6e88:src/components/Content/Company - NOT USED/CompanyView.vue
         {{ team.title }}<br /><span class="badge yellowText">Admin</span> {{ team.admin }}
       </li>
 
