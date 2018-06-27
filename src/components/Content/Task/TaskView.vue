@@ -7,14 +7,22 @@
   <template v-else>
 
 
+
+
+
+
+
+
+
       <div class="card">
-        <div class="card-header task-header">
+        <div class="card-header task-header" v-if="taskInfo[0] !== undefined">
           {{ taskInfo[0].taskname }}
         </div>
         <div class="card-body">
           <table class="table table-borderless text-center text-dark table-hover">
             <thead>
               <tr>
+                <th scope="col">Status</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
                 <th scope="col">Tags</th>
@@ -24,7 +32,13 @@
             </thead>
             <tbody>
 
-              <tr v-for="(task, index) in taskInfo" @click='getStepInfo(61, task.tsk_id)'> <!--@click="getStepInfo(task.tsk_id)"-->
+              <tr v-for="(task, index) in taskInfo" @click='getStepInfo(task.tsk_id)'> <!--@click="getStepInfo(task.tsk_id)"-->
+                <td>
+                  <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
+                  <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
+                  <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
+                </td>
+
                 <td>{{ task.tsk_title}}</td>
                 <td>
                   {{ task.tsk_deadline }}
@@ -67,62 +81,37 @@
 
 
 
-      <div class="card mt-5" v-if="selectedItemID > 0">
+      <div class="card mt-5" v-if="stepInfo.length > 0">
         <div class="card-header task-header">
-          {{ taskInfo[0].taskname }}
+          {{ stepInfo[0].tsk_title }}
         </div>
         <div class="card-body">
-          <table class="table table-borderless text-center text-dark table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Tags</th>
-                <th scope="col">Priority</th>
-                <th scope="col">Working</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <tr v-for="(task, index) in taskInfo"> <!--@click="getStepInfo(task.tsk_id)"-->
-                <td>{{ task.tsk_title}}</td>
-                <td>
-                  {{ task.tsk_deadline }}
-                </td>
-
-
-                <td>
-
-                  <div v-if='showAllTags && showAllTagsID === index'>
-                    <span class="badge badge-success" v-for="tag in task.tags">{{ tag.tag_text }}</span>
-                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
-                  </div>
-
-                  <div v-else>
-                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)">{{ tag.tag_text }}</span>
-                    <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
-                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
-                  </div>
-
-                </td>
-
-
-
-                <td>
-                  <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
-                </td>
-                <td>
-                {{task.usrworking}}
-              </td>
-              </tr>
-
-
-            </tbody>
-          </table>
+          <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
+          <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
+          <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
+          <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
+          <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
+          <p><strong>Priority: </strong>{{stepInfo[0].pri_text}}</p>
 
         </div>
       </div>
 
+      <!-- description:null
+      pri_text:"Low"
+      pro_id:146
+      pro_name:"Autobuski prevoz"
+      sta_text:"Assigned"
+      taskname:"Treba zameniti sijalicu"
+      tsk_deadline:"2018-06-26 11:48:03.0"
+      tsk_estimated_completion_date:null
+      tsk_id:64
+      tsk_timecreated:null
+      tsk_timespent:null
+      tsk_title:"Dostava"
+      usr_creator_name:"Dime"
+      usr_creator_surname:"Dimic"
+      usr_id_creator:64
+      usrworking:Array[2] -->
 
 
 
@@ -131,7 +120,6 @@
 </template>
 
 <script>
-
 import {
   store
 } from "@/store/index.js";
@@ -151,12 +139,14 @@ export default {
       taskInfo: [],
       showAllTags: false,
       showAllTagsID: undefined,
-      stepInfo: []
+      stepInfo: [],
+      stepShow: false
     };
   },
 
   methods: {
-    getStepInfo(taskID, stepID) {
+    getStepInfo(stepID) {
+      // console.log('taskID' + taskID + ', stepID' + stepID);
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
           params: {
             tasid: this.selectedItemID,
@@ -166,8 +156,8 @@ export default {
         })
         .then(response => {
           if (response.data.data !== undefined) {
-              console.log(response.data.data);
-            // this.taskInfo = response.data.data;
+              // console.log(response.data.data);
+            this.stepInfo = response.data.data;
           }
         });
     },
@@ -220,6 +210,17 @@ export default {
       else return a;
     },
 
+    showSteps() {
+      if(this.selectedItemID === 0){
+        this.stepShow = false;
+        return;
+      }else {
+        this.stepShow = true;
+        return;
+      }
+
+    },
+
     deadlineDate() {
       return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
     },
@@ -242,6 +243,7 @@ export default {
     'selectedItemID': function(val, oldVal) {
       if (val !== 0) {
         this.getTaskInfo(val);
+        this.getStepInfo(val)
       }
       // this.getCompanyInfo(val);
       // this.loadAdmins(val);
@@ -251,9 +253,28 @@ export default {
 
   }
 };
+
 </script>
 
+
 <style scoped>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 h1 {
   text-align: left;
 }
