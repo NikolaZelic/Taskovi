@@ -44,8 +44,7 @@
             <form class="form-block">
               <div class="search custom-modern">
                 <span class="fas fa-search"></span>
-                <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search"
-                  aria-label="Search">
+                <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="tabs[currentTabIndex].search" type="search" placeholder="Search" aria-label="Search">
               </div>
             </form>
             <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
@@ -55,30 +54,19 @@
                 </b-form-checkbox-group>
               </b-form-group>
 
-              <!-- <label v-for='f in radioFilter' :key='f.value'>
-                <input type="checkbox" name="check" :value="f.value" v-model="invokeFilterType">
-                <span class="label-text">{{f.text}}</span>
-              </label> -->
-
             </form>
-            <!-- <form v-if="showAdminFilter()" class="item-filter" role="group" aria-label="Item Filter">
-              <label>
-                <input type="checkbox" v-model="adminFilter">
-                <span class="label-text">is Admin</span>
-              </label>
-            </form> -->
           </div>
           <div class="item-list">
-            <!-- <task-sidebar v-if="currentTabIndex === 1 || currentTabIndex === 2" /> -->
             <table>
-              <thead v-if='currentTabIndex === 0'>
-                <tr><th>Project</th><th>Desc</th><th>DeadLine</th></tr>
+              <thead>
+                <tr>
+                  <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
+                  <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
+                  <th>Edit</th>
+                </tr>
               </thead>
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-                  <td>
-                    <span @click="editItemButton(item)" class="td-icons fas fa-edit" title="Edit Item"></span>
-                  </td>
                   <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
                   <td v-if="item.haveUnseenFeed ==='true'">
                     <span title="Unread" class="badge badge-primary badge-pill">1</span>
@@ -93,6 +81,10 @@
                   </td>
                   <td v-if="item.userscount !== undefined && item.userscount !== null">
                     <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                  </td>
+                  <td>
+                    <span v-if='currentTabIndex !== 0 || item.is_admin === "true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
+                      title="Edit Item"></span>
                   </td>
                 </tr>
               </tbody>
@@ -114,13 +106,13 @@ import { mapState } from "vuex";
 import UserPopup from "./UserPopup";
 export default {
   components: {
-    UserPopup,
+    UserPopup
   },
   data() {
     return {
       // isTask: false,
       sidebarActive: true,
-      searchData: "",
+      // searchData: "",
       currentTabIndex: 0,
       project: {
         title: undefined,
@@ -147,11 +139,13 @@ export default {
       tabs: [
         {
           name: "Projects",
-          icon: "fas fa-project-diagram"
+          icon: "fas fa-project-diagram",
+          search: ""
         },
         {
           name: "Tasks",
-          icon: "fas fa-tasks"
+          icon: "fas fa-tasks",
+          search: ""
         }
       ]
     };
@@ -305,7 +299,8 @@ export default {
       if (tabData === undefined) return;
       let filtered = tabData.filter(it => {
         var item = it.title;
-        var searchItem = this.searchData;
+        var searchItem = this.tabs[this.currentTabIndex].search;
+        // var searchItem = this.searchData;
         return item == undefined || searchItem == undefined
           ? false
           : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
@@ -396,7 +391,7 @@ export default {
 .tablinks.active {
   background: #24262d;
   color: yellow;
-  border-left: 3px solid var(--ac-light-color);
+  border-left: 3px solid var(--ac-light-bg-color);
 }
 
 .tablinks:hover,
@@ -452,7 +447,7 @@ export default {
 
 .sidebar-content {
   max-width: 100%;
-  background: #24262d;
+  background: linear-gradient(to right, #24262d 0%, #20232b 100%);
   transition: all 0.5s ease;
   flex-direction: column;
   display: flex;
@@ -471,7 +466,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: black;
-  background: var(--ac-light-color);
+  background: var(--ac-light-bg-color);
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
@@ -558,6 +553,7 @@ h2 {
 .search input:hover {
   border: 1px solid var(--ac-color);
 }
+
 .search input::placeholder {
   color: #888;
 }

@@ -1,43 +1,181 @@
 <template>
-<div class="start">
-  <div id='main'>
-    <div class="form-auth">
-      <component @clicked='formSwitch' :is='form'></component>
+  <div class="start">
+    <div id='main'>
+     <h1> <strong>Tasker</strong></h1>
+      <div class="form-auth">
+
+        <div v-if='loginVisible' class="login">
+          <form class="login-form" novalidate>
+            <div class="form-group">
+              <span class='fas fa-envelope'></span>
+              <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3" />
+            </div>
+            <div class="form-group">
+              <span class='fas fa-lock'></span>
+              <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
+              />
+            </div>
+            <button @click.prevent="login" class='btn btn-warning'>login</button>
+            <p class="message">Not registered?
+              <strong>
+                <a @click='loginVisible = !loginVisible'>Create an account</a>
+              </strong>
+            </p>
+          </form>
+          <!-- REMOVE IN FINAL -->
+          <div class="preset">
+            <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
+          </div>
+        </div>
+
+        <div v-else class="register">
+          <vue-form :state="formstate" @submit.prevent="onSubmit">
+
+            <validate class="form-group">
+              <span class='fas fa-user'></span>
+              <input type="text" name="name" v-model='user.name' class="form-control" placeholder="Name" required>
+            </validate>
+
+            <validate class="form-group">
+              <span class='fas fa-user'></span>
+              <input type="text" name="surname" v-model='user.surname' class="form-control" placeholder="Surname" required minlength="3">
+            </validate>
+
+            <validate class="form-group">
+              <span class='fas fa-envelope'></span>
+              <input type="email" name="email" v-model.lazy='user.email' class="form-control" placeholder="Email address" required>
+            </validate>
+
+            <validate class="form-group">
+              <span class='fas fa-lock'></span>
+              <input type="password" name="pass" v-model='user.password' class="form-control" placeholder="password" required minlength="3">
+            </validate>
+            <validate class="form-group">
+              <span class='fas fa-lock'></span>
+              <input type="password" name="pass2" v-model='user.confirmpass' class="form-control" placeholder="Confirm password" required
+                minlength="3">
+            </validate>
+
+            <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
+
+          </vue-form>
+          <p class="message">Already registered?
+            <strong>
+              <a @click='loginVisible = !loginVisible'>Sign In</a>
+            </strong>
+          </p>
+
+        </div>
+
+        <!-- <component @clicked='formSwitch' :is='form'></component> -->
+      </div>
+      <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
+
     </div>
   </div>
-  <div id='side'>
-    <div id='apptitle'>
-      <h2>Welcome to our</h2>
-      <h1>Task Management App</h1>
-    </div>
-    <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
-  </div>
-</div>
+
 </template>
 
 <script>
-import LoginPage from "@/components/Auth/LoginPage";
-import RegistrationPage from "@/components/Auth/RegistrationPage";
 import { api } from "@/api/index.js";
+import VueForm from "vue-form";
 export default {
-  components: {
-    LoginPage,
-    RegistrationPage
-  },
+  mixins: [
+    new VueForm({
+      inputClasses: {
+        valid: "is-valid",
+        invalid: "is-invalid"
+      }
+    })
+    // StartPage
+  ],
   data() {
     return {
-      signedIn: false,
-      login: true
+      loginVisible: true,
+      presets: [
+        {
+          email: "nzelic@ymail.com",
+          pass: "123"
+        },
+        {
+          email: "danilopusic@ymail.com",
+          pass: "123"
+        },
+        {
+          email: "dime@gmail.com",
+          pass: "123"
+        }
+      ],
+      formstate: {},
+      user: {}
+      // signedIn: false,
+      // login: true
     };
   },
   methods: {
-    formSwitch(val) {
-      this.login = val;
+    autologin(p) {
+      // REMOVE IN FINAL
+      this.user = p;
+      this.login();
+    },
+    login() {
+      let mail = this.user.email;
+      let pass = this.user.pass;
+      if (mail.length < 4) {
+        alert("Email is not valid");
+        return;
+      }
+      if (pass.length < 2) {
+        alert("Password cannot be less then two characters");
+        return;
+      }
+      api
+        .login(mail, pass)
+        .then(r => {
+          let sid = r.data.sid;
+          if (sid != undefined || sid != null) {
+            // WRITE SID TO STORE
+            window.localStorage.sid = sid;
+            window.localStorage.name = r.data.name;
+            window.localStorage.surname = r.data.surname;
+            this.$router.push("/");
+          } else {
+            alert(r.data.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    register() {
+      let valid = this.formstate.$valid;
+      console.log(valid);
+      if (valid) {
+        api.register(this.user);
+      }
+    },
+    onSubmit() {
+      if (this.formstate.$invalid) {
+        alert("invalid");
+        // alert user and exit early
+        return;
+      }
+      alert("submitt");
+      // otherwise submit form
     }
   },
   computed: {
-    form() {
-      return this.login ? "login-page" : "registration-page";
+    passNotSame() {
+      var undef =
+        this.user.password === undefined || this.user.confirmpass === undefined;
+      if (undef) return -1;
+      var empty =
+        this.user.password.length === 0 || this.user.confirmpass.length === 0;
+      if (empty) return -1;
+      return this.user.password !== this.user.confirmpass;
+    },
+    registerDisabled() {
+      return this.passNotSame;
     }
   },
   created() {
@@ -53,32 +191,20 @@ export default {
 <style scoped>
 .start {
   text-align: center;
+  justify-content: center;
   display: flex;
   height: 100vh;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background: #000 url(~@/assets/img/Start/StartPage.jpg);
+  background: linear-gradient(to top, #f46b45, #eea849);
+  /* background: linear-gradient(to left, #fc4a1a, #f7b733); */
 }
 
-h1,
-h2 {
-  color: #fff;
-  background: #0007;
-}
-
-.start > * {
-  width: 50%;
-}
-
-#side {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+h1 {
+  margin-bottom: 50px;
+  color: #000b;
 }
 
 #main {
-  background: #25881442;
+  /* background: #25881442; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -91,12 +217,37 @@ h2 {
 
 #creators {
   position: absolute;
-  background: #28a745;
+  background: var(--ac-light-bg-color);
   height: 30px;
   width: 30px;
   opacity: 0.2;
   border-radius: 50%;
   bottom: 5%;
   right: 5%;
+}
+
+/* LOGIN */
+
+.preset button {
+  line-height: 0px;
+}
+
+.preset > * {
+  margin-bottom: 10px;
+}
+
+.form-group {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.form-group input {
+  padding-left: 40px;
+}
+
+.form-group span {
+  position: absolute;
+  left: 15px;
 }
 </style>

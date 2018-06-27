@@ -14,13 +14,14 @@
 
 /* input.darkTheme,
 textarea.darkTheme, */
-input.form-control,
+
+/* input.form-control,
 textarea.form-control {
   border-radius: 0;
   border: 1px solid #eee5;
   color: #eee;
   background: #f1eadf;
-}
+} */
 
 .maincontent.darkTheme input,
 .maincontent.darkTheme textarea {

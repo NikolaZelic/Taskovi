@@ -31,7 +31,6 @@ textarea.custom-modern::placeholder {
 
 /* input[type="radio"]:checked+.label-text:before {
   content: "\f192";
-  color: var(--ac-light-color);
   animation: effect 250ms ease-in;
 }
 

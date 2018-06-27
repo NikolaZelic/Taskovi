@@ -589,7 +589,7 @@ export default {
 .tmp-content .multiselect--active .multiselect__option--highlight::after,
 .tmp-content .multiselect .multiselect__tag span,
 .tmp-content .multiselect .multiselect__tag {
-  background: var(--ac-light-color);
+  background: var(--ac-light-bg-color);
 }
 
 .tmp-content .deadline {
@@ -621,8 +621,8 @@ export default {
 }
 
 .add-myself {
-  background: var(--ac-light-color);
-  border: 3px solid var(--ac-light-color);
+  background: var(--ac-light-bg-color);
+  border: 3px solid var(--ac-light-bg-color);
   color: black;
   border-radius: 15px;
   position: absolute;
@@ -768,15 +768,6 @@ export default {
   cursor: pointer;
 }
 
-/* .fas.fa-user {
-  position: absolute;
-} */
-
-/* .fas-selected {
-  color: var(--ac-light-color);
-  border-bottom: 2px solid var(--ac-light-color);
-} */
-
 div.form-group{
   display: flex;
   
@@ -795,8 +786,8 @@ div.form-group{
 }
 
 .tag {
-  background-color: var(--ac-light-color);
-  border: 1px solid var(--ac-light-color);
+  background-color: var(--ac-light-bg-color);
+  border: 1px solid var(--ac-light-bg-color);
   border-radius: 5px;
 }
 
