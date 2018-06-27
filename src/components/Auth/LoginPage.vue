@@ -47,6 +47,14 @@ export default {
         {
           email: "dime@gmail.com",
           pass: "123"
+        },
+        {
+          email: "email001@qqq.com",
+          pass: "qqq"
+        },
+        {
+          email: "email004@qqq.com",
+          pass: "qqq"
         }
       ],
       user: {}

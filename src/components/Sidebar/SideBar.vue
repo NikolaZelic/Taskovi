@@ -44,7 +44,8 @@
             <form class="form-block">
               <div class="search custom-modern">
                 <span class="fas fa-search"></span>
-                <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="searchData" type="search" placeholder="Search"
+                  aria-label="Search">
               </div>
             </form>
             <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
@@ -71,15 +72,13 @@
             <!-- <task-sidebar v-if="currentTabIndex === 1 || currentTabIndex === 2" /> -->
             <table>
               <thead v-if='currentTabIndex === 0'>
-                <tr>
-                  <th class='td-flex'>Project</th>
-                  <!-- <th>Desc</th> -->
-                  <th>DeadLine</th>
-                  <th>Edit</th>
-                </tr>
+                <tr><th>Project</th><th>Desc</th><th>DeadLine</th></tr>
               </thead>
               <tbody>
                 <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+                  <td>
+                    <span @click="editItemButton(item)" class="td-icons fas fa-edit" title="Edit Item"></span>
+                  </td>
                   <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
                   <td v-if="item.haveUnseenFeed ==='true'">
                     <span title="Unread" class="badge badge-primary badge-pill">1</span>
@@ -94,10 +93,6 @@
                   </td>
                   <td v-if="item.userscount !== undefined && item.userscount !== null">
                     <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                  </td>
-                  <td>
-                    <span v-show='currentTabIndex !== 0 || item.is_admin=="true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
-                      title="Edit Item"></span>
                   </td>
                 </tr>
               </tbody>
@@ -117,9 +112,11 @@ import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 import { mapState } from "vuex";
 import UserPopup from "./UserPopup";
+import TaskSidebar from "./TaskSidebar";
 export default {
   components: {
-    UserPopup
+    UserPopup,
+    TaskSidebar
   },
   data() {
     return {
@@ -134,6 +131,7 @@ export default {
       // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
+      // darkTheme: false,
       selectedFilter: ["as"],
       radioFilter: [
         {
@@ -158,11 +156,34 @@ export default {
           name: "Tasks",
           icon: "fas fa-tasks"
         }
+        // {
+        //   name: "Issues",
+        //   icon: "fas fa-bug"
+        // }
+        // {
+        //   name: "Teams",
+        //   icon: "fas fa-users",
+        //   isAdmin: true
+        // }
       ]
+      // activeArray: []
+      // invokeFilterType: "as"
     };
   },
   watch: {
+    // invokeFilterType(val, oldVal) {
+    //   console.log(val);
+    //   delete this.tabs[this.currentTabIndex].itemIndex;
+    //   this.activeItem = undefined;
+    //   this.getTabData();
+    // },
+    // getActiveArray(val, oldVal) {
+    //   this.activeArray = val;
+    // },
     selectedFilter() {
+      //   console.log(val);
+      //   delete this.tabs[this.currentTabIndex].itemIndex;
+      //   this.activeItem = undefined;
       this.getFilterData();
     },
     currentTabIndex(val) {
@@ -572,7 +593,6 @@ h2 {
 .search input:hover {
   border: 1px solid var(--ac-color);
 }
-
 .search input::placeholder {
   color: #888;
 }

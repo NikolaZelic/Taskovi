@@ -10,20 +10,8 @@
   width: 100%;
 }
 
-.item-list>table td,
-.item-list>table th {
+.item-list>table td {
   height: 100%;
-  padding: 0 7px;
-}
-
-.item-list td:first-child,
-.item-list th:first-child {
-  border-left: none;
-}
-
-.item-list td:last-child,
-.item-list th:last-child {
-  border-right: none;
 }
 
 .item-list tr {
@@ -52,8 +40,17 @@
   background-color: #1d1d1d;
 }
 
-/* .item-list td,.item-list td {
-} */
+.item-list td {
+  padding: 0 7px;
+}
+
+.item-list td:first-child {
+  border-left: none;
+}
+
+.item-list td:last-child {
+  border-right: none;
+}
 
 .td-flex {
   flex: 1;
