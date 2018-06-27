@@ -207,6 +207,11 @@ export default {
     min-height: 100vh;
   }
   /* SIDEBAR */
+  /* #wrapper > aside.collapsed {
+    position: fixed;
+    height: 100vh;
+    width: 37%;
+  } */
   #wrapper > aside {
     position: fixed;
     height: 100vh;

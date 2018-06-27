@@ -1,5 +1,5 @@
 <template>
-  <aside id="sidebar">
+  <aside id="sidebar" :class="{ collapsed: !sidebarActive }">
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
@@ -112,11 +112,9 @@ import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 import { mapState } from "vuex";
 import UserPopup from "./UserPopup";
-import TaskSidebar from "./TaskSidebar";
 export default {
   components: {
     UserPopup,
-    TaskSidebar
   },
   data() {
     return {
@@ -131,7 +129,6 @@ export default {
       // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
-      // darkTheme: false,
       selectedFilter: ["as"],
       radioFilter: [
         {
@@ -156,30 +153,10 @@ export default {
           name: "Tasks",
           icon: "fas fa-tasks"
         }
-        // {
-        //   name: "Issues",
-        //   icon: "fas fa-bug"
-        // }
-        // {
-        //   name: "Teams",
-        //   icon: "fas fa-users",
-        //   isAdmin: true
-        // }
       ]
-      // activeArray: []
-      // invokeFilterType: "as"
     };
   },
   watch: {
-    // invokeFilterType(val, oldVal) {
-    //   console.log(val);
-    //   delete this.tabs[this.currentTabIndex].itemIndex;
-    //   this.activeItem = undefined;
-    //   this.getTabData();
-    // },
-    // getActiveArray(val, oldVal) {
-    //   this.activeArray = val;
-    // },
     selectedFilter() {
       //   console.log(val);
       //   delete this.tabs[this.currentTabIndex].itemIndex;
@@ -233,7 +210,6 @@ export default {
       }
     },
     getTabData() {
-      // console.log('request data');
       let index = this.currentTabIndex;
       switch (index) {
         case 0:
@@ -247,7 +223,6 @@ export default {
           this.actionTabDataTeam();
           break;
       }
-      // this.setActiveArray();
     },
     getFilterData() {
       let cr = this.selectedFilter.includes("cr");
@@ -297,9 +272,6 @@ export default {
         ? dateTime.split(" ")[0]
         : "";
     },
-    // setActiveArray() {
-    //   this.activeArray = this.getActiveArray;
-    // },
     signOut() {
       window.localStorage.removeItem("sid");
       api.sessionActive();
@@ -341,13 +313,6 @@ export default {
       return filtered;
     }
   },
-  // directives: {
-  //   focus: {
-  //     inserted(el) {
-  //       el.focus();
-  //     }
-  //   }
-  // },
   mounted() {
     let sidebarActive = window.sessionStorage.sidebarActive;
     if (sidebarActive !== undefined) {
