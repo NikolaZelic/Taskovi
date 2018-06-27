@@ -24,6 +24,66 @@
             </thead>
             <tbody>
 
+              <tr v-for="(task, index) in taskInfo" @click='getStepInfo(61, task.tsk_id)'> <!--@click="getStepInfo(task.tsk_id)"-->
+                <td>{{ task.tsk_title}}</td>
+                <td>
+                  {{ task.tsk_deadline }}
+                </td>
+
+
+                <td>
+
+                  <div v-if='showAllTags && showAllTagsID === index'>
+                    <span class="badge badge-success" v-for="tag in task.tags">{{ tag.tag_text }}</span>
+                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
+                  </div>
+
+                  <div v-else>
+                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)">{{ tag.tag_text }}</span>
+                    <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
+                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
+                  </div>
+
+                </td>
+
+
+
+                <td>
+                  <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
+                </td>
+                <td>
+                {{task.usrworking}}
+              </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+
+
+
+
+      <div class="card mt-5" v-if="selectedItemID > 0">
+        <div class="card-header task-header">
+          {{ taskInfo[0].taskname }}
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless text-center text-dark table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Tags</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Working</th>
+              </tr>
+            </thead>
+            <tbody>
+
               <tr v-for="(task, index) in taskInfo"> <!--@click="getStepInfo(task.tsk_id)"-->
                 <td>{{ task.tsk_title}}</td>
                 <td>
@@ -64,67 +124,6 @@
       </div>
 
 
-<!-- modal start -->
-<!-- <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-
-    <div class="modal-content">
-
-      <div class="modal-body tab-content">
-        <div id="info" class="tab-pane fade show active" role="tabpanel">
-
-
-          <p><strong>Title: </strong>Nabavljanje sijalice za ucionicu 23</p>
-
-          <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <p><strong>Deadline:</strong> 25/08/2018 16:45</p>
-          <p><strong>Tags:</strong>
-            <span class="badge badge-success">Front</span>
-            <span class="badge badge-success">MARS</span>
-            <span class="badge badge-success">Header</span>
-            <span class="badge badge-success">MARS</span>
-            <span class="badge badge-success">Header</span>
-          </p>
-          <p><strong>Priority:</strong> <span class="badge badge-danger">High</span></p>
-          <p><strong>Working:</strong>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px">
-
-            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA"
-              class="rounded-circle" width="30px">
-
-            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px">
-          </p>
-          <p><strong>Status:</strong> In progress</p>
-
-
-
-        </div>
-
-
-
-
-
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-<!-- modal end -->
-
-
-
-
-
-
-
 
 
     </template>
@@ -151,14 +150,27 @@ export default {
     return {
       taskInfo: [],
       showAllTags: false,
-      showAllTagsID: undefined
+      showAllTagsID: undefined,
+      stepInfo: []
     };
   },
 
   methods: {
-    // getStepInfo(stepID){
-    //   console.log(stepID);
-    // },
+    getStepInfo(taskID, stepID) {
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+          params: {
+            tasid: this.selectedItemID,
+            stepid: stepID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          if (response.data.data !== undefined) {
+              console.log(response.data.data);
+            // this.taskInfo = response.data.data;
+          }
+        });
+    },
 
     getTaskInfo(taskID) {
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
