@@ -1,74 +1,85 @@
 <template>
   <div class="start">
     <div id='main'>
-     <h1> <strong>Tasker</strong></h1>
-      <div class="form-auth">
+      <h1>
+        <strong>Tasker</strong>
+      </h1>
+      <transition name="fade" mode="out-in">
 
-        <div v-if='loginVisible' class="login">
-          <form class="login-form" novalidate>
-            <div class="form-group">
-              <span class='fas fa-envelope'></span>
-              <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3" />
+        <div class="form-auth">
+          <!-- <transition name="fade" mode="out-in"> -->
+          <div v-if='loginVisible' key='1' class="login">
+            <h2>Log in to your account</h2>
+            <form class="login-form" novalidate>
+              <div class="form-group">
+                <span class='fas fa-envelope'></span>
+                <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3"
+                />
+              </div>
+              <div class="form-group">
+                <span class='fas fa-lock'></span>
+                <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
+                />
+              </div>
+              <button @click.prevent="login" class='btn btn-warning'>login</button>
+              <p class="message">Not registered?
+                <strong>
+                  <a @click='loginVisible = !loginVisible'>Create an account</a>
+                </strong>
+              </p>
+            </form>
+            <!-- REMOVE IN FINAL -->
+            <div class="preset">
+              <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
             </div>
-            <div class="form-group">
-              <span class='fas fa-lock'></span>
-              <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
-              />
-            </div>
-            <button @click.prevent="login" class='btn btn-warning'>login</button>
-            <p class="message">Not registered?
+          </div>
+
+          <div v-if='!loginVisible' key='2' class="register">
+            <h2>Sign up for free</h2>
+            <vue-form :state="formstate" @submit.prevent="onSubmit">
+
+              <validate class="form-group">
+                <span class='fas fa-user'></span>
+                <input type="text" name="name" v-model='user.name' :class='fieldClassName(formstate.name)' class="form-control" placeholder="Name"
+                  required>
+              </validate>
+
+              <validate class="form-group">
+                <span class='fas fa-user'></span>
+                <input type="text" name="surname" v-model='user.surname' :class='fieldClassName(formstate.surname)' class="form-control"
+                  placeholder="Surname" required minlength="3">
+              </validate>
+
+              <validate class="form-group">
+                <span class='fas fa-envelope'></span>
+                <input type="email" name="email" v-model.lazy='user.email' :class='fieldClassName(formstate.email)' class="form-control"
+                  placeholder="Email address" required>
+              </validate>
+
+              <validate class="form-group">
+                <span class='fas fa-lock'></span>
+                <input type="password" name="pass" v-model='user.password' :class='fieldClassName(formstate.pass)' class="form-control" placeholder="password"
+                  required minlength="3">
+              </validate>
+              <validate class="form-group">
+                <span class='fas fa-lock'></span>
+                <input type="password" name="pass2" v-model='user.confirmpass' :class='fieldClassName(formstate.pass2)' class="form-control"
+                  placeholder="Confirm password" required minlength="3">
+              </validate>
+
+              <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
+
+            </vue-form>
+            <p class="message">Already have an account?
               <strong>
-                <a @click='loginVisible = !loginVisible'>Create an account</a>
+                <a @click='loginVisible = !loginVisible'>Sign In</a>
               </strong>
             </p>
-          </form>
-          <!-- REMOVE IN FINAL -->
-          <div class="preset">
-            <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
+
           </div>
         </div>
-
-        <div v-else class="register">
-          <vue-form :state="formstate" @submit.prevent="onSubmit">
-
-            <validate class="form-group">
-              <span class='fas fa-user'></span>
-              <input type="text" name="name" v-model='user.name' class="form-control" placeholder="Name" required>
-            </validate>
-
-            <validate class="form-group">
-              <span class='fas fa-user'></span>
-              <input type="text" name="surname" v-model='user.surname' class="form-control" placeholder="Surname" required minlength="3">
-            </validate>
-
-            <validate class="form-group">
-              <span class='fas fa-envelope'></span>
-              <input type="email" name="email" v-model.lazy='user.email' class="form-control" placeholder="Email address" required>
-            </validate>
-
-            <validate class="form-group">
-              <span class='fas fa-lock'></span>
-              <input type="password" name="pass" v-model='user.password' class="form-control" placeholder="password" required minlength="3">
-            </validate>
-            <validate class="form-group">
-              <span class='fas fa-lock'></span>
-              <input type="password" name="pass2" v-model='user.confirmpass' class="form-control" placeholder="Confirm password" required
-                minlength="3">
-            </validate>
-
-            <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
-
-          </vue-form>
-          <p class="message">Already registered?
-            <strong>
-              <a @click='loginVisible = !loginVisible'>Sign In</a>
-            </strong>
-          </p>
-
-        </div>
-
-        <!-- <component @clicked='formSwitch' :is='form'></component> -->
-      </div>
+      </transition>
+      <!-- </transition-group> -->
       <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
 
     </div>
@@ -82,10 +93,10 @@ import VueForm from "vue-form";
 export default {
   mixins: [
     new VueForm({
-      inputClasses: {
-        valid: "is-valid",
-        invalid: "is-invalid"
-      }
+      // inputClasses: {
+      // valid: "is-valid",
+      // invalid: "is-invalid1111"
+      // }
     })
     // StartPage
   ],
@@ -113,6 +124,17 @@ export default {
     };
   },
   methods: {
+    fieldClassName: function(field) {
+      if (!field) {
+        return "";
+      }
+      if ((field.$touched || field.$submitted) && field.$valid) {
+        return "is-valid";
+      }
+      if ((field.$touched || field.$submitted) && field.$invalid) {
+        return "is-invalid";
+      }
+    },
     autologin(p) {
       // REMOVE IN FINAL
       this.user = p;
@@ -203,17 +225,17 @@ h1 {
   color: #000b;
 }
 
+h2 {
+  margin-bottom: 25px;
+  color: #000b;
+}
+
 #main {
-  /* background: #25881442; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
-/* #apptitle {
-  margin: 45% 0 0;
-} */
 
 #creators {
   position: absolute;
@@ -243,11 +265,41 @@ h1 {
 }
 
 .form-group input {
-  padding-left: 40px;
+  padding-left: 50px;
 }
 
 .form-group span {
   position: absolute;
   left: 15px;
+}
+
+.form-group span:after {
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: -10px;
+  bottom: -10px;
+  width: 1px;
+  opacity: 0.5;
+  background-color: rgba(212, 212, 212, 0);
+  background-image: linear-gradient(
+    to top,
+    rgba(212, 212, 212, 0) 0,
+    #d4d4d4 30%,
+    #d4d4d4 70%,
+    rgba(212, 212, 212, 0) 100%
+  );
+}
+
+/* Transition */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

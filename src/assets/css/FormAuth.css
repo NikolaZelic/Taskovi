@@ -21,7 +21,7 @@
   width: 100%;
   border: 0;
   padding: 15px;
-  transition: all 0.4s;
+  transition: all 0.4s;line-height: 1;
   cursor: pointer;
 }
 
