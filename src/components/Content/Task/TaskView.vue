@@ -48,12 +48,12 @@
                 <td>
 
                   <div v-if='showAllTags && showAllTagsID === index'>
-                    <span class="badge badge-success" v-for="tag in task.tags" :key='tag'>{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="(tag,index) in task.tags" :key='index'>{{ tag.tag_text }}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
                   </div>
 
                   <div v-else>
-                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)" :key='tag'>{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
                     <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
                   </div>
@@ -81,28 +81,59 @@
 
 
 
-      <div class="card mt-5 col-md-6 offset-md-3 pad-0" v-if="stepInfo.length > 0">
+      <div class="card mt-5 col-md-6 offset-md-3 pad-0 mb-5" v-if="stepInfo.length > 0">
         <div class="card-header task-header">
           {{ stepInfo[0].tsk_title }}
         </div>
         <div class="card-body">
           <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
           <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
-          <p><strong>Status: </strong>{{stepInfo[0].sta_text}}</p> <!--dodati badge alert -->
+
+          <p><strong>Status: </strong>
+            {{stepInfo[0].sta_text}}
+            <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+            <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+            <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+          </p>
+
           <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-          <p><strong>Priority: </strong>{{stepInfo[0].pri_text}}</p> <!--dodati badge alert -->
+          <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p> <!--dodati badge alert -->
           <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
           <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
 
+<p><strong>Created by: </strong>
+  <ul class="list-unstyled">
+    <li class="media mt-2">
 
-          <p><strong>Created by: </strong>{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</p>
+      <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+      <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+
+      <div class="media-body">
+        <div class="media-body">
+              <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                {{stepInfo[0].usr_email}}
+          </div>
+          </div>
+
+    </li>
+  </ul>
+</p>
           <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
           <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
           <p><strong>Working: </strong>
-            <ul>
-              <li v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
-                {{user.usr_name}} -- {{user.usr_email}}
-                <img :src=" 'data:image/jpeg;base64,' + user.usr_picture" />
+            <ul class="list-unstyled">
+              <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+
+                <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                <div class="media-body">
+                  <div class="media-body">
+                        <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                          {{user.usr_email}}
+                    </div>
+                    </div>
+
               </li>
             </ul>
           </p>
@@ -172,8 +203,52 @@ export default {
         })
         .then(response => {
           if (response.data.data !== undefined) {
-              // console.log(response.data.data);
+            // console.log(response.data.data);
             this.stepInfo = response.data.data;
+
+            for (var i = 0; i < response.data.data.length; i++) {
+              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+              if (this.stepInfo[i].tsk_timespent !== null) {
+                if (this.stepInfo[i].tsk_timespent <= 59) {
+                  this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
+                }
+                else{
+                  let minutes = this.stepInfo[i].tsk_timespent % 60;
+                  let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
+
+                  this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
+                }
+              }
+
+
+              if (this.stepInfo[i].tsk_deadline === null) {
+                this.stepInfo[i].tsk_deadline = ''
+              } else {
+                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].tsk_estimated_completion_date === null) {
+                this.stepInfo[i].tsk_estimated_completion_date = ''
+              } else {
+                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].tsk_timecreated === null) {
+                this.stepInfo[i].tsk_timecreated = ''
+              } else {
+                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].pri_text === 'High') {
+                this.stepInfo[i].pri_badge = 'badge-danger'
+              } else if (this.stepInfo[i].pri_text === 'Medium') {
+                this.stepInfo[i].pri_badge = 'badge-warning'
+              } else if (this.stepInfo[i].pri_text === 'Low') {
+                this.stepInfo[i].pri_badge = 'badge-info'
+              }
+            }
+
           }
         });
     },
@@ -227,10 +302,10 @@ export default {
     },
 
     showSteps() {
-      if(this.selectedItemID === 0){
+      if (this.selectedItemID === 0) {
         this.stepShow = false;
         return;
-      }else {
+      } else {
         this.stepShow = true;
         return;
       }
@@ -269,28 +344,10 @@ export default {
 
   }
 };
-
 </script>
 
 
 <style scoped>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 h1 {
   text-align: left;
 }
@@ -307,7 +364,11 @@ h1 {
   cursor: pointer;
 }
 
-.pad-0{
+.pad-0 {
   padding: 0;
+}
+
+.slika {
+  border: 1px solid #333;
 }
 </style>
