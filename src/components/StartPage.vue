@@ -4,82 +4,100 @@
       <h1>
         <strong>Tasker</strong>
       </h1>
-      <transition name="fade" mode="out-in">
+      
+      <template v-if='loginVisible'>
+        <transition name="slide-to-left" mode="out-in">
+          <div class="form-auth" :key='1'>
 
-        <div class="form-auth">
-          <!-- <transition name="fade" mode="out-in"> -->
-          <div v-if='loginVisible' key='1' class="login">
-            <h2>Log in to your account</h2>
-            <form class="login-form" novalidate>
-              <div class="form-group">
-                <span class='fas fa-envelope'></span>
-                <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3"
-                />
+
+            <div class="login">
+              <h2>Log in to your account</h2>
+              <form class="login-form" novalidate>
+                <div class="form-group">
+                  <span class='fas fa-envelope'></span>
+                  <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3"
+                  />
+                </div>
+                <div class="form-group">
+                  <span class='fas fa-lock'></span>
+                  <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
+                  />
+                </div>
+                <button @click.prevent="login" class='btn btn-warning'>login</button>
+                <p class="message">Not registered?
+                  <strong>
+                    <a @click='loginVisible = !loginVisible'>Create an account</a>
+                  </strong>
+                </p>
+              </form>
+              <!-- REMOVE IN FINAL -->
+              <div class="preset">
+                <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
               </div>
-              <div class="form-group">
-                <span class='fas fa-lock'></span>
-                <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
-                />
-              </div>
-              <button @click.prevent="login" class='btn btn-warning'>login</button>
-              <p class="message">Not registered?
+            </div>
+
+          </div>
+        </transition>
+      </template>
+
+      <template v-if='!loginVisible'>
+        <transition name="slide-to-right" mode="out-in">
+
+          <div class="form-auth" :key='2'>
+            <div class="register">
+              <h2>Sign up for free</h2>
+              <vue-form :state="formstate" @submit.prevent="onSubmit">
+
+                <validate class="form-group">
+                  <span class='fas fa-user'></span>
+                  <input type="text" name="name" v-model='user.name' :class='fieldClassName(formstate.name)' class="form-control" placeholder="Name"
+                    required>
+                </validate>
+
+                <validate class="form-group">
+                  <span class='fas fa-user'></span>
+                  <input type="text" name="surname" v-model='user.surname' :class='fieldClassName(formstate.surname)' class="form-control"
+                    placeholder="Surname" required minlength="3">
+                </validate>
+
+                <validate class="form-group">
+                  <span class='fas fa-envelope'></span>
+                  <input type="email" name="email" v-model.lazy='user.email' :class='fieldClassName(formstate.email)' class="form-control"
+                    placeholder="Email address" required>
+                </validate>
+
+                <validate class="form-group">
+                  <span class='fas fa-lock'></span>
+                  <input type="password" name="pass" v-model='user.password' :class='fieldClassName(formstate.pass)' class="form-control" placeholder="password"
+                    required minlength="3">
+                </validate>
+                <validate class="form-group">
+                  <span class='fas fa-lock'></span>
+                  <input type="password" name="pass2" v-model='user.confirmpass' :class='fieldClassName(formstate.pass2)' class="form-control"
+                    placeholder="Confirm password" required minlength="3">
+                </validate>
+
+                <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
+
+              </vue-form>
+              <p class="message">Already have an account?
                 <strong>
-                  <a @click='loginVisible = !loginVisible'>Create an account</a>
+                  <a @click='loginVisible = !loginVisible'>Sign In</a>
                 </strong>
               </p>
-            </form>
-            <!-- REMOVE IN FINAL -->
-            <div class="preset">
-              <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
+
             </div>
-          </div>
 
-          <div v-if='!loginVisible' key='2' class="register">
-            <h2>Sign up for free</h2>
-            <vue-form :state="formstate" @submit.prevent="onSubmit">
 
-              <validate class="form-group">
-                <span class='fas fa-user'></span>
-                <input type="text" name="name" v-model='user.name' :class='fieldClassName(formstate.name)' class="form-control" placeholder="Name"
-                  required>
-              </validate>
-
-              <validate class="form-group">
-                <span class='fas fa-user'></span>
-                <input type="text" name="surname" v-model='user.surname' :class='fieldClassName(formstate.surname)' class="form-control"
-                  placeholder="Surname" required minlength="3">
-              </validate>
-
-              <validate class="form-group">
-                <span class='fas fa-envelope'></span>
-                <input type="email" name="email" v-model.lazy='user.email' :class='fieldClassName(formstate.email)' class="form-control"
-                  placeholder="Email address" required>
-              </validate>
-
-              <validate class="form-group">
-                <span class='fas fa-lock'></span>
-                <input type="password" name="pass" v-model='user.password' :class='fieldClassName(formstate.pass)' class="form-control" placeholder="password"
-                  required minlength="3">
-              </validate>
-              <validate class="form-group">
-                <span class='fas fa-lock'></span>
-                <input type="password" name="pass2" v-model='user.confirmpass' :class='fieldClassName(formstate.pass2)' class="form-control"
-                  placeholder="Confirm password" required minlength="3">
-              </validate>
-
-              <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
-
-            </vue-form>
-            <p class="message">Already have an account?
-              <strong>
-                <a @click='loginVisible = !loginVisible'>Sign In</a>
-              </strong>
-            </p>
 
           </div>
-        </div>
-      </transition>
+
+        </transition>
+      </template>
       <!-- </transition-group> -->
+
+
+
       <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
 
     </div>
@@ -293,13 +311,23 @@ h2 {
 
 /* Transition */
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
+.slide-to-left-enter-active,
+.slide-to-right-enter-active {
+  transition: all 0.4s;
+  /* margin-top: -100px; */
 }
-
-.fade-enter,
-.fade-leave-to {
+.slide-to-left-leave-active,
+.slide-to-right-leave-active {
+  transition: all 0.4s;
+}
+.slide-to-left-leave-to,
+.slide-to-right-enter {
   opacity: 0;
+  transform: translateX(200px);
+}
+.slide-to-left-enter,
+.slide-to-right-leave-to {
+  opacity: 0;
+  transform: translateX(-200px);
 }
 </style>

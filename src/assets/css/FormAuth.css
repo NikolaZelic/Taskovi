@@ -21,7 +21,8 @@
   width: 100%;
   border: 0;
   padding: 15px;
-  transition: all 0.4s;line-height: 1;
+  transition: all 0.4s;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -44,4 +45,13 @@
 
 .form-auth .register-form {
   display: none;
+}
+
+.form-control:hover {
+  border-color: var(--ac-light-color);
+}
+
+.form-control:focus {
+  border-color: var(--ac-color);
+  box-shadow: unset;
 }

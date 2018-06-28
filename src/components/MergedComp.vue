@@ -95,9 +95,9 @@ export default {
       api.sessionActive();
     }
     let dark = localStorage.dark;
-    if (dark === 'true') {
-      store.commit('darkTheme',true);
-    } 
+    if (dark === "true") {
+      store.commit("darkTheme", true);
+    }
   },
   watch: {
     modalStatus(val) {
@@ -159,6 +159,7 @@ export default {
   align-items: stretch;
   flex-direction: column;
   background-color: #24262d;
+  min-height: 100vh;
 }
 
 .rightside {

@@ -121,7 +121,7 @@ export default {
       // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
-      selectedFilter: ["as"],
+      selectedFilter: ['cr','as'],
       radioFilter: [
         {
           text: "Created",
@@ -357,7 +357,7 @@ export default {
 }
 
 .static-side span {
-  padding: 20px;
+  padding: 15px;
   display: block;
   text-align: center;
   cursor: pointer;
