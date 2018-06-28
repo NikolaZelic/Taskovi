@@ -160,7 +160,7 @@ export default {
       //   console.log(val);
       //   delete this.tabs[this.currentTabIndex].itemIndex;
       //   this.activeItem = undefined;
-      this.getFilterData();
+      this.getTaskFilterData();
     },
     currentTabIndex(val) {
       // this.sidebarActive = true; // MAYBE USED LATER FOR ACTIVATING SIDE FROM MAIN
@@ -202,7 +202,9 @@ export default {
     selectAndSet(item) {
       this.selectItem(item.id);
       this.activeItem = item.id;
+      // console.log(this.currentTabIndex)
       if (this.currentTabIndex === 0) {
+        // console.log(this.currentTabIndex)
         this.project = item;
         this.currentTabIndex = 1;
         this.getTabData();
@@ -215,15 +217,15 @@ export default {
           this.actionTabDataProject();
           break;
         case 1:
-        case 2:
-          this.getFilterData();
+          // case 2:
+          this.getTaskFilterData();
           break;
-        case 3:
-          this.actionTabDataTeam();
-          break;
+        // case 3:
+        //   this.actionTabDataTeam();
+        //   break;
       }
     },
-    getFilterData() {
+    getTaskFilterData() {
       let cr = this.selectedFilter.includes("cr");
       let as = this.selectedFilter.includes("as");
       let ar = this.selectedFilter.includes("ar");
@@ -254,10 +256,6 @@ export default {
       let i = this.currentTabIndex;
       return i === 1 || i === 2;
     },
-    // showAdminFilter() {
-    //   let i = this.currentTabIndex;
-    //   return i === 3;
-    // },
     addItemButton() {
       store.dispatch("itemAddClick");
     },
@@ -273,6 +271,8 @@ export default {
     },
     signOut() {
       window.localStorage.removeItem("sid");
+      // console.log('s')
+      // store.resetState();
       api.sessionActive();
     },
     mouseOverPopup(val) {
@@ -283,7 +283,7 @@ export default {
       store.commit("darkTheme", !this.darkTheme);
     },
     userOptions() {
-      alert("Avatar Kliknut");
+      alert("Treba da prebaci na user options stranicu");
     }
   },
   computed: {
@@ -313,7 +313,8 @@ export default {
       return filtered;
     }
   },
-  mounted() {
+  created() {
+    // CHECK IF USER IS LOGGED IN
     let sidebarActive = window.sessionStorage.sidebarActive;
     if (sidebarActive !== undefined) {
       try {
@@ -329,9 +330,20 @@ export default {
     });
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
-    // SET TASK VIEW IF ONLY ONE PROJECT
-    if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1)
-      selectAndSet(this.itemsFiltered[0]);
+    // TEST VER
+    if (this.itemsFiltered !== undefined)
+      console.log("cr " + this.itemsFiltered.length);
+  },
+  mounted() {
+    // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
+    // if (this.itemsFiltered !== undefined)
+    //   console.log("mn" + this.itemsFiltered.length);
+    if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
+      console.log(
+        "Ubacujem u jedini projekat = " + this.itemsFiltered[0].title
+      );
+      this.selectAndSet(this.itemsFiltered[0]);
+    }
   }
 };
 </script>
@@ -466,7 +478,7 @@ export default {
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
-  height: 45px;
+  height: 40px;
 }
 
 /* .sidebar-header > a {
@@ -565,7 +577,7 @@ h2 {
 
 .sidebar-body {
   max-width: 100%;
-  background: linear-gradient(to right, #24262d 0%, #20232b 100%);
+  background: #272a31;
   transition: all 0.5s ease;
   width: 100%;
   flex: 1;

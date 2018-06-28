@@ -48,12 +48,12 @@
                 <td>
 
                   <div v-if='showAllTags && showAllTagsID === index'>
-                    <span class="badge badge-success" v-for="tag in task.tags" :key='tag'>{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="(tag,index) in task.tags" :key='index'>{{ tag.tag_text }}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
                   </div>
 
                   <div v-else>
-                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)" :key='tag'>{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
                     <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
                   </div>
