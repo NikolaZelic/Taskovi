@@ -7,14 +7,22 @@
   <template v-else>
 
 
+
+
+
+
+
+
+
       <div class="card">
-        <div class="card-header task-header">
+        <div class="card-header task-header" v-if="taskInfo[0] !== undefined">
           {{ taskInfo[0].taskname }}
         </div>
         <div class="card-body">
           <table class="table table-borderless text-center text-dark table-hover">
             <thead>
               <tr>
+                <th scope="col">Status</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
                 <th scope="col">Tags</th>
@@ -24,7 +32,13 @@
             </thead>
             <tbody>
 
-              <tr v-for="(task, index) in taskInfo"> <!--@click="getStepInfo(task.tsk_id)"-->
+              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id)'> <!--@click="getStepInfo(task.tsk_id)"-->
+                <td>
+                  <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
+                  <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
+                  <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
+                </td>
+
                 <td>{{ task.tsk_title}}</td>
                 <td>
                   {{ task.tsk_deadline }}
@@ -34,12 +48,12 @@
                 <td>
 
                   <div v-if='showAllTags && showAllTagsID === index'>
-                    <span class="badge badge-success" v-for="tag in task.tags">{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="tag in task.tags" :key='tag'>{{ tag.tag_text }}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
                   </div>
 
                   <div v-else>
-                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)">{{ tag.tag_text }}</span>
+                    <span class="badge badge-success" v-for="tag in task.tags.slice(0, 3)" :key='tag'>{{ tag.tag_text }}</span>
                     <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
                     <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
                   </div>
@@ -64,66 +78,56 @@
       </div>
 
 
-<!-- modal start -->
-<!-- <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-
-    <div class="modal-content">
-
-      <div class="modal-body tab-content">
-        <div id="info" class="tab-pane fade show active" role="tabpanel">
 
 
-          <p><strong>Title: </strong>Nabavljanje sijalice za ucionicu 23</p>
 
-          <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <p><strong>Deadline:</strong> 25/08/2018 16:45</p>
-          <p><strong>Tags:</strong>
-            <span class="badge badge-success">Front</span>
-            <span class="badge badge-success">MARS</span>
-            <span class="badge badge-success">Header</span>
-            <span class="badge badge-success">MARS</span>
-            <span class="badge badge-success">Header</span>
+      <div class="card mt-5 col-md-6 offset-md-3 pad-0" v-if="stepInfo.length > 0">
+        <div class="card-header task-header">
+          {{ stepInfo[0].tsk_title }}
+        </div>
+        <div class="card-body">
+          <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
+          <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
+          <p><strong>Status: </strong>{{stepInfo[0].sta_text}}</p> <!--dodati badge alert -->
+          <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
+          <p><strong>Priority: </strong>{{stepInfo[0].pri_text}}</p> <!--dodati badge alert -->
+          <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
+          <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
+
+
+          <p><strong>Created by: </strong>{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</p>
+          <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
+          <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
+          <p><strong>Working: </strong>
+            <ul>
+              <li v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+                {{user.usr_name}} -- {{user.usr_email}}
+                <img :src=" 'data:image/jpeg;base64,' + user.usr_picture" />
+              </li>
+            </ul>
           </p>
-          <p><strong>Priority:</strong> <span class="badge badge-danger">High</span></p>
-          <p><strong>Working:</strong>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA" class="rounded-circle" width="30px">
-
-            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdV43WHdqn0ahVKE3Xna3LUtEi31preFUEqiQFhKw4E27X7JAHnA"
-              class="rounded-circle" width="30px">
-
-            <img src="http://www.programmerfish.com//wp-content/uploads/2009/08/image44.png" class="rounded-circle" width="30px">
-            <img src="http://irdom.ru/wp-content/uploads/2017/06/user_avatar_mykehurley_artwork.jpg" class="rounded-circle" width="30px">
-          </p>
-          <p><strong>Status:</strong> In progress</p>
-
 
 
         </div>
-
-
-
-
-
-
-
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-<!-- modal end -->
 
 
-
-
-
-
+      <!-- description:null
+      pri_text:"Low"
+      pro_id:146
+      pro_name:"Autobuski prevoz"
+      sta_text:"Assigned"
+      taskname:"Treba zameniti sijalicu"
+      tsk_deadline:"2018-06-26 11:48:03.0"
+      tsk_estimated_completion_date:null
+      tsk_id:64
+      tsk_timecreated:null
+      tsk_timespent:null
+      tsk_title:"Dostava"
+      usr_creator_name:"Dime"
+      usr_creator_surname:"Dimic"
+      usr_id_creator:64
+      usrworking:Array[2] -->
 
 
 
@@ -132,7 +136,6 @@
 </template>
 
 <script>
-
 import {
   store
 } from "@/store/index.js";
@@ -151,14 +154,29 @@ export default {
     return {
       taskInfo: [],
       showAllTags: false,
-      showAllTagsID: undefined
+      showAllTagsID: undefined,
+      stepInfo: [],
+      stepShow: false
     };
   },
 
   methods: {
-    // getStepInfo(stepID){
-    //   console.log(stepID);
-    // },
+    getStepInfo(stepID) {
+      // console.log('taskID' + taskID + ', stepID' + stepID);
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+          params: {
+            tasid: this.selectedItemID,
+            stepid: stepID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          if (response.data.data !== undefined) {
+              // console.log(response.data.data);
+            this.stepInfo = response.data.data;
+          }
+        });
+    },
 
     getTaskInfo(taskID) {
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
@@ -208,6 +226,17 @@ export default {
       else return a;
     },
 
+    showSteps() {
+      if(this.selectedItemID === 0){
+        this.stepShow = false;
+        return;
+      }else {
+        this.stepShow = true;
+        return;
+      }
+
+    },
+
     deadlineDate() {
       return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
     },
@@ -230,6 +259,7 @@ export default {
     'selectedItemID': function(val, oldVal) {
       if (val !== 0) {
         this.getTaskInfo(val);
+        this.getStepInfo(val)
       }
       // this.getCompanyInfo(val);
       // this.loadAdmins(val);
@@ -239,9 +269,28 @@ export default {
 
   }
 };
+
 </script>
 
+
 <style scoped>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 h1 {
   text-align: left;
 }
@@ -256,5 +305,9 @@ h1 {
 
 .pointer {
   cursor: pointer;
+}
+
+.pad-0{
+  padding: 0;
 }
 </style>
