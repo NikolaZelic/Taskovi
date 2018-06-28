@@ -26,17 +26,13 @@
 </template>
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapState
-} from "vuex";
+import { store } from "@/store/index.js";
+import { mapState } from "vuex";
 export default {
   computed: {
     SurnameAndName() {
-      return localStorage.surname + ' ' +localStorage.name;
-    },
+      return localStorage.surname + " " + localStorage.name;
+    }
     // ...mapState({
     //   companyID: state => state.modulecompany.name
     // })
@@ -47,14 +43,14 @@ export default {
 <style scoped>
 .popup {
   position: absolute;
-  left: 66px;
+  left: 65px;
   border-radius: 20px;
-  border: 1px solid #f5ee0cc7;
-  bottom: 60px;
+  border: 1px solid var(--ac-color-light);
+  bottom: 0;
   display: inline-block;
   background: #1d1d1dff;
   width: 300px;
-  height: 200px;
+  height: 140px;
   user-select: none;
   padding: 20px;
 }

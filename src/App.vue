@@ -12,7 +12,6 @@ export default {
 
 <style>
 @import "./assets/css/CustomControls.css";
-@import "./assets/css/FormAuth.css";
 @import "./assets/css/SidebarTable.css";
 @import "./assets/css/DarkTheme.css";
 @import "./assets/css/CssVars.css";

@@ -257,7 +257,7 @@ h2 {
 
 #creators {
   position: absolute;
-  background: var(--ac-light-bg-color);
+  background: var(--ac-bg-light-color);
   height: 30px;
   width: 30px;
   opacity: 0.2;
@@ -281,6 +281,65 @@ h2 {
   position: relative;
   align-items: center;
 }
+
+.form-auth {
+  width: 90%;
+  padding: 30px;
+  max-width: 550px;
+  min-width: 430px;
+  background-color: #f7f7f2e0;
+  border-radius: 20px;
+}
+
+.form-auth input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  height: 50px;
+  box-shadow: inset 0 3px 10px 0 #00000026;
+}
+
+.form-auth button {
+  text-transform: uppercase;
+  outline: 0;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  transition: all 0.4s;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.form-auth button:hover,
+.form-auth button:active,
+.form-auth button:focus {
+  box-shadow: 2px 5px 10px 0px rgba(51, 51, 51, 0.5);
+}
+
+.form-auth .message {
+  margin: 15px 0 0;
+  color: #111;
+}
+
+.form-auth .message a {
+  color: #111;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-auth .register-form {
+  display: none;
+}
+
+.form-control:hover {
+  border-color: var(--ac-color-light);
+}
+
+.form-control:focus {
+  border-color: var(--ac-color);
+  box-shadow: unset;
+}
+
 
 .form-group input {
   padding-left: 50px;

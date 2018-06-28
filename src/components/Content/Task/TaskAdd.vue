@@ -589,7 +589,7 @@ export default {
 .tmp-content .multiselect--active .multiselect__option--highlight::after,
 .tmp-content .multiselect .multiselect__tag span,
 .tmp-content .multiselect .multiselect__tag {
-  background: var(--ac-light-bg-color);
+  background: var(--ac-bg-light-color);
 }
 
 .tmp-content .deadline {
@@ -621,8 +621,8 @@ export default {
 }
 
 .add-myself {
-  background: var(--ac-light-bg-color);
-  border: 3px solid var(--ac-light-bg-color);
+  background: var(--ac-bg-light-color);
+  border: 3px solid var(--ac-bg-light-color);
   color: black;
   border-radius: 15px;
   position: absolute;
@@ -648,7 +648,7 @@ export default {
 }
 
 .oznacen {
-  color: var(--ac-light-color);
+  color: var(--ac-color-light);
 }
 
 .unselected {
@@ -786,8 +786,8 @@ div.form-group{
 }
 
 .tag {
-  background-color: var(--ac-light-bg-color);
-  border: 1px solid var(--ac-light-bg-color);
+  background-color: var(--ac-bg-light-color);
+  border: 1px solid var(--ac-bg-light-color);
   border-radius: 5px;
 }
 

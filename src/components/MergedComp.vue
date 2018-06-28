@@ -171,7 +171,7 @@ export default {
 
 .item-filter {
   justify-content: unset;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .maincontent {

@@ -27,73 +27,78 @@
         <div class="user-sidebar">
           <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
-          <transition name='fade'>
-            <user-popup v-show='activePopup' :class='{show: activePopup}' />
-          </transition>
+
           <!-- <popup/> -->
-          <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)'
-          />
+          <div class='user-placeholder'>
+            <transition name='fade'>
+              <user-popup v-show='activePopup' :class='{show: activePopup}' />
+            </transition>
+            <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)'
+            />
+          </div>
           <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
         </div>
 
       </div>
 
-      <div class="sidebar-content" :class="{ collapsed: !sidebarActive }">
-        <div class="sidebar-body">
-          <div class="form-filter">
-            <form class="form-block">
-              <div class="search custom-modern">
-                <span class="fas fa-search"></span>
-                <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="tabs[currentTabIndex].search" type="search" placeholder="Search" aria-label="Search">
-              </div>
-            </form>
-            <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
+      <!-- <div class="sidebar-content" > -->
+      <div class="sidebar-body" :class="{ collapsed: !sidebarActive }">
+        <div class="form-filter">
+          <form class="form-block">
+            <div class="search custom-modern">
+              <span class="fas fa-search"></span>
+              <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="tabs[currentTabIndex].search" type="search" placeholder="Search"
+                aria-label="Search">
+            </div>
+          </form>
+          <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
 
-              <b-form-group>
-                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-                </b-form-checkbox-group>
-              </b-form-group>
+            <b-form-group>
+              <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+              </b-form-checkbox-group>
+            </b-form-group>
 
-            </form>
-          </div>
-          <div class="item-list">
-            <table>
-              <thead>
-                <tr>
-                  <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
-                  <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
-                  <th>Edit</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-                  <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
-                  <td v-if="item.haveUnseenFeed ==='true'">
-                    <span title="Unread" class="badge badge-primary badge-pill">1</span>
-                  </td>
-                  <td v-if="item.isUrgent === 'urgent'">
-                    <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                  </td>
-                  <td v-if="item.deadline !== undefined && item.deadline !== null">
-                    <span title="Deadline" class="badge badge-danger">
-                      {{ deadlineSplit(item.deadline) }}
-                    </span>
-                  </td>
-                  <td v-if="item.userscount !== undefined && item.userscount !== null">
-                    <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                  </td>
-                  <td>
-                    <span v-if='currentTabIndex !== 0 || item.is_admin === "true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
-                      title="Edit Item"></span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> Add New</button>
+          </form>
         </div>
+        <div class="item-list">
+          <table>
+            <thead>
+              <tr>
+                <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
+                <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
+                <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
+                <td v-if="item.haveUnseenFeed ==='true'">
+                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
+                </td>
+                <td v-if="item.isUrgent === 'urgent'">
+                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+                </td>
+                <td v-if="item.deadline !== undefined && item.deadline !== null">
+                  <span title="Deadline" class="badge badge-danger">
+                    {{ deadlineSplit(item.deadline) }}
+                  </span>
+                </td>
+                <td v-if="item.userscount !== undefined && item.userscount !== null">
+                  <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                </td>
+                <td>
+                  <span v-if='currentTabIndex !== 0 || item.is_admin === "true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
+                    title="Edit Item"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
+          <span class="fas fa-plus-circle"></span> Add New</button>
       </div>
+      <!-- </div> -->
+
     </div>
   </aside>
 </template>
@@ -121,7 +126,7 @@ export default {
       // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
-      selectedFilter: ['cr','as'],
+      selectedFilter: ["cr", "as"],
       radioFilter: [
         {
           text: "Created",
@@ -352,7 +357,7 @@ export default {
   min-width: 70px;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
 
@@ -391,13 +396,13 @@ export default {
 .tablinks.active {
   background: #24262d;
   color: yellow;
-  border-left: 3px solid var(--ac-light-bg-color);
+  border-left: 3px solid var(--ac-bg-light-color);
 }
 
 .tablinks:hover,
 .static-side span:hover {
   background: #eadc903b;
-  color: var(--ac-light-color);
+  color: var(--ac-color-light);
   /* border-left: 3px solid #a7a7a7; */
 }
 
@@ -415,10 +420,12 @@ export default {
   transition: all 0.3s;
 }
 
-.sidebar-content.collapsed {
+.sidebar-body.collapsed {
+  padding: 0;
   width: 0;
   min-width: 0;
   max-width: 0;
+  border: 0;
 }
 
 .sidebar-header.collapsed {
@@ -433,7 +440,7 @@ export default {
   width: unset;
 }
 
-.sidebar-content.collapsed *,
+.sidebar-body.collapsed *,
   .sidebar-header.collapsed>div
   /* .sidebar-header.collapsed .theme-changer  */
 
@@ -442,17 +449,6 @@ export default {
 }
 
 /* COLLAPSED END */
-
-/* SIDEBAR CONTENT */
-
-.sidebar-content {
-  max-width: 100%;
-  background: linear-gradient(to right, #24262d 0%, #20232b 100%);
-  transition: all 0.5s ease;
-  flex-direction: column;
-  display: flex;
-  width: 100%;
-}
 
 .sidebar-lower {
   display: flex;
@@ -466,7 +462,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: black;
-  background: var(--ac-light-bg-color);
+  background: var(--ac-bg-light-color);
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
@@ -568,11 +564,15 @@ h2 {
 /* SIDEBAR BODY */
 
 .sidebar-body {
+  max-width: 100%;
+  background: linear-gradient(to right, #24262d 0%, #20232b 100%);
+  transition: all 0.5s ease;
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 15px;
-  border-right: 1px solid #ffc10742;
+  border-right: 1px solid var(--ac-color-dark);
 }
 
 .form-filter {
@@ -602,6 +602,10 @@ h2 {
   margin: 10px auto;
   border-radius: 15px;
   display: block;
+}
+
+.user-sidebar .user-placeholder {
+  position: relative;
 }
 
 label {
