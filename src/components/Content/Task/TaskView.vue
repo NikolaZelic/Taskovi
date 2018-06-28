@@ -81,20 +81,36 @@
 
 
 
-      <div class="card mt-5" v-if="stepInfo.length > 0">
+      <div class="card mt-5 col-md-6 offset-md-3 pad-0" v-if="stepInfo.length > 0">
         <div class="card-header task-header">
           {{ stepInfo[0].tsk_title }}
         </div>
         <div class="card-body">
           <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
           <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
+          <p><strong>Status: </strong>{{stepInfo[0].sta_text}}</p> <!--dodati badge alert -->
           <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
+          <p><strong>Priority: </strong>{{stepInfo[0].pri_text}}</p> <!--dodati badge alert -->
           <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
           <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
-          <p><strong>Priority: </strong>{{stepInfo[0].pri_text}}</p>
+
+
+          <p><strong>Created by: </strong>{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</p>
+          <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
+          <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
+          <p><strong>Working: </strong>
+            <ul>
+              <li v-for="user in stepInfo[0].usrworking">
+                {{user.usr_name}} -- {{user.usr_email}}
+                <img :src=" 'data:image/jpeg;base64,' + user.usr_picture" />
+              </li>
+            </ul>
+          </p>
+
 
         </div>
       </div>
+
 
       <!-- description:null
       pri_text:"Low"
@@ -289,5 +305,9 @@ h1 {
 
 .pointer {
   cursor: pointer;
+}
+
+.pad-0{
+  padding: 0;
 }
 </style>
