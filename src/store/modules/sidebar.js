@@ -5,23 +5,9 @@ import {
   store
 } from '../index';
 const actions = {
-  getUserTasks(commit, params) {
-    api.getUserTasks(params.index, params.state, params.type, params.archived, params.parentIndex).then(r => {
-      store.commit('setSidebarData', {
-        index: params.index,
-        parentindex: params.parentIndex,
-        data: r.data.data
-      });
-    }).catch(e => {
-      store.commit("modalError", {
-        active: true,
-        message: '' + e,
-      });
-    });
-  },
 
-  getUserProjects(commit, params) {
-    api.getUserProjects(params).then(r => {
+  getProjects(commit, params) {
+    api.getProjects(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -34,8 +20,8 @@ const actions = {
     });
   },
 
-  getUserTaskList(commit, params) {
-    api.getUserTaskList(params).then(r => {
+  getTasks(commit, params) {
+    api.getTasks(params).then(r => {
       store.commit('setSidebarData', {
         index: params.index,
         data: r.data.data
@@ -48,25 +34,12 @@ const actions = {
     });
   },
 
-  // getUserTeams(commit, params) {
-  //   api.getUserTeams(params.index, params.admin).then(r => {
-  //     store.commit('setSidebarData', {
-  //       index: params.index,
-  //       data: r.data.data
-  //     });
-  //   }).catch(e => {
-  //     store.commit("modalError", {
-  //       active: true,
-  //       message: '' + e,
-  //     });
-  //   });
-  // },
   itemEditClick(commit, params) {
     store.commit('itemEditClick', {
       id: params,
     });
   },
-  itemAddClick(commit, params) {
+  itemAddClick() {
     store.commit('itemAddClick');
   },
   itemAddTaskClick(commit, params) {
@@ -105,7 +78,7 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
   },
-  itemAddClick: (state, params) => {
+  itemAddClick: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = 1;
     store.state.itemAction.addTask = undefined;
@@ -115,7 +88,7 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = params.id;
   },
-  itemActionReset: (state, params) => {
+  itemActionReset: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;

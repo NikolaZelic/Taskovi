@@ -3,11 +3,11 @@
     <button class='btn btn-warning' @click='resetProjectView'>
       <span class='fas fa-arrow-left'></span> BACK</button>
     <div class='pro-edit'>
-      <h4 v-if='edit'>Edit project:</h4>
+      <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
       <h4 v-else>Adding project:</h4>
 
       <label for="name" class="mt-3">Project name</label>
-      <input type="text" id="name" name="projectname" v-model="project.name" placeholder="Enter new project name" class="form-control mb-3">
+      <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
 
       <label for="description">Description</label>
       <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
@@ -18,13 +18,15 @@
         class="form-control mb-3">
 
       <label for="date">Deadline</label>
-      <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3" placeholder="Pick a deadline (optional)">
+      <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
+        placeholder="Pick a deadline (optional)">
       </flat-pickr>
-      <!-- <input class="form-control mb-3" id="description" rows="3" name="description" v-model='project.deadline' placeholder="Enter new deadline..."
-      /> -->
 
-      <button v-if='edit' @click="projectEdit" class="btn btn-warning save">Save changes</button>
-      <button v-else @click="projectCreate" class="btn btn-success save">Create project</button>
+      <div v-if='itemEditButton!==undefined' class='d-block'>
+        <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
+        <button @click="projectEdit" class="btn btn-warning btn-block">Save changes</button>
+      </div>
+      <button v-else @click="projectCreate" class="btn btn-success">Create project</button>
     </div>
   </div>
 </template>
@@ -44,9 +46,9 @@ export default {
   },
   data() {
     return {
-      edit: true,
+      // edit: undefined,
       project: {
-        name: undefined,
+        title: undefined,
         description: undefined,
         users: undefined,
         deadline: undefined
@@ -63,35 +65,69 @@ export default {
     };
   },
   watch: {
-    edit(val) {
-      console.log(val);
-      if (val === false) this.project.deadline = Date.now();
+    projectID(val) {
+      // console.log("PROID");
+      this.projectInfo();
+      this.getProjectUsers();
+    },
+    itemEditButton(val) {
+      if (val === undefined) {
+        this.project.deadline = Date.now();
+      }
       // else{
-        // this.project.deadline = 
+      // this.project.deadline =
       // }
     }
   },
   methods: {
+    projectInfo() {
+      for (var i = 0; i < this.currentTabData.length; i++) {
+        var ctd = this.currentTabData[i];
+        if (this.projectID === ctd.id) {
+          // PASS BY VALUE, NOT BY REF - STAY LIKE THIS
+          this.project.title = ctd.title;
+          this.project.description = ctd.pro_description;
+          this.project.deadline = ctd.pro_deadline;
+        }
+      }
+    },
+    getProjectUsers() {
+      axios
+        .get("projects/:proid/users", {
+          params: {
+            proid: store.getters.selectedItemID,
+            sid: window.localStorage.sid
+          }
+        })
+        .then(result => {
+          if ((result.status = "OK")) this.project.users = result.data.data;
+        });
+    },
     projectCreate() {
       axios
-        .post("projects", this.project)
+        .post("projects", {
+          name: this.project.title,
+          description: this.project.description,
+          deadline: this.project.deadline,
+          sid: window.localStorage.sid
+        })
         .then(r => {
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
               active: true,
               message:
                 "Project '" +
-                this.project.name +
+                this.project.title +
                 "' has been created succesfully"
             });
-            store.dispatch("getUserProjects", {
+            store.dispatch("getProjects", {
               index: this.tabIndex
             });
           } else {
             store.commit("modalStatus", {
               active: true,
               ok: false,
-              message: "Error: Couldn't create project '" + this.project.name
+              message: "Error: Couldn't create project '" + this.project.title
             });
           }
         })
@@ -103,7 +139,7 @@ export default {
       axios
         .put("projects/:proid", {
           // Object.assign(project,)
-          name: this.project.name,
+          name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
           proid: store.getters.selectedItemID,
@@ -115,10 +151,10 @@ export default {
               active: true,
               message:
                 "Project '" +
-                this.project.name +
+                this.project.title +
                 "' has been edited succesfully"
             });
-            store.dispatch("getUserProjects", {
+            store.dispatch("getProjects", {
               index: this.tabIndex
             });
           } else {
@@ -126,13 +162,16 @@ export default {
               active: true,
               ok: false,
               message:
-                "Error: Couldn't edit project '" + this.project.name + "'"
+                "Error: Couldn't edit project '" + this.project.title + "'"
             });
           }
         })
         .catch(e => {
           console.log(e);
         });
+    },
+    projectCancel() {
+      // this.project = this.backupProject;
     },
     resetProjectView() {
       store.commit("itemActionReset");
@@ -141,11 +180,19 @@ export default {
   computed: {
     ...mapGetters({
       projectID: "selectedItemID",
-      // currentTabData: "currentTabData"
+      currentTabData: "currentTabData"
     }),
     ...mapState({
-      tabIndex: "currentTabIndex"
+      tabIndex: "currentTabIndex",
+      // itemAction: "itemAction",
+      itemEditButton: state => state.itemAction.edit
     })
+  },
+  mounted() {
+    if (this.itemEditButton !== undefined) {
+      this.projectInfo();
+      this.getProjectUsers();
+    }
   }
 };
 </script>
@@ -155,8 +202,4 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
-/* .save {
-  justify-content: right;
-} */
 </style>
