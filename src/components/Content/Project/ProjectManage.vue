@@ -77,7 +77,7 @@ export default {
       for (var i = 0; i < this.currentTabData.length; i++) {
         var ctd = this.currentTabData[i];
         if (this.itemEditButton === ctd.id) {
-          // PASS BY VALUE, NOT BY REF - STAY LIKE THIS
+          // PASS BY VALUE, NOT BY REF - DON'T CHANGE
           this.project.title = ctd.title;
           this.project.description = ctd.pro_description;
           this.project.deadline = ctd.pro_deadline;
@@ -108,6 +108,7 @@ export default {
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
               active: true,
+              ok: true,
               message:
                 "Project '" +
                 this.project.title +
