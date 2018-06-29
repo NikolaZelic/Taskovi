@@ -65,25 +65,20 @@ export default {
     };
   },
   watch: {
-    projectID(val) {
-      // console.log("PROID");
-      this.projectInfo();
-      this.getProjectUsers();
-    },
     itemEditButton(val) {
       if (val === undefined) {
         this.project.deadline = Date.now();
+      } else {
+        this.projectInfo();
+        this.getProjectUsers();
       }
-      // else{
-      // this.project.deadline =
-      // }
     }
   },
   methods: {
     projectInfo() {
       for (var i = 0; i < this.currentTabData.length; i++) {
         var ctd = this.currentTabData[i];
-        if (this.projectID === ctd.id) {
+        if (this.itemEditButton === ctd.id) {
           // PASS BY VALUE, NOT BY REF - STAY LIKE THIS
           this.project.title = ctd.title;
           this.project.description = ctd.pro_description;
@@ -179,12 +174,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      projectID: "selectedItemID",
       currentTabData: "currentTabData"
     }),
     ...mapState({
       tabIndex: "currentTabIndex",
-      // itemAction: "itemAction",
       itemEditButton: state => state.itemAction.edit
     })
   },
