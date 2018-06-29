@@ -46,7 +46,6 @@ export default {
   },
   data() {
     return {
-      // edit: undefined,
       project: {
         title: undefined,
         description: undefined,
@@ -55,7 +54,6 @@ export default {
       },
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
-        // defaultDate: Date.now(),
         enableTime: true,
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",

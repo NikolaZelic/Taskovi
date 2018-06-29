@@ -65,7 +65,7 @@
             <thead>
               <tr>
                 <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
-                <template v-if='itemAction.edit === undefined && itemAction.add === undefined'>
+                <template v-if=' currentTabIndex ===0  && itemAction.edit === undefined && itemAction.add === undefined'>
                   <th>Deadline</th>
                   <th>Users on Project</th>
                   <th>Completed Tasks</th>
@@ -81,7 +81,12 @@
                 <td v-if="item.haveUnseenFeed ==='true'">
                   <span title="Unread" class="badge badge-primary badge-pill">1</span>
                 </td>
-                <template v-if='itemAction.edit === undefined && itemAction.add === undefined'>
+                <template v-if=' currentTabIndex ===0 && itemAction.edit === undefined && itemAction.add === undefined'>
+                  <td v-if='item.deadline !== undefined' class="badge badge-danger badge-pill">{{item.deadline}}</td>
+                  <td v-if='item.users_count !== undefined' class="badge badge-success badge-pill">{{item.users_count}}</td>
+                  <td v-if='item.completed_tasks !== undefined' class="badge badge-primary badge-pill">{{item.completed_tasks}}</td>
+                  <td v-if='item.inprogress_tasks !== undefined' class="badge badge-light badge-pill">{{item.inprogress_tasks}}</td>
+
                   <td v-if="item.isUrgent === 'urgent'">
                     <span title="Urgent" class="badge badge-purple badge-pill">U</span>
                   </td>
