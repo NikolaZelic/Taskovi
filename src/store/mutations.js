@@ -1,5 +1,10 @@
 import {store} from './index';
 const mutations = {
+  resetState(state) {
+    store.state.sidebarTabData = [];
+    store.state.sidebarItemSelection = [];
+    store.state.darkTheme = undefined;
+  },
   modalError(state, params) {
     store.state.modalError.active = params.active;
     if (params.message !== undefined)
@@ -14,7 +19,6 @@ const mutations = {
       store.state.modalStatus.message = params.message;
   }
 }
-
 export default {
   mutations,
 }

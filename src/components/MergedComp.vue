@@ -149,6 +149,10 @@ export default {
         itemAddTask === this.addTaskBtn
       );
     }
+  },
+  destroyed() {
+    console.log("User " + localStorage.name + " signed out. Destroying data.");
+    store.commit("resetState");
   }
 };
 </script>

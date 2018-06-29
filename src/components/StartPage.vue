@@ -161,11 +161,11 @@ export default {
     login() {
       let mail = this.user.email;
       let pass = this.user.pass;
-      if (mail.length < 4) {
+      if (mail === undefined || mail.length < 4) {
         alert("Email is not valid");
         return;
       }
-      if (pass.length < 2) {
+      if (pass === undefined || pass.length < 2) {
         alert("Password cannot be less then two characters");
         return;
       }
@@ -176,8 +176,10 @@ export default {
           if (sid != undefined || sid != null) {
             // WRITE SID TO STORE
             window.localStorage.sid = sid;
-            window.localStorage.name = r.data.name;
-            window.localStorage.surname = r.data.surname;
+            window.localStorage.email = r.data.user.email;
+            window.localStorage.name = r.data.user.name;
+            window.localStorage.surname = r.data.user.surname;
+            // console.log(r)
             this.$router.push("/");
           } else {
             alert(r.data.message);

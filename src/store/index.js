@@ -4,7 +4,7 @@ import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
 import modulesidebar from './modules/sidebar';
-import modulefeed from './modules/feed';  
+import modulefeed from './modules/feed';
 import moduleproject from './modules/project';
 import moduletask from './modules/task';
 import modulework from './modules/work';
@@ -30,10 +30,6 @@ export const store = new Vuex.Store({
     mainFocused: undefined,
     sidebarTabData: [],
     sidebarItemSelection: [],
-    // theme: {
-    //   back: '--sec-bg-color',
-    //   front: '--sec-color'
-    // },
     darkTheme: false,
     modalStatus: {
       active: false,
