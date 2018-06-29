@@ -27,8 +27,8 @@
       </div>
       <feed-element v-if="taskid != -1"/>
     </div>
-    <modal-complete v-if="modalStatus"/>
-    <modal-error v-if="modalError"/>
+    <modal-complete v-if="modalStatusActive"/>
+    <modal-error v-if="modalErrorActive"/>
   </div>
 </template>
 
@@ -86,7 +86,7 @@ export default {
       addTaskBtn: false
     };
   },
-  created() {
+  beforeCreate() {
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
       this.$router.push("/auth");
@@ -100,13 +100,13 @@ export default {
     }
   },
   watch: {
-    modalStatus(val) {
+    modalStatusActive(val) {
       if (val === true) {
         setTimeout(function() {
           store.commit("modalStatus", {
             active: false
           });
-        }, 20000);
+        }, 4000);
       }
     },
     itemEditButton(val) {
@@ -122,8 +122,8 @@ export default {
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
-      modalError: state => state.modalError.active,
-      modalStatus: state => state.modalStatus.active,
+      modalErrorActive: state => state.modalError.active,
+      modalStatusActive: state => state.modalStatus.active,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,

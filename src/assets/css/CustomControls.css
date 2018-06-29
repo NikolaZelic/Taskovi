@@ -29,6 +29,15 @@ textarea.custom-modern::placeholder {
   color: #888;
 }
 
+.form-control:hover {
+  border-color: var(--ac-color-light);
+}
+
+.form-control:focus {
+  border-color: var(--ac-color);
+  box-shadow: unset;
+}
+
 /* input[type="radio"]:checked+.label-text:before {
   content: "\f192";
   animation: effect 250ms ease-in;
