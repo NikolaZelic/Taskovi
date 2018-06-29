@@ -22,7 +22,7 @@
 </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters} from 'vuex';
 import FeedMessage from "./FeedMessage";
 import {
   store
@@ -52,9 +52,9 @@ export default {
     messages: state => state.modulefeed.messages,
 
     }),
-    taskid() {
-      return store.getters.getTaskID;
-    }
+    ...mapGetters({
+      taskid:'selectedItemID'
+    })
   },
   watch: {
     taskid(val) {

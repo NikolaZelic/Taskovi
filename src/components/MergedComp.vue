@@ -25,7 +25,7 @@
         <team-view v-else-if='checkShow(3,false,false)'/>
 
       </div>
-      <feed-element v-if="taskid != -1"/>
+      <!-- <feed-element v-if="taskid"/> -->
     </div>
     <modal-complete v-if="modalStatus"/>
     <modal-error v-if="modalError"/>
@@ -132,7 +132,7 @@ export default {
     }),
     ...mapGetters({
       isFocus: "isFocus",
-      taskid: "getTaskID"
+      taskid: "selectedItemID"
     })
   },
   methods: {
