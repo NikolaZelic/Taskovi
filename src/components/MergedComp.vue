@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <feed-element v-if="taskid != -1" />
+      <!-- <feed-element v-if="taskid"/> -->
     </div>
     <modal-complete v-if="modalStatusActive" />
     <modal-error v-if="modalErrorActive" />
@@ -98,7 +98,7 @@ export default {
     }),
     ...mapGetters({
       isFocus: "isFocus",
-      taskid: "getTaskID"
+      taskid: "selectedItemID"
     })
   },
   methods: {
