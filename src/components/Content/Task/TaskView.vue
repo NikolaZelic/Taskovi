@@ -511,6 +511,7 @@ h1 {
 .pad-0 {
   padding: 0;
 }
+<<<<<<< HEAD
 
 .slika {
   border: 1px solid #333;
@@ -518,3 +519,6 @@ h1 {
 
 </style>
 h
+=======
+</style>
+>>>>>>> a85279198141c8f4cc4e86f094727a43c3e36e52

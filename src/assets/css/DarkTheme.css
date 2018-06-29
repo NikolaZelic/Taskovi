@@ -26,10 +26,14 @@ textarea.form-control {
 .maincontent.darkTheme input,
 .maincontent.darkTheme textarea {
   background: #2d3436;
+  color: #eee;
+  border: 1px solid #eee5;
+  border-radius: 0;
 }
 
 .maincontent.darkTheme input:hover,
-.maincontent.darkTheme textarea:hover, {
+.maincontent.darkTheme textarea:hover,
+  {
   border: 1px solid #ffb037;
 }
 

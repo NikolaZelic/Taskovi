@@ -220,7 +220,7 @@ export default {
       return this.passNotSame;
     }
   },
-  created() {
+  beforeCreate() {
     // IF SID EXIST AND SEASON ACTIVE EXIST ROUTE TO MAINPAGE
     let sid = localStorage.sid;
     if (sid !== undefined && sid !== null) {
@@ -332,16 +332,6 @@ h2 {
 .form-auth .register-form {
   display: none;
 }
-
-.form-control:hover {
-  border-color: var(--ac-color-light);
-}
-
-.form-control:focus {
-  border-color: var(--ac-color);
-  box-shadow: unset;
-}
-
 
 .form-group input {
   padding-left: 50px;

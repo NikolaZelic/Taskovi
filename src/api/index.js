@@ -4,7 +4,7 @@ import {
 import {
   store
 } from '@/store/index.js';
-import router from '../router/index.js'
+import router from '../router/index.js';
 
 // KAD PRAVIS API OBAVEZNO KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
@@ -16,17 +16,17 @@ export const api = {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
   // Poziva se u TaskAdd.vue
-  createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
-    return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
-      title: title,
-      description: description,
-      deadline: deadline,
-      userid: userid,
-      teamid: teamid,
-      tagarray: JSON.stringify(tagarray),
-      priority: priorety
-    });
-  },
+  // createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
+  //   return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
+  //     title: title,
+  //     description: description,
+  //     deadline: deadline,
+  //     userid: userid,
+  //     teamid: teamid,
+  //     tagarray: JSON.stringify(tagarray),
+  //     priority: priorety
+  //   });
+  // },
   // Poziva se u TaskAdd.vue
   createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
@@ -147,7 +147,7 @@ export const api = {
     });
   },
   // ZX - Get projects based on filter
-  getUserProjects() {
+  getProjects() {
     return axios.get('projects', {
       params: {
         sid: window.localStorage.sid,
@@ -155,7 +155,7 @@ export const api = {
     });
   },
   // ZX - GET user tasks based on a project - filter used
-  getUserTaskList(params) {
+  getTasks(params) {
     return axios.get('/users/tasks', {
       params: {
         sid: window.localStorage.sid,
@@ -168,4 +168,4 @@ export const api = {
   },
   //#endregion
 
-}
+};

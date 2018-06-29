@@ -1,34 +1,25 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar :class="{max: checkShow(0,false,false)}"/>
+    <side-bar :class="{max: checkShow(0,false,false)}" />
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent" :class='{darkTheme: darkTheme}'>
-        <!-- <user-options/> -->
 
         <!-- Editing existing -->
-        <!-- <company-edit v-if="checkShow(0,true)"/> -->
-        <project-edit v-if="checkShow(0,true)"/>
-        <task-edit v-if="checkShow(1,true) || checkShow(2,true)"/>
-        <team-edit v-if="checkShow(3,true)"/>
+        <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
+        <task-edit v-if="checkShow(1,true) || checkShow(2,true)" />
 
         <!-- Adding new -->
-        <!-- <company-add v-if="checkShow(0,false,true)"/> -->
-        <project-add v-if="checkShow(0,false,true)"/>
-        <step-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)"/>
-        <task-add v-if="checkShow(1,false,true) || checkShow(2,false,true)"/>
-        <team-add v-if="checkShow(3,false,true)"/>
+        <step-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)" />
+        <task-add v-if="checkShow(1,false,true) || checkShow(2,false,true)" />
 
         <!-- Viewing existing -->
-        <!-- <company-view v-if='checkShow(0,false,false)'/> -->
-        <!-- <project-view v-else-if='checkShow(0,false,false)'/> -->
-        <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)'/>
-        <team-view v-else-if='checkShow(3,false,false)'/>
+        <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <feed-element v-if="taskid != -1"/>
+      <!-- <feed-element v-if="taskid"/> -->
     </div>
-    <modal-complete v-if="modalStatus"/>
-    <modal-error v-if="modalError"/>
+    <modal-complete v-if="modalStatusActive" />
+    <modal-error v-if="modalErrorActive" />
   </div>
 </template>
 
@@ -36,25 +27,15 @@
 import { store } from "@/store/index.js";
 import SideBar from "@/components/SideBar/Sidebar";
 
-import FeedElement from "@/components/Feed/FeedElement";
-
 import TaskView from "@/components/Content/Task/TaskView";
 import StepAdd from "@/components/Content/Task/StepAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
 
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
-// import TeamView from "@/components/Content/Team/TeamView";
-// import TeamAdd from "@/components/Content/Team/TeamAdd";
-// import TeamEdit from "@/components/Content/Team/TeamEdit";
+import ProjectManage from "@/components/Content/Project/ProjectManage";
 
-import ProjectAdd from "@/components/Content/Project/ProjectAdd";
-// import ProjectView from "@/components/Content/Project/ProjectView";
-import ProjectEdit from "@/components/Content/Project/ProjectEdit";
-
-// import CompanyAdd from "@/components/Content/Company/CompanyAdd";
-// import CompanyEdit from "@/components/Content/Company/CompanyEdit";
-// import CompanyView from "@/components/Content/Company/CompanyView";
+import FeedElement from "@/components/Feed/FeedElement";
 
 import ModalError from "@/components/Misc/ModalError";
 import ModalComplete from "@/components/Misc/ModalComplete";
@@ -71,9 +52,7 @@ export default {
     TaskView,
     StepAdd,
     TaskEdit,
-    ProjectAdd,
-    // ProjectView,
-    ProjectEdit,
+    ProjectManage,
     TaskAdd,
     UserOptions,
     ModalError,
@@ -86,27 +65,14 @@ export default {
       addTaskBtn: false
     };
   },
-  created() {
-    let sid = localStorage.sid;
-    if (sid === undefined || sid === null) {
-      this.$router.push("/auth");
-      return;
-    } else {
-      api.sessionActive();
-    }
-    let dark = localStorage.dark;
-    if (dark === "true") {
-      store.commit("darkTheme", true);
-    }
-  },
   watch: {
-    modalStatus(val) {
+    modalStatusActive(val) {
       if (val === true) {
         setTimeout(function() {
           store.commit("modalStatus", {
             active: false
           });
-        }, 20000);
+        }, 4000);
       }
     },
     itemEditButton(val) {
@@ -122,8 +88,8 @@ export default {
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
-      modalError: state => state.modalError.active,
-      modalStatus: state => state.modalStatus.active,
+      modalErrorActive: state => state.modalError.active,
+      modalStatusActive: state => state.modalStatus.active,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
@@ -132,7 +98,7 @@ export default {
     }),
     ...mapGetters({
       isFocus: "isFocus",
-      taskid: "getTaskID"
+      taskid: "selectedItemID"
     })
   },
   methods: {
@@ -148,6 +114,19 @@ export default {
         itemAdd === this.addBtn &&
         itemAddTask === this.addTaskBtn
       );
+    }
+  },
+  beforeCreate() {
+    let sid = localStorage.sid;
+    if (sid === undefined || sid === null) {
+      this.$router.push("/auth");
+      return;
+    } else {
+      api.sessionActive();
+    }
+    let dark = localStorage.dark;
+    if (dark === "true") {
+      store.commit("darkTheme", true);
     }
   },
   destroyed() {

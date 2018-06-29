@@ -29,7 +29,7 @@
                 <i class="far fa-calendar-alt"></i>
               </span>
               <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
-                <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick Deadline (optional)"
+                <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
                   name="date">
                 </flat-pickr>
                 <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
@@ -42,7 +42,7 @@
             <!-- ADING WORKERS -->
             <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
               <i class="fas fa-user"></i>
-               <!-- @click='selectUser' -->
+              <!-- @click='selectUser' -->
               <!-- <i :class="teamClass" @click='selectTeam'></i> -->
               <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
                 @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
@@ -99,6 +99,7 @@ import { mapGetters } from "vuex";
 
 var interval;
 const flatpickr = require("flatpickr");
+require("flatpickr/dist/themes/confetti.css");
 
 export default {
   components: {
@@ -114,10 +115,12 @@ export default {
       deadline: null,
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
-        altFormat: "M	j, Y",
-        altInput: true,
-        dateFormat: "Y-m-d"
-        // locale: "Hindi", // locale for this instance only
+        defaultDate: Date.now(),
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: "Y-m-d H:i:S",
+        altFormat: "M	j, Y H:i",
+        altInput: true
       },
       teamSelect: 0,
       inputWorker: null,
@@ -760,7 +763,8 @@ export default {
   cursor: pointer;
 }
 
-.fas,.far {
+.fas,
+.far {
   color: #fff;
   font-size: 25px;
   margin: 3px;
@@ -768,17 +772,18 @@ export default {
   cursor: pointer;
 }
 
-div.form-group{
+div.form-group {
   display: flex;
-  
 }
 
-#auto-suggestion, .calender-wrapper {
+#auto-suggestion,
+.calender-wrapper {
   padding-left: 10px;
   width: 100%;
 }
+
 #auto-suggestion .form-control {
-     text-indent: 30px;
+  text-indent: 30px;
 }
 
 .tags-wrapper {

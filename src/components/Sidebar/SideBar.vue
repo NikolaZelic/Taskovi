@@ -65,7 +65,13 @@
             <thead>
               <tr>
                 <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
-                <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
+                <template v-if=' currentTabIndex ===0  && itemAction.edit === undefined && itemAction.add === undefined'>
+                  <th>Deadline</th>
+                  <th>Users on Project</th>
+                  <th>Completed Tasks</th>
+                  <th>In Progress Tasks</th>
+                  <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
+                </template>
                 <th>Edit</th>
               </tr>
             </thead>
@@ -75,17 +81,24 @@
                 <td v-if="item.haveUnseenFeed ==='true'">
                   <span title="Unread" class="badge badge-primary badge-pill">1</span>
                 </td>
-                <td v-if="item.isUrgent === 'urgent'">
-                  <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                </td>
-                <td v-if="item.deadline !== undefined && item.deadline !== null">
-                  <span title="Deadline" class="badge badge-danger">
-                    {{ deadlineSplit(item.deadline) }}
-                  </span>
-                </td>
-                <td v-if="item.userscount !== undefined && item.userscount !== null">
-                  <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                </td>
+                <template v-if=' currentTabIndex ===0 && itemAction.edit === undefined && itemAction.add === undefined'>
+                  <td v-if='item.deadline !== undefined' class="badge badge-danger badge-pill">{{item.deadline}}</td>
+                  <td v-if='item.users_count !== undefined' class="badge badge-success badge-pill">{{item.users_count}}</td>
+                  <td v-if='item.completed_tasks !== undefined' class="badge badge-primary badge-pill">{{item.completed_tasks}}</td>
+                  <td v-if='item.inprogress_tasks !== undefined' class="badge badge-light badge-pill">{{item.inprogress_tasks}}</td>
+
+                  <td v-if="item.isUrgent === 'urgent'">
+                    <span title="Urgent" class="badge badge-purple badge-pill">U</span>
+                  </td>
+                  <td v-if="item.deadline !== undefined && item.deadline !== null">
+                    <span title="Deadline" class="badge badge-danger">
+                      {{ deadlineSplit(item.deadline) }}
+                    </span>
+                  </td>
+                  <td v-if="item.userscount !== undefined && item.userscount !== null">
+                    <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
+                  </td>
+                </template>
                 <td>
                   <span v-if='currentTabIndex !== 0 || item.is_admin === "true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
                     title="Edit Item"></span>
@@ -117,7 +130,6 @@ export default {
     return {
       // isTask: false,
       sidebarActive: true,
-      // searchData: "",
       currentTabIndex: 0,
       project: {
         title: undefined,
@@ -239,7 +251,7 @@ export default {
       });
     },
     actionTabDataTask(cr, as, ar) {
-      store.dispatch("getUserTaskList", {
+      store.dispatch("getTasks", {
         index: this.currentTabIndex,
         pro_id: this.project.id,
         created: cr,
@@ -248,7 +260,7 @@ export default {
       });
     },
     actionTabDataProject() {
-      store.dispatch("getUserProjects", {
+      store.dispatch("getProjects", {
         index: this.currentTabIndex
       });
     },
@@ -289,6 +301,7 @@ export default {
   computed: {
     ...mapState({
       getTabIndex: "currentTabIndex",
+      itemAction: "itemAction",
       darkTheme: "darkTheme"
     }),
     activeArray() {

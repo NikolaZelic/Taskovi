@@ -1,6 +1,8 @@
-import {store} from './index';
+import {
+  store
+} from './index';
 const mutations = {
-  resetState(state) {
+  resetState() {
     store.state.sidebarTabData = [];
     store.state.sidebarItemSelection = [];
     store.state.darkTheme = undefined;
@@ -13,12 +15,10 @@ const mutations = {
 
   modalStatus(state, params) {
     store.state.modalStatus.active = params.active;
-    if (params.ok !== undefined)
-      store.state.modalStatus.ok = params.ok;
-    if (params.message !== undefined)
-      store.state.modalStatus.message = params.message;
+    store.state.modalStatus.ok = params.ok !== undefined ? params.ok : true;
+    store.state.modalStatus.message = params.message !== undefined ? params.message : '';
   }
-}
+};
 export default {
   mutations,
-}
+};

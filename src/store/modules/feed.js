@@ -65,16 +65,8 @@ const mutations = {
   }
 }
 const getters ={
-  getTaskID:state=>{
-    var item = store.getters.selectedItemID;
-    var tab = store.state.currentTabIndex;
-    if((tab  == 2  || tab == 3)&& item){
-      return store.getters.selectedItemID;
-    }else{
-      return -1;
-    }
+
   }
-}
 
 const state = {
   messages: [],
