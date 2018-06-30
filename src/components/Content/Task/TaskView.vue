@@ -3,8 +3,8 @@
   <template v-if="selectedItemID <= 0">
     <h1>Select task first...</h1>
   </template>
-  <!-- Prikaz podataka pojedinacnog taska -->
-  <template v-else>
+<!-- Prikaz podataka pojedinacnog taska -->
+<template v-else>
 
 
 <!--
@@ -108,7 +108,7 @@
 
 
 
-
+<!-- modal za prikaz podataka o stepu -->
       <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -183,7 +183,132 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#stepEdit">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+<!-- modal za editovanje podataka o stepu -->
+<div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-secondary step-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="step-header">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+             <label for="stepName">Task name:</label>
+             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title">
+
+
+            <label for="desc">Description:</label>
+            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description"></textarea>
+
+
+             <label for="status">Change status:</label>
+             <select class="form-control" id="status">
+              <option>Completed</option>
+              <option>Failed</option>
+              <option>Rejected</option>
+              <option>Cancelled</option>
+            </select>
+
+             <label for="priority">Change priority:</label>
+             <select class="form-control" id="priority">
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+
+            <label for="tags">Change priority:</label>
+            <select class="form-control" id="tags">
+             <option>a</option>
+             <option>b</option>
+             <option>c</option>
+           </select>
+
+
+
+
+
+             <!--
+
+              <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
+              <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
+
+              <p><strong>Status: </strong>
+                {{stepInfo[0].sta_text}}
+                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+              </p>
+
+              <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
+              <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
+
+
+
+              <div>
+                <p><strong>Tags: </strong>
+                <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
+              </p>
+              </div>
+
+
+              <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
+              <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
+
+    <p><strong>Created by: </strong>
+      <ul class="list-unstyled">
+        <li class="media mt-2">
+
+          <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+
+          <div class="media-body">
+            <div class="media-body">
+                  <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                    {{stepInfo[0].usr_email}}
+              </div>
+              </div>
+
+        </li>
+      </ul>
+    </p>
+              <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
+              <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
+              <p><strong>Working: </strong>
+                <ul class="list-unstyled">
+                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+
+                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                    <div class="media-body">
+                      <div class="media-body">
+                            <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                              {{user.usr_email}}
+                        </div>
+                        </div>
+
+                  </li>
+                </ul>
+              </p>
+
+              -->
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+              <button type="button" class="btn btn-primary">Save</button>
             </div>
           </div>
         </div>
@@ -279,246 +404,245 @@
 
 
 <script>
-import {
-  store
-} from "@/store/index.js";
-import axios from "axios";
+    import {
+        store
+    } from "@/store/index.js";
+    import axios from "axios";
 
-import {
-  mapGetters
-} from "vuex";
+    import {
+        mapGetters
+    } from "vuex";
 
-// var now = moment();
+    // var now = moment();
 
-export default {
-
-
-  data() {
-    return {
-      taskInfo: [],
-      showAllTags: false,
-      showAllTagsID: undefined,
-      stepInfo: [],
-      stepShow: false
-    };
-  },
-
-  methods: {
+    export default {
 
 
-    getStepInfo(stepID) {
-      // console.log('taskID' + taskID + ', stepID' + stepID);
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
-          params: {
-            tasid: this.selectedItemID,
-            stepid: stepID,
-            sid: window.localStorage.getItem("sid")
-          }
-        })
-        .then(response => {
-          if (response.data.data !== undefined) {
-            // console.log(response.data.data);
-            this.stepInfo = response.data.data;
+        data() {
+            return {
+                taskInfo: [],
+                showAllTags: false,
+                showAllTagsID: undefined,
+                stepInfo: [],
+                stepShow: false
+            };
+        },
 
-            for (var i = 0; i < response.data.data.length; i++) {
-              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+        methods: {
 
-              if (this.stepInfo[i].tsk_timespent !== null) {
-                if (this.stepInfo[i].tsk_timespent <= 59) {
-                  this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
+
+            getStepInfo(stepID) {
+                // console.log('taskID' + taskID + ', stepID' + stepID);
+                axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+                        params: {
+                            tasid: this.selectedItemID,
+                            stepid: stepID,
+                            sid: window.localStorage.getItem("sid")
+                        }
+                    })
+                    .then(response => {
+                        if (response.data.data !== undefined) {
+                            // console.log(response.data.data);
+                            this.stepInfo = response.data.data;
+
+                            for (var i = 0; i < response.data.data.length; i++) {
+                                // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+                                if (this.stepInfo[i].tsk_timespent !== null) {
+                                    if (this.stepInfo[i].tsk_timespent <= 59) {
+                                        this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
+                                    } else {
+                                        let minutes = this.stepInfo[i].tsk_timespent % 60;
+                                        let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
+
+                                        this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
+                                    }
+                                }
+
+                                if (this.stepInfo[i].sta_text !== null) {
+
+                                    if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
+                                        this.stepInfo[i].background = 'bg-info'
+                                    } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
+                                        this.stepInfo[i].background = 'bg-danger'
+                                    } else {
+                                        this.stepInfo[i].background = 'bg-success'
+                                    }
+                                }
+
+
+
+
+
+                                if (this.stepInfo[i].tsk_deadline === null) {
+                                    this.stepInfo[i].tsk_deadline = ''
+                                } else {
+                                    this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+
+                                if (this.stepInfo[i].tsk_estimated_completion_date === null) {
+                                    this.stepInfo[i].tsk_estimated_completion_date = ''
+                                } else {
+                                    this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+
+                                if (this.stepInfo[i].tsk_timecreated === null) {
+                                    this.stepInfo[i].tsk_timecreated = ''
+                                } else {
+                                    this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+
+                                if (this.stepInfo[i].pri_text === 'High') {
+                                    this.stepInfo[i].pri_badge = 'badge-danger'
+                                } else if (this.stepInfo[i].pri_text === 'Medium') {
+                                    this.stepInfo[i].pri_badge = 'badge-warning'
+                                } else if (this.stepInfo[i].pri_text === 'Low') {
+                                    this.stepInfo[i].pri_badge = 'badge-info'
+                                }
+                            }
+
+                        }
+
+
+                        // this.stepInfo.tags = this.tas
+                    })
+
+
+                // .then(response => {
+                //   window.location.href = "#step";
+                // });
+
+
+
+            },
+
+            getTaskInfo(taskID) {
+                axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
+                        params: {
+                            tasid: taskID,
+                            sid: window.localStorage.getItem("sid")
+                        }
+                    })
+                    .then(response => {
+                        if (response.data.data !== undefined) {
+
+
+                            this.taskInfo = response.data.data;
+
+                            for (var i = 0; i < response.data.data.length; i++) {
+                                // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+
+                                if (this.taskInfo[i].tsk_deadline === null) {
+                                    this.taskInfo[i].tsk_deadline = ''
+                                } else {
+                                    this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+
+                                if (this.taskInfo[i].pri_text === 'High') {
+                                    this.taskInfo[i].pri_badge = 'badge-danger'
+                                } else if (this.taskInfo[i].pri_text === 'Medium') {
+                                    this.taskInfo[i].pri_badge = 'badge-warning'
+                                } else if (this.taskInfo[i].pri_text === 'Low') {
+                                    this.taskInfo[i].pri_badge = 'badge-info'
+                                }
+                            }
+
+
+
+                            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
+                        }
+                    });
+            }
+        },
+
+        computed: {
+
+
+            selectedItemID() {
+                var a = store.getters.selectedItemID;
+                if (a === undefined) return 0;
+                else return a;
+            },
+
+            showSteps() {
+                if (this.selectedItemID === 0) {
+                    this.stepShow = false;
+                    return;
                 } else {
-                  let minutes = this.stepInfo[i].tsk_timespent % 60;
-                  let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
-
-                  this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
+                    this.stepShow = true;
+                    return;
                 }
-              }
 
-if (this.stepInfo[i].sta_text !== null) {
+            },
 
-  if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
-    this.stepInfo[i].background = 'bg-info'
-  } else if(this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled' ){
-      this.stepInfo[i].background = 'bg-danger'
-    }
-    else{
-      this.stepInfo[i].background = 'bg-success'
-    }
-}
+            deadlineDate() {
+                return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
+            },
 
-
-
-
-
-              if (this.stepInfo[i].tsk_deadline === null) {
-                this.stepInfo[i].tsk_deadline = ''
-              } else {
-                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
-              }
-
-              if (this.stepInfo[i].tsk_estimated_completion_date === null) {
-                this.stepInfo[i].tsk_estimated_completion_date = ''
-              } else {
-                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
-              }
-
-              if (this.stepInfo[i].tsk_timecreated === null) {
-                this.stepInfo[i].tsk_timecreated = ''
-              } else {
-                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
-              }
-
-              if (this.stepInfo[i].pri_text === 'High') {
-                this.stepInfo[i].pri_badge = 'badge-danger'
-              } else if (this.stepInfo[i].pri_text === 'Medium') {
-                this.stepInfo[i].pri_badge = 'badge-warning'
-              } else if (this.stepInfo[i].pri_text === 'Low') {
-                this.stepInfo[i].pri_badge = 'badge-info'
-              }
+            createdDate() {
+                return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
             }
 
-          }
+        },
 
-
-          // this.stepInfo.tags = this.tas
-        })
-
-
-        // .then(response => {
-        //   window.location.href = "#step";
-        // });
-
-
-
-    },
-
-    getTaskInfo(taskID) {
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
-          params: {
-            tasid: taskID,
-            sid: window.localStorage.getItem("sid")
-          }
-        })
-        .then(response => {
-          if (response.data.data !== undefined) {
-
-
-            this.taskInfo = response.data.data;
-
-            for (var i = 0; i < response.data.data.length; i++) {
-              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
-
-
-              if (this.taskInfo[i].tsk_deadline === null) {
-                this.taskInfo[i].tsk_deadline = ''
-              } else {
-                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
-              }
-
-              if (this.taskInfo[i].pri_text === 'High') {
-                this.taskInfo[i].pri_badge = 'badge-danger'
-              } else if (this.taskInfo[i].pri_text === 'Medium') {
-                this.taskInfo[i].pri_badge = 'badge-warning'
-              } else if (this.taskInfo[i].pri_text === 'Low') {
-                this.taskInfo[i].pri_badge = 'badge-info'
-              }
+        mounted() {
+            if (this.selectedItemID !== 0) {
+                this.getTaskInfo(this.selectedItemID);
             }
 
 
+        },
 
-            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
-          }
-        });
-    }
-  },
-
-  computed: {
-
-
-    selectedItemID() {
-      var a = store.getters.selectedItemID;
-      if (a === undefined) return 0;
-      else return a;
-    },
-
-    showSteps() {
-      if (this.selectedItemID === 0) {
-        this.stepShow = false;
-        return;
-      } else {
-        this.stepShow = true;
-        return;
-      }
-
-    },
-
-    deadlineDate() {
-      return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
-    },
-
-    createdDate() {
-      return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
-    }
-
-  },
-
-  mounted() {
-    if (this.selectedItemID !== 0) {
-      this.getTaskInfo(this.selectedItemID);
-    }
+        watch: {
+            'selectedItemID': function(val, oldVal) {
+                if (val !== 0) {
+                    this.getTaskInfo(val);
+                    this.getStepInfo(val)
+                }
+                // this.getCompanyInfo(val);
+                // this.loadAdmins(val);
+                // this.loadEmployees(val);
+            }
 
 
-  },
+        }
+    };
 
-  watch: {
-    'selectedItemID': function(val, oldVal) {
-      if (val !== 0) {
-        this.getTaskInfo(val);
-        this.getStepInfo(val)
-      }
-      // this.getCompanyInfo(val);
-      // this.loadAdmins(val);
-      // this.loadEmployees(val);
-    }
-
-
-  }
-};
 </script>
 
 
 <style scoped>
-h1 {
-  text-align: left;
-}
+    h1 {
+        text-align: left;
+    }
 
-.task-header {
-  color: #333 !important;
-}
+    .task-header {
+        color: #333 !important;
+    }
 
-.step-header {
-  color: #fff !important;
-}
+    .step-header {
+        color: #fff !important;
+    }
 
-.badge {
-  margin: 0.125rem;
-}
+    .badge {
+        margin: 0.125rem;
+    }
 
-.pointer {
-  cursor: pointer;
-}
+    .pointer {
+        cursor: pointer;
+    }
 
-.pad-0 {
-  padding: 0;
-}
-<<<<<<< HEAD
+    .pad-0 {
+        padding: 0;
+    }
 
-.slika {
-  border: 1px solid #333;
-}
+    .slika {
+        border: 1px solid #333;
+    }
+
+    label {
+        padding-top: 10px;
+    }
 
 </style>
-h
-=======
-</style>
->>>>>>> a85279198141c8f4cc4e86f094727a43c3e36e52
