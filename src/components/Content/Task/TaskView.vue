@@ -3,8 +3,8 @@
   <template v-if="selectedItemID <= 0">
     <h1>Select task first...</h1>
   </template>
-<!-- Prikaz podataka pojedinacnog taska -->
-<template v-else>
+  <!-- Prikaz podataka pojedinacnog taska -->
+  <template v-else>
 
 
 <!--
@@ -109,7 +109,7 @@
 
 
 <!-- modal za prikaz podataka o stepu -->
-      <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
+      <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0 && stepModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header step-header" :class="stepInfo[0].background">
@@ -119,67 +119,121 @@
               </button>
             </div>
             <div class="modal-body">
-              <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
-              <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
 
-              <p><strong>Status: </strong>
-                {{stepInfo[0].sta_text}}
-                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-              </p>
+              <table class="table table-borderless">
 
-              <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-              <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
+  <tbody>
+    <tr>
+      <td>Project:</td>
+      <th scope="row">{{stepInfo[0].pro_name}}</th>
+    </tr>
+    <tr>
+      <td>Task:</td>
+      <th scope="row">{{stepInfo[0].taskname}}</th>
+    </tr>
+    <tr>
+      <td>Status:</td>
+      <th scope="row">{{stepInfo[0].sta_text}}
+        <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+        <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+        <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+      </th>
+    </tr>
 
 
 
-              <div>
-                <p><strong>Tags: </strong>
-                <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
-              </p>
-              </div>
+    <tr>
+      <td>Description:</td>
+      <th scope="row">{{stepInfo[0].description}}</th>
+    </tr>
 
 
-              <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
-              <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
 
-    <p><strong>Created by: </strong>
-      <ul class="list-unstyled">
-        <li class="media mt-2">
 
-          <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+    <tr>
+      <td>Priority:</td>
+      <th scope="row"><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></th>
+    </tr>
 
-          <div class="media-body">
+
+
+
+    <tr>
+      <td>Tags:</td>
+      <th scope="row">
+        <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
+      </th>
+    </tr>
+
+
+    <tr>
+      <td>Deadline:</td>
+      <th scope="row">
+      {{stepInfo[0].tsk_deadline}}
+      </th>
+    </tr>
+
+    <tr>
+      <td>Estimated completion date:</td>
+      <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
+    </tr>
+
+
+    <tr>
+      <td>Created by:</td>
+      <th scope="row">
+        <ul class="list-unstyled">
+          <li class="media mt-2">
+
+            <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+
             <div class="media-body">
-                  <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                    {{stepInfo[0].usr_email}}
-              </div>
-              </div>
+              <div class="media-body">
+                    <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                      {{stepInfo[0].usr_email}}
+                </div>
+                </div>
 
-        </li>
-      </ul>
-    </p>
-              <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
-              <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
-              <p><strong>Working: </strong>
-                <ul class="list-unstyled">
-                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+          </li>
+        </ul>
+      </th>
+    </tr>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+    <tr>
+      <td>Time created:</td>
+      <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
+    </tr>
 
-                    <div class="media-body">
-                      <div class="media-body">
-                            <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                              {{user.usr_email}}
-                        </div>
-                        </div>
+    <tr>
+      <td>Time spent:</td>
+      <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
+    </tr>
 
-                  </li>
-                </ul>
-              </p>
+    <tr>
+      <td>Working:</td>
+      <th scope="row">
+        <ul class="list-unstyled">
+          <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+
+            <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+            <div class="media-body">
+              <div class="media-body">
+                    <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                      {{user.usr_email}}
+                </div>
+                </div>
+          </li>
+        </ul>
+      </th>
+    </tr>
+
+  </tbody>
+</table>
+
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -214,6 +268,7 @@
 
              <label for="status">Change status:</label>
              <select class="form-control" id="status">
+              <option disabled selected>Select status of your task</option>
               <option>Completed</option>
               <option>Failed</option>
               <option>Rejected</option>
@@ -222,18 +277,56 @@
 
              <label for="priority">Change priority:</label>
              <select class="form-control" id="priority">
+              <option disabled selected>Select priority of your task</option>
               <option>High</option>
               <option>Medium</option>
               <option>Low</option>
             </select>
 
-            <label for="tags">Change priority:</label>
-            <select class="form-control" id="tags">
+            <!-- <label for="tags">Change tags:</label>
+            <select class="form-control" >
              <option>a</option>
              <option>b</option>
              <option>c</option>
-           </select>
+           </select> -->
 
+           <label class="tag" for="tags">Tags</label>
+           <multiselect v-model="valueTag" id="tags"tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+
+           <label for="deadline">Deadline:</label>
+           <flat-pickr name="deadline" ref='deadline' :config="config" v-model="project.deadline" id='deadline' class="form-control mb-3"
+             placeholder="Pick deadline (optional)">
+           </flat-pickr>
+
+           <!-- <input type="text" class="form-control" id="deadline"> -->
+
+           <label for="estDate">Estimated completion date:</label>
+           <flat-pickr name="estDate" ref='estDate' :config="estDate" v-model="project.estDate" id='estDate' class="form-control mb-3"
+             placeholder="Pick estimated completion date (optional)">
+           </flat-pickr>
+
+           <label for="timeSpent">Time spent [in minutes]:</label>
+           <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent">
+
+
+
+           <!-- <label for="wokring">Working:</label>
+           <select class="form-control" id="wokring">
+            <option>a</option>
+            <option>b</option>
+            <option>c</option>
+          </select> -->
+
+          <label class="tag" for="working">Working:</label>
+          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
+
+
+
+
+            <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
+
+
+          <!-- <label for="date">Deadline</label> -->
 
 
 
@@ -398,251 +491,357 @@
 
     </template>
 </div>
-
-
 </template>
 
 
 <script>
-    import {
-        store
-    } from "@/store/index.js";
-    import axios from "axios";
+import axios from "axios";
+import {store} from "@/store/index.js";
+import {mapGetters} from "vuex";
+import Multiselect from 'vue-multiselect'
 
-    import {
-        mapGetters
-    } from "vuex";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+const flatpickr = require("flatpickr");
+require("flatpickr/dist/themes/confetti.css");
 
-    // var now = moment();
+export default {
+  components: {
+    flatPickr,
+    Multiselect
+  },
 
-    export default {
+  data() {
+    return {
+      valueTag: [],
+      optionsTag: [],
 
+      valueUser: [],
+      optionsUser: [],
 
-        data() {
-            return {
-                taskInfo: [],
-                showAllTags: false,
-                showAllTagsID: undefined,
-                stepInfo: [],
-                stepShow: false
-            };
-        },
+      taskInfo: [],
+      showAllTags: false,
+      showAllTagsID: undefined,
+      stepInfo: [],
+      stepShow: false,
+      stepModal: false,
 
-        methods: {
+      project: {
+        title: undefined,
+        description: undefined,
+        users: undefined,
+        deadline: undefined,
+        estDate: undefined
+      },
 
-
-            getStepInfo(stepID) {
-                // console.log('taskID' + taskID + ', stepID' + stepID);
-                axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
-                        params: {
-                            tasid: this.selectedItemID,
-                            stepid: stepID,
-                            sid: window.localStorage.getItem("sid")
-                        }
-                    })
-                    .then(response => {
-                        if (response.data.data !== undefined) {
-                            // console.log(response.data.data);
-                            this.stepInfo = response.data.data;
-
-                            for (var i = 0; i < response.data.data.length; i++) {
-                                // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
-
-                                if (this.stepInfo[i].tsk_timespent !== null) {
-                                    if (this.stepInfo[i].tsk_timespent <= 59) {
-                                        this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
-                                    } else {
-                                        let minutes = this.stepInfo[i].tsk_timespent % 60;
-                                        let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
-
-                                        this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
-                                    }
-                                }
-
-                                if (this.stepInfo[i].sta_text !== null) {
-
-                                    if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
-                                        this.stepInfo[i].background = 'bg-info'
-                                    } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
-                                        this.stepInfo[i].background = 'bg-danger'
-                                    } else {
-                                        this.stepInfo[i].background = 'bg-success'
-                                    }
-                                }
-
-
-
-
-
-                                if (this.stepInfo[i].tsk_deadline === null) {
-                                    this.stepInfo[i].tsk_deadline = ''
-                                } else {
-                                    this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
-                                }
-
-                                if (this.stepInfo[i].tsk_estimated_completion_date === null) {
-                                    this.stepInfo[i].tsk_estimated_completion_date = ''
-                                } else {
-                                    this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
-                                }
-
-                                if (this.stepInfo[i].tsk_timecreated === null) {
-                                    this.stepInfo[i].tsk_timecreated = ''
-                                } else {
-                                    this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
-                                }
-
-                                if (this.stepInfo[i].pri_text === 'High') {
-                                    this.stepInfo[i].pri_badge = 'badge-danger'
-                                } else if (this.stepInfo[i].pri_text === 'Medium') {
-                                    this.stepInfo[i].pri_badge = 'badge-warning'
-                                } else if (this.stepInfo[i].pri_text === 'Low') {
-                                    this.stepInfo[i].pri_badge = 'badge-info'
-                                }
-                            }
-
-                        }
-
-
-                        // this.stepInfo.tags = this.tas
-                    })
-
-
-                // .then(response => {
-                //   window.location.href = "#step";
-                // });
-
-
-
-            },
-
-            getTaskInfo(taskID) {
-                axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
-                        params: {
-                            tasid: taskID,
-                            sid: window.localStorage.getItem("sid")
-                        }
-                    })
-                    .then(response => {
-                        if (response.data.data !== undefined) {
-
-
-                            this.taskInfo = response.data.data;
-
-                            for (var i = 0; i < response.data.data.length; i++) {
-                                // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
-
-
-                                if (this.taskInfo[i].tsk_deadline === null) {
-                                    this.taskInfo[i].tsk_deadline = ''
-                                } else {
-                                    this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
-                                }
-
-                                if (this.taskInfo[i].pri_text === 'High') {
-                                    this.taskInfo[i].pri_badge = 'badge-danger'
-                                } else if (this.taskInfo[i].pri_text === 'Medium') {
-                                    this.taskInfo[i].pri_badge = 'badge-warning'
-                                } else if (this.taskInfo[i].pri_text === 'Low') {
-                                    this.taskInfo[i].pri_badge = 'badge-info'
-                                }
-                            }
-
-
-
-                            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
-                        }
-                    });
-            }
-        },
-
-        computed: {
-
-
-            selectedItemID() {
-                var a = store.getters.selectedItemID;
-                if (a === undefined) return 0;
-                else return a;
-            },
-
-            showSteps() {
-                if (this.selectedItemID === 0) {
-                    this.stepShow = false;
-                    return;
-                } else {
-                    this.stepShow = true;
-                    return;
-                }
-
-            },
-
-            deadlineDate() {
-                return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
-            },
-
-            createdDate() {
-                return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
-            }
-
-        },
-
-        mounted() {
-            if (this.selectedItemID !== 0) {
-                this.getTaskInfo(this.selectedItemID);
-            }
-
-
-        },
-
-        watch: {
-            'selectedItemID': function(val, oldVal) {
-                if (val !== 0) {
-                    this.getTaskInfo(val);
-                    this.getStepInfo(val)
-                }
-                // this.getCompanyInfo(val);
-                // this.loadAdmins(val);
-                // this.loadEmployees(val);
-            }
-
-
-        }
+      config: {
+        wrap: false, // set wrap to true only when using 'input-group'
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: "Y-m-d H:i:S",
+        altFormat: "F	j, Y H:i",
+        altInput: true
+      },
+      estDate: {
+        wrap: false, // set wrap to true only when using 'input-group'
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: "Y-m-d H:i:S",
+        altFormat: "F	j, Y H:i",
+        altInput: true
+      }
     };
+  },
 
+  methods: {
+
+    loadAllProjectUsers(projectID){
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users", {
+          params: {
+            proid: projectID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+            this.optionsUser = response.data.data;
+            // console.log(response.data.data)
+          })
+    },
+
+    addTag (newTag) {
+          const tag = {
+            name: newTag
+          }
+          this.valueTag.push(tag)
+        },
+
+        addUser (newUser) {
+              const user = {
+                name: newUser
+              }
+              this.valueUser.push(user)
+            },
+
+
+    getStepInfo(stepID) {
+      // console.log('taskID' + taskID + ', stepID' + stepID);
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+          params: {
+            tasid: this.selectedItemID,
+            stepid: stepID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          if (response.data.data !== undefined) {
+            // console.log(response.data.data);
+            this.stepInfo = response.data.data;
+
+
+            for (var i = 0; i < response.data.data.length; i++) {
+              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+              if (this.stepInfo[i].tsk_timespent !== null) {
+                if (this.stepInfo[i].tsk_timespent <= 59) {
+                  this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
+                } else {
+                  let minutes = this.stepInfo[i].tsk_timespent % 60;
+                  let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
+
+                  this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
+                }
+              }
+
+              if (this.stepInfo[i].sta_text !== null) {
+
+                if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
+                  this.stepInfo[i].background = 'bg-info'
+                } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
+                  this.stepInfo[i].background = 'bg-danger'
+                } else {
+                  this.stepInfo[i].background = 'bg-success'
+                }
+              }
+
+
+
+
+
+              if (this.stepInfo[i].tsk_deadline === null) {
+                this.stepInfo[i].tsk_deadline = ''
+              } else {
+                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].tsk_estimated_completion_date === null) {
+                this.stepInfo[i].tsk_estimated_completion_date = ''
+              } else {
+                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].tsk_timecreated === null) {
+                this.stepInfo[i].tsk_timecreated = ''
+              } else {
+                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.stepInfo[i].pri_text === 'High') {
+                this.stepInfo[i].pri_badge = 'badge-danger'
+              } else if (this.stepInfo[i].pri_text === 'Medium') {
+                this.stepInfo[i].pri_badge = 'badge-warning'
+              } else if (this.stepInfo[i].pri_text === 'Low') {
+                this.stepInfo[i].pri_badge = 'badge-info'
+              }
+            }
+
+
+          }
+
+
+          // this.stepInfo.tags = this.tas
+          this.stepModal = true;
+        }).then(response => {
+
+
+          this.valueTag = [];
+          if(this.stepInfo[0] !== undefined){
+            for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
+              // console.log(this.stepInfo[0].tags[i].tag_text)
+              // console.log(this.options.name);
+              const tag = {name: this.stepInfo[0].tags[i].tag_text}
+              this.valueTag.push(tag);
+            }
+          }
+
+        }).then(response => {
+
+
+          this.valueUser = [];
+          if(this.stepInfo[0] !== undefined){
+            for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
+              // console.log(this.stepInfo[0].tags[i].tag_text)
+              // console.log(this.options.name);
+              const user = {
+                name: this.stepInfo[0].usrworking[i].usr_name,
+                email: this.stepInfo[0].usrworking[i].usr_email
+              }
+              this.valueUser.push(user);
+            }
+          }
+
+        })
+
+
+      // .then(response => {
+      //   window.location.href = "#step";
+      // });
+
+
+
+    },
+
+    getTaskInfo(taskID) {
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
+          params: {
+            tasid: taskID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+          if (response.data.data !== undefined) {
+
+
+            this.taskInfo = response.data.data;
+
+            for (var i = 0; i < response.data.data.length; i++) {
+              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+
+
+              if (this.taskInfo[i].tsk_deadline === null) {
+                this.taskInfo[i].tsk_deadline = ''
+              } else {
+                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+              }
+
+              if (this.taskInfo[i].pri_text === 'High') {
+                this.taskInfo[i].pri_badge = 'badge-danger'
+              } else if (this.taskInfo[i].pri_text === 'Medium') {
+                this.taskInfo[i].pri_badge = 'badge-warning'
+              } else if (this.taskInfo[i].pri_text === 'Low') {
+                this.taskInfo[i].pri_badge = 'badge-info'
+              }
+            }
+
+
+
+            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
+          }
+        });
+    }
+  },
+
+  computed: {
+
+
+    selectedItemID() {
+      var a = store.getters.selectedItemID;
+      if (a === undefined) return 0;
+      else return a;
+    },
+
+    selectedProjectID() {
+      var a = store.state.sidebarItemSelection[0];
+      if (a === undefined) return 0;
+      else return a;
+    },
+
+    showSteps() {
+      if (this.selectedItemID === 0) {
+        this.stepShow = false;
+        return;
+      } else {
+        this.stepShow = true;
+        return;
+      }
+
+    },
+
+    deadlineDate() {
+      return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
+    },
+
+    createdDate() {
+      return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
+    }
+
+  },
+
+  mounted() {
+    if (this.selectedItemID !== 0) {
+      this.getTaskInfo(this.selectedItemID);
+
+    }
+
+    this.loadAllProjectUsers(this.selectedProjectID);
+
+
+  },
+
+  watch: {
+    'selectedItemID': function(val, oldVal) {
+      if (val !== 0) {
+        this.getTaskInfo(val);
+        this.getStepInfo(val);
+        // this.loadAllProjectUsers(val);
+      }
+      // this.getCompanyInfo(val);
+      // this.loadAdmins(val);
+      // this.loadEmployees(val);
+    },
+
+
+    'selectedProjectID': function(val, oldVal) {
+      console.log('prijekat' + val);
+      // if (val !== 0) {
+      //   this.loadAllProjectUsers(val);
+      // }
+    }
+
+  }
+};
 </script>
 
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
-    h1 {
-        text-align: left;
-    }
+h1 {
+  text-align: left;
+}
 
-    .task-header {
-        color: #333 !important;
-    }
+.task-header {
+  color: #333 !important;
+}
 
-    .step-header {
-        color: #fff !important;
-    }
+.step-header {
+  color: #fff !important;
+}
 
-    .badge {
-        margin: 0.125rem;
-    }
+.badge {
+  margin: 0.125rem;
+}
 
-    .pointer {
-        cursor: pointer;
-    }
+.pointer {
+  cursor: pointer;
+}
 
-    .pad-0 {
-        padding: 0;
-    }
+.pad-0 {
+  padding: 0;
+}
 
-    .slika {
-        border: 1px solid #333;
-    }
+.slika {
+  border: 1px solid #333;
+}
 
-    label {
-        padding-top: 10px;
-    }
-
+label {
+  padding-top: 10px;
+}
 </style>
