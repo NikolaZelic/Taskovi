@@ -109,15 +109,7 @@
 import { api } from "@/api/index.js";
 import VueForm from "vue-form";
 export default {
-  mixins: [
-    new VueForm({
-      // inputClasses: {
-      // valid: "is-valid",
-      // invalid: "is-invalid1111"
-      // }
-    })
-    // StartPage
-  ],
+  mixins: [new VueForm({})],
   data() {
     return {
       loginVisible: true,
@@ -133,6 +125,14 @@ export default {
         {
           email: "dime@gmail.com",
           pass: "123"
+        },
+        {
+          email: "svetaprogramer@gmail.com",
+          pass: "praksa1234"
+        },
+        {
+          email: "paun992@hotmail.com",
+          pass: "pass123"
         }
       ],
       formstate: {},
@@ -191,9 +191,17 @@ export default {
     },
     register() {
       let valid = this.formstate.$valid;
-      console.log(valid);
       if (valid) {
-        api.register(this.user);
+        api
+          .register(this.user)
+          .then(r => {
+            if(r.data.registration === 'Success'){
+              this.loginVisible = true;
+            }
+          })
+          .catch(error => {
+            alert(error);
+          });
       }
     },
     onSubmit() {
@@ -271,7 +279,7 @@ h2 {
 /* LOGIN */
 
 .preset button {
-  line-height: 0px;
+  line-height: 0px !important;
 }
 
 .preset > * {

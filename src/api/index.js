@@ -1,9 +1,9 @@
 import {
   instance as axios
 } from './config.js';
-import {
-  store
-} from '@/store/index.js';
+// import {
+//   store
+// } from '@/store/index.js';
 import router from '../router/index.js';
 
 // KAD PRAVIS API OBAVEZNO KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
@@ -97,7 +97,7 @@ export const api = {
     });
   },
   postMessage(tasid, mess) {
-    var msg = store.state.messages;
+    // var msg = store.state.messages;
     var fd = new FormData();
     fd.append('type', 'text');
     fd.append('text', mess);
@@ -121,7 +121,6 @@ export const api = {
     axios.get('auth/users?sid=' + sid).then(r => {
       let statusOK = r.data.status === 'OK';
       if (statusOK) {
-        console.log(r.data.name + ' ' + r.data.surname + ' ulogovan');
         window.localStorage.name = r.data.name;
         window.localStorage.surname = r.data.surname;
         router.push('/');
@@ -137,13 +136,11 @@ export const api = {
     });
   },
   register(user) {
-    axios.post('auth/singup', {
+    return axios.post('auth/singup', {
       email: user.email,
       pass: user.password,
       name: user.name,
       surname: user.surname
-    }).catch(error => {
-      console.log(error);
     });
   },
   // ZX - Get projects based on filter
@@ -164,7 +161,7 @@ export const api = {
         assigned: params.assigned,
         archived: params.archived,
       }
-    })
+    });
   },
   //#endregion
 

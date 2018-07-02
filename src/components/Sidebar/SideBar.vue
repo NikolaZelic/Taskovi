@@ -61,6 +61,12 @@
           </form>
         </div>
         <div class="item-list">
+
+          <b-table responsive :dark='tableconf.dark'>
+
+
+          </b-table>
+
           <table>
             <thead>
               <tr>
@@ -128,7 +134,12 @@ export default {
   },
   data() {
     return {
-      // isTask: false,
+      tableconf: {
+        dark: true,
+        hover:true,
+        small: true,
+        outlined: true,
+      },
       sidebarActive: true,
       currentTabIndex: 0,
       project: {
@@ -313,6 +324,8 @@ export default {
         : this.itemsFiltered.length;
     },
     itemsFiltered() {
+      let showColumns = [];
+
       let tabData = this.activeArray;
       if (tabData === undefined) return;
       let filtered = tabData.filter(it => {
