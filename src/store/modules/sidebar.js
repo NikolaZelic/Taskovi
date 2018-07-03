@@ -92,6 +92,7 @@ const mutations = {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
+    store.state.mainFocused = false;
   },
   darkTheme: (state, params) => {
     store.state.darkTheme = params;

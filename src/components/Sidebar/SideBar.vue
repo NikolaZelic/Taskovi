@@ -2,7 +2,10 @@
   <aside id="sidebar" :class="{ collapsed: !sidebarActive }">
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
-      <span title="Collapse Sidebar" @click="sidebarActive = !sidebarActive" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
+      <span>
+        <span v-show='currentTabIndex !== 0 || itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar"
+          @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
+        </span>
       </span>
       <div>
         <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
@@ -18,8 +21,8 @@
       <div class="static-side">
 
         <ul class="tabs">
-          <li v-for="( tab, index ) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" :title="tab.name" class="tablinks"
-            :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), sidebarActive=true"
+          <li v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" :title="tab.name" class="tablinks"
+            :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), setSidebarBoolean(true)"
             :disabled="tab.disabled">
           </li>
         </ul>
@@ -43,31 +46,47 @@
 
       <!-- <div class="sidebar-content" > -->
       <div class="sidebar-body" :class="{ collapsed: !sidebarActive }">
+        <!-- FILTERS -->
         <div class="form-filter">
-          <form class="form-block">
-            <div class="search custom-modern">
-              <span class="fas fa-search"></span>
-              <input class="form-control mr-sm-2 hidden-md-down" v-model.trim="tabs[currentTabIndex].search" type="search" placeholder="Search"
-                aria-label="Search">
-            </div>
-          </form>
-          <form v-if="showSubFilter()" class="item-filter" role="group" aria-label="Item Filter">
 
-            <b-form-group>
+          <b-form-group>
+            <b-input-group class='search custom-modern'>
+              <b-input-group-text slot="prepend">
+                <span class="fas fa-search" @click='focusSearch'></span>
+              </b-input-group-text>
+              <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Type to Search" />
+              <b-input-group-append v-if='tabs[currentTabIndex].search'>
+                <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+
+          <div class="item-filter">
+            <b-form-group v-if="showSubFilter()" role="group">
               <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
               </b-form-checkbox-group>
             </b-form-group>
+          </div>
 
-          </form>
         </div>
         <div class="item-list">
 
-          <b-table responsive :dark='tableconf.dark'>
+          <b-table responsive :items="itemsFiltered" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
+            :fields="fieldsToShow" @row-clicked="selectAndSet">
 
+            <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
+            <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
+              <span>{{data.item.title}}</span>
+            </template>
+
+            <template slot="edit_item" slot-scope="data">
+              <span v-if='currentTabIndex !== 0 || data.item.is_admin === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span>
+            </template>
 
           </b-table>
 
-          <table>
+          <!-- <table>
             <thead>
               <tr>
                 <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
@@ -76,7 +95,6 @@
                   <th>Users on Project</th>
                   <th>Completed Tasks</th>
                   <th>In Progress Tasks</th>
-                  <!-- <th v-if="item.deadline !== undefined && item.deadline !== null">DeadLine</th> -->
                 </template>
                 <th>Edit</th>
               </tr>
@@ -111,7 +129,7 @@
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
         </div>
         <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
           <span class="fas fa-plus-circle"></span> Add New</button>
@@ -134,13 +152,61 @@ export default {
   },
   data() {
     return {
-      tableconf: {
-        dark: true,
-        hover:true,
-        small: true,
-        outlined: true,
-      },
-      sidebarActive: true,
+      projectFields: [
+        {
+          key: "title",
+          label: "Projects",
+          sortable: true
+        },
+        {
+          key: "pro_deadline",
+          label: "Deadline",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "users_count",
+          label: "Users on Project",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "inprogress_tasks",
+          label: "In Progress Tasks",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "failed_tasks",
+          label: "Failed Tasks",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "completed_tasks",
+          label: "Completed Tasks",
+          sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "edit_item",
+          label: "Edit",
+          class: "text-center"
+        }
+      ],
+      taskFields: [
+        {
+          key: "title",
+          label: "Tasks",
+          sortable: true
+        },
+        {
+          key: "edit_item",
+          label: "Edit",
+          class: "text-center"
+        }
+      ],
+      // sidebarActive: true,
       currentTabIndex: 0,
       project: {
         title: undefined,
@@ -186,7 +252,6 @@ export default {
       this.getTaskFilterData();
     },
     currentTabIndex(val) {
-      // this.sidebarActive = true; // MAYBE USED LATER FOR ACTIVATING SIDE FROM MAIN
       let tabItem = this.tabs[val].itemIndex;
 
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
@@ -215,10 +280,6 @@ export default {
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
       this.actionTabDataTeam();
-    },
-    sidebarActive(val) {
-      store.commit("mainFocused", !val);
-      window.sessionStorage.sidebarActive = val;
     }
   },
   methods: {
@@ -301,19 +362,29 @@ export default {
     mouseOverPopup(val) {
       this.activePopup = val;
     },
+    focusSearch() {
+      this.$refs.search.$el.focus();
+    },
     changeTheme() {
       localStorage.dark = !this.darkTheme;
       store.commit("darkTheme", !this.darkTheme);
     },
     userOptions() {
       alert("Treba da prebaci na user options stranicu");
+    },
+    setSidebarBoolean(val) {
+      store.commit("mainFocused", !val);
+    },
+    myRowClickHandler() {
+      alert("ss");
     }
   },
   computed: {
     ...mapState({
       getTabIndex: "currentTabIndex",
       itemAction: "itemAction",
-      darkTheme: "darkTheme"
+      darkTheme: "darkTheme",
+      sidebarActive: state => !state.mainFocused
     }),
     activeArray() {
       return store.getters.currentTabData;
@@ -323,15 +394,27 @@ export default {
         ? null
         : this.itemsFiltered.length;
     },
+    fieldsToShow() {
+      if (this.currentTabIndex === 0) {
+        if (
+          this.itemAction.edit !== undefined ||
+          this.itemAction.add !== undefined
+        ) {
+          let shortProj = ["Projects", "Edit"];
+          return this.projectFields.filter(item => {
+            return shortProj.includes(item.label);
+          });
+        }
+        return this.projectFields;
+      }
+      return this.taskFields;
+    },
     itemsFiltered() {
-      let showColumns = [];
-
       let tabData = this.activeArray;
       if (tabData === undefined) return;
       let filtered = tabData.filter(it => {
         var item = it.title;
         var searchItem = this.tabs[this.currentTabIndex].search;
-        // var searchItem = this.searchData;
         return item == undefined || searchItem == undefined
           ? false
           : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
@@ -340,16 +423,6 @@ export default {
     }
   },
   created() {
-    // CHECK IF USER IS LOGGED IN
-    let sidebarActive = window.sessionStorage.sidebarActive;
-    if (sidebarActive !== undefined) {
-      try {
-        let parsed = JSON.parse(sidebarActive);
-        this.sidebarActive = parsed;
-      } catch (e) {
-        console.log("Browser Storage is invalid " + e);
-      }
-    }
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
       index: this.currentTabIndex
@@ -570,16 +643,29 @@ h2 {
   position: relative;
 }
 
+.search * {
+  border-color: #717171;
+}
+
+.form-control {
+  border-color: #717171;
+}
+
 .search span {
   color: #fff;
-  position: absolute;
+  /*  position: absolute;
   left: 12px;
   top: 10px;
-  opacity: 0.8;
+  opacity: 0.8; */
+}
+
+.search .input-group-text {
+  background: #2d3436;
+  border-right: 0;
 }
 
 .search input {
-  text-indent: 25px;
+  /* text-indent: 25px; */
   background: #2d3436;
   color: #fff;
 }
@@ -613,10 +699,13 @@ h2 {
   border-right: 1px solid var(--ac-color-dark);
 }
 
-.form-filter {
-  border-bottom: 1px solid gray;
-  margin-bottom: 10px;
-}
+/* .form-filter { */
+
+/* border-bottom: 1px solid gray; */
+
+/* margin-bottom: 10px; */
+
+/* } */
 
 .form-filter > form {
   margin-bottom: 10px;
@@ -625,10 +714,6 @@ h2 {
 .item-filter {
   display: flex;
   justify-content: space-around;
-}
-
-.item-filter > * {
-  color: white;
 }
 
 .badge-purple {

@@ -27,7 +27,7 @@ export const store = new Vuex.Store({
   strict: true,
   state: {
     currentTabIndex: undefined,
-    mainFocused: undefined,
+    mainFocused: false,
     sidebarTabData: [],
     sidebarItemSelection: [],
     darkTheme: false,

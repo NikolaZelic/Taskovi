@@ -1,6 +1,6 @@
-.item-list {
-  width: 100%;
-  flex: 1 0px;
+ .item-list {
+   width: 100%;
+  flex: 1 0px; 
   overflow-x: hidden;
   margin: 0 0 10px 0;
 }
@@ -37,7 +37,7 @@
 }
 
 .item-list tr {
-  display: flex;
+  /* display: flex; */
   line-height: 30px;
 }
 
@@ -67,11 +67,11 @@
 }
 
 .item-list tr>input {
-  flex: 1;
+  /* flex: 1; */
   line-height: initial;
 }
 
 .td-icons {
   cursor: pointer;
   font-size: 15px;
-}
+} 
