@@ -58,6 +58,9 @@
 
 
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id)' data-toggle="modal" data-target="#stepInformation">
+
+
+
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
                   <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
@@ -132,6 +135,13 @@
       <th scope="row">{{stepInfo[0].taskname}}</th>
     </tr>
     <tr>
+
+      <tr>
+        <td>Description:</td>
+        <th scope="row">{{stepInfo[0].description}}</th>
+      </tr>
+
+
       <td>Status:</td>
       <th scope="row">{{stepInfo[0].sta_text}}
         <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
@@ -141,11 +151,17 @@
     </tr>
 
 
-
-    <tr>
-      <td>Description:</td>
-      <th scope="row">{{stepInfo[0].description}}</th>
+    <tr v-if="stepInfo[0].tsk_progress !== null">
+      <td>Progress:</td>
+      <th scope="row">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
+        </div>
+      </th>
     </tr>
+
+
+
 
 
 
@@ -245,6 +261,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
 <!-- modal za editovanje podataka o stepu -->
 <div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -259,234 +284,71 @@
 
 
              <label for="stepName">Task name:</label>
-             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title">
+             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
 
 
             <label for="desc">Description:</label>
-            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description"></textarea>
+            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
 
 
              <label for="status">Change status:</label>
-             <select class="form-control" id="status">
+             <select class="form-control" id="status" v-model="edit.status">
               <option disabled selected>Select status of your task</option>
-              <option>Completed</option>
-              <option>Failed</option>
-              <option>Rejected</option>
-              <option>Cancelled</option>
+              <option value="1">Assigned</option>
+              <option value="2">In Progress</option>
+              <option value="3">Completed</option>
+              <option value="4">Failed</option>
+              <option value="5">Rejected</option>
+              <option value="6">Cancelled</option>
             </select>
+
+
+
+
+
 
              <label for="priority">Change priority:</label>
-             <select class="form-control" id="priority">
+             <select class="form-control" id="priority" v-model="edit.priority">
               <option disabled selected>Select priority of your task</option>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
+              <option value="1">High</option>
+              <option value="2">Medium</option>
+              <option value="3">Low</option>
             </select>
 
-            <!-- <label for="tags">Change tags:</label>
-            <select class="form-control" >
-             <option>a</option>
-             <option>b</option>
-             <option>c</option>
-           </select> -->
 
            <label class="tag" for="tags">Tags</label>
            <multiselect v-model="valueTag" id="tags"tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
 
            <label for="deadline">Deadline:</label>
-           <flat-pickr name="deadline" ref='deadline' :config="config" v-model="project.deadline" id='deadline' class="form-control mb-3"
+           <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
              placeholder="Pick deadline (optional)">
            </flat-pickr>
 
-           <!-- <input type="text" class="form-control" id="deadline"> -->
-
            <label for="estDate">Estimated completion date:</label>
-           <flat-pickr name="estDate" ref='estDate' :config="estDate" v-model="project.estDate" id='estDate' class="form-control mb-3"
+           <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
              placeholder="Pick estimated completion date (optional)">
            </flat-pickr>
 
            <label for="timeSpent">Time spent [in minutes]:</label>
-           <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent">
+           <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
 
 
-
-           <!-- <label for="wokring">Working:</label>
-           <select class="form-control" id="wokring">
-            <option>a</option>
-            <option>b</option>
-            <option>c</option>
-          </select> -->
+           <label for="progress">Progress: </label>
+           <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
 
           <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
+          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
 
-
-
-
-            <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
-
-
-          <!-- <label for="date">Deadline</label> -->
-
-
-
-
-             <!--
-
-              <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
-              <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
-
-              <p><strong>Status: </strong>
-                {{stepInfo[0].sta_text}}
-                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-              </p>
-
-              <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-              <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
-
-
-
-              <div>
-                <p><strong>Tags: </strong>
-                <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
-              </p>
-              </div>
-
-
-              <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
-              <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
-
-    <p><strong>Created by: </strong>
-      <ul class="list-unstyled">
-        <li class="media mt-2">
-
-          <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
-
-          <div class="media-body">
-            <div class="media-body">
-                  <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                    {{stepInfo[0].usr_email}}
-              </div>
-              </div>
-
-        </li>
-      </ul>
-    </p>
-              <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
-              <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
-              <p><strong>Working: </strong>
-                <ul class="list-unstyled">
-                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
-
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
-
-                    <div class="media-body">
-                      <div class="media-body">
-                            <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                              {{user.usr_email}}
-                        </div>
-                        </div>
-
-                  </li>
-                </ul>
-              </p>
-
-              -->
 
 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-              <button type="button" class="btn btn-primary">Save</button>
+              <button type="button" class="btn btn-primary" @click="saveChanges">Save</button>
             </div>
           </div>
         </div>
       </div>
-
-<!--
-      <div class="card mt-5 col-md-6 offset-md-3 pad-0 mb-5" v-if="stepInfo.length > 0" id="step">
-        <div class="card-header step-header " :class="stepInfo[0].background">
-          {{ stepInfo[0].tsk_title }}
-        </div>
-        <div class="card-body">
-          <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
-          <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
-
-          <p><strong>Status: </strong>
-            {{stepInfo[0].sta_text}}
-            <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-            <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-            <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-          </p>
-
-          <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-          <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
-          <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
-          <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
-
-<p><strong>Created by: </strong>
-  <ul class="list-unstyled">
-    <li class="media mt-2">
-
-      <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-      <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
-
-      <div class="media-body">
-        <div class="media-body">
-              <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                {{stepInfo[0].usr_email}}
-          </div>
-          </div>
-
-    </li>
-  </ul>
-</p>
-          <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
-          <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
-          <p><strong>Working: </strong>
-            <ul class="list-unstyled">
-              <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
-
-                <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
-
-                <div class="media-body">
-                  <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                          {{user.usr_email}}
-                    </div>
-                    </div>
-
-              </li>
-            </ul>
-          </p>
-
-
-        </div>
-      </div>
--->
-
-      <!-- description:null
-      pri_text:"Low"
-      pro_id:146
-      pro_name:"Autobuski prevoz"
-      sta_text:"Assigned"
-      taskname:"Treba zameniti sijalicu"
-      tsk_deadline:"2018-06-26 11:48:03.0"
-      tsk_estimated_completion_date:null
-      tsk_id:64
-      tsk_timecreated:null
-      tsk_timespent:null
-      tsk_title:"Dostava"
-      usr_creator_name:"Dime"
-      usr_creator_surname:"Dimic"
-      usr_id_creator:64
-      usrworking:Array[2] -->
-
 
 
     </template>
@@ -515,6 +377,17 @@ export default {
     return {
       valueTag: [],
       optionsTag: [],
+
+      edit: {
+        name: undefined,
+        description: undefined,
+        status: undefined,
+        priority: undefined,
+        deadline: undefined,
+        estTime: undefined,
+        timespent: undefined,
+        progress: undefined
+      },
 
       valueUser: [],
       optionsUser: [],
@@ -555,6 +428,27 @@ export default {
 
   methods: {
 
+    saveChanges(){
+      axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+
+            tasid: this.selectedItemID,
+            stepid: this.stepInfo[0].tsk_id,
+            sid: window.localStorage.getItem("sid"),
+
+            title: this.edit.name,
+            description:  this.edit.description,
+            deadline:  this.edit.deadline,
+            priority: this.edit.priority,
+            status: this.edit.status,
+            progress: this.edit.progress,
+            timespent: this.edit.timespent,
+            estimateddate:  this.edit.estTime,
+            usersarray: this.userStringArray,
+            tagarray: this.tagStringArray
+
+      })
+    },
+
     loadAllProjectUsers(projectID){
       axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users", {
           params: {
@@ -577,7 +471,7 @@ export default {
 
         addUser (newUser) {
               const user = {
-                name: newUser
+                id: newUser
               }
               this.valueUser.push(user)
             },
@@ -618,9 +512,14 @@ export default {
                   this.stepInfo[i].background = 'bg-info'
                 } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
                   this.stepInfo[i].background = 'bg-danger'
-                } else {
+                } else if (this.stepInfo[i].sta_text === 'Completed') {
                   this.stepInfo[i].background = 'bg-success'
                 }
+                else{
+                  this.stepInfo[i].background = 'bg-secondary'
+                }
+              }else{
+                  this.stepInfo[i].background = 'bg-secondary'
               }
 
 
@@ -682,9 +581,11 @@ export default {
               // console.log(this.stepInfo[0].tags[i].tag_text)
               // console.log(this.options.name);
               const user = {
+                id: this.stepInfo[0].usrworking[i].usr_id,
                 name: this.stepInfo[0].usrworking[i].usr_name,
                 email: this.stepInfo[0].usrworking[i].usr_email
               }
+              // console.log(this.stepInfo[0].usrworking[i]);
               this.valueUser.push(user);
             }
           }
@@ -742,15 +643,38 @@ export default {
 
   computed: {
 
+    tagStringArray(){
+      let niz = [];
+      for (var i = 0; i < this.valueTag.length; i++) {
+        niz.push(this.valueTag[i].name);
+      }
+      return JSON.stringify(niz);
+    },
+
+    userStringArray(){
+      let niz = [];
+      for (var i = 0; i < this.valueUser.length; i++) {
+        niz.push(this.valueUser[i].id);
+      }
+      return JSON.stringify(niz);
+    },
 
     selectedItemID() {
       var a = store.getters.selectedItemID;
+      // console.log(a);
       if (a === undefined) return 0;
       else return a;
     },
 
     selectedProjectID() {
       var a = store.state.sidebarItemSelection[0];
+      if (a === undefined) return 0;
+      else return a;
+    },
+
+    selectedTaskID() {
+      var a = store.getters.selectedItemID;
+      // console.log(a);
       if (a === undefined) return 0;
       else return a;
     },
@@ -805,6 +729,13 @@ export default {
       // if (val !== 0) {
       //   this.loadAllProjectUsers(val);
       // }
+    },
+
+    'selectedTaskID': function(val, oldVal) {
+      // console.log('a');
+        if (val !== 0) {
+          console.log('novi je task broj' + val);
+        }
     }
 
   }
