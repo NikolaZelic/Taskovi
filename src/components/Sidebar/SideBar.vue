@@ -11,7 +11,7 @@
         <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
           <strong>{{ project.title }}</strong> / </a>
         <span>{{ tabs[currentTabIndex].name }}</span>
-        <span v-if='shownItemsCount !== 0' class='badge badge-dark'>{{ shownItemsCount }}</span>
+        <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
       <span></span>
     </div>
@@ -71,8 +71,11 @@
         </div>
         <div class="item-list">
 
-          <b-table responsive :items="itemsFiltered" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
-            :fields="fieldsToShow" @row-clicked="selectAndSet">
+          <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
+            :fields="fieldsToShow" 
+            :filter="tabs[currentTabIndex].search"
+             @filtered="onFiltered"
+              @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
@@ -206,7 +209,7 @@ export default {
           class: "text-center"
         }
       ],
-      // sidebarActive: true,
+      totalRows: this.activeArray===undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       project: {
         title: undefined,
@@ -355,8 +358,6 @@ export default {
     },
     signOut() {
       window.localStorage.removeItem("sid");
-      // console.log('s')
-      // store.resetState();
       api.sessionActive();
     },
     mouseOverPopup(val) {
@@ -375,8 +376,8 @@ export default {
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);
     },
-    myRowClickHandler() {
-      alert("ss");
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length;
     }
   },
   computed: {
@@ -389,11 +390,11 @@ export default {
     activeArray() {
       return store.getters.currentTabData;
     },
-    shownItemsCount() {
-      return this.itemsFiltered === undefined
-        ? null
-        : this.itemsFiltered.length;
-    },
+    // shownItemsCount() {
+    //   return this.itemsFiltered === undefined
+    //     ? null
+    //     : this.itemsFiltered.length;
+    // },
     fieldsToShow() {
       if (this.currentTabIndex === 0) {
         if (
@@ -410,16 +411,16 @@ export default {
       return this.taskFields;
     },
     itemsFiltered() {
-      let tabData = this.activeArray;
-      if (tabData === undefined) return;
-      let filtered = tabData.filter(it => {
-        var item = it.title;
-        var searchItem = this.tabs[this.currentTabIndex].search;
-        return item == undefined || searchItem == undefined
-          ? false
-          : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
-      });
-      return filtered;
+    //   let tabData = this.activeArray;
+    //   if (tabData === undefined) return;
+    //   let filtered = tabData.filter(it => {
+    //     var item = it.title;
+    //     var searchItem = this.tabs[this.currentTabIndex].search;
+    //     return item == undefined || searchItem == undefined
+    //       ? false
+    //       : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
+    //   });
+    //   return filtered;
     }
   },
   created() {
