@@ -15,7 +15,7 @@ const state = {
 const actions = {
   // by Zelic - koristi se u TaskAdd.vue
   suggestTags(commit, params){
-    api.suggestTags(params.tagFor, params.searchStr).
+    api.suggestTags(params.pro_id, params.tagFor, params.searchStr).
     then( result => {
       // console.log(result.data.data);
       store.commit('setSuggestedTags', {suggestions: result.data.data} );
@@ -48,8 +48,8 @@ const actions = {
   refreshSuggestions(commit, params){
     // console.log('Action');
      var searchText = params.searchText;
-     var comId = params.comId;
-     api.refreshSuggestions(searchText,comId).
+     var pro_id = params.pro_id;
+     api.refreshSuggestions(searchText, pro_id).
      then( result => {
        store.commit('setSuggestions', result);
      } );

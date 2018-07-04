@@ -11,7 +11,20 @@ import router from '../router/index.js';
 export const api = {
 
   //#region Zelic
-
+  createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags){
+    return axios.post('tasks',{
+      sid: window.localStorage.sid,
+      type: 'step',
+      proid: pro_id,
+      tasid: tas_id,
+      title: title,
+      description: description,
+      deadline: deadline,
+      priorety: priorety,
+      usersarray: JSON.stringify(users),
+      tagarray: JSON.stringify(tags)
+    });
+  },
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
@@ -28,16 +41,15 @@ export const api = {
   //   });
   // },
   // Poziva se u TaskAdd.vue
-  createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin) {
+  createTask(title, description, deadline, tagarray, priorety,  pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
+      type: 'task',
+      proid: pro_id,
       title: title,
       description: description,
       deadline: deadline,
-      userid: userid,
-      teamid: teamid,
       tagarray: JSON.stringify(tagarray),
       priority: priorety,
-      origintskid: origin,
     });
   },
   // koristi se u TaskAdd.vue, TaskAdd.vue
@@ -53,12 +65,12 @@ export const api = {
     });
   },
   // Koristi se u TaskAdd.vue
-  suggestTags(tagFor, searchStr) {
-    return axios.get("tags", {
+  suggestTags(pro_id,tagFor, searchStr) {
+    return axios.get("projects/"+pro_id+"/tags", {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchStr,
-        type: tagFor
+        type: tagFor,
       }
     });
   },
@@ -71,12 +83,12 @@ export const api = {
   // },
 
   // pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
-  refreshSuggestions(searchText, comId) {
+  refreshSuggestions(searchText, pro_id) {
     return axios.get('users', {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchText,
-        comid: comId,
+        proid: pro_id,
       }
     });
   },
