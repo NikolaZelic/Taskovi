@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <feed-element v-if="checkShow(1,false,false)"/>
+      <feed-element v-if="checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
     </div>
   <!-- <router-link to="/user"></router-link> -->
   <router-view></router-view>
@@ -152,7 +152,14 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #24262d;
+}
+.feed {
+  background-color: var(--main-bg-color);
+  color: var(--main-color);
+}
+.feed.darkTheme {
+  background-color: var(--sec-bg-color);
+  color: var(--sec-color);
 }
 
 .item-filter {

@@ -541,14 +541,12 @@ export default {
 }
 
 .sidebar-header.collapsed {
+  transition: all 0.5s ease;
   width: 70px;
 }
 
-/* .sidebar-header.collapsed > span {
-    margin: 0;
-  } */
-
 #sidebar.collapsed {
+  transition: all 0.5s ease;
   width: unset;
 }
 

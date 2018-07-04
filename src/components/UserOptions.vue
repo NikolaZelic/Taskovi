@@ -69,12 +69,7 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      console.log(f)
-      // store.dispatch("sendAttach", {
-      //   type: "file",
-      //   file: f,
-      //   taskid: this.taskid
-      // });
+      console.log(f.name)
     },
     closeModal() {
       this.$router.push("/");
