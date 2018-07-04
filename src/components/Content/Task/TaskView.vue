@@ -58,6 +58,9 @@
 
 
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id)' data-toggle="modal" data-target="#stepInformation">
+
+
+
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
                   <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
@@ -108,8 +111,8 @@
 
 
 
-
-      <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
+<!-- modal za prikaz podataka o stepu -->
+      <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0 && stepModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header step-header" :class="stepInfo[0].background">
@@ -119,191 +122,359 @@
               </button>
             </div>
             <div class="modal-body">
-              <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
-              <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
 
-              <p><strong>Status: </strong>
-                {{stepInfo[0].sta_text}}
-                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-              </p>
+              <table class="table table-borderless">
 
-              <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-              <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
+  <tbody>
+    <tr>
+      <td>Project:</td>
+      <th scope="row">{{stepInfo[0].pro_name}}</th>
+    </tr>
+    <tr>
+      <td>Task:</td>
+      <th scope="row">{{stepInfo[0].taskname}}</th>
+    </tr>
+    <tr>
 
-
-
-              <div>
-                <p><strong>Tags: </strong>
-                <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
-              </p>
-              </div>
+      <tr>
+        <td>Description:</td>
+        <th scope="row">{{stepInfo[0].description}}</th>
+      </tr>
 
 
-              <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
-              <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
+      <td>Status:</td>
+      <th scope="row">{{stepInfo[0].sta_text}}
+        <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+        <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+        <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+      </th>
+    </tr>
 
-    <p><strong>Created by: </strong>
-      <ul class="list-unstyled">
-        <li class="media mt-2">
 
-          <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+    <tr v-if="stepInfo[0].tsk_progress !== null">
+      <td>Progress:</td>
+      <th scope="row">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
+        </div>
+      </th>
+    </tr>
 
-          <div class="media-body">
+
+
+
+
+
+
+    <tr>
+      <td>Priority:</td>
+      <th scope="row"><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></th>
+    </tr>
+
+
+
+
+    <tr>
+      <td>Tags:</td>
+      <th scope="row">
+        <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
+      </th>
+    </tr>
+
+
+    <tr>
+      <td>Deadline:</td>
+      <th scope="row">
+      {{stepInfo[0].tsk_deadline}}
+      </th>
+    </tr>
+
+    <tr>
+      <td>Estimated completion date:</td>
+      <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
+    </tr>
+
+
+    <tr>
+      <td>Created by:</td>
+      <th scope="row">
+        <ul class="list-unstyled">
+          <li class="media mt-2">
+
+            <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+
             <div class="media-body">
-                  <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                    {{stepInfo[0].usr_email}}
-              </div>
-              </div>
+              <div class="media-body">
+                    <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                      {{stepInfo[0].usr_email}}
+                </div>
+                </div>
 
-        </li>
-      </ul>
-    </p>
-              <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
-              <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
-              <p><strong>Working: </strong>
-                <ul class="list-unstyled">
-                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+          </li>
+        </ul>
+      </th>
+    </tr>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+    <tr>
+      <td>Time created:</td>
+      <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
+    </tr>
 
-                    <div class="media-body">
-                      <div class="media-body">
-                            <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                              {{user.usr_email}}
-                        </div>
-                        </div>
+    <tr>
+      <td>Time spent:</td>
+      <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
+    </tr>
 
-                  </li>
-                </ul>
-              </p>
+    <tr>
+      <td>Working:</td>
+      <th scope="row">
+        <ul class="list-unstyled">
+          <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+
+            <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+            <div class="media-body">
+              <div class="media-body">
+                    <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                      {{user.usr_email}}
+                </div>
+                </div>
+          </li>
+        </ul>
+      </th>
+    </tr>
+
+  </tbody>
+</table>
+
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#stepEdit">Edit</button>
             </div>
           </div>
         </div>
       </div>
 
-<!--
-      <div class="card mt-5 col-md-6 offset-md-3 pad-0 mb-5" v-if="stepInfo.length > 0" id="step">
-        <div class="card-header step-header " :class="stepInfo[0].background">
-          {{ stepInfo[0].tsk_title }}
-        </div>
-        <div class="card-body">
-          <p><strong>Project: </strong>{{stepInfo[0].pro_name}}</p>
-          <p><strong>Task: </strong>{{stepInfo[0].taskname}}</p>
 
-          <p><strong>Status: </strong>
-            {{stepInfo[0].sta_text}}
-            <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-            <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-            <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-          </p>
 
-          <p><strong>Description: </strong>{{stepInfo[0].description}}</p>
-          <p><strong>Priority: </strong><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></p>
-          <p><strong>Deadline: </strong>{{stepInfo[0].tsk_deadline}}</p>
-          <p><strong>Estimated completion date: </strong>{{stepInfo[0].tsk_estimated_completion_date}}</p>
 
-<p><strong>Created by: </strong>
-  <ul class="list-unstyled">
-    <li class="media mt-2">
 
-      <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-      <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
 
-      <div class="media-body">
-        <div class="media-body">
-              <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                {{stepInfo[0].usr_email}}
+
+
+
+
+
+
+<!-- modal za editovanje podataka o stepu -->
+<div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-secondary step-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="step-header">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+             <label for="stepName">Task name:</label>
+             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
+
+
+            <label for="desc">Description:</label>
+            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
+
+
+             <label for="status">Change status:</label>
+             <select class="form-control" id="status" v-model="edit.status">
+              <option disabled selected>Select status of your task</option>
+              <option value="1">Assigned</option>
+              <option value="2">In Progress</option>
+              <option value="3">Completed</option>
+              <option value="4">Failed</option>
+              <option value="5">Rejected</option>
+              <option value="6">Cancelled</option>
+            </select>
+
+
+
+
+
+
+             <label for="priority">Change priority:</label>
+             <select class="form-control" id="priority" v-model="edit.priority">
+              <option disabled selected>Select priority of your task</option>
+              <option value="1">High</option>
+              <option value="2">Medium</option>
+              <option value="3">Low</option>
+            </select>
+
+
+           <label class="tag" for="tags">Tags</label>
+           <multiselect v-model="valueTag" id="tags"tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+
+           <label for="deadline">Deadline:</label>
+           <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
+             placeholder="Pick deadline (optional)">
+           </flat-pickr>
+
+           <label for="estDate">Estimated completion date:</label>
+           <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
+             placeholder="Pick estimated completion date (optional)">
+           </flat-pickr>
+
+           <label for="timeSpent">Time spent [in minutes]:</label>
+           <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+
+
+           <label for="progress">Progress: </label>
+           <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
+
+          <label class="tag" for="working">Working:</label>
+          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+              <button type="button" class="btn btn-primary" @click="saveChanges">Save</button>
+            </div>
           </div>
-          </div>
-
-    </li>
-  </ul>
-</p>
-          <p><strong>Time created: </strong>{{stepInfo[0].tsk_timecreated}}</p>
-          <p><strong>Time spent: </strong>{{stepInfo[0].tsk_timespent}}</p>
-          <p><strong>Working: </strong>
-            <ul class="list-unstyled">
-              <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
-
-                <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
-
-                <div class="media-body">
-                  <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                          {{user.usr_email}}
-                    </div>
-                    </div>
-
-              </li>
-            </ul>
-          </p>
-
-
         </div>
       </div>
--->
-
-      <!-- description:null
-      pri_text:"Low"
-      pro_id:146
-      pro_name:"Autobuski prevoz"
-      sta_text:"Assigned"
-      taskname:"Treba zameniti sijalicu"
-      tsk_deadline:"2018-06-26 11:48:03.0"
-      tsk_estimated_completion_date:null
-      tsk_id:64
-      tsk_timecreated:null
-      tsk_timespent:null
-      tsk_title:"Dostava"
-      usr_creator_name:"Dime"
-      usr_creator_surname:"Dimic"
-      usr_id_creator:64
-      usrworking:Array[2] -->
-
 
 
     </template>
 </div>
-
-
 </template>
 
 
 <script>
-import {
-  store
-} from "@/store/index.js";
 import axios from "axios";
+import {store} from "@/store/index.js";
+import {mapGetters} from "vuex";
+import Multiselect from 'vue-multiselect'
 
-import {
-  mapGetters
-} from "vuex";
-
-// var now = moment();
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+const flatpickr = require("flatpickr");
+require("flatpickr/dist/themes/confetti.css");
 
 export default {
-
+  components: {
+    flatPickr,
+    Multiselect
+  },
 
   data() {
     return {
+      valueTag: [],
+      optionsTag: [],
+
+      edit: {
+        name: undefined,
+        description: undefined,
+        status: undefined,
+        priority: undefined,
+        deadline: undefined,
+        estTime: undefined,
+        timespent: undefined,
+        progress: undefined
+      },
+
+      valueUser: [],
+      optionsUser: [],
+
       taskInfo: [],
       showAllTags: false,
       showAllTagsID: undefined,
       stepInfo: [],
-      stepShow: false
+      stepShow: false,
+      stepModal: false,
+
+      project: {
+        title: undefined,
+        description: undefined,
+        users: undefined,
+        deadline: undefined,
+        estDate: undefined
+      },
+
+      config: {
+        wrap: false, // set wrap to true only when using 'input-group'
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: "Y-m-d H:i:S",
+        altFormat: "F	j, Y H:i",
+        altInput: true
+      },
+      estDate: {
+        wrap: false, // set wrap to true only when using 'input-group'
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: "Y-m-d H:i:S",
+        altFormat: "F	j, Y H:i",
+        altInput: true
+      }
     };
   },
 
   methods: {
+
+    saveChanges(){
+      axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+
+            tasid: this.selectedItemID,
+            stepid: this.stepInfo[0].tsk_id,
+            sid: window.localStorage.getItem("sid"),
+
+            title: this.edit.name,
+            description:  this.edit.description,
+            deadline:  this.edit.deadline,
+            priority: this.edit.priority,
+            status: this.edit.status,
+            progress: this.edit.progress,
+            timespent: this.edit.timespent,
+            estimateddate:  this.edit.estTime,
+            usersarray: this.userStringArray,
+            tagarray: this.tagStringArray
+
+      })
+    },
+
+    loadAllProjectUsers(projectID){
+      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users", {
+          params: {
+            proid: projectID,
+            sid: window.localStorage.getItem("sid")
+          }
+        })
+        .then(response => {
+            this.optionsUser = response.data.data;
+            // console.log(response.data.data)
+          })
+    },
+
+    addTag (newTag) {
+          const tag = {
+            name: newTag
+          }
+          this.valueTag.push(tag)
+        },
+
+        addUser (newUser) {
+              const user = {
+                id: newUser
+              }
+              this.valueUser.push(user)
+            },
 
 
     getStepInfo(stepID) {
@@ -320,6 +491,7 @@ export default {
             // console.log(response.data.data);
             this.stepInfo = response.data.data;
 
+
             for (var i = 0; i < response.data.data.length; i++) {
               // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
 
@@ -334,17 +506,21 @@ export default {
                 }
               }
 
-if (this.stepInfo[i].sta_text !== null) {
+              if (this.stepInfo[i].sta_text !== null) {
 
-  if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
-    this.stepInfo[i].background = 'bg-info'
-  } else if(this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled' ){
-      this.stepInfo[i].background = 'bg-danger'
-    }
-    else{
-      this.stepInfo[i].background = 'bg-success'
-    }
-}
+                if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
+                  this.stepInfo[i].background = 'bg-info'
+                } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
+                  this.stepInfo[i].background = 'bg-danger'
+                } else if (this.stepInfo[i].sta_text === 'Completed') {
+                  this.stepInfo[i].background = 'bg-success'
+                }
+                else{
+                  this.stepInfo[i].background = 'bg-secondary'
+                }
+              }else{
+                  this.stepInfo[i].background = 'bg-secondary'
+              }
 
 
 
@@ -377,16 +553,49 @@ if (this.stepInfo[i].sta_text !== null) {
               }
             }
 
+
           }
 
 
           // this.stepInfo.tags = this.tas
+          this.stepModal = true;
+        }).then(response => {
+
+
+          this.valueTag = [];
+          if(this.stepInfo[0] !== undefined){
+            for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
+              // console.log(this.stepInfo[0].tags[i].tag_text)
+              // console.log(this.options.name);
+              const tag = {name: this.stepInfo[0].tags[i].tag_text}
+              this.valueTag.push(tag);
+            }
+          }
+
+        }).then(response => {
+
+
+          this.valueUser = [];
+          if(this.stepInfo[0] !== undefined){
+            for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
+              // console.log(this.stepInfo[0].tags[i].tag_text)
+              // console.log(this.options.name);
+              const user = {
+                id: this.stepInfo[0].usrworking[i].usr_id,
+                name: this.stepInfo[0].usrworking[i].usr_name,
+                email: this.stepInfo[0].usrworking[i].usr_email
+              }
+              // console.log(this.stepInfo[0].usrworking[i]);
+              this.valueUser.push(user);
+            }
+          }
+
         })
 
 
-        // .then(response => {
-        //   window.location.href = "#step";
-        // });
+      // .then(response => {
+      //   window.location.href = "#step";
+      // });
 
 
 
@@ -434,9 +643,38 @@ if (this.stepInfo[i].sta_text !== null) {
 
   computed: {
 
+    tagStringArray(){
+      let niz = [];
+      for (var i = 0; i < this.valueTag.length; i++) {
+        niz.push(this.valueTag[i].name);
+      }
+      return JSON.stringify(niz);
+    },
+
+    userStringArray(){
+      let niz = [];
+      for (var i = 0; i < this.valueUser.length; i++) {
+        niz.push(this.valueUser[i].id);
+      }
+      return JSON.stringify(niz);
+    },
 
     selectedItemID() {
       var a = store.getters.selectedItemID;
+      // console.log(a);
+      if (a === undefined) return 0;
+      else return a;
+    },
+
+    selectedProjectID() {
+      var a = store.state.sidebarItemSelection[0];
+      if (a === undefined) return 0;
+      else return a;
+    },
+
+    selectedTaskID() {
+      var a = store.getters.selectedItemID;
+      // console.log(a);
       if (a === undefined) return 0;
       else return a;
     },
@@ -465,7 +703,10 @@ if (this.stepInfo[i].sta_text !== null) {
   mounted() {
     if (this.selectedItemID !== 0) {
       this.getTaskInfo(this.selectedItemID);
+
     }
+
+    this.loadAllProjectUsers(this.selectedProjectID);
 
 
   },
@@ -474,19 +715,34 @@ if (this.stepInfo[i].sta_text !== null) {
     'selectedItemID': function(val, oldVal) {
       if (val !== 0) {
         this.getTaskInfo(val);
-        this.getStepInfo(val)
+        this.getStepInfo(val);
+        // this.loadAllProjectUsers(val);
       }
       // this.getCompanyInfo(val);
       // this.loadAdmins(val);
       // this.loadEmployees(val);
-    }
+    },
 
+
+    'selectedProjectID': function(val, oldVal) {
+      console.log('prijekat' + val);
+      // if (val !== 0) {
+      //   this.loadAllProjectUsers(val);
+      // }
+    },
+
+    'selectedTaskID': function(val, oldVal) {
+      // console.log('a');
+        if (val !== 0) {
+          console.log('novi je task broj' + val);
+        }
+    }
 
   }
 };
 </script>
 
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 h1 {
   text-align: left;
@@ -511,14 +767,12 @@ h1 {
 .pad-0 {
   padding: 0;
 }
-<<<<<<< HEAD
 
 .slika {
   border: 1px solid #333;
 }
 
+label {
+  padding-top: 10px;
+}
 </style>
-h
-=======
-</style>
->>>>>>> a85279198141c8f4cc4e86f094727a43c3e36e52
