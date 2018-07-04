@@ -1,65 +1,69 @@
 <template>
-<div class="feed">
-  <div class="feed-all" v-show="showFeeds">
-    <div id="all" v-on:scroll="handleScroll()" class="feed-back">
-      <div class="messages">
-        <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
+  <div class="feed">
+    <div class="feed-all" v-show="showFeeds">
+      <div id="all" v-on:scroll="handleScroll()" class="feed-back">
+        <div class="messages">
+          <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        </div>
+      </div>
+      <div class="progress" v-show="inProgress">
+        <p>LOADING FILE {{uploadProgress}}</p>
+        <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
+      </div>
+      <div class="input">
+        <button class="load btn btn-primary" v-on:click="addUp">
+          <span class="fas fa-sync-alt"></span>
+        </button>
+        <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
+        <button class="btn attac" @click="uploadFile">
+          <span class="fas fa-paperclip"></span>
+        </button>
+        <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+        <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+        <button class="btn btn-success send" v-on:click="writeMessageFeed">
+          <span class="fas fa-paper-plane"></span>
+        </button>
       </div>
     </div>
-    <div class="progress" v-show="inProgress">
-      <p>LOADING FILE {{uploadProgress}}</p>
-      <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
-    </div>
-    <div class="input">
-      <button class="load btn btn-primary" v-on:click="addUp"><span class="fas fa-sync-alt"></span></button>
-      <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
-      <button class="btn attac" @click="uploadFile"><span class="fas fa-paperclip"></span></button>
-      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-      <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-      <button class="btn btn-success send" v-on:click="writeMessageFeed"><span class="fas fa-paper-plane"></span></button>
-    </div>
   </div>
-</div>
 </template>
 <script>
-import { mapState, mapGetters} from 'vuex';
+import { mapState, mapGetters } from "vuex";
 import FeedMessage from "./FeedMessage";
-import {
-  store
-} from "@/store/index.js";
-import {
-  api
-} from "@/api/index.js";
+import { store } from "@/store/index.js";
+import { api } from "@/api/index.js";
 
 export default {
   components: {
-   FeedMessage
+    FeedMessage
   },
   data() {
     return {
       showFeeds: true,
       count: 0,
-      countNumber:10,
+      countNumber: 10,
       fInterval: null,
-      feed: "", //ovo je tekst koji jos nije poslat
+      feed: "",
       uploadProgress: 50,
       inProgress: false
     };
   },
   computed: {
     ...mapState({
-    // arrow functions can make the code very succinct!
-    messages: state => state.modulefeed.messages,
-
+      messages: state => state.modulefeed.messages
     }),
     ...mapGetters({
-      taskid:'selectedItemID'
+      taskid: "selectedItemID"
     })
   },
   watch: {
     taskid(val) {
       // if(this.taskid != -1){
-      store.dispatch("readeFeeds", { taskid: this.taskid, fedid: 0, direction: "start" });
+      store.dispatch("readeFeeds", {
+        taskid: this.taskid,
+        fedid: 0,
+        direction: "start"
+      });
       this.countNumber = 3;
       this.count = 1;
       // }
@@ -89,12 +93,11 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      store.dispatch("sendAttach",{
-        type:'file',
+      store.dispatch("sendAttach", {
+        type: "file",
         file: f,
         taskid: this.taskid
       });
-
     },
     addUp() {
       if (this.taskid === -1) return;
@@ -112,7 +115,7 @@ export default {
     startFeed() {
       //poziva api svaki put kada je count deljiv sa countNumber
       this.fInterval = setInterval(() => {
-        if(this.count % this.countNumber == 0 && this.taskid != -1){
+        if (this.count % this.countNumber == 0 && this.taskid != -1) {
           var msg = this.messages;
 
           if (msg.length > 0) {
@@ -128,9 +131,9 @@ export default {
               direction: "start"
             });
           }
-        }//kraj if unutar intervala
+        } //kraj if unutar intervala
 
-        if(this.count++ >=25){
+        if (this.count++ >= 25) {
           this.countNumber = 10;
           this.count = 1;
         }
@@ -140,7 +143,7 @@ export default {
   mounted() {
     this.startFeed();
   },
-  destroyed(){
+  destroyed() {
     clearInterval(this.fInterval);
   }
 };
@@ -162,7 +165,6 @@ export default {
 }
 
 .feed-all {
-
   border-top: 1px solid #ffb037;
   width: 100%;
   display: flex;
@@ -213,7 +215,7 @@ export default {
   right: 60px;
 }
 
-.input button>span {
+.input button > span {
   font-size: 16px;
 }
 

@@ -36,8 +36,7 @@ import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import { instance as axios } from "@/api/config.js";
 import { store } from "@/store/index.js";
-import { mapGetters } from "vuex";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/themes/confetti.css");
 export default {
@@ -53,7 +52,7 @@ export default {
         deadline: undefined
       },
       config: {
-        wrap: true, // set wrap to true only when using 'input-group'
+        // wrap: true, // set wrap to true only when using 'input-group'
         enableTime: true,
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
@@ -132,7 +131,6 @@ export default {
     projectEdit() {
       axios
         .put("projects/:proid", {
-          // Object.assign(project,)
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,

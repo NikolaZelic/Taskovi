@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <!-- <feed-element v-if="taskid"/> -->
+      <feed-element v-if="checkShow(1,false,false)"/>
     </div>
     <modal-complete v-if="modalStatusActive" />
     <modal-error v-if="modalErrorActive" />
