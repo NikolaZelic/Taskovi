@@ -162,15 +162,14 @@
         </td>
       </tr> -->
 
-
       <td>Status:</td>
       <th scope="row">{{stepInfo[0].sta_text}}
         <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
         <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
         <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
       </th>
-    </tr>
 
+    </tr>
 
     <tr v-if="stepInfo[0].tsk_progress !== null">
       <td>Progress:</td>
@@ -198,7 +197,7 @@
     <tr v-if="stepInfo[0].tags.length > 0">
       <td>Tags:</td>
       <th scope="row">
-        <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.text }}</span>
+        <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
       </th>
     </tr>
 
