@@ -11,11 +11,13 @@ export default {
   mixins: [TaskAdd],
   data() {
     return {
-      task: true,
+      task: false,
+      componentTitle: 'Creating Step',
+
     };
   },
   computed: {
-    parenttaskid(){
+    taskid(){
       return store.state.sidebarItemSelection[2];
     },
 

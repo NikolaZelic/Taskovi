@@ -28,16 +28,15 @@ export const api = {
   //   });
   // },
   // Poziva se u TaskAdd.vue
-  createTask(title, description, deadline, userid, teamid, tagarray, priorety, origin) {
+  createTask(title, description, deadline, tagarray, priorety,  pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
+      type: 'task',
+      proid: pro_id,
       title: title,
       description: description,
       deadline: deadline,
-      userid: userid,
-      teamid: teamid,
       tagarray: JSON.stringify(tagarray),
       priority: priorety,
-      origintskid: origin,
     });
   },
   // koristi se u TaskAdd.vue, TaskAdd.vue
@@ -53,12 +52,12 @@ export const api = {
     });
   },
   // Koristi se u TaskAdd.vue
-  suggestTags(tagFor, searchStr) {
-    return axios.get("tags", {
+  suggestTags(pro_id,tagFor, searchStr) {
+    return axios.get("projects/"+pro_id+"/tags", {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchStr,
-        type: tagFor
+        type: tagFor,
       }
     });
   },

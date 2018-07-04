@@ -24,7 +24,7 @@
             </div>
 
             <!-- DEADLINE -->
-            <div class="form-group" id='deadline'>
+            <div class="form-group" id='deadline' title='Deadline'>
               <span class="calender-icon" @click='calendarIconClicked'>
                 <i class="far fa-calendar-alt"></i>
               </span>
@@ -40,7 +40,7 @@
             </div>
 
             <!-- ADING WORKERS -->
-            <div class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
+            <div v-show='!task' class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
               <i class="fas fa-user"></i>
               <!-- @click='selectUser' -->
               <!-- <i :class="teamClass" @click='selectTeam'></i> -->
@@ -55,18 +55,18 @@
 
             <!-- TAGS -->
             <div class="form-group">
-              <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="id" placeholder="Enter Tags" open-direction="bottom"
+              <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
-                @search-change="searchTags">
-                <template slot="clear" slot-scope="props">
+                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
+                @search-change="searchTags" @close="multiselectOut" >
+                <!-- <template slot="clear" slot-scope="props">
                   <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
                 </template>
-                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span> -->
               </multiselect>
             </div>
 
-            <!-- TaskAdd.vue -->
+            <!-- PRIORETY -->
             <div v-show='task' class="form-group">
               <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
                 <option disabled value=null>Select Priorety</option>
@@ -78,7 +78,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-warning">Create</button>
+              <button @click='createTask' type="submit" class="btn btn-warning"><p v-show='edit'>Edit</p><p v-show='!edit'>Create</p></button>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default {
       deadline: null,
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
-        defaultDate: Date.now(),
+        defaultDate: null,
         enableTime: true,
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
@@ -136,7 +136,7 @@ export default {
       selectedTags: [],
       inputTagHaveChange: 0,
       tagSearchStr: null,
-      task: false,
+      task: true,
       edit: false,
       selectedPrioretyClass: "unselected form-control",
       suggestedProjets: [],
@@ -164,11 +164,8 @@ export default {
     ...mapState({
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
-      projectID: state => state.sidebarItemSelection[0]
+      proId: state => state.sidebarItemSelection[0]
     }),
-    proId() {
-      return state.sidebarItemSelection[0];
-    }
   },
 
   created: function() {
@@ -183,7 +180,8 @@ export default {
       ) {
         store.dispatch("suggestTags", {
           tagFor: "task",
-          searchStr: this.tagSearchStr
+          searchStr: this.tagSearchStr,
+          pro_id: this.proId,
         });
         this.inputTagHaveChange = 0;
       }
@@ -236,6 +234,16 @@ export default {
   },
 
   methods: {
+    multiselectOut(){
+      // Dodavanje novog taga
+      var tag = this.tagSearchStr;
+      if(tag==undefined||tag==null||tag.length==0)
+        return;
+      for(var i in this.selectedTags)
+        if(this.selectedTags[i].text==tag)
+          return;
+      this.selectedTags.push({text:tag});
+    },
     selectUser() {
       this.teamSelect = false;
       this.personClass = "fas fa-user fas-selected";
@@ -399,40 +407,25 @@ export default {
     createTask() {
       this.refreshErrors();
       // Provera ulaznih vrednosti
-      var stop = false;
       if (this.title == null || this.title.length == 0) {
         this.titleError();
-        stop = true;
-      }
-      if (this.proId == null) {
-        this.projectError();
-        stop = true;
+        return;
       }
 
-      if (stop) return;
-
-      var usrid = null;
-      var teamid = null;
-      if (this.choosenWorker != null) {
-        if (this.teamSelect == 1) teamid = this.choosenWorker.id;
-        else usrid = this.choosenWorker.id;
-      }
-
-      var tagarray = this.selectedTags.map(e => e.id);
+      var tagarray = this.selectedTags.map(e => e.text);
 
       api
-        .createParenttask(
-          this.proId,
+        .createTask(
           this.title,
           this.description,
           this.deadline,
-          usrid,
-          teamid,
           tagarray,
-          this.selectedPriorety
+          this.selectedPriorety,
+          this.proId,
         )
         .then(result => {
           this.reportWritingToDB(result);
+          this.closeModal();
         });
     },
     reportWritingToDB(result) {
