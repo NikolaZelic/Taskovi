@@ -1,10 +1,12 @@
 <template>
   <div>
-    <button class='btn btn-warning' @click='resetProjectView'>
-      <span class='fas fa-arrow-left'></span> BACK</button>
     <div class='pro-edit'>
-      <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
-      <h4 v-else>Adding project:</h4>
+      <div class='header' :class='{"back-warning":itemEditButton!==undefined}'>
+        <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
+        <h4 v-else>Adding project:</h4>
+        <button class='btn btn-dark' @click='resetProjectView'>
+          <span class='fas fa-arrow-left'></span> BACK</button>
+      </div>
 
       <label for="name" class="mt-3">Project name</label>
       <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
@@ -14,7 +16,7 @@
         class="form-control mb-3" spellcheck="false"></textarea>
 
       <label for="users">Users</label>
-      <input type="text" id='users' v-model='project.users' placeholder="Enter email of people you want to add to the project"
+      <input type="text" id='users' v-model.lazy='usersString' placeholder="Enter email of people you want to add to the project"
         class="form-control mb-3">
 
       <label for="date">Deadline</label>
@@ -45,6 +47,7 @@ export default {
   },
   data() {
     return {
+      // usersString: undefined,
       project: {
         title: undefined,
         description: undefined,
@@ -56,7 +59,7 @@ export default {
         enableTime: true,
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
-        altFormat: "M	j, Y H:i",
+        altFormat: "j M, Y H:i",
         altInput: true
       }
     };
@@ -92,9 +95,17 @@ export default {
           }
         })
         .then(result => {
-          if ((result.status = "OK")) this.project.users = result.data.data;
+          if ((result.status = "OK")) {
+            let users = result.data.data;
+            if (users.length !== 0) {
+              this.project.users = users;
+            }
+          }
         });
     },
+    //     setProjectUsers(){
+    // axios.put
+    //     },
     projectCreate() {
       axios
         .post("projects", {
@@ -134,6 +145,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
+          usersarray: this.project.users,
           proid: store.getters.selectedItemID,
           sid: window.localStorage.sid
         })
@@ -176,7 +188,26 @@ export default {
     ...mapState({
       tabIndex: "currentTabIndex",
       itemEditButton: state => state.itemAction.edit
-    })
+    }),
+    usersString: {
+      get() {
+        let users = this.project.users;
+        if (users !== undefined) {
+          let tempUsers = [];
+          console.log(users.length + " KORISNIKA");
+          for (let i = 0; i < users.length; i++) {
+            tempUsers.push(users[i].email);
+          }
+          return tempUsers.join();
+        }
+        return undefined;
+      },
+      set(val) {
+        // console.log(val);
+        let splitUsers = val.split(",");
+        this.project.users = splitUsers;
+      }
+    }
   },
   mounted() {
     if (this.itemEditButton !== undefined) {
@@ -191,5 +222,26 @@ export default {
 .pro-edit {
   display: flex;
   flex-direction: column;
+}
+
+.header {
+  background: var(--success);
+  border-radius: 4px;
+  display: flex;
+  padding: 10px 20px;
+  justify-content: space-between;
+  color: initial;
+}
+
+.header.back-warning {
+  background: var(--warning);
+}
+
+.header * {
+  margin: 0;
+}
+
+.btn-success {
+  color: initial;
 }
 </style>

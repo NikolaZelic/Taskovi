@@ -370,8 +370,9 @@ export default {
       localStorage.dark = !this.darkTheme;
       store.commit("darkTheme", !this.darkTheme);
     },
-    userOptions() {
-      alert("Treba da prebaci na user options stranicu");
+    userOptions() {      
+      this.$router.push("user");
+      // alert("Treba da prebaci na user options stranicu");
     },
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);

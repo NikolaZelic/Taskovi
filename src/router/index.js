@@ -12,16 +12,23 @@ export default new Router({
   routes: [{
     path: '/',
     name: 'MergedComp',
-    component: MergedComp
+    component: MergedComp,
+    children: [{
+      path: 'user',
+      name: 'UserOptions',
+      component: UserOptions,
+    }]
   }, {
     path: '/auth',
     name: 'StartPage',
     component: StartPage
-  }, {
-    path: '/user',
-    name: 'UserOptions',
-    component: UserOptions
-  }, {
+  } 
+  // ,{
+  //   path: '/user',
+  //   name: 'UserOptions',
+  //   component: UserOptions
+  // }
+  , {
     path: '*',
     component: StartPage
   }, {

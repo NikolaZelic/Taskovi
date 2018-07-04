@@ -18,6 +18,7 @@
       </div>
       <feed-element v-if="checkShow(1,false,false)"/>
     </div>
+    <!-- <user-options></user-options> -->
     <modal-complete v-if="modalStatusActive" />
     <modal-error v-if="modalErrorActive" />
   </div>
