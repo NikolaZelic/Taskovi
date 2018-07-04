@@ -22,13 +22,7 @@ export default new Router({
     path: '/auth',
     name: 'StartPage',
     component: StartPage
-  } 
-  // ,{
-  //   path: '/user',
-  //   name: 'UserOptions',
-  //   component: UserOptions
-  // }
-  , {
+  }, {
     path: '*',
     component: StartPage
   }, {
