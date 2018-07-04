@@ -106,7 +106,13 @@
             </tbody>
           </table>
 
+
         </div>
+
+        <div class="card-footer">
+          <button type="button" class="btn btn-primary">Add new step...</button>
+        </div>
+
       </div>
 
 
@@ -136,10 +142,25 @@
     </tr>
     <tr>
 
-      <tr>
+      <tr v-if="stepInfo[0].description !== null">
         <td>Description:</td>
-        <th scope="row">{{stepInfo[0].description}}</th>
+        <th scope="row">{{stepInfo[0].description}}
+          <!-- <i class="far fa-edit"></i> -->
+        </th>
       </tr>
+
+      <!-- <tr>
+        <td>DescriptionTest:</td>
+        <td>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" :placeholder="stepInfo[0].description" :disabled="!editDescription">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" @click="editDescription = !editDescription" v-if="!editDescription"><i class="far fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" @click="editDescription = !editDescription; saveDescription()" v-if="editDescription"><i class="fas fa-check-square"></i></i></button>
+              </div>
+            </div>
+        </td>
+      </tr> -->
 
 
       <td>Status:</td>
@@ -166,7 +187,7 @@
 
 
 
-    <tr>
+    <tr v-if="stepInfo[0].pri_text !== null">
       <td>Priority:</td>
       <th scope="row"><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></th>
     </tr>
@@ -174,22 +195,22 @@
 
 
 
-    <tr>
+    <tr v-if="stepInfo[0].tags.length > 0">
       <td>Tags:</td>
       <th scope="row">
-        <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.tag_text }}</span>
+        <span class="badge badge-success" v-for="tag in stepInfo[0].tags">{{ tag.text }}</span>
       </th>
     </tr>
 
 
-    <tr>
+    <tr v-if="stepInfo[0].tsk_deadline !== ''">
       <td>Deadline:</td>
       <th scope="row">
       {{stepInfo[0].tsk_deadline}}
       </th>
     </tr>
 
-    <tr>
+    <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
       <td>Estimated completion date:</td>
       <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
     </tr>
@@ -221,7 +242,7 @@
       <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
     </tr>
 
-    <tr>
+    <tr v-if="stepInfo[0].tsk_timespent !== null">
       <td>Time spent:</td>
       <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
     </tr>
@@ -282,31 +303,30 @@
             </div>
             <div class="modal-body">
 
-
+            <div v-if="stepInfo[0].yours === null">
              <label for="stepName">Task name:</label>
              <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
+           </div>
 
-
+           <div v-if="stepInfo[0].yours === null">
             <label for="desc">Description:</label>
             <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
-
+            </div>
 
              <label for="status">Change status:</label>
              <select class="form-control" id="status" v-model="edit.status">
               <option disabled selected>Select status of your task</option>
-              <option value="1">Assigned</option>
-              <option value="2">In Progress</option>
               <option value="3">Completed</option>
               <option value="4">Failed</option>
-              <option value="5">Rejected</option>
-              <option value="6">Cancelled</option>
+              <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
+              <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
             </select>
 
 
 
 
 
-
+<div v-if="stepInfo[0].yours === null">
              <label for="priority">Change priority:</label>
              <select class="form-control" id="priority" v-model="edit.priority">
               <option disabled selected>Select priority of your task</option>
@@ -315,26 +335,36 @@
               <option value="3">Low</option>
             </select>
 
+          </div>
+
 
            <label class="tag" for="tags">Tags</label>
-           <multiselect v-model="valueTag" id="tags"tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="name" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+           <multiselect @search-change="loadTags"  :preserveSearch="true" :clearOnSelect="false" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag" id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
 
+<div v-if="stepInfo[0].yours === null">
            <label for="deadline">Deadline:</label>
            <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-             placeholder="Pick deadline (optional)">
+             :placeholder="stepInfo[0].tsk_deadline">
            </flat-pickr>
+         </div>
 
+           <div v-if="stepInfo[0].yours === 1">
            <label for="estDate">Estimated completion date:</label>
            <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
-             placeholder="Pick estimated completion date (optional)">
+            :placeholder="stepInfo[0].tsk_estimated_completion_date">
            </flat-pickr>
+           </div>
 
-           <label for="timeSpent">Time spent [in minutes]:</label>
-           <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+            <div v-if="stepInfo[0].yours === 1">
+             <label for="timeSpent">Time spent [in minutes]:</label>
+             <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+            </div>
 
 
+<div v-if="stepInfo[0].yours === null">
            <label for="progress">Progress: </label>
            <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
+         </div>
 
           <label class="tag" for="working">Working:</label>
           <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
@@ -343,6 +373,10 @@
 
             </div>
             <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" @click="closeAll">all</button> -->
+
+
+
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
               <button type="button" class="btn btn-primary" @click="saveChanges">Save</button>
             </div>
@@ -354,7 +388,6 @@
     </template>
 </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -377,6 +410,8 @@ export default {
     return {
       valueTag: [],
       optionsTag: [],
+
+      // editDescription: false,
 
       edit: {
         name: undefined,
@@ -428,6 +463,28 @@ export default {
 
   methods: {
 
+loadTags(){
+  // console.log(this.$refs.tagSearchString.search)
+
+  axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/tags", {
+  params: {
+        proid: this.selectedProjectID,
+        type: 'task',
+        searchstring: this.$refs.tagSearchString.search,
+        sid: window.localStorage.getItem("sid")
+      }
+
+      }).then(response =>{
+        // console.log(response.data.data);
+        // this.optionsTag = response.data.data;
+        this.optionsTag = response.data.data;
+      })
+},
+
+    saveDescription(){
+      console.log('saved desc edit');
+    },
+
     saveChanges(){
       axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
 
@@ -446,6 +503,9 @@ export default {
             usersarray: this.userStringArray,
             tagarray: this.tagStringArray
 
+      }).then( response =>{
+        $('#stepInformation, #stepEdit').modal('hide');
+          this.getTaskInfo(this.selectedItemID);
       })
     },
 
@@ -464,7 +524,7 @@ export default {
 
     addTag (newTag) {
           const tag = {
-            name: newTag
+            text: newTag
           }
           this.valueTag.push(tag)
         },
@@ -567,7 +627,10 @@ export default {
             for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
               // console.log(this.stepInfo[0].tags[i].tag_text)
               // console.log(this.options.name);
-              const tag = {name: this.stepInfo[0].tags[i].tag_text}
+              const tag = {
+                id: this.stepInfo[0].tags[i].id,
+                text: this.stepInfo[0].tags[i].text
+              }
               this.valueTag.push(tag);
             }
           }
@@ -646,7 +709,7 @@ export default {
     tagStringArray(){
       let niz = [];
       for (var i = 0; i < this.valueTag.length; i++) {
-        niz.push(this.valueTag[i].name);
+        niz.push(this.valueTag[i].text);
       }
       return JSON.stringify(niz);
     },
@@ -661,7 +724,7 @@ export default {
 
     selectedItemID() {
       var a = store.getters.selectedItemID;
-      // console.log(a);
+      console.log(a);
       if (a === undefined) return 0;
       else return a;
     },
