@@ -40,17 +40,18 @@
             </div>
 
             <!-- ADING WORKERS -->
-            <div v-show='!task' class="form-group" id='adding-worker' @mouseover='mouseOverAddWorker=1' @mouseleave='mouseOverAddWorker=0'>
+            <div v-show='!task' class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
               <!-- @click='selectUser' -->
               <!-- <i :class="teamClass" @click='selectTeam'></i> -->
-              <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
+              <!-- <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
                 @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
-              />
-              <!-- Dodavanje sebe na task -->
-              <div class="add-myself disable-selection" v-if='task && mouseOverAddWorker && teamSelect==0 && choosenWorker==null' @click='selectMe'>
-                Just me
-              </div>
+              /> -->
+              <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom"
+                :options="suggestedWorker" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
+                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
+                @search-change="searchUsers" @close="usersOut" >
+              </multiselect>
             </div>
 
             <!-- TAGS -->
@@ -150,18 +151,15 @@ export default {
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
       titleClass: "form-control",
-      componentTitle: "Creating Task"
+      componentTitle: "Creating Task",
+      selectedUSers: [],
+
     };
   },
 
   computed: {
-    suggestedWorker: function() {
-      if (this.teamSelect == 1)
-        // Selektovan tim
-        return store.getters.getSuggestedTeams; // Selektovan korisnik
-      else return store.getters.getSuggestedUsers;
-    },
     ...mapState({
+      suggestedWorker: state => store.getters.getSuggestedUsers,
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
       proId: state => state.sidebarItemSelection[0]
@@ -185,37 +183,6 @@ export default {
         });
         this.inputTagHaveChange = 0;
       }
-
-      // Poziv sugestija za user tj. timove
-      if (
-        this.inputWorkerHaveChange == 1 &&
-        this.inputWorker != null &&
-        this.inputWorker.length > 0
-      ) {
-        if (this.teamSelect == 0) this.suggestUsers();
-        // else this.suggestTeams();
-        this.inputWorkerHaveChange = 0;
-      }
-      if (this.inputWorker != null && this.inputWorker.length == 0) {
-        store.dispatch("cleanSuggestions");
-        store.dispatch("cleanSuggestedTeams");
-      }
-
-      // Poziv sugestija za projekte
-      if (this.$refs.projectref != undefined) {
-        if (
-          this.$refs.projectref._data.searchInput == null ||
-          this.$refs.projectref._data.searchInput.length == 0
-        ) {
-          // store.dispatch('clleaneSuggestedProjects');
-        } else if (this.projectSuggestionHaveChange == 1) {
-          store.dispatch("suggestProjects", {
-            searchStr: this.$refs.projectref._data.searchInput,
-            comId: this.projectID
-          });
-          this.projectSuggestionHaveChange = 0;
-        }
-      }
     }, 500);
   },
 
@@ -234,10 +201,13 @@ export default {
   },
 
   methods: {
+    usersOut(){
+      
+    },
     multiselectOut(){
       // Dodavanje novog taga
       var tag = this.tagSearchStr;
-      if(tag==undefined||tag==null||tag.length==0)
+      if(this.suggestedTags.length>0||tag==undefined||tag==null||tag.length==0)
         return;
       for(var i in this.selectedTags)
         if(this.selectedTags[i].text==tag)
@@ -383,7 +353,7 @@ export default {
       // console.log('SUggest users');
       store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
-        comId: this.projectID
+        pro_id: this.proId,
       });
     },
     // suggestTeams() {
@@ -486,7 +456,19 @@ export default {
     },
     closeModal() {
       store.commit("itemActionReset");
-    }
+    },
+    searchUsers(str){
+      if(str==undefined||str==null)
+        return;
+      if(str.length==0){
+        store.dispatch('cleanSuggestions');
+        return;
+      }
+      store.dispatch("refreshSuggestions", {
+        searchText: str,
+        pro_id: this.proId,
+      });
+    },
   }
 };
 </script>

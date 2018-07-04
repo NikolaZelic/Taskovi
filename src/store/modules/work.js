@@ -48,8 +48,8 @@ const actions = {
   refreshSuggestions(commit, params){
     // console.log('Action');
      var searchText = params.searchText;
-     var comId = params.comId;
-     api.refreshSuggestions(searchText,comId).
+     var pro_id = params.pro_id;
+     api.refreshSuggestions(searchText, pro_id).
      then( result => {
        store.commit('setSuggestions', result);
      } );

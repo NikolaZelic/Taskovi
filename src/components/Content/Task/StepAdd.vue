@@ -13,12 +13,14 @@ export default {
     return {
       task: false,
       componentTitle: 'Creating Step',
+      // proId: 146,
 
     };
   },
   computed: {
     taskid(){
-      return store.state.sidebarItemSelection[2];
+      return store.state.sidebarItemSelection[1];
+      // return 61;
     },
 
   },
@@ -31,24 +33,14 @@ export default {
         stop = true;
         this.titleError();
       }
-      if( this.choosenWorker == null ){
-        stop = true;
-        this.workerError();
-      }
 
       if( stop )
         return;
+      console.log('Ovdeee');
+      var tagarray = this.selectedTags.map( e => e.text );
+      var userarray = this.selectedUSers.map( e => e.id );
 
-      var usrid = null;
-      var teamid = null;
-      if( this.teamSelect == 1 )
-        teamid = this.choosenWorker.id;
-      else
-        usrid = this.choosenWorker.id;
-
-      var tagarray = this.selectedTags.map( e => e.id );
-
-      api.createTask(this.title, this.description, this.deadline, usrid, teamid, tagarray, this.selectedPriorety, this.parenttaskid)
+      api.createStep(this.proId, this.taskid, this.title, this.description, this.deadline, this.selectedPriorety, userarray, tagarray)
       .then(result =>{
         this.reportWritingToDB(result);
       });

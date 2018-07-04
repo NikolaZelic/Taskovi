@@ -11,7 +11,20 @@ import router from '../router/index.js';
 export const api = {
 
   //#region Zelic
-
+  createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags){
+    return axios.post('tasks',{
+      sid: window.localStorage.sid,
+      type: 'step',
+      proid: pro_id,
+      tasid: tas_id,
+      title: title,
+      description: description,
+      deadline: deadline,
+      priorety: priorety,
+      usersarray: JSON.stringify(users),
+      tagarray: JSON.stringify(tags)
+    });
+  },
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
@@ -70,12 +83,12 @@ export const api = {
   // },
 
   // pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
-  refreshSuggestions(searchText, comId) {
+  refreshSuggestions(searchText, pro_id) {
     return axios.get('users', {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchText,
-        comid: comId,
+        proid: pro_id,
       }
     });
   },
