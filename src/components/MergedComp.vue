@@ -18,6 +18,8 @@
       </div>
       <feed-element v-if="checkShow(1,false,false)"/>
     </div>
+  <!-- <router-link to="/user"></router-link> -->
+  <router-view></router-view>
     <!-- <user-options></user-options> -->
     <modal-complete v-if="modalStatusActive" />
     <modal-error v-if="modalErrorActive" />

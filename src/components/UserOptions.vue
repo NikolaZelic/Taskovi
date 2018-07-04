@@ -1,38 +1,50 @@
 <template>
-<div class='modal-mask'>
-    <div class="tail">
-        <div class='image-container' title='Click to change Avatar' @click='changeAvatar'>
-        <img src="@/assets/img/user.png" class="picture"  />
-        <span class='fas fa-camera'></span></div>
-      <div class="right-side">
-        <table>
-          <tr>
-            <td>Name:</td>
-            <td>
-              <input type="text" :value="name" :disabled="editable" />
-            </td>
-          </tr>
-          <tr>
-            <td>Surname:</td>
-            <td>
-              <input type="text" :value="surname" :disabled="editable" />
-            </td>
-          </tr>
-          <tr>
-            <td>Email:</td>
-            <td>
-              <input type="text" value="aaa@bbb.com" :disabled="editable" />
-            </td>
-          </tr>
+  <div class='modal-mask'>
+    <transition name='fade'>
+      <div class="user-modal">
+        <div class="header">
+          <span>
+            <strong>Change User Options</strong>
+          </span>
+          <i class="fa fa-times" @click='closeModal'></i>
+        </div>
+        <div class="body">
 
-          <tr class="edit">
-            <td colspan="2">
-              <button v-on:click="edit">{{editable?"Edit":"Save"}}</button>
-            </td>
-          </tr>
-        </table>
+          <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
+            <img src="@/assets/img/user.png" class="picture" />
+            <span class='fas fa-camera'></span>
+            <input ref='avatarUpload' type="file" style="display: none;" @change='changeFile'>
+          </div>
+
+          <div class="op-edit">
+            <table>
+              <tr>
+                <td>Name:</td>
+                <td>
+                  <input type="text" :value="name" :disabled="editable" />
+                </td>
+              </tr>
+              <tr>
+                <td>Surname:</td>
+                <td>
+                  <input type="text" :value="surname" :disabled="editable" />
+                </td>
+              </tr>
+              <tr>
+                <td>Email:</td>
+                <td>
+                  <input type="text" v-model="email" :disabled="editable" />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <button @click='edit' class="op-btn btn btn-warning">
+          <i class="fas fa-pen"></i> {{editable?"Edit":"Save"}}</button>
+        </div>
       </div>
-    </div></div>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -40,28 +52,38 @@ import { store } from "@/store/index.js";
 
 export default {
   data() {
+    // email = localStorage.email;
     return {
+      email: undefined,
+      name: undefined,
+      surname: undefined,
       editable: true
     };
-  },
-  computed: {
-    name() {
-      return localStorage.name;
-    },
-    surname() {
-      return localStorage.surname;
-    },
-    fullname() {
-      return " " + this.name + " " + this.surname;
-    }
   },
   methods: {
     edit() {
       this.editable = !this.editable;
     },
     changeAvatar() {
-      console.log('change avatar clicked')
+      this.$refs.avatarUpload.click();
+    },
+    changeFile(e) {
+      var f = e.target.files[0];
+      console.log(f)
+      // store.dispatch("sendAttach", {
+      //   type: "file",
+      //   file: f,
+      //   taskid: this.taskid
+      // });
+    },
+    closeModal() {
+      this.$router.push("/");
     }
+  },
+  created() {
+    this.email = localStorage.email;
+    this.name = localStorage.name;
+    this.surname = localStorage.surname;
   }
 };
 </script>
@@ -70,105 +92,96 @@ export default {
 .modal-mask {
   height: 100%;
   width: 100%;
-  background: #333333aa;
+  background: #101010c2;
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.tail {
+
+.user-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-modal .header {
+  background: var(--warning);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px 10px 0 0;
+}
+
+.user-modal .header i {
+  cursor: pointer;
+}
+
+.user-modal .body {
   position: relative;
   background: #f4f4f4;
   border: 1px solid #777;
-  border-radius: 10px;
+  padding: 10px;
   display: flex;
-  width: 500px;
+  flex-direction: row;
+  min-width: 500px;
+  border-radius: 0 0 10px 10px;
 }
 
-.image-container {
-  position: absolute;
+.op-avatar {
+  position: relative;
   cursor: pointer;
-  left: 20px;
-  top: 20px;
-  width: 120px;
+  margin: auto 20px;
 }
 
-.image-container span {
+.op-avatar span {
   position: absolute;
   opacity: 0;
-  font-size: 30px;
+  font-size: 35px;
   top: 50%;
   left: 50%;
   transition: 0.5s ease;
   transform: translate(-50%, -50%);
 }
 
-.image-container img {
+.op-avatar img {
   height: 120px;
   border-radius: 40px;
   transition: 0.5s ease;
   backface-visibility: hidden;
 }
 
-.image-container:hover img {
+.op-avatar:hover img {
   opacity: 0.3;
 }
 
-.image-container:hover span {
+.op-avatar:hover span {
   opacity: 1;
   color: #444;
   font-size: 40px;
 }
 
-.tail .right-side {
-  background-color: #333;
+.op-edit {
+  align-self: center;
+}
+
+.op-edit input {
+  border: 1px solid #7777;
   border-radius: 2px;
-  background-color: white;
-  border: 1px solid #777;
-  margin: 10px;
-  display: flex;
-  flex-flow: column;
+  padding: 4px 10px;
 }
 
-.tail .right-side table {
-  border-radius: 2px;
-  display: block;
-  margin: 40px;
-  font-size: 20px;
+.op-btn {
+  height: 50px;
+  align-self: center;
+  margin: 0 15px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.tail .right-side tr,
-td {
-  margin: 20px;
-  border-collapse: collapse;
-  border: 1px solid #aaa;
-}
-
-.tail .right-side table input {
-  width: 100%;
-  height: 100%;
-  padding: 15px;
-}
-
-table .edit {
-  text-align: right;
-}
-
-.tail .right-side tr td:first-child {
-  padding: 15px;
-}
-
-.tail .left-side .picture {
-  width: 100%;
-}
-
-.tail .left-side .change-pic {
-  background-color: #42cbf4;
-  color: black;
-
-  text-decoration: none;
-  font-size: 16px;
-  text-align: center;
-  padding: 10px;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

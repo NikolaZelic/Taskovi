@@ -74,7 +74,7 @@
           <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
             :fields="fieldsToShow" 
             :filter="tabs[currentTabIndex].search"
-             @filtered="onFiltered"
+             @filtered="onFiltered" 
               @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
@@ -134,7 +134,7 @@
             </tbody>
           </table> -->
         </div>
-        <button id="addItem" class="btn btn-block btn-warning" @click="addItemButton">
+        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span> Add New</button>
       </div>
       <!-- </div> -->
@@ -209,7 +209,7 @@ export default {
           class: "text-center"
         }
       ],
-      totalRows: this.activeArray===undefined ? 0 : this.activeArray.length,
+      totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       project: {
         title: undefined,
@@ -370,9 +370,8 @@ export default {
       localStorage.dark = !this.darkTheme;
       store.commit("darkTheme", !this.darkTheme);
     },
-    userOptions() {      
+    userOptions() {
       this.$router.push("user");
-      // alert("Treba da prebaci na user options stranicu");
     },
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);
@@ -412,16 +411,16 @@ export default {
       return this.taskFields;
     },
     itemsFiltered() {
-    //   let tabData = this.activeArray;
-    //   if (tabData === undefined) return;
-    //   let filtered = tabData.filter(it => {
-    //     var item = it.title;
-    //     var searchItem = this.tabs[this.currentTabIndex].search;
-    //     return item == undefined || searchItem == undefined
-    //       ? false
-    //       : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
-    //   });
-    //   return filtered;
+      //   let tabData = this.activeArray;
+      //   if (tabData === undefined) return;
+      //   let filtered = tabData.filter(it => {
+      //     var item = it.title;
+      //     var searchItem = this.tabs[this.currentTabIndex].search;
+      //     return item == undefined || searchItem == undefined
+      //       ? false
+      //       : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
+      //   });
+      //   return filtered;
     }
   },
   created() {
@@ -604,10 +603,12 @@ export default {
 
 #addItem {
   line-height: 10px;
+  max-width: 500px;
+  align-self: center;
 }
 
 #addItem:hover {
-  box-shadow: 0 0 20px 1px rgba(255, 248, 19, 0.2);
+  box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
 }
 
 /* TASK LIST END */
@@ -753,7 +754,6 @@ label {
   height: 25px;
   width: 25px;
   margin: 20px auto;
-  /* padding: auto; */
 }
 
 .fade-enter-active,

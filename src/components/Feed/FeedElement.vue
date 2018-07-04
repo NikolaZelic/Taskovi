@@ -1,7 +1,7 @@
 <template>
   <div class="feed">
     <div class="feed-all" v-show="showFeeds">
-      <div id="all" v-on:scroll="handleScroll()" class="feed-back">
+      <div id="all" @scroll="handleScroll()" class="feed-back">
         <div class="messages">
           <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
         </div>
@@ -11,10 +11,10 @@
         <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
       </div>
       <div class="input">
-        <button class="load btn btn-primary" v-on:click="addUp">
+        <button class="load btn btn-primary" @click="addUp">
           <span class="fas fa-sync-alt"></span>
         </button>
-        <input type="file" id="file" v-on:change="changeFile" style="display:none;" />
+        <input type="file" id="file" @change="changeFile" style="display:none;" />
         <button class="btn attac" @click="uploadFile">
           <span class="fas fa-paperclip"></span>
         </button>
