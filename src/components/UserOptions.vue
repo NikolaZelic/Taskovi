@@ -21,26 +21,32 @@
               <tr>
                 <td>Name:</td>
                 <td>
-                  <input type="text" :value="name" :disabled="editable" />
+                  <input type="text" v-model.trim="name" :disabled="editMode" />
                 </td>
               </tr>
               <tr>
                 <td>Surname:</td>
                 <td>
-                  <input type="text" :value="surname" :disabled="editable" />
+                  <input type="text" v-model.trim="surname" :disabled="editMode" />
                 </td>
               </tr>
               <tr>
                 <td>Email:</td>
                 <td>
-                  <input type="text" v-model="email" :disabled="editable" />
+                  <input type="text" v-model.trim="email" :disabled="editMode" />
+                </td>
+              </tr>
+              <tr>
+                <td>Password:</td>
+                <td>
+                  <input type="password" v-model="password" :disabled="editMode" />
                 </td>
               </tr>
             </table>
           </div>
 
           <button @click='edit' class="op-btn btn btn-warning">
-          <i class="fas fa-pen"></i> {{editable?"Edit":"Save"}}</button>
+          <i class="fas fa-pen"></i> {{editMode?"Edit":"Save"}}</button>
         </div>
       </div>
     </transition>
@@ -49,27 +55,49 @@
 
 <script>
 import { store } from "@/store/index.js";
+import { instance as axios } from "@/api/config.js";
 
 export default {
   data() {
-    // email = localStorage.email;
     return {
       email: undefined,
       name: undefined,
       surname: undefined,
-      editable: true
+      password: undefined,
+      editMode: true
     };
   },
   methods: {
     edit() {
-      this.editable = !this.editable;
+      this.editMode = !this.editMode;
+      //FIX API FOR CHANGE USER DATA
+      if (this.editMode === true) {
+        axios
+          .put("auth/users", {
+            email: this.email,
+            name: this.name,
+            surname: this.surname,
+            pass: this.password,
+            sid: localStorage.sid
+          })
+          .then(r => {
+            if(r.data.status === "OK"){
+              localStorage.email = this.email;
+              localStorage.name = this.name;
+              localStorage.surname = this.surname;
+            }
+          })
+          .catch(e => {
+            console.log('e ' + e);
+          });
+      }
     },
     changeAvatar() {
       this.$refs.avatarUpload.click();
     },
     changeFile(e) {
       var f = e.target.files[0];
-      console.log(f.name)
+      console.log(f.name);
     },
     closeModal() {
       this.$router.push("/");
