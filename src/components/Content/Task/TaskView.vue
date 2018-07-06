@@ -1,49 +1,23 @@
 <template>
-<div>
-  <template v-if="selectedItemID <= 0">
-    <h1>Select task first...</h1>
-  </template>
-  <!-- Prikaz podataka pojedinacnog taska -->
-  <template v-else>
+  <div>
 
+    <template v-if="selectedItemID <= 0">
+      <h1>Select task first...</h1>
+    </template>
 
-<!--
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      Launch demo modal
-    </button>
--->
-<!-- Modal
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
--->
+    <template v-else>
 
+      <!-- Showing data about all steps inside selected task -->
+      <div class="card" v-if="!stepInfoShow && !stepEditShow">
 
-
-
-
-      <div class="card">
         <div class="card-header task-header" v-if="taskInfo[0] !== undefined">
           {{ taskInfo[0].taskname }}
         </div>
+
         <div class="card-body">
+
           <table class="table table-borderless text-center text-dark table-hover">
+
             <thead>
               <tr>
                 <th scope="col">Status</th>
@@ -54,12 +28,9 @@
                 <th scope="col">Working</th>
               </tr>
             </thead>
+
             <tbody>
-
-
-              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id)' data-toggle="modal" data-target="#stepInformation">
-
-
+              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()' data-toggle="modal" data-target="#stepInformation">
 
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
@@ -67,45 +38,31 @@
                   <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
                 </td>
 
-                <td>{{ task.tsk_title}}</td>
+                <td>
+                  {{ task.tsk_title}}
+                </td>
+
                 <td>
                   {{ task.tsk_deadline }}
                 </td>
 
-
                 <td>
-
-                  <div v-if='showAllTags && showAllTagsID === index'>
-                    <span class="badge badge-success" v-for="(tag,index) in task.tags" :key='index'>{{ tag.tag_text }}</span>
-                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show less</span>
-                  </div>
-
-                  <div v-else>
-                    <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
-                    <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
-                    <span class="badge badge-default pointer" @click='showAllTags= !showAllTags; showAllTagsID = index' v-if="task.tags.length > 3">Show all</span>
-                  </div>
-
+                  <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
+                  <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
                 </td>
-
-
 
                 <td>
                   <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
                 </td>
-                <td>
-                {{task.usrworking}}
-              </td>
 
+                <td>
+                  {{task.usrworking}}
+                </td>
 
               </tr>
-
-
-
-
             </tbody>
-          </table>
 
+          </table>
 
         </div>
 
@@ -115,277 +72,217 @@
 
       </div>
 
+      <!-- Showing data about selected step -->
+      <div class="card" v-if='stepInfoShow && !stepEditShow && stepInfo[0] !== undefined'>
 
-
-<!-- modal za prikaz podataka o stepu -->
-      <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0 && stepModal">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header step-header" :class="stepInfo[0].background">
-              <h5 class="modal-title" id="exampleModalLabel">{{ stepInfo[0].tsk_title }}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true" class="step-header">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-
-              <table class="table table-borderless">
-
-  <tbody>
-    <tr>
-      <td>Project:</td>
-      <th scope="row">{{stepInfo[0].pro_name}}</th>
-    </tr>
-    <tr>
-      <td>Task:</td>
-      <th scope="row">{{stepInfo[0].taskname}}</th>
-    </tr>
-    <tr>
-
-      <tr v-if="stepInfo[0].description !== null">
-        <td>Description:</td>
-        <th scope="row">{{stepInfo[0].description}}
-          <!-- <i class="far fa-edit"></i> -->
-        </th>
-      </tr>
-
-      <!-- <tr>
-        <td>DescriptionTest:</td>
-        <td>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" :placeholder="stepInfo[0].description" :disabled="!editDescription">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" @click="editDescription = !editDescription" v-if="!editDescription"><i class="far fa-edit"></i></button>
-                <button class="btn btn-outline-secondary" @click="editDescription = !editDescription; saveDescription()" v-if="editDescription"><i class="fas fa-check-square"></i></i></button>
-              </div>
-            </div>
-        </td>
-      </tr> -->
-
-      <td>Status:</td>
-      <th scope="row">{{stepInfo[0].sta_text}}
-        <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-        <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-        <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-      </th>
-
-    </tr>
-
-    <tr v-if="stepInfo[0].tsk_progress !== null">
-      <td>Progress:</td>
-      <th scope="row">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
+        <div class="card-header">
+          {{ stepInfo[0].tsk_title }}
         </div>
-      </th>
-    </tr>
 
+        <div class="card-body">
+          <table class="stepInfoShow">
 
+            <tr>
+              <td class="align-top">Project:</td>
+              <td>{{stepInfo[0].pro_name}}</td>
+            </tr>
 
+            <tr>
+              <td class="align-top">Task:</td>
+              <td>{{stepInfo[0].taskname}}</td>
+            </tr>
 
+            <tr v-if="stepInfo[0].description !== null">
+              <td class="align-top">Description:</td>
+              <td>{{stepInfo[0].description}}</td>
+            </tr>
 
+            <tr>
+              <td class="align-top">Status:</td>
+              <td>{{stepInfo[0].sta_text}}
+                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+              </td>
+            </tr>
 
-
-    <tr v-if="stepInfo[0].pri_text !== null">
-      <td>Priority:</td>
-      <th scope="row"><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></th>
-    </tr>
-
-
-
-
-    <tr v-if="stepInfo[0].tags.length > 0">
-      <td>Tags:</td>
-      <th scope="row">
-        <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
-      </th>
-    </tr>
-
-
-    <tr v-if="stepInfo[0].tsk_deadline !== ''">
-      <td>Deadline:</td>
-      <th scope="row">
-      {{stepInfo[0].tsk_deadline}}
-      </th>
-    </tr>
-
-    <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
-      <td>Estimated completion date:</td>
-      <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
-    </tr>
-
-
-    <tr>
-      <td>Created by:</td>
-      <th scope="row">
-        <ul class="list-unstyled">
-          <li class="media mt-2">
-
-            <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
-
-            <div class="media-body">
-              <div class="media-body">
-                    <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                      {{stepInfo[0].usr_email}}
+            <tr v-if="stepInfo[0].tsk_progress !== null">
+              <td class="align-top">Progress:</td>
+              <td>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
                 </div>
-                </div>
+              </td>
+            </tr>
 
-          </li>
-        </ul>
-      </th>
-    </tr>
+            <tr v-if="stepInfo[0].pri_text !== null">
+              <td class="align-top">Priority:</td>
+              <td><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></td>
+            </tr>
 
-    <tr>
-      <td>Time created:</td>
-      <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
-    </tr>
+            <tr v-if="stepInfo[0].tags.length > 0">
+              <td class="align-top">Tags:</td>
+              <td>
+                <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
+              </td>
+            </tr>
 
-    <tr v-if="stepInfo[0].tsk_timespent !== null">
-      <td>Time spent:</td>
-      <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
-    </tr>
+            <tr v-if="stepInfo[0].tsk_deadline !== ''">
+              <td class="align-top">Deadline:</td>
+              <td>{{stepInfo[0].tsk_deadline}}</td>
+            </tr>
 
-    <tr>
-      <td>Working:</td>
-      <th scope="row">
-        <ul class="list-unstyled">
-          <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+            <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
+              <td class="align-top">Estimated completion date:</td>
+              <td>{{stepInfo[0].tsk_estimated_completion_date}}</td>
+            </tr>
 
-            <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+            <tr>
+              <td class="align-top">Created by:</td>
+              <td>
+                <ul class="list-unstyled">
+                  <li class="media mt-2">
 
-            <div class="media-body">
-              <div class="media-body">
-                    <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                      {{user.usr_email}}
-                </div>
-                </div>
-          </li>
-        </ul>
-      </th>
-    </tr>
+                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
 
-  </tbody>
-</table>
+                    <div class="media-body">
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                        <span>{{stepInfo[0].usr_email}}</span>
+                      </div>
+                    </div>
 
+                  </li>
+                </ul>
+              </td>
+            </tr>
 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#stepEdit">Edit</button>
-            </div>
+            <tr>
+              <td class="align-top">Time created:</td>
+              <td>{{stepInfo[0].tsk_timecreated}}</td>
+            </tr>
+
+            <tr v-if="stepInfo[0].tsk_timespent !== null">
+              <td class="align-top">Time spent:</td>
+              <td>{{stepInfo[0].tsk_timespent}}</td>
+            </tr>
+
+            <tr>
+              <td class="align-top">Working:</td>
+              <td>
+                <ul class="list-unstyled">
+                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+
+                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                    <div class="media-body">
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                        <span>{{user.usr_email}}</span>
+                      </div>
+                    </div>
+
+                  </li>
+                </ul>
+              </td>
+            </tr>
+
+          </table>
+        </div>
+
+        <div class="card-footer">
+          <div class="float-right">
+            <button type="button" class="btn btn-warning" @click="stepEditToggle()">Edit</button>
+            <button type="button" class="btn btn-primary" @click="stepInfoToggle()">Back</button>
           </div>
         </div>
+
       </div>
 
+      <!-- Showing edit fields about selected step -->
+      <div class="card" v-if='!stepInfoShow && stepEditShow && stepInfo[0] !== undefined'>
 
+        <div class="card-header bg-warning">
+          {{ stepInfo[0].tsk_title }}
+        </div>
 
+        <div class="card-body">
 
+          <div v-if="stepInfo[0].yours === null">
+            <label for="name">Task name:</label>
+            <input type="text" class="form-control" id="name" v-model="edit.name">
+          </div>
 
-
-
-
-
-
-
-
-<!-- modal za editovanje podataka o stepu -->
-<div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header bg-secondary step-header">
-              <h5 class="modal-title" id="exampleModalLabel">Edit task</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true" class="step-header">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-
-            <div v-if="stepInfo[0].yours === null">
-             <label for="stepName">Task name:</label>
-             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
-           </div>
-
-           <div v-if="stepInfo[0].yours === null">
+          <div v-if="stepInfo[0].yours === null">
             <label for="desc">Description:</label>
-            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
-            </div>
+            <textarea class="form-control" id="desc" rows="3" v-model="edit.description"></textarea>
+          </div>
 
-             <label for="status">Change status:</label>
-             <select class="form-control" id="status" v-model="edit.status">
-              <option disabled selected>Select status of your task</option>
-              <option value="3">Completed</option>
-              <option value="4">Failed</option>
-              <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
-              <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
-            </select>
+          <label for="status">Change status:</label>
+          <select class="form-control" id="status" v-model="edit.status">
+            <option value="2" v-if="stepInfo[0].yours === null">In Progress</option>
+            <option value="3" v-if="stepInfo[0].yours === 1">Completed</option>
+            <option value="4" v-if="stepInfo[0].yours === 1">Failed</option>
+            <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
+            <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
+          </select>
 
-
-
-
-
-<div v-if="stepInfo[0].yours === null">
-             <label for="priority">Change priority:</label>
-             <select class="form-control" id="priority" v-model="edit.priority">
-              <option disabled selected>Select priority of your task</option>
+          <div v-if="stepInfo[0].yours === null">
+            <label for="priority">Change priority:</label>
+            <select class="form-control" id="priority" v-model="edit.priority">
               <option value="1">High</option>
               <option value="2">Medium</option>
               <option value="3">Low</option>
             </select>
-
           </div>
 
+          <label class="tag" for="tags">Tags</label>
+          <multiselect @search-change="loadTags"  :preserveSearch="true" :closeOnSelect="false" ref="tagSearchString"
+          v-model="valueTag" id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag"
+          :multiple="true" :taggable="true" @tag="addTag">
+          </multiselect>
 
-           <label class="tag" for="tags">Tags</label>
-           <multiselect @search-change="loadTags"  :preserveSearch="true" :clearOnSelect="false" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag" id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+          <div v-if="stepInfo[0].yours === null">
+            <label for="deadline">Deadline:</label>
+            <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline" :placeholder="stepInfo[0].tsk_deadline"></flat-pickr>
+          </div>
 
-<div v-if="stepInfo[0].yours === null">
-           <label for="deadline">Deadline:</label>
-           <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-             :placeholder="stepInfo[0].tsk_deadline">
-           </flat-pickr>
-         </div>
+          <div v-if="stepInfo[0].yours === 1">
+            <label for="estDate">Estimated completion date:</label>
+            <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime" :placeholder="stepInfo[0].tsk_estimated_completion_date"></flat-pickr>
+          </div>
 
-           <div v-if="stepInfo[0].yours === 1">
-           <label for="estDate">Estimated completion date:</label>
-           <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
-            :placeholder="stepInfo[0].tsk_estimated_completion_date">
-           </flat-pickr>
-           </div>
+          <div v-if="stepInfo[0].yours === 1">
+            <label for="timeSpent">Time spent [in minutes]:</label>
+            <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+          </div>
 
-            <div v-if="stepInfo[0].yours === 1">
-             <label for="timeSpent">Time spent [in minutes]:</label>
-             <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
-            </div>
-
-
-<div v-if="stepInfo[0].yours === null">
-           <label for="progress">Progress: </label>
-           <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
-         </div>
+          <div v-if="stepInfo[0].yours === null">
+            <label for="progress">Progress: </label>
+            <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
+          </div>
 
           <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
+          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" :multiple="true">
+          <span slot="noResult">There's no users with searched name in this project.</span>
+          </multiselect>
 
+        </div>
 
-
-            </div>
-            <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" @click="closeAll">all</button> -->
-
-
-
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-              <button type="button" class="btn btn-primary" @click="saveChanges">Save</button>
-            </div>
+        <div class="card-footer">
+          <div class="float-right">
+            <button type="button" class="btn btn-warning" @click="saveChanges(); stepInfoToggle();">Save</button>
+            <button type="button" class="btn btn-primary" @click="stepInfoToggle() ">Back</button>
           </div>
         </div>
+
       </div>
 
-
     </template>
-</div>
+
+  </div>
 </template>
 
 <script>
@@ -393,6 +290,8 @@ import axios from "axios";
 import {store} from "@/store/index.js";
 import {mapGetters} from "vuex";
 import Multiselect from 'vue-multiselect'
+
+
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -407,6 +306,10 @@ export default {
 
   data() {
     return {
+      stepInfoShow: false,
+      stepEditShow: false,
+
+
       valueTag: [],
       optionsTag: [],
 
@@ -476,12 +379,14 @@ loadTags(){
       }).then(response =>{
         // console.log(response.data.data);
         // this.optionsTag = response.data.data;
-        this.optionsTag = response.data.data;
+        if(response.data.data !== undefined){
+          this.optionsTag = response.data.data;
+        }
       })
 },
 
     saveDescription(){
-      console.log('saved desc edit');
+      // console.log('saved desc edit');
     },
 
     saveChanges(){
@@ -502,9 +407,18 @@ loadTags(){
             usersarray: this.userStringArray,
             tagarray: this.tagStringArray
 
-      }).then( response =>{
-        $('#stepInformation, #stepEdit').modal('hide');
+      }).then(response => {
+          this.getStepInfo(this.stepInfo[0].tsk_id);
           this.getTaskInfo(this.selectedItemID);
+
+          this.edit.name = undefined,
+          this.edit.description = undefined,
+          this.edit.deadline = undefined,
+          this.edit.priority = undefined,
+          this.edit.status = undefined,
+          this.edit.progress = undefined,
+          this.edit.timespent = undefined,
+          this.edit.estTime = undefined
       })
     },
 
@@ -534,6 +448,16 @@ loadTags(){
               }
               this.valueUser.push(user)
             },
+
+stepInfoToggle(){
+  this.stepEditShow = false;
+  this.stepInfoShow = !this.stepInfoShow;
+},
+
+stepEditToggle(){
+  this.stepInfoShow = false;
+  this.stepEditShow = !this.stepEditShow;
+},
 
 
     getStepInfo(stepID) {
@@ -588,19 +512,19 @@ loadTags(){
               if (this.stepInfo[i].tsk_deadline === null) {
                 this.stepInfo[i].tsk_deadline = ''
               } else {
-                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm a'));
               }
 
               if (this.stepInfo[i].tsk_estimated_completion_date === null) {
                 this.stepInfo[i].tsk_estimated_completion_date = ''
               } else {
-                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm a'));
               }
 
               if (this.stepInfo[i].tsk_timecreated === null) {
                 this.stepInfo[i].tsk_timecreated = ''
               } else {
-                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm a'));
               }
 
               if (this.stepInfo[i].pri_text === 'High') {
@@ -660,7 +584,6 @@ loadTags(){
       // });
 
 
-
     },
 
     getTaskInfo(taskID) {
@@ -683,7 +606,7 @@ loadTags(){
               if (this.taskInfo[i].tsk_deadline === null) {
                 this.taskInfo[i].tsk_deadline = ''
               } else {
-                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm a'));
               }
 
               if (this.taskInfo[i].pri_text === 'High') {
@@ -723,7 +646,7 @@ loadTags(){
 
     selectedItemID() {
       var a = store.getters.selectedItemID;
-      console.log(a);
+      // console.log(a);
       if (a === undefined) return 0;
       else return a;
     },
@@ -778,6 +701,9 @@ loadTags(){
       if (val !== 0) {
         this.getTaskInfo(val);
         this.getStepInfo(val);
+
+        this.stepInfoShow = false;
+        this.stepEditShow = false;
         // this.loadAllProjectUsers(val);
       }
       // this.getCompanyInfo(val);
@@ -787,7 +713,7 @@ loadTags(){
 
 
     'selectedProjectID': function(val, oldVal) {
-      console.log('prijekat' + val);
+      // console.log('prijekat' + val);
       // if (val !== 0) {
       //   this.loadAllProjectUsers(val);
       // }
@@ -796,7 +722,7 @@ loadTags(){
     'selectedTaskID': function(val, oldVal) {
       // console.log('a');
         if (val !== 0) {
-          console.log('novi je task broj' + val);
+          // console.log('novi je task broj' + val);
         }
     }
 
@@ -836,5 +762,14 @@ h1 {
 
 label {
   padding-top: 10px;
+}
+
+.stepInfoShow{
+  width: 100%;
+}
+
+.stepInfoShow td{
+  width: 50%;
+  padding: 5px 0;
 }
 </style>
