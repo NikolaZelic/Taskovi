@@ -12,6 +12,24 @@
   color: white;
 }
 
+.multiselect__tag,
+.multiselect__tag-icon:after,
+.multiselect__tag-icon:focus,
+.multiselect__tag-icon:hover,
+.multiselect__option--highlight,
+.multiselect__option--highlight::after {
+  background: var(--ac-color) !important;
+  color: var( --sec-bg-color) !important;
+}
+
+.multiselect__tags {
+  display: block;
+  width: 100%;
+  border: 1px solid #ced4da !important;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
 .custom-checkbox {
   transform: scale(0.9);
 }

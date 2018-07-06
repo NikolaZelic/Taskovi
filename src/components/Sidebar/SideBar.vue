@@ -390,11 +390,6 @@ export default {
     activeArray() {
       return store.getters.currentTabData;
     },
-    // shownItemsCount() {
-    //   return this.itemsFiltered === undefined
-    //     ? null
-    //     : this.itemsFiltered.length;
-    // },
     fieldsToShow() {
       if (this.currentTabIndex === 0) {
         if (
@@ -410,18 +405,6 @@ export default {
       }
       return this.taskFields;
     },
-    itemsFiltered() {
-      //   let tabData = this.activeArray;
-      //   if (tabData === undefined) return;
-      //   let filtered = tabData.filter(it => {
-      //     var item = it.title;
-      //     var searchItem = this.tabs[this.currentTabIndex].search;
-      //     return item == undefined || searchItem == undefined
-      //       ? false
-      //       : item.toLowerCase().indexOf(searchItem.toLowerCase()) > -1;
-      //   });
-      //   return filtered;
-    }
   },
   created() {
     // WRITE CURRENT TAB TO STORE
@@ -454,6 +437,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  /* height: 470px; */
 }
 
 .static-side .fas,

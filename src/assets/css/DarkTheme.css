@@ -24,21 +24,40 @@ textarea.form-control {
 } */
 
 .maincontent.darkTheme input,
-.maincontent.darkTheme textarea {
-  background: #2d3436;
-  color: #eee;
-  border: 1px solid #eee5;
+.maincontent.darkTheme textarea,
+.maincontent.darkTheme .multiselect__tags,
+.maincontent.darkTheme .multiselect__input,
+.maincontent.darkTheme .multiselect__single,
+.maincontent.darkTheme .multiselect__option {
+  background: #2d3436 !important;
+  color: #eee !important;
+  border: 0;
   /* border-radius: 0; */
+}
+
+.maincontent.darkTheme input,
+.maincontent.darkTheme textarea,
+.maincontent.darkTheme .multiselect__tags,
+.maincontent.darkTheme .multiselect__option {
+  border: 1px solid #eee5 !important;
+}
+
+.maincontent.darkTheme .multiselect__input::placeholder,
+.maincontent.darkTheme .multiselect__single::placeholder {
+  color: #999 !important;
 }
 
 .maincontent.darkTheme input:hover,
 .maincontent.darkTheme textarea:hover,
-  {
-  border: 1px solid #ffb037;
+.maincontent.darkTheme .multiselect__tags:hover {
+  border: 1px solid #ffd391 !important;
 }
 
 .maincontent.darkTheme input:focus,
-.maincontent.darkTheme textarea:focus {
+.maincontent.darkTheme textarea:focus,
+.maincontent.darkTheme .multiselect__tags:focus,
+.multiselect__input,
+.multiselect__single:focus {
   background: #2d3436;
   color: #fff;
 }

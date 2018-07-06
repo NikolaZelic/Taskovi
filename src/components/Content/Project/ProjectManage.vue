@@ -15,9 +15,16 @@
       <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
         class="form-control mb-3" spellcheck="false"></textarea>
 
-      <label for="users">Users</label>
-      <input type="text" id='users' v-model.lazy='usersString' placeholder="Enter email of people you want to add to the project"
-        class="form-control mb-3">
+      <label for="users"><span class='badge badge-warning'>{{project.users_count}}</span> Users</label>
+      <button id='users' class='btn btn-primary' @click='openUserList'>View and change users</button>
+      <div class='usersModal'>
+<input type="text">
+
+
+      </div>
+      <!-- <multiselect id='users' v-model='project.users' :options="options" :preserveSearch="true" :multiple="true" :taggable="true"
+        track-by='email' @tag="addTag" :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" :custom-label='CustomPersonLabel'
+        placeholder="Enter email of people"></multiselect> -->
 
       <label for="date">Deadline</label>
       <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
@@ -39,19 +46,20 @@ import "flatpickr/dist/flatpickr.css";
 import { instance as axios } from "@/api/config.js";
 import { store } from "@/store/index.js";
 import { mapGetters, mapState } from "vuex";
+import Multiselect from "vue-multiselect";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/themes/confetti.css");
 export default {
   components: {
-    flatPickr
+    flatPickr,
+    Multiselect
   },
   data() {
     return {
-      // usersString: undefined,
       project: {
         title: undefined,
         description: undefined,
-        users: undefined,
+        users_count: undefined,
         deadline: undefined
       },
       config: {
@@ -61,7 +69,8 @@ export default {
         dateFormat: "Y-m-d H:i:S",
         altFormat: "j M, Y H:i",
         altInput: true
-      }
+      },
+      options: []
     };
   },
   watch: {
@@ -75,6 +84,9 @@ export default {
     }
   },
   methods: {
+    openUserList(){
+
+    },
     projectInfo() {
       for (var i = 0; i < this.currentTabData.length; i++) {
         var ctd = this.currentTabData[i];
@@ -83,6 +95,7 @@ export default {
           this.project.title = ctd.title;
           this.project.description = ctd.pro_description;
           this.project.deadline = ctd.pro_deadline;
+          this.project.users_count = ctd.users_count;
         }
       }
     },
@@ -99,6 +112,7 @@ export default {
             let users = result.data.data;
             if (users.length !== 0) {
               this.project.users = users;
+              this.options = this.project.users;
             }
           }
         });
@@ -145,7 +159,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
-          usersarray: this.project.users,
+          usersarray: this.usersString,
           proid: store.getters.selectedItemID,
           sid: window.localStorage.sid
         })
@@ -179,6 +193,17 @@ export default {
     },
     resetProjectView() {
       store.commit("itemActionReset");
+    },
+    CustomPersonLabel(option) {
+      return `${option.email}`;
+    },
+    addTag(newTag) {
+      const tag = {
+        email: newTag
+      };
+      this.options.push(tag);
+      this.project.users.push(tag);
+      // this.usersString.push(tag);
     }
   },
   computed: {
@@ -204,8 +229,8 @@ export default {
       },
       set(val) {
         // console.log(val);
-        let splitUsers = val.split(",");
-        this.project.users = splitUsers;
+        // let splitUsers = val.split(",");
+        // this.project.users = splitUsers;
       }
     }
   },
@@ -218,6 +243,7 @@ export default {
 };
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 .pro-edit {
   display: flex;
@@ -239,6 +265,10 @@ export default {
 
 .header * {
   margin: 0;
+}
+
+#users {
+  width: 100% !important;
 }
 
 .btn-success {

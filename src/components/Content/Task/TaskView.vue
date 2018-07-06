@@ -1,18 +1,18 @@
 <template>
-<div>
-  <template v-if="selectedItemID <= 0">
-    <h1>Select task first...</h1>
-  </template>
-  <!-- Prikaz podataka pojedinacnog taska -->
-  <template v-else>
+  <div>
+    <template v-if="selectedItemID <= 0">
+      <h1>Select task first...</h1>
+    </template>
+    <!-- Prikaz podataka pojedinacnog taska -->
+    <template v-else>
 
 
-<!--
+      <!--
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
       Launch demo modal
     </button>
 -->
-<!-- Modal
+      <!-- Modal
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -94,8 +94,8 @@
                   <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
                 </td>
                 <td>
-                {{task.usrworking}}
-              </td>
+                  {{task.usrworking}}
+                </td>
 
 
               </tr>
@@ -117,7 +117,7 @@
 
 
 
-<!-- modal za prikaz podataka o stepu -->
+      <!-- modal za prikaz podataka o stepu -->
       <div class="modal fade" id="stepInformation" tabindex="-1" role="dialog" v-if="stepInfo.length > 0 && stepModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -131,25 +131,25 @@
 
               <table class="table table-borderless">
 
-  <tbody>
-    <tr>
-      <td>Project:</td>
-      <th scope="row">{{stepInfo[0].pro_name}}</th>
-    </tr>
-    <tr>
-      <td>Task:</td>
-      <th scope="row">{{stepInfo[0].taskname}}</th>
-    </tr>
-    <tr>
+                <tbody>
+                  <tr>
+                    <td>Project:</td>
+                    <th scope="row">{{stepInfo[0].pro_name}}</th>
+                  </tr>
+                  <tr>
+                    <td>Task:</td>
+                    <th scope="row">{{stepInfo[0].taskname}}</th>
+                  </tr>
+                  <tr>
 
-      <tr v-if="stepInfo[0].description !== null">
-        <td>Description:</td>
-        <th scope="row">{{stepInfo[0].description}}
-          <!-- <i class="far fa-edit"></i> -->
-        </th>
-      </tr>
+                    <tr v-if="stepInfo[0].description !== null">
+                      <td>Description:</td>
+                      <th scope="row">{{stepInfo[0].description}}
+                        <!-- <i class="far fa-edit"></i> -->
+                      </th>
+                    </tr>
 
-      <!-- <tr>
+                    <!-- <tr>
         <td>DescriptionTest:</td>
         <td>
             <div class="input-group mb-3">
@@ -162,112 +162,117 @@
         </td>
       </tr> -->
 
-      <td>Status:</td>
-      <th scope="row">{{stepInfo[0].sta_text}}
-        <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-        <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-        <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
-      </th>
+                    <td>Status:</td>
+                    <th scope="row">{{stepInfo[0].sta_text}}
+                      <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+                      <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+                      <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+                    </th>
 
-    </tr>
+                  </tr>
 
-    <tr v-if="stepInfo[0].tsk_progress !== null">
-      <td>Progress:</td>
-      <th scope="row">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
-        </div>
-      </th>
-    </tr>
-
-
+                  <tr v-if="stepInfo[0].tsk_progress !== null">
+                    <td>Progress:</td>
+                    <th scope="row">
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" :style=" 'width:' + stepInfo[0].tsk_progress + '%' ">{{stepInfo[0].tsk_progress}}%</div>
+                      </div>
+                    </th>
+                  </tr>
 
 
 
 
 
-    <tr v-if="stepInfo[0].pri_text !== null">
-      <td>Priority:</td>
-      <th scope="row"><span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span></th>
-    </tr>
+
+
+                  <tr v-if="stepInfo[0].pri_text !== null">
+                    <td>Priority:</td>
+                    <th scope="row">
+                      <span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span>
+                    </th>
+                  </tr>
 
 
 
 
-    <tr v-if="stepInfo[0].tags.length > 0">
-      <td>Tags:</td>
-      <th scope="row">
-        <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
-      </th>
-    </tr>
+                  <tr v-if="stepInfo[0].tags.length > 0">
+                    <td>Tags:</td>
+                    <th scope="row">
+                      <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
+                    </th>
+                  </tr>
 
 
-    <tr v-if="stepInfo[0].tsk_deadline !== ''">
-      <td>Deadline:</td>
-      <th scope="row">
-      {{stepInfo[0].tsk_deadline}}
-      </th>
-    </tr>
+                  <tr v-if="stepInfo[0].tsk_deadline !== ''">
+                    <td>Deadline:</td>
+                    <th scope="row">
+                      {{stepInfo[0].tsk_deadline}}
+                    </th>
+                  </tr>
 
-    <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
-      <td>Estimated completion date:</td>
-      <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
-    </tr>
+                  <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
+                    <td>Estimated completion date:</td>
+                    <th scope="row">{{stepInfo[0].tsk_estimated_completion_date}}</th>
+                  </tr>
 
 
-    <tr>
-      <td>Created by:</td>
-      <th scope="row">
-        <ul class="list-unstyled">
-          <li class="media mt-2">
+                  <tr>
+                    <td>Created by:</td>
+                    <th scope="row">
+                      <ul class="list-unstyled">
+                        <li class="media mt-2">
 
-            <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" />
+                          <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                          />
+                          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"
+                          />
 
-            <div class="media-body">
-              <div class="media-body">
-                    <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
-                      {{stepInfo[0].usr_email}}
-                </div>
-                </div>
+                          <div class="media-body">
+                            <div class="media-body">
+                              <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                              {{stepInfo[0].usr_email}}
+                            </div>
+                          </div>
 
-          </li>
-        </ul>
-      </th>
-    </tr>
+                        </li>
+                      </ul>
+                    </th>
+                  </tr>
 
-    <tr>
-      <td>Time created:</td>
-      <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
-    </tr>
+                  <tr>
+                    <td>Time created:</td>
+                    <th scope="row">{{stepInfo[0].tsk_timecreated}}</th>
+                  </tr>
 
-    <tr v-if="stepInfo[0].tsk_timespent !== null">
-      <td>Time spent:</td>
-      <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
-    </tr>
+                  <tr v-if="stepInfo[0].tsk_timespent !== null">
+                    <td>Time spent:</td>
+                    <th scope="row">{{stepInfo[0].tsk_timespent}}</th>
+                  </tr>
 
-    <tr>
-      <td>Working:</td>
-      <th scope="row">
-        <ul class="list-unstyled">
-          <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+                  <tr>
+                    <td>Working:</td>
+                    <th scope="row">
+                      <ul class="list-unstyled">
+                        <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
 
-            <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-            <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+                          <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                          />
+                          <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
 
-            <div class="media-body">
-              <div class="media-body">
-                    <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                      {{user.usr_email}}
-                </div>
-                </div>
-          </li>
-        </ul>
-      </th>
-    </tr>
+                          <div class="media-body">
+                            <div class="media-body">
+                              <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
+                              {{user.usr_email}}
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </th>
+                  </tr>
 
-  </tbody>
-</table>
+                </tbody>
+              </table>
 
 
             </div>
@@ -279,19 +284,8 @@
         </div>
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- modal za editovanje podataka o stepu -->
-<div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
+      <!-- modal za editovanje podataka o stepu -->
+      <div class="modal fade" id="stepEdit" tabindex="-1" role="dialog" v-if="stepInfo.length > 0">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header bg-secondary step-header">
@@ -302,71 +296,74 @@
             </div>
             <div class="modal-body">
 
-            <div v-if="stepInfo[0].yours === null">
-             <label for="stepName">Task name:</label>
-             <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
-           </div>
+              <div v-if="stepInfo[0].yours === null">
+                <label for="stepName">Task name:</label>
+                <input type="text" class="form-control" id="stepName" :placeholder="stepInfo[0].tsk_title" v-model="edit.name">
+              </div>
 
-           <div v-if="stepInfo[0].yours === null">
-            <label for="desc">Description:</label>
-            <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
-            </div>
+              <div v-if="stepInfo[0].yours === null">
+                <label for="desc">Description:</label>
+                <textarea class="form-control" id="desc" rows="3" :placeholder="stepInfo[0].description" v-model="edit.description"></textarea>
+              </div>
 
-             <label for="status">Change status:</label>
-             <select class="form-control" id="status" v-model="edit.status">
-              <option disabled selected>Select status of your task</option>
-              <option value="3">Completed</option>
-              <option value="4">Failed</option>
-              <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
-              <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
-            </select>
-
-
+              <label for="status">Change status:</label>
+              <select class="form-control" id="status" v-model="edit.status">
+                <option disabled selected>Select status of your task</option>
+                <option value="3">Completed</option>
+                <option value="4">Failed</option>
+                <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
+                <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
+              </select>
 
 
 
-<div v-if="stepInfo[0].yours === null">
-             <label for="priority">Change priority:</label>
-             <select class="form-control" id="priority" v-model="edit.priority">
-              <option disabled selected>Select priority of your task</option>
-              <option value="1">High</option>
-              <option value="2">Medium</option>
-              <option value="3">Low</option>
-            </select>
-
-          </div>
 
 
-           <label class="tag" for="tags">Tags</label>
-           <multiselect @search-change="loadTags"  :preserveSearch="true" :clearOnSelect="false" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag" id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+              <div v-if="stepInfo[0].yours === null">
+                <label for="priority">Change priority:</label>
+                <select class="form-control" id="priority" v-model="edit.priority">
+                  <option disabled selected>Select priority of your task</option>
+                  <option value="1">High</option>
+                  <option value="2">Medium</option>
+                  <option value="3">Low</option>
+                </select>
 
-<div v-if="stepInfo[0].yours === null">
-           <label for="deadline">Deadline:</label>
-           <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-             :placeholder="stepInfo[0].tsk_deadline">
-           </flat-pickr>
-         </div>
-
-           <div v-if="stepInfo[0].yours === 1">
-           <label for="estDate">Estimated completion date:</label>
-           <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
-            :placeholder="stepInfo[0].tsk_estimated_completion_date">
-           </flat-pickr>
-           </div>
-
-            <div v-if="stepInfo[0].yours === 1">
-             <label for="timeSpent">Time spent [in minutes]:</label>
-             <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
-            </div>
+              </div>
 
 
-<div v-if="stepInfo[0].yours === null">
-           <label for="progress">Progress: </label>
-           <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
-         </div>
+              <label class="tag" for="tags">Tags</label>
+              <multiselect @search-change="loadTags" :preserveSearch="true" :clearOnSelect="false" :closeOnSelect="false" ref="tagSearchString"
+                v-model="valueTag" id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text"
+                track-by="id" :options="optionsTag" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
 
-          <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
+              <div v-if="stepInfo[0].yours === null">
+                <label for="deadline">Deadline:</label>
+                <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
+                  :placeholder="stepInfo[0].tsk_deadline">
+                </flat-pickr>
+              </div>
+
+              <div v-if="stepInfo[0].yours === 1">
+                <label for="estDate">Estimated completion date:</label>
+                <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
+                  :placeholder="stepInfo[0].tsk_estimated_completion_date">
+                </flat-pickr>
+              </div>
+
+              <div v-if="stepInfo[0].yours === 1">
+                <label for="timeSpent">Time spent [in minutes]:</label>
+                <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+              </div>
+
+
+              <div v-if="stepInfo[0].yours === null">
+                <label for="progress">Progress: </label>
+                <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
+              </div>
+
+              <label class="tag" for="working">Working:</label>
+              <multiselect v-model="valueUser" id="working" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name"
+                track-by="id" :options="optionsUser" :multiple="true" :taggable="true" @tag="addUser"></multiselect>
 
 
 
@@ -385,14 +382,14 @@
 
 
     </template>
-</div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import {store} from "@/store/index.js";
-import {mapGetters} from "vuex";
-import Multiselect from 'vue-multiselect'
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
+import Multiselect from "vue-multiselect";
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -461,184 +458,199 @@ export default {
   },
 
   methods: {
+    loadTags() {
+      // console.log(this.$refs.tagSearchString.search)
 
-loadTags(){
-  // console.log(this.$refs.tagSearchString.search)
-
-  axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/tags", {
-  params: {
-        proid: this.selectedProjectID,
-        type: 'task',
-        searchstring: this.$refs.tagSearchString.search,
-        sid: window.localStorage.getItem("sid")
-      }
-
-      }).then(response =>{
-        // console.log(response.data.data);
-        // this.optionsTag = response.data.data;
-        this.optionsTag = response.data.data;
-      })
-},
-
-    saveDescription(){
-      console.log('saved desc edit');
+      axios
+        .get(
+          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/tags",
+          {
+            params: {
+              proid: this.selectedProjectID,
+              type: "task",
+              searchstring: this.$refs.tagSearchString.search,
+              sid: window.localStorage.getItem("sid")
+            }
+          }
+        )
+        .then(response => {
+          // console.log(response.data.data);
+          // this.optionsTag = response.data.data;
+          this.optionsTag = response.data.data;
+        });
     },
 
-    saveChanges(){
-      axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+    saveDescription() {
+      console.log("saved desc edit");
+    },
 
+    saveChanges() {
+      axios
+        .put(
+          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+          {
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
             sid: window.localStorage.getItem("sid"),
 
             title: this.edit.name,
-            description:  this.edit.description,
-            deadline:  this.edit.deadline,
+            description: this.edit.description,
+            deadline: this.edit.deadline,
             priority: this.edit.priority,
             status: this.edit.status,
             progress: this.edit.progress,
             timespent: this.edit.timespent,
-            estimateddate:  this.edit.estTime,
+            estimateddate: this.edit.estTime,
             usersarray: this.userStringArray,
             tagarray: this.tagStringArray
-
-      }).then( response =>{
-        $('#stepInformation, #stepEdit').modal('hide');
-          this.getTaskInfo(this.selectedItemID);
-      })
-    },
-
-    loadAllProjectUsers(projectID){
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users", {
-          params: {
-            proid: projectID,
-            sid: window.localStorage.getItem("sid")
           }
-        })
+        )
         .then(response => {
-            this.optionsUser = response.data.data;
-            // console.log(response.data.data)
-          })
+          $("#stepInformation, #stepEdit").modal("hide");
+          this.getTaskInfo(this.selectedItemID);
+        });
     },
 
-    addTag (newTag) {
-          const tag = {
-            text: newTag
+    loadAllProjectUsers(projectID) {
+      axios
+        .get(
+          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users",
+          {
+            params: {
+              proid: projectID,
+              sid: window.localStorage.getItem("sid")
+            }
           }
-          this.valueTag.push(tag)
-        },
+        )
+        .then(response => {
+          this.optionsUser = response.data.data;
+          // console.log(response.data.data)
+        });
+    },
 
-        addUser (newUser) {
-              const user = {
-                id: newUser
-              }
-              this.valueUser.push(user)
-            },
+    addTag(newTag) {
+      const tag = {
+        text: newTag
+      };
+      this.valueTag.push(tag);
+    },
 
+    addUser(newUser) {
+      const user = {
+        id: newUser
+      };
+      this.valueUser.push(user);
+    },
 
     getStepInfo(stepID) {
       // console.log('taskID' + taskID + ', stepID' + stepID);
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
-          params: {
-            tasid: this.selectedItemID,
-            stepid: stepID,
-            sid: window.localStorage.getItem("sid")
+      axios
+        .get(
+          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+          {
+            params: {
+              tasid: this.selectedItemID,
+              stepid: stepID,
+              sid: window.localStorage.getItem("sid")
+            }
           }
-        })
+        )
         .then(response => {
           if (response.data.data !== undefined) {
             // console.log(response.data.data);
             this.stepInfo = response.data.data;
-
 
             for (var i = 0; i < response.data.data.length; i++) {
               // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
 
               if (this.stepInfo[i].tsk_timespent !== null) {
                 if (this.stepInfo[i].tsk_timespent <= 59) {
-                  this.stepInfo[i].tsk_timespent = this.stepInfo[i].tsk_timespent + ' minutes'
+                  this.stepInfo[i].tsk_timespent =
+                    this.stepInfo[i].tsk_timespent + " minutes";
                 } else {
                   let minutes = this.stepInfo[i].tsk_timespent % 60;
                   let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
 
-                  this.stepInfo[i].tsk_timespent = hours + ' hour(s), ' + minutes + ' minute(s)'
+                  this.stepInfo[i].tsk_timespent =
+                    hours + " hour(s), " + minutes + " minute(s)";
                 }
               }
 
               if (this.stepInfo[i].sta_text !== null) {
-
-                if (this.stepInfo[i].sta_text === 'Assigned' || this.stepInfo[i].sta_text === 'In Progress') {
-                  this.stepInfo[i].background = 'bg-info'
-                } else if (this.stepInfo[i].sta_text === 'Failed' || this.stepInfo[i].sta_text === 'Rejected' || this.stepInfo[i].sta_text === 'Cancelled') {
-                  this.stepInfo[i].background = 'bg-danger'
-                } else if (this.stepInfo[i].sta_text === 'Completed') {
-                  this.stepInfo[i].background = 'bg-success'
+                if (
+                  this.stepInfo[i].sta_text === "Assigned" ||
+                  this.stepInfo[i].sta_text === "In Progress"
+                ) {
+                  this.stepInfo[i].background = "bg-info";
+                } else if (
+                  this.stepInfo[i].sta_text === "Failed" ||
+                  this.stepInfo[i].sta_text === "Rejected" ||
+                  this.stepInfo[i].sta_text === "Cancelled"
+                ) {
+                  this.stepInfo[i].background = "bg-danger";
+                } else if (this.stepInfo[i].sta_text === "Completed") {
+                  this.stepInfo[i].background = "bg-success";
+                } else {
+                  this.stepInfo[i].background = "bg-secondary";
                 }
-                else{
-                  this.stepInfo[i].background = 'bg-secondary'
-                }
-              }else{
-                  this.stepInfo[i].background = 'bg-secondary'
+              } else {
+                this.stepInfo[i].background = "bg-secondary";
               }
 
-
-
-
-
               if (this.stepInfo[i].tsk_deadline === null) {
-                this.stepInfo[i].tsk_deadline = ''
+                this.stepInfo[i].tsk_deadline = "";
               } else {
-                this.stepInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_deadline = moment(
+                  response.data.data[i].tsk_deadline
+                ).format("MMMM Do YYYY, h:mm:ss a");
               }
 
               if (this.stepInfo[i].tsk_estimated_completion_date === null) {
-                this.stepInfo[i].tsk_estimated_completion_date = ''
+                this.stepInfo[i].tsk_estimated_completion_date = "";
               } else {
-                this.stepInfo[i].tsk_estimated_completion_date = (moment(response.data.data[i].tsk_estimated_completion_date).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_estimated_completion_date = moment(
+                  response.data.data[i].tsk_estimated_completion_date
+                ).format("MMMM Do YYYY, h:mm:ss a");
               }
 
               if (this.stepInfo[i].tsk_timecreated === null) {
-                this.stepInfo[i].tsk_timecreated = ''
+                this.stepInfo[i].tsk_timecreated = "";
               } else {
-                this.stepInfo[i].tsk_timecreated = (moment(response.data.data[i].tsk_timecreated).format('MMMM Do YYYY, h:mm:ss a'));
+                this.stepInfo[i].tsk_timecreated = moment(
+                  response.data.data[i].tsk_timecreated
+                ).format("MMMM Do YYYY, h:mm:ss a");
               }
 
-              if (this.stepInfo[i].pri_text === 'High') {
-                this.stepInfo[i].pri_badge = 'badge-danger'
-              } else if (this.stepInfo[i].pri_text === 'Medium') {
-                this.stepInfo[i].pri_badge = 'badge-warning'
-              } else if (this.stepInfo[i].pri_text === 'Low') {
-                this.stepInfo[i].pri_badge = 'badge-info'
+              if (this.stepInfo[i].pri_text === "High") {
+                this.stepInfo[i].pri_badge = "badge-danger";
+              } else if (this.stepInfo[i].pri_text === "Medium") {
+                this.stepInfo[i].pri_badge = "badge-warning";
+              } else if (this.stepInfo[i].pri_text === "Low") {
+                this.stepInfo[i].pri_badge = "badge-info";
               }
             }
-
-
           }
-
 
           // this.stepInfo.tags = this.tas
           this.stepModal = true;
-        }).then(response => {
-
-
+        })
+        .then(response => {
           this.valueTag = [];
-          if(this.stepInfo[0] !== undefined){
+          if (this.stepInfo[0] !== undefined) {
             for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
               // console.log(this.stepInfo[0].tags[i].tag_text)
               // console.log(this.options.name);
               const tag = {
                 id: this.stepInfo[0].tags[i].id,
                 text: this.stepInfo[0].tags[i].text
-              }
+              };
               this.valueTag.push(tag);
             }
           }
-
-        }).then(response => {
-
-
+        })
+        .then(response => {
           this.valueUser = [];
-          if(this.stepInfo[0] !== undefined){
+          if (this.stepInfo[0] !== undefined) {
             for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
               // console.log(this.stepInfo[0].tags[i].tag_text)
               // console.log(this.options.name);
@@ -646,56 +658,52 @@ loadTags(){
                 id: this.stepInfo[0].usrworking[i].usr_id,
                 name: this.stepInfo[0].usrworking[i].usr_name,
                 email: this.stepInfo[0].usrworking[i].usr_email
-              }
+              };
               // console.log(this.stepInfo[0].usrworking[i]);
               this.valueUser.push(user);
             }
           }
-
-        })
-
+        });
 
       // .then(response => {
       //   window.location.href = "#step";
       // });
-
-
-
     },
 
     getTaskInfo(taskID) {
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
-          params: {
-            tasid: taskID,
-            sid: window.localStorage.getItem("sid")
+      axios
+        .get(
+          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps",
+          {
+            params: {
+              tasid: taskID,
+              sid: window.localStorage.getItem("sid")
+            }
           }
-        })
+        )
         .then(response => {
           if (response.data.data !== undefined) {
-
-
             this.taskInfo = response.data.data;
 
             for (var i = 0; i < response.data.data.length; i++) {
               // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
 
-
               if (this.taskInfo[i].tsk_deadline === null) {
-                this.taskInfo[i].tsk_deadline = ''
+                this.taskInfo[i].tsk_deadline = "";
               } else {
-                this.taskInfo[i].tsk_deadline = (moment(response.data.data[i].tsk_deadline).format('MMMM Do YYYY, h:mm:ss a'));
+                this.taskInfo[i].tsk_deadline = moment(
+                  response.data.data[i].tsk_deadline
+                ).format("MMMM Do YYYY, h:mm:ss a");
               }
 
-              if (this.taskInfo[i].pri_text === 'High') {
-                this.taskInfo[i].pri_badge = 'badge-danger'
-              } else if (this.taskInfo[i].pri_text === 'Medium') {
-                this.taskInfo[i].pri_badge = 'badge-warning'
-              } else if (this.taskInfo[i].pri_text === 'Low') {
-                this.taskInfo[i].pri_badge = 'badge-info'
+              if (this.taskInfo[i].pri_text === "High") {
+                this.taskInfo[i].pri_badge = "badge-danger";
+              } else if (this.taskInfo[i].pri_text === "Medium") {
+                this.taskInfo[i].pri_badge = "badge-warning";
+              } else if (this.taskInfo[i].pri_text === "Low") {
+                this.taskInfo[i].pri_badge = "badge-info";
               }
             }
-
-
 
             // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
           }
@@ -704,8 +712,7 @@ loadTags(){
   },
 
   computed: {
-
-    tagStringArray(){
+    tagStringArray() {
       let niz = [];
       for (var i = 0; i < this.valueTag.length; i++) {
         niz.push(this.valueTag[i].text);
@@ -713,7 +720,7 @@ loadTags(){
       return JSON.stringify(niz);
     },
 
-    userStringArray(){
+    userStringArray() {
       let niz = [];
       for (var i = 0; i < this.valueUser.length; i++) {
         niz.push(this.valueUser[i].id);
@@ -749,32 +756,31 @@ loadTags(){
         this.stepShow = true;
         return;
       }
-
     },
 
     deadlineDate() {
-      return moment(this.taskInfo.deadline, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
+      return moment(this.taskInfo.deadline, "YYYY-MM-DD HH:mm:ss.S").format(
+        "DD/MM/YYYY (HH:mm)"
+      ); //moment(this.taskInfo.deadline, "YYYY");
     },
 
     createdDate() {
-      return moment(this.taskInfo.createdDate, 'YYYY-MM-DD HH:mm:ss.S').format('DD/MM/YYYY (HH:mm)'); //moment(this.taskInfo.deadline, "YYYY");
+      return moment(this.taskInfo.createdDate, "YYYY-MM-DD HH:mm:ss.S").format(
+        "DD/MM/YYYY (HH:mm)"
+      ); //moment(this.taskInfo.deadline, "YYYY");
     }
-
   },
 
   mounted() {
     if (this.selectedItemID !== 0) {
       this.getTaskInfo(this.selectedItemID);
-
     }
 
     this.loadAllProjectUsers(this.selectedProjectID);
-
-
   },
 
   watch: {
-    'selectedItemID': function(val, oldVal) {
+    selectedItemID: function(val, oldVal) {
       if (val !== 0) {
         this.getTaskInfo(val);
         this.getStepInfo(val);
@@ -785,21 +791,19 @@ loadTags(){
       // this.loadEmployees(val);
     },
 
-
-    'selectedProjectID': function(val, oldVal) {
-      console.log('prijekat' + val);
+    selectedProjectID: function(val, oldVal) {
+      console.log("prijekat" + val);
       // if (val !== 0) {
       //   this.loadAllProjectUsers(val);
       // }
     },
 
-    'selectedTaskID': function(val, oldVal) {
+    selectedTaskID: function(val, oldVal) {
       // console.log('a');
-        if (val !== 0) {
-          console.log('novi je task broj' + val);
-        }
+      if (val !== 0) {
+        console.log("novi je task broj" + val);
+      }
     }
-
   }
 };
 </script>
