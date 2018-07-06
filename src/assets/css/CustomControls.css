@@ -30,6 +30,22 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+/* VUE-B MODALS */
+
+.modal-header {
+  border-bottom: 1px solid #565b61;
+  border-radius: 0;
+}
+
+.modal-footer {
+  border-top: 1px solid #565b61;
+  border-radius: 0;
+}
+
+.modal-content {
+  border: 0;
+}
+
 .custom-checkbox {
   transform: scale(0.9);
 }

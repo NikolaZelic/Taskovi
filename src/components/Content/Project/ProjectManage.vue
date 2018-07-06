@@ -15,11 +15,34 @@
       <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
         class="form-control mb-3" spellcheck="false"></textarea>
 
-      <label for="users"><span class='badge badge-warning'>{{project.users_count}}</span> Users</label>
-      <button id='users' class='btn btn-primary' @click='openUserList'>View and change users</button>
-      <div class='usersModal'>
-<input type="text">
+      <label for="users">
+        <span class='badge badge-warning'>{{project.users_count}}</span> Users
+      </label>
 
+      <b-btn v-b-modal.modal1 variant="primary">View and change users</b-btn>
+
+      <b-modal id="modal1" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
+        body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
+
+        <b-input-group>
+          <b-form-input v-model="email" ref="focusThis" placeholder="Type email" />
+          <b-input-group-append>
+            <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
+          </b-input-group-append>
+        </b-input-group>
+
+        <b-table :dark=true :items='project.users' :field='usersField' responsive>
+          <template slot="admin" slot-scope="row">
+            <!-- In some circumstances you may need to use @click.native.stop instead -->
+            <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
+            <b-form-checkbox @click.native.stop @change="row.toggleDetails" v-model="row.detailsShowing">
+
+            </b-form-checkbox>
+          </template>
+        </b-table>
+      </b-modal>
+
+      <div class='usersModal'>
 
       </div>
       <!-- <multiselect id='users' v-model='project.users' :options="options" :preserveSearch="true" :multiple="true" :taggable="true"
@@ -70,7 +93,9 @@ export default {
         altFormat: "j M, Y H:i",
         altInput: true
       },
-      options: []
+      usersField: ["email", "name", "surname", "admin"],
+      email: undefined
+      // options: []
     };
   },
   watch: {
@@ -78,30 +103,30 @@ export default {
       if (val === undefined) {
         this.project.deadline = Date.now();
       } else {
-        this.projectInfo();
-        this.getProjectUsers();
+        this.getProjectInfo();
       }
     }
   },
   methods: {
-    openUserList(){
-
+    submitEmail() {
+      this.project.users.push({
+        email: this.email
+      });
     },
-    projectInfo() {
+    setupInfo() {
       for (var i = 0; i < this.currentTabData.length; i++) {
         var ctd = this.currentTabData[i];
         if (this.itemEditButton === ctd.id) {
           // PASS BY VALUE, NOT BY REF - DON'T CHANGE
           this.project.title = ctd.title;
-          this.project.description = ctd.pro_description;
           this.project.deadline = ctd.pro_deadline;
           this.project.users_count = ctd.users_count;
         }
       }
     },
-    getProjectUsers() {
+    getProjectInfo() {
       axios
-        .get("projects/:proid/users", {
+        .get("projects/:proid", {
           params: {
             proid: store.getters.selectedItemID,
             sid: window.localStorage.sid
@@ -109,17 +134,15 @@ export default {
         })
         .then(result => {
           if ((result.status = "OK")) {
-            let users = result.data.data;
-            if (users.length !== 0) {
-              this.project.users = users;
-              this.options = this.project.users;
+            let moreInfo = result.data.data;
+            if (moreInfo.length !== 0) {
+              this.project = moreInfo;
+              // this.options = this.project.users;
             }
+            this.setupInfo();
           }
         });
     },
-    //     setProjectUsers(){
-    // axios.put
-    //     },
     projectCreate() {
       axios
         .post("projects", {
@@ -204,6 +227,9 @@ export default {
       this.options.push(tag);
       this.project.users.push(tag);
       // this.usersString.push(tag);
+    },
+    focusMyElement(e) {
+      this.$refs.focusThis.focus();
     }
   },
   computed: {
@@ -214,6 +240,13 @@ export default {
       tabIndex: "currentTabIndex",
       itemEditButton: state => state.itemAction.edit
     }),
+    isValidEmail() {
+      let email = this.email;
+      if (email === undefined || email === "") return true;
+      let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let check = email.match(regex);
+      return !check;
+    },
     usersString: {
       get() {
         let users = this.project.users;
@@ -221,9 +254,13 @@ export default {
           let tempUsers = [];
           console.log(users.length + " KORISNIKA");
           for (let i = 0; i < users.length; i++) {
-            tempUsers.push(users[i].email);
+            // console.log("EMAIL KORISNIKA: "+ users[i].email);
+            tempUsers.push({
+              email: users[i].email,
+              admin: "false"
+            });
           }
-          return tempUsers.join();
+          return JSON.stringify(tempUsers);
         }
         return undefined;
       },
@@ -236,8 +273,7 @@ export default {
   },
   mounted() {
     if (this.itemEditButton !== undefined) {
-      this.projectInfo();
-      this.getProjectUsers();
+      this.getProjectInfo();
     }
   }
 };
@@ -269,6 +305,10 @@ export default {
 
 #users {
   width: 100% !important;
+}
+
+.input-group {
+  margin-bottom: 20px;
 }
 
 .btn-success {

@@ -28,19 +28,6 @@ export const api = {
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
-  // Poziva se u TaskAdd.vue
-  // createParenttask(proid, title, description, deadline, userid, teamid, tagarray, priorety) {
-  //   return axios.post('project/' + proid + "/parenttasks?sid=" + window.localStorage.sid, {
-  //     title: title,
-  //     description: description,
-  //     deadline: deadline,
-  //     userid: userid,
-  //     teamid: teamid,
-  //     tagarray: JSON.stringify(tagarray),
-  //     priority: priorety
-  //   });
-  // },
-  // Poziva se u TaskAdd.vue
   createTask(title, description, deadline, tagarray, priorety,  pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
       type: 'task',
@@ -74,15 +61,6 @@ export const api = {
       }
     });
   },
-  // Poziva se u TeamAdd.vue. Ne zapisuje nista u store.
-  // createTeam(comid, users, teamname) {
-  //   return axios.post('companies/' + comid + "/teams?sid=" + window.localStorage.sid, {
-  //     teamname: teamname,
-  //     users: JSON.stringify(users)
-  //   });
-  // },
-
-  // pozvano iz actions/refreshSuggestions. Sluzi za TeamAdd.
   refreshSuggestions(searchText, pro_id) {
     return axios.get('users', {
       params: {
@@ -92,7 +70,6 @@ export const api = {
       }
     });
   },
-  // by Zelic
   selectTask(id) {
     return axios.get('tasks/' + id);
   },
