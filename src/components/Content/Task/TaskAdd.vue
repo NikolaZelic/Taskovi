@@ -202,7 +202,7 @@ export default {
 
   methods: {
     usersOut(){
-      
+
     },
     multiselectOut(){
       // Dodavanje novog taga
