@@ -43,7 +43,8 @@ export const store = new Vuex.Store({
     itemAction: {
       edit: undefined,
       add: undefined,
-      addTask: undefined
+      addTask: undefined,
+      addStep: false
     },
   },
 });

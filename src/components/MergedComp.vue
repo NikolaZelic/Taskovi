@@ -9,7 +9,7 @@
         <task-edit v-if="checkShow(1,true) || checkShow(2,true)" />
 
         <!-- Adding new -->
-        <step-add v-if="checkShow(1,false,false,true) || checkShow(2,false,false,true)" />
+        <step-add v-if="itemAddStepButton"/>
         <task-add v-if="checkShow(1,false,true) || checkShow(2,false,true)" />
 
         <!-- Viewing existing -->
@@ -96,6 +96,7 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
+      itemAddStepButton: state => state.itemAction.addStep,
       isFocus: state => state.mainFocused,
       darkTheme: state => state.darkTheme
     }),

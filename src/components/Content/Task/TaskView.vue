@@ -67,7 +67,7 @@
         </div>
 
         <div class="card-footer">
-          <button type="button" class="btn btn-primary">Add new step...</button>
+          <button type="button" class="btn btn-primary"  @click="itemAddStep">Add new step...</button>
         </div>
 
       </div>
@@ -364,6 +364,11 @@ export default {
   },
 
   methods: {
+    itemAddStep(){
+        store.commit("itemAddStep");
+        // console.log('itemAddStep metoda')
+    },
+
 
 loadTags(){
   // console.log(this.$refs.tagSearchString.search)
