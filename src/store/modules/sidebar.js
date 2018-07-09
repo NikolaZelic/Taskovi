@@ -45,9 +45,12 @@ const actions = {
   itemAddTaskClick(commit, params) {
     store.commit('itemAddTaskClick', {
       id: params.id,
-    });
+    })
   },
 
+  itemActionReset() {
+    store.commit('itemActionReset');
+  }
 };
 const mutations = {
   setSidebarData: (state, params) => {
@@ -95,6 +98,7 @@ const mutations = {
     store.state.itemAction.addStep = false;
     store.state.mainFocused = false;
   },
+
   darkTheme: (state, params) => {
     store.state.darkTheme = params;
   },

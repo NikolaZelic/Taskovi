@@ -103,7 +103,7 @@ export const api = {
     });
   },
   //#endregion
-  //#region Zex 
+  //#region Zex
   // AUTH
   sessionActive() {
     let sid = window.localStorage.sid;
@@ -153,5 +153,15 @@ export const api = {
     });
   },
   //#endregion
+
+
+  getTaskInfo(taskID) {
+    return axios.get("tasks/:tasid/steps",{
+      params: {
+        tasid: taskID,
+        sid: window.localStorage.sid
+      }
+    })
+  }
 
 };

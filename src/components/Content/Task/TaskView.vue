@@ -216,12 +216,12 @@
 
         <div class="card-body">
 
-          <div v-if="stepInfo[0].yours === null">
+          <div>
             <label for="name">Task name:</label>
             <input type="text" class="form-control" id="name" v-model="edit.name">
           </div>
 
-          <div v-if="stepInfo[0].yours === null">
+          <div>
             <label for="desc">Description:</label>
             <textarea class="form-control" id="desc" rows="3" v-model="edit.description"></textarea>
           </div>
@@ -298,6 +298,8 @@ import axios from "axios";
 import { store } from "@/store/index.js";
 import { mapGetters } from "vuex";
 import Multiselect from "vue-multiselect";
+import { api } from "@/api/index";
+import { mapState } from "vuex";
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -605,17 +607,7 @@ export default {
     },
 
     getTaskInfo(taskID) {
-      axios
-        .get(
-          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps",
-          {
-            params: {
-              tasid: taskID,
-              sid: window.localStorage.getItem("sid")
-            }
-          }
-        )
-        .then(response => {
+      api.getTaskInfo(taskID).then(response => {
           if (response.data.data !== undefined) {
             this.taskInfo = response.data.data;
 
@@ -625,9 +617,7 @@ export default {
               if (this.taskInfo[i].tsk_deadline === null) {
                 this.taskInfo[i].tsk_deadline = "";
               } else {
-                this.taskInfo[i].tsk_deadline = moment(
-                  response.data.data[i].tsk_deadline
-                ).format("MMMM Do YYYY, h:mm a");
+                this.taskInfo[i].tsk_deadline = moment(response.data.data[i].tsk_deadline).format("MMMM Do YYYY, h:mm a");
               }
 
               if (this.taskInfo[i].pri_text === "High") {
@@ -702,7 +692,11 @@ export default {
       return moment(this.taskInfo.createdDate, "YYYY-MM-DD HH:mm:ss.S").format(
         "DD/MM/YYYY (HH:mm)"
       ); //moment(this.taskInfo.deadline, "YYYY");
-    }
+    },
+
+    ...mapState({
+        addStep: state => state.itemAction.addStep
+    })
   },
 
   mounted() {
@@ -714,6 +708,16 @@ export default {
   },
 
   watch: {
+    addStep:function(){
+      // console.log('addstep iz watch-a');
+
+      if(this.selectedItemID !== undefined){
+          this.getTaskInfo(this.selectedItemID);
+      }
+      // this.getTaskInfo(store.state.selectedItemID);
+    },
+
+
     selectedItemID: function(val, oldVal) {
       if (val !== 0) {
         this.getTaskInfo(val);

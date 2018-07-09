@@ -70,7 +70,7 @@
             <!-- PRIORETY -->
             <div v-show='task' class="form-group">
               <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
-                <option disabled value=null>Select Priorety</option>
+                <option disabled value=null>Select Priority</option>
                 <option value='1'>High</option>
                 <option value='2'>Low</option>
                 <option value='3'>Medium</option>
@@ -164,6 +164,12 @@ export default {
       suggestedProjects: state => state.modulework.suggestedProjects,
       proId: state => state.sidebarItemSelection[0]
     }),
+
+    selectedProjectID() {
+      var a = store.state.sidebarItemSelection[0];
+      if (a === undefined) return 0;
+      else return a;
+    },
   },
 
   created: function() {
@@ -391,7 +397,7 @@ export default {
           this.deadline,
           tagarray,
           this.selectedPriorety,
-          this.proId,
+          this.selectedProjectID
         )
         .then(result => {
           this.reportWritingToDB(result);

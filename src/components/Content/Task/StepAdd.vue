@@ -3,9 +3,7 @@ import TaskAdd from "@/components/Content/Task/TaskAdd";
 import {
   api
 } from "@/api/index";
-import {
-  store
-} from "@/store/index";
+import {store} from "@/store/index";
 
 export default {
   mixins: [TaskAdd],
@@ -36,13 +34,16 @@ export default {
 
       if( stop )
         return;
-      console.log('Ovdeee');
+      // console.log('Ovdeee');
       var tagarray = this.selectedTags.map( e => e.text );
       var userarray = this.selectedUSers.map( e => e.id );
 
       api.createStep(this.proId, this.taskid, this.title, this.description, this.deadline, this.selectedPriorety, userarray, tagarray)
       .then(result =>{
         this.reportWritingToDB(result);
+        // console.log('aaaa')
+        store.commit("itemAddStep");
+        // api.getTaskInfo(store.getters.selectedItemID);
       });
     }
   },

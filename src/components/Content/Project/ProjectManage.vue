@@ -32,13 +32,19 @@
         </b-input-group>
 
         <b-table :dark=true :items='project.users' :field='usersField' responsive>
+
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <b-form-checkbox @click.native.stop @change="row.toggleDetails" v-model="row.detailsShowing">
-
-            </b-form-checkbox>
+            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin"></b-form-checkbox>
           </template>
+
+          <template slot="delete" slot-scope="row">
+            <!-- In some circumstances you may need to use @click.native.stop instead -->
+            <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
+            <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox>
+          </template>
+
         </b-table>
       </b-modal>
 
@@ -79,6 +85,9 @@ export default {
   },
   data() {
     return {
+      // nesto: false,
+      deleteUserID: undefined,
+
       project: {
         title: undefined,
         description: undefined,
@@ -94,7 +103,8 @@ export default {
         altInput: true
       },
       usersField: ["email", "name", "surname", "admin"],
-      email: undefined
+      email: undefined,
+      isAdmin: false
       // options: []
     };
   },
@@ -108,6 +118,28 @@ export default {
     }
   },
   methods: {
+    // clickedRow(item, index, event){
+    //   // console.log('index ' + item);
+    //   // return item;
+    //   // console.log('item ' + item.id);
+    //   // console.log('index' + index);
+    //   // console.log('event' + event);
+    //   // this.deleteUserID = item.id;
+    //   // return item.id;
+    //   // console.log(this.deleteUserID);
+    //   console.log('clicked row funkcija')
+    // },
+
+    changeDeleted(rowIndex){
+      this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
+      this.usersWorking;
+    },
+
+    changeAdmin(rowIndex){
+      this.project.users[rowIndex].admin = !this.project.users[rowIndex].admin;
+      this.usersWorking;
+    },
+
     submitEmail() {
       this.project.users.push({
         email: this.email
@@ -135,6 +167,21 @@ export default {
         .then(result => {
           if ((result.status = "OK")) {
             let moreInfo = result.data.data;
+
+            for (var i = 0; i < moreInfo.users.length; i++) {
+              moreInfo.users[i].delete = false;
+
+              if(moreInfo.users[i].admin === "true"){
+                moreInfo.users[i].admin = true;
+              }else{
+                moreInfo.users[i].admin = false;
+              }
+
+              // console.log(moreInfo.users[i].name + ' ' + moreInfo.users[i].delete);
+            }
+
+
+
             if (moreInfo.length !== 0) {
               this.project = moreInfo;
               // this.options = this.project.users;
@@ -182,7 +229,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
-          usersarray: this.usersString,
+          usersarray: this.usersWorking,
           proid: store.getters.selectedItemID,
           sid: window.localStorage.sid
         })
@@ -233,6 +280,38 @@ export default {
     }
   },
   computed: {
+
+    usersWorking(){
+      let nizUsera = [];
+
+      if(this.project.users !== undefined){
+        for (var i = 0; i < this.project.users.length; i++) {
+          if(this.project.users[i].delete === false){
+            let singleUser = {
+              email: this.project.users[i].email,
+              admin: "" + this.project.users[i].admin + ""
+            };
+            nizUsera.push(singleUser);
+          }
+        }
+
+        if(this.email !== undefined){
+          let singleUser = {
+            email: this.email,
+            admin: "" + this.project.users[i].admin + ""
+          };
+          nizUsera.push(singleUser);
+        }
+      }
+
+      // console.log(nizUsera);
+      return JSON.stringify(nizUsera);
+      },
+
+
+
+
+
     ...mapGetters({
       currentTabData: "currentTabData"
     }),
@@ -254,6 +333,7 @@ export default {
           let tempUsers = [];
           console.log(users.length + " KORISNIKA");
           for (let i = 0; i < users.length; i++) {
+            // console.log('Nesto' + users[i].surname);
             // console.log("EMAIL KORISNIKA: "+ users[i].email);
             tempUsers.push({
               email: users[i].email,
