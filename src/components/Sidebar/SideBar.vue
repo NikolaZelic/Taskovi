@@ -72,9 +72,9 @@
         <div class="item-list">
 
           <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
-            :fields="fieldsToShow" 
+            :fields="fieldsToShow"
             :filter="tabs[currentTabIndex].search"
-             @filtered="onFiltered" 
+             @filtered="onFiltered"
               @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->

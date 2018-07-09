@@ -44,6 +44,7 @@ export const store = new Vuex.Store({
       edit: undefined,
       add: undefined,
       addTask: undefined,
+      addStep: false
     },
   },
 });
