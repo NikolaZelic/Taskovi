@@ -44,7 +44,9 @@ export default {
         case 'attachment':
           return 'static\\img\\file-icon.png';
         case 'message':
-          return 'static\\img\\user.png';
+          return "static/img/user.png";
+        case 'status':
+          return "static/img/status.png";
         default:
           return "";
         }
@@ -78,7 +80,7 @@ export default {
 }
 
 .cont img {
-  height: 30px;
+  height: 40px;
   border-radius: 50%;
   margin: auto 0;
 }
@@ -109,6 +111,7 @@ export default {
 
   margin-left: 20px;
   display: flex;
+  flex-direction: row-reverse;
 
 }
 .right-con .message-body-header{
