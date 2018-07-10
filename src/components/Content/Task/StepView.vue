@@ -95,7 +95,7 @@ export default {
 loadTags(){
   // console.log(this.$refs.tagSearchString.search)
 
-  axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/tags", {
+  axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags", {
   params: {
         proid: this.selectedProjectID,
         type: 'task',
@@ -115,7 +115,7 @@ loadTags(){
     },
 
     saveChanges(){
-      axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+      axios.put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
 
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
@@ -139,7 +139,7 @@ loadTags(){
     },
 
     loadAllProjectUsers(projectID){
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users", {
+      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/users", {
           params: {
             proid: projectID,
             sid: window.localStorage.getItem("sid")
@@ -168,7 +168,7 @@ loadTags(){
 
     getStepInfo(stepID) {
       // console.log('taskID' + taskID + ', stepID' + stepID);
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
           params: {
             tasid: this.selectedItemID,
             stepid: stepID,
@@ -294,7 +294,7 @@ loadTags(){
     },
 
     getTaskInfo(taskID) {
-      axios.get("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps", {
+      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps", {
           params: {
             tasid: taskID,
             sid: window.localStorage.getItem("sid")

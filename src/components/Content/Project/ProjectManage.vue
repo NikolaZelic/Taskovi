@@ -200,7 +200,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
-          usersarray: this.usersWorking,
+          usersarray: this.usersString,
           sid: window.localStorage.sid
         })
         .then(r => {

@@ -67,7 +67,7 @@ export default {
 
   methods: {
     createTask(){
-      axios.put("http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid", {
+      axios.put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
         sid: window.localStorage.sid,
         tasid: this.taskID,
         title: this.title,

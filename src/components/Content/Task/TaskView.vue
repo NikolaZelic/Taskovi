@@ -381,7 +381,7 @@ export default {
 
       axios
         .get(
-          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/tags",
+          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags",
           {
             params: {
               proid: this.selectedProjectID,
@@ -411,7 +411,7 @@ export default {
     saveChanges() {
       axios
         .put(
-          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
           {
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
@@ -447,7 +447,7 @@ export default {
     loadAllProjectUsers(projectID) {
       axios
         .get(
-          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid",
+          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid",
           {
             params: {
               proid: projectID,
@@ -483,7 +483,7 @@ export default {
       // console.log('taskID' + taskID + ', stepID' + stepID);
       axios
         .get(
-          "http://682b121.mars1.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
           {
             params: {
               tasid: this.selectedItemID,
