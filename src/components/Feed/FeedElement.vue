@@ -1,6 +1,5 @@
 <template>
-  <div class="feed">
-    <div class="feed-all" v-show="showFeeds">
+  <div class="feed" v-show="showFeeds">
       <div id="all" @scroll="handleScroll()" class="feed-back">
         <div class="messages">
           <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
@@ -24,7 +23,6 @@
           <span class="fas fa-paper-plane"></span>
         </button>
       </div>
-    </div>
   </div>
 </template>
 <script>
@@ -149,12 +147,6 @@ export default {
 };
 </script>
 <style scoped>
-.feed {
-  display: flex;
-  flex: 1;
-  border-left: 1px solid #ffc10742;
-}
-
 .trans {
   flex: 0 0 30px;
 }
@@ -164,7 +156,9 @@ export default {
   height: 100%;
 }
 
-.feed-all {
+.feed {
+  flex: 1;
+  border-left: 1px solid #ffc10742;
   border-top: 1px solid #ffb037;
   width: 100%;
   display: flex;
@@ -196,6 +190,7 @@ export default {
 }
 
 .input textarea {
+  color:black;
   padding: 5px 40px 5px 10px;
   flex: 1;
   background-color: #f8f8f8;

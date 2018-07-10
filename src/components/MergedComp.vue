@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <feed-element v-if="checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
+      <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
     </div>
   <!-- <router-link to="/user"></router-link> -->
   <router-view></router-view>
@@ -28,7 +28,7 @@
 
 <script>
 import { store } from "@/store/index.js";
-import SideBar from "@/components/SideBar/Sidebar";
+import SideBar from "@/components/Sidebar/SideBar";
 
 import TaskView from "@/components/Content/Task/TaskView";
 import StepAdd from "@/components/Content/Task/StepAdd";

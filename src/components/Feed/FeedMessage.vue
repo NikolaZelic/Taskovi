@@ -44,7 +44,7 @@ export default {
         case 'attachment':
           return 'static\\img\\file-icon.png';
         case 'message':
-          return  'static\\img\\user.png';
+          return 'static\\img\\user.png';
         default:
           return "";
         }
@@ -86,7 +86,7 @@ export default {
 .cont .name {
   font-size: 12px;
   font-style: oblique;
-  width: 93%;
+ 
   color:#ffb037;
 
 }
@@ -101,6 +101,7 @@ export default {
 
 .message-body-header {
   display: flex;
+  justify-content: space-between;
 }
 
 .right-con {
@@ -108,6 +109,11 @@ export default {
 
   margin-left: 20px;
   display: flex;
+
+}
+.right-con .message-body-header{
+  flex-direction: row-reverse;
+  
 }
 
 .left-con {
@@ -124,7 +130,7 @@ export default {
 .time-right {
   color: #8a8a8a;
   font-size: 12px;
-  width: 100%;
+
   text-align: right;
 }
 
