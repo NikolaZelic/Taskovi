@@ -447,7 +447,7 @@ export default {
     loadAllProjectUsers(projectID) {
       axios
         .get(
-          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid/users",
+          "http://682b121.mars1.mars-hosting.com/mngapi/projects/:proid",
           {
             params: {
               proid: projectID,
@@ -456,7 +456,8 @@ export default {
           }
         )
         .then(response => {
-          this.optionsUser = response.data.data;
+          // console.log(response.data.data);
+          this.optionsUser = response.data.data.users;
           // console.log(response.data.data)
         });
     },

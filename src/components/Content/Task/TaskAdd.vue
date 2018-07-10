@@ -400,14 +400,21 @@ export default {
           this.selectedProjectID
         )
         .then(result => {
+
+          store.dispatch("getTasks", {
+            index: 1,
+            pro_id: this.proId
+          });
+
           this.reportWritingToDB(result);
           this.closeModal();
+
         });
     },
     reportWritingToDB(result) {
-      console.log(result);
+      // console.log(result);
       var status = result.data.status;
-      console.log("Statis: " + status);
+      // console.log("Statis: " + status);
       if (status === "OK") {
         store.commit("modalStatus", {
           active: true,

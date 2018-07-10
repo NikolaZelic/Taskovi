@@ -92,7 +92,8 @@ export default {
         title: undefined,
         description: undefined,
         users_count: undefined,
-        deadline: undefined
+        deadline: undefined,
+        users: []
       },
       config: {
         // wrap: true, // set wrap to true only when using 'input-group'
@@ -132,18 +133,21 @@ export default {
 
     changeDeleted(rowIndex){
       this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
-      this.usersWorking;
+      // this.usersWorking;
     },
 
     changeAdmin(rowIndex){
       this.project.users[rowIndex].admin = !this.project.users[rowIndex].admin;
-      this.usersWorking;
+      // this.usersWorking;
     },
 
     submitEmail() {
-      this.project.users.push({
-        email: this.email
-      });
+      let user = {
+        email: this.email,
+        admin: false
+      }
+
+      this.project.users.push(user);
     },
     setupInfo() {
       for (var i = 0; i < this.currentTabData.length; i++) {
@@ -196,6 +200,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
+          usersarray: this.usersWorking,
           sid: window.localStorage.sid
         })
         .then(r => {
@@ -298,13 +303,12 @@ export default {
         if(this.email !== undefined){
           let singleUser = {
             email: this.email,
-            admin: "" + this.project.users[i].admin + ""
+            admin: "false"
           };
           nizUsera.push(singleUser);
         }
       }
 
-      // console.log(nizUsera);
       return JSON.stringify(nizUsera);
       },
 
