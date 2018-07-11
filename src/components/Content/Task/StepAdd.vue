@@ -49,3 +49,8 @@ export default {
   },
 };
 </script>
+<style>
+  .multiselect__input{
+    color: black;
+  }
+</style>
