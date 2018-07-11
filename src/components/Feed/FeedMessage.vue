@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
   props: {
     mess: {
@@ -29,6 +29,9 @@ export default {
   computed:{
     ...mapState({
       scrollDownMess: state => state.modulefeed.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
+    }),
+    ...mapGetters({
+      taskid: "selectedItemID"
     }),
     name(){return window.localStorage.name},
     surname(){return window.localStorage.surname}
@@ -55,9 +58,9 @@ export default {
     },
     showFile() {
       return (
-        "http://671n121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds/" +
-        this.mess.fed_id +
-        "/attachment"
+        "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/"+
+        this.taskid+ "/feeds/" +
+        this.mess.fed_id+"?sid="+window.localStorage.sid
       );
     }
   },

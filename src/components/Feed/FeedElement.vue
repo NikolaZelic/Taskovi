@@ -62,12 +62,11 @@ export default {
         fedid: 0,
         direction: "start"
       });
-      this.countNumber = 3;
       this.count = 1;
       // }
     },
     messages() {
-      this.countNumber = 3;
+      this.countNumber = 5;
       this.count = 1;
     }
   },
