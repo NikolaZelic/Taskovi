@@ -62,7 +62,6 @@ export default {
         fedid: 0,
         direction: "start"
       });
-      this.count = 1;
       // }
     },
     messages() {
