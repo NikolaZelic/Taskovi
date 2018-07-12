@@ -83,56 +83,11 @@
             </template>
 
             <template slot="edit_item" slot-scope="data">
-              <span v-if='currentTabIndex !== 0 || data.item.is_admin === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
                 title="Edit Item"></span>
             </template>
 
           </b-table>
-
-          <!-- <table>
-            <thead>
-              <tr>
-                <th class='td-flex'>{{tabs[currentTabIndex].name}}</th>
-                <template v-if=' currentTabIndex ===0  && itemAction.edit === undefined && itemAction.add === undefined'>
-                  <th>Deadline</th>
-                  <th>Users on Project</th>
-                  <th>Completed Tasks</th>
-                  <th>In Progress Tasks</th>
-                </template>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in itemsFiltered" :key='item.id' :class="{ active: activeItem === item.id}">
-                <td @click='selectAndSet(item)' class='td-flex'>{{ item.title }}</td>
-                <td v-if="item.haveUnseenFeed ==='true'">
-                  <span title="Unread" class="badge badge-primary badge-pill">1</span>
-                </td>
-                <template v-if=' currentTabIndex ===0 && itemAction.edit === undefined && itemAction.add === undefined'>
-                  <td v-if='item.deadline !== undefined' class="badge badge-danger badge-pill">{{item.deadline}}</td>
-                  <td v-if='item.users_count !== undefined' class="badge badge-success badge-pill">{{item.users_count}}</td>
-                  <td v-if='item.completed_tasks !== undefined' class="badge badge-primary badge-pill">{{item.completed_tasks}}</td>
-                  <td v-if='item.inprogress_tasks !== undefined' class="badge badge-light badge-pill">{{item.inprogress_tasks}}</td>
-
-                  <td v-if="item.isUrgent === 'urgent'">
-                    <span title="Urgent" class="badge badge-purple badge-pill">U</span>
-                  </td>
-                  <td v-if="item.deadline !== undefined && item.deadline !== null">
-                    <span title="Deadline" class="badge badge-danger">
-                      {{ deadlineSplit(item.deadline) }}
-                    </span>
-                  </td>
-                  <td v-if="item.userscount !== undefined && item.userscount !== null">
-                    <span title="Team Members Count" class="badge badge-danger">{{ item.userscount }}</span>
-                  </td>
-                </template>
-                <td>
-                  <span v-if='currentTabIndex !== 0 || item.is_admin === "true"' @click="editItemButton(item)" class="td-icons fas fa-edit"
-                    title="Edit Item"></span>
-                </td>
-              </tr>
-            </tbody>
-          </table> -->
         </div>
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span> Add New</button>
@@ -198,6 +153,7 @@ export default {
         }
       ],
       taskFields: [
+        { key: "id", label: "ID", sortable: true },
         {
           key: "title",
           label: "Tasks",
@@ -215,7 +171,6 @@ export default {
         title: undefined,
         id: undefined
       },
-      // adminFilter: true,
       activePopup: false,
       activeItem: undefined,
       selectedFilter: ["cr", "as"],
@@ -404,7 +359,7 @@ export default {
         return this.projectFields;
       }
       return this.taskFields;
-    },
+    }
   },
   created() {
     // WRITE CURRENT TAB TO STORE
@@ -746,5 +701,11 @@ label {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+@media screen and (max-width: 992px) {
+  .sidebar-lower {
+    height: 50vh;
+  }
 }
 </style>

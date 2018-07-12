@@ -42,8 +42,8 @@ export default {
   bottom: 0;
   display: inline-block;
   background: #1d1d1dff;
-  width: 300px;
-  height: 140px;
+  min-width: 300px;
+  min-height: 140px;
   user-select: none;
   padding: 20px;
 }

@@ -18,29 +18,11 @@
 
           <div class="op-edit">
             <table>
-              <tr>
-                <td>Name:</td>
-                <td>
-                  <input type="text" v-model.trim="name" :disabled="editMode" />
-                </td>
-              </tr>
-              <tr>
-                <td>Surname:</td>
-                <td>
-                  <input type="text" v-model.trim="surname" :disabled="editMode" />
-                </td>
-              </tr>
-              <tr>
-                <td>Email:</td>
-                <td>
-                  <input type="text" v-model.trim="email" :disabled="editMode" />
-                </td>
-              </tr>
-              <tr>
-                <td>Password:</td>
-                <td>
-                  <input type="password" v-model="password" :disabled="editMode" />
-                </td>
+              <tr v-for='(t,index) in tableData' :key='index'>
+                <td>{{t.name}}:</td>
+                <td> 
+                  <input type="text" v-model.trim="t.value" :disabled="editMode" />
+                  </td>
               </tr>
             </table>
           </div>
@@ -60,35 +42,59 @@ import { instance as axios } from "@/api/config.js";
 export default {
   data() {
     return {
-      email: undefined,
-      name: undefined,
-      surname: undefined,
-      password: undefined,
+      tableData: [
+        {
+          name: "Name",
+          value: ""
+        },
+        {
+          name: "Surname",
+          value: ""
+        },
+        {
+          name: "Email",
+          value: ""
+        },
+        {
+          name: "Password",
+          value: ""
+        }
+      ],
       editMode: true
     };
   },
   methods: {
     edit() {
       this.editMode = !this.editMode;
-      //FIX API FOR CHANGE USER DATA
       if (this.editMode === true) {
         axios
           .put("auth/users", {
-            email: this.email,
-            name: this.name,
-            surname: this.surname,
-            pass: this.password,
+            name: this.tableData[0].value,
+            surname: this.tableData[1].value,
+            email: this.tableData[2].value,
+            pass: this.tableData[3].value,
             sid: localStorage.sid
           })
           .then(r => {
-            if(r.data.status === "OK"){
-              localStorage.email = this.email;
-              localStorage.name = this.name;
-              localStorage.surname = this.surname;
+            if (r.data.status === "OK") {
+              store.commit("modalStatus", {
+                active: true,
+                ok: true,
+                message: "Success"
+              });
+              localStorage.name = this.tableData[0].value;
+              localStorage.surname = this.tableData[1].value;
+              localStorage.email = this.tableData[2].value;
+            } else {
+              store.commit("modalStatus", {
+                active: true,
+                ok: false,
+                message: "Error"
+              });
             }
           })
           .catch(e => {
-            console.log('e ' + e);
+            console.log("e " + e);
           });
       }
     },
@@ -104,9 +110,9 @@ export default {
     }
   },
   created() {
-    this.email = localStorage.email;
-    this.name = localStorage.name;
-    this.surname = localStorage.surname;
+    this.tableData[0].value = localStorage.name;
+    this.tableData[1].value = localStorage.surname;
+    this.tableData[2].value = localStorage.email;
   }
 };
 </script>

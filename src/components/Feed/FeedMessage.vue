@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters } from "vuex";
 export default {
   props: {
     mess: {
@@ -26,60 +26,66 @@ export default {
       uploadProgress: 0
     };
   },
-  computed:{
+  computed: {
     ...mapState({
       scrollDownMess: state => state.modulefeed.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
     }),
     ...mapGetters({
       taskid: "selectedItemID"
     }),
-    name(){return window.localStorage.name},
-    surname(){return window.localStorage.surname}
+    name() {
+      return window.localStorage.name;
+    },
+    surname() {
+      return window.localStorage.surname;
+    }
   },
   methods: {
-    mojaPoruka(){
-       if(this.name == this.mess.usr_name && this.surname == this.mess.usr_surname)return true;
-       else return false;
-
+    mojaPoruka() {
+      if (
+        this.name == this.mess.usr_name &&
+        this.surname == this.mess.usr_surname
+      )
+        return true;
+      else return false;
     },
     icon() {
       switch (this.mess.fed_type) {
-        case 'attachment':
-          return 'static\\img\\file-icon.png';
-        case 'message':
+        case "attachment":
+          return "static\\img\\file-icon.png";
+        case "message":
           return "static/img/user.png";
-        case 'status':
+        case "status":
           return "static/img/status.png";
         default:
           return "";
-        }
-
-
+      }
     },
     showFile() {
       return (
-        "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/"+
-        this.taskid+ "/feeds/" +
-        this.mess.fed_id+"?sid="+window.localStorage.sid
+        "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+        this.taskid +
+        "/feeds/" +
+        this.mess.fed_id +
+        "?sid=" +
+        window.localStorage.sid
       );
     }
   },
   mounted() {
-    if(this.scrollDownMess)
-      document.getElementById("all").scrollTop = document.getElementById("all").scrollHeight;
+    if (this.scrollDownMess)
+      document.getElementById("all").scrollTop = document.getElementById(
+        "all"
+      ).scrollHeight;
   }
 };
 </script>
 
 <style scoped>
-.cont * {
-  color: #eee;
-}
 .cont {
-  /* background-color: #ddd; */
   padding: 5px 10px;
   margin: 7px;
-  border-top: 1px solid #ffc10742;
+  border-top: 1px solid var(--ac-color-dark);
 }
 
 .cont img {
@@ -91,12 +97,10 @@ export default {
 .cont .name {
   font-size: 12px;
   font-style: oblique;
- 
-  color:#ffb037;
-
+  color: var(--ac-color-dark);
 }
-.cont .attach{
-  color:#139cbf;
+.cont .attach {
+  color: #139cbf;
 }
 
 .message-body {
@@ -115,11 +119,9 @@ export default {
   margin-left: 20px;
   display: flex;
   flex-direction: row-reverse;
-
 }
-.right-con .message-body-header{
+.right-con .message-body-header {
   flex-direction: row-reverse;
-  
 }
 
 .left-con {
