@@ -273,7 +273,13 @@
           </div>
 
           <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="aaa"
+
+          <multiselect v-if="stepInfo[0].you_are_worker === 1 && stepInfo[0].you_are_creator !== 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="removeUser"
+            :multiple="true">
+            <span slot="noResult">There's no users with searched name in this project.</span>
+          </multiselect>
+
+          <multiselect v-if="stepInfo[0].you_are_creator === 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser"
             :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
@@ -371,8 +377,16 @@ export default {
   },
 
   methods: {
-    aaa(){
-      console.log('aaa');
+    removeUser(removedOption){
+      let user = {
+        id: removedOption.id,
+        name: removedOption.name,
+        email: removedOption.email
+      }
+
+      this.valueUser.push(user);
+      // console.log(removedOption.email);
+      // console.log(id);
     },
 
     itemAddStep() {
