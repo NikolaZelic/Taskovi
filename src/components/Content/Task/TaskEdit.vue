@@ -35,10 +35,10 @@ export default {
       proId: state => state.sidebarItemSelection[0]
     }),
 
-    tags(){
+    tags() {
       let nizTagova = [];
 
-      for(var i = 0; i< this.selectedTags.length; i++){
+      for (var i = 0; i < this.selectedTags.length; i++) {
         nizTagova.push(this.selectedTags[i].text);
       }
       return nizTagova;
@@ -66,35 +66,32 @@ export default {
   // },
 
   methods: {
-    createTask(){
-      axios.put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-        sid: window.localStorage.sid,
-        tasid: this.taskID,
-        title: this.title,
-        description: this.description,
-        deadline: this.deadline,
-        tagarray: JSON.stringify(this.tags),
-        priority: this.selectedPriorety
-      }).then(response => {
-        if (response.data.status === "OK") {
-          store.commit("modalStatus", {
-            active: true,
-            ok: true,
-            message:
-              "Task has been edited succesfully"
-          });
-        } else {
-          store.commit("modalStatus", {
-            active: true,
-            ok: false,
-            message: "Error: Couldn't edit task"
-          });
-        }
+    createTask() {
+      axios
+        .put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+          sid: window.localStorage.sid,
+          tasid: this.taskID,
+          title: this.title,
+          description: this.description,
+          deadline: this.deadline,
+          tagarray: JSON.stringify(this.tags),
+          priority: this.selectedPriorety
+        })
+        .then(response => {
+          if (response.data.status === "OK") {
+            store.commit("modalStatus", {
+              message: "Task has been edited succesfully"
+            });
+          } else {
+            store.commit("modalStatus", {
+              ok: false,
+              message: "Error: Couldn't edit task"
+            });
+          }
           store.dispatch("itemActionReset");
           // store.dispatch("getTasks()", this.proId);
-      })
+        });
     }
   }
-
 };
 </script>

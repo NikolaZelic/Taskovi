@@ -125,6 +125,7 @@ export default {
 }
 
 .left-con {
+  font-size: 80%;
   margin-right: 20px;
   display: flex;
 }

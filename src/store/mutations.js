@@ -8,13 +8,13 @@ const mutations = {
     store.state.darkTheme = undefined;
   },
   modalError(state, params) {
-    store.state.modalError.active = params.active;
+    store.state.modalError.active = true;
     if (params.message !== undefined)
       store.state.modalError.message = params.message;
   },
 
   modalStatus(state, params) {
-    store.state.modalStatus.active = params.active;
+    store.state.modalStatus.active = true;
     store.state.modalStatus.ok = params.ok !== undefined ? params.ok : true;
     store.state.modalStatus.message = params.message !== undefined ? params.message : '';
   },

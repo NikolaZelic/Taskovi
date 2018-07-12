@@ -152,8 +152,7 @@ export default {
       mouseOverAddWorker: 0,
       titleClass: "form-control",
       componentTitle: "Creating Task",
-      selectedUSers: [],
-
+      selectedUSers: []
     };
   },
 
@@ -169,7 +168,7 @@ export default {
       var a = store.state.sidebarItemSelection[0];
       if (a === undefined) return 0;
       else return a;
-    },
+    }
   },
 
   created: function() {
@@ -185,7 +184,7 @@ export default {
         store.dispatch("suggestTags", {
           tagFor: "task",
           searchStr: this.tagSearchStr,
-          pro_id: this.proId,
+          pro_id: this.proId
         });
         this.inputTagHaveChange = 0;
       }
@@ -207,18 +206,20 @@ export default {
   },
 
   methods: {
-    usersOut(){
-
-    },
-    multiselectOut(){
+    usersOut() {},
+    multiselectOut() {
       // Dodavanje novog taga
       var tag = this.tagSearchStr;
-      if(this.suggestedTags.length>0||tag==undefined||tag==null||tag.length==0)
+      if (
+        this.suggestedTags.length > 0 ||
+        tag == undefined ||
+        tag == null ||
+        tag.length == 0
+      )
         return;
-      for(var i in this.selectedTags)
-        if(this.selectedTags[i].text==tag)
-          return;
-      this.selectedTags.push({text:tag});
+      for (var i in this.selectedTags)
+        if (this.selectedTags[i].text == tag) return;
+      this.selectedTags.push({ text: tag });
     },
     selectUser() {
       this.teamSelect = false;
@@ -359,7 +360,7 @@ export default {
       // console.log('SUggest users');
       store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
-        pro_id: this.proId,
+        pro_id: this.proId
       });
     },
     // suggestTeams() {
@@ -400,7 +401,6 @@ export default {
           this.selectedProjectID
         )
         .then(result => {
-
           store.dispatch("getTasks", {
             index: 1,
             pro_id: this.proId
@@ -408,7 +408,6 @@ export default {
 
           this.reportWritingToDB(result);
           this.closeModal();
-
         });
     },
     reportWritingToDB(result) {
@@ -419,12 +418,10 @@ export default {
       // console.log("Statis: " + status);
       if (status === "OK") {
         store.commit("modalStatus", {
-          active: true,
           message: "Task successfully created"
         });
       } else {
         store.commit("modalStatus", {
-          active: true,
           message: result.data.message //"Error! Task wasn't created."
         });
       }
@@ -472,18 +469,17 @@ export default {
     closeModal() {
       store.commit("itemActionReset");
     },
-    searchUsers(str){
-      if(str==undefined||str==null)
-        return;
-      if(str.length==0){
-        store.dispatch('cleanSuggestions');
+    searchUsers(str) {
+      if (str == undefined || str == null) return;
+      if (str.length == 0) {
+        store.dispatch("cleanSuggestions");
         return;
       }
       store.dispatch("refreshSuggestions", {
         searchText: str,
-        pro_id: this.proId,
+        pro_id: this.proId
       });
-    },
+    }
   }
 };
 </script>

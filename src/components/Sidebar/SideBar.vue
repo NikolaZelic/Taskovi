@@ -72,19 +72,21 @@
         <div class="item-list">
 
           <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
-            :fields="fieldsToShow"
-            :filter="tabs[currentTabIndex].search"
-             @filtered="onFiltered"
-              @row-clicked="selectAndSet">
+            :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
               <span>{{data.item.title}}</span>
             </template>
 
+            <template slot="unseen_feed" slot-scope="data">
+              <span class='badge badge-success'>{{data.item.unseen_feed}}</span>
+            </template>
+
+            <template slot=''></template>
+
             <template slot="edit_item" slot-scope="data">
-              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span>
+              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit" title="Edit Item"></span>
             </template>
 
           </b-table>
@@ -147,17 +149,31 @@ export default {
           class: "text-center"
         },
         {
+          key: "unseen_feed",
+          label: "N",
+          class: "text-center"
+        },
+        {
           key: "edit_item",
           label: "Edit",
           class: "text-center"
         }
       ],
       taskFields: [
-        { key: "id", label: "ID", sortable: true },
+        {
+          key: "id",
+          label: "ID",
+          sortable: true
+        },
         {
           key: "title",
           label: "Tasks",
           sortable: true
+        },
+        {
+          key: "unseen_feed",
+          label: "N",
+          class: "text-center"
         },
         {
           key: "edit_item",

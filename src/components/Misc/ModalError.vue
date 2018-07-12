@@ -19,9 +19,7 @@ import { mapState } from "vuex";
 export default {
   methods: {
     closeModal() {
-      store.commit("modalError", {
-        active: false
-      });
+      store.commit("modalError");
     }
   },
   computed: {

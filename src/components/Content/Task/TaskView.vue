@@ -8,15 +8,15 @@
     <template v-else>
 
       <!-- Showing data about all steps inside selected task -->
-      <div class="card" v-if="!stepInfoShow && !stepEditShow">
+      <div class="card" :class='{darkTheme: darkTheme}' v-if="!stepInfoShow && !stepEditShow">
 
-        <div class="card-header task-header" v-if="taskInfo[0] !== undefined">
+        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">
           {{ taskInfo[0].taskname }}
         </div>
 
         <div class="card-body">
 
-          <table class="table table-borderless text-center text-dark table-hover">
+          <table class="table table-borderless text-center table-hover">
 
             <thead>
               <tr>
@@ -56,7 +56,8 @@
                 </td>
 
                 <td>
-                  <span v-if="task.you_are_worker === 1"><i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
+                  <span v-if="task.you_are_worker === 1">
+                    <i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
                   <span v-else>{{task.usrworking}}</span>
                 </td>
 
@@ -67,16 +68,16 @@
 
         </div>
 
-        <div class="card-footer">
+        <div class="card-footer" :class='{darkTheme: darkTheme}'>
           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
         </div>
 
       </div>
 
       <!-- Showing data about selected step -->
-      <div class="card" v-if='stepInfoShow && !stepEditShow && stepInfo[0] !== undefined'>
+      <div class="card" :class='{darkTheme: darkTheme}' v-if='stepInfoShow && !stepEditShow && stepInfo[0] !== undefined'>
 
-        <div class="card-header">
+        <div class="card-header" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
         </div>
 
@@ -198,7 +199,7 @@
           </table>
         </div>
 
-        <div class="card-footer">
+        <div class="card-footer" :class='{darkTheme: darkTheme}'>
           <div class="float-right">
             <button type="button" class="btn btn-warning" @click="stepEditToggle()">Edit</button>
             <button type="button" class="btn btn-primary" @click="stepInfoToggle()">Back</button>
@@ -208,9 +209,9 @@
       </div>
 
       <!-- Showing edit fields about selected step -->
-      <div class="card" v-if='!stepInfoShow && stepEditShow && stepInfo[0] !== undefined'>
+      <div class="card" :class='{darkTheme: darkTheme}' v-if='!stepInfoShow && stepEditShow && stepInfo[0] !== undefined'>
 
-        <div class="card-header bg-warning">
+        <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
         </div>
 
@@ -273,14 +274,14 @@
           </div>
 
           <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="aaa"
-            :multiple="true">
+          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser"
+            @remove="aaa" :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
 
         </div>
 
-        <div class="card-footer">
+        <div class="card-footer" :class='{darkTheme: darkTheme}'>
           <div class="float-right">
             <button type="button" class="btn btn-warning" @click="saveChanges(); stepInfoToggle();">Save</button>
             <button type="button" class="btn btn-primary" @click="stepInfoToggle() ">Back</button>
@@ -371,8 +372,8 @@ export default {
   },
 
   methods: {
-    aaa(){
-      console.log('aaa');
+    aaa() {
+      console.log("aaa");
     },
 
     itemAddStep() {
@@ -437,7 +438,7 @@ export default {
           this.getStepInfo(this.stepInfo[0].tsk_id);
           this.getTaskInfo(this.selectedItemID);
 
-            (this.edit.name = undefined),
+          (this.edit.name = undefined),
             (this.edit.description = undefined),
             (this.edit.deadline = undefined),
             (this.edit.priority = undefined),
@@ -447,20 +448,16 @@ export default {
             (this.edit.estTime = undefined);
 
           this.reportWritingToDB(response);
-
         });
     },
 
     reportWritingToDB(result) {
       if (result.data.status === "OK") {
         store.commit("modalStatus", {
-          active: true,
-          ok: true,
-          message: 'Step is edited successfully'
+          message: "Step is edited successfully"
         });
-      } else if(result.data.status === "ERR"){
+      } else {
         store.commit("modalStatus", {
-          active: true,
           ok: false,
           message: result.data.message
         });
@@ -469,15 +466,12 @@ export default {
 
     loadAllProjectUsers(projectID) {
       axios
-        .get(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid",
-          {
-            params: {
-              proid: projectID,
-              sid: window.localStorage.getItem("sid")
-            }
+        .get("http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid", {
+          params: {
+            proid: projectID,
+            sid: window.localStorage.getItem("sid")
           }
-        )
+        })
         .then(response => {
           // console.log(response.data.data);
           this.optionsUser = response.data.data.users;
@@ -632,30 +626,32 @@ export default {
 
     getTaskInfo(taskID) {
       api.getTaskInfo(taskID).then(response => {
-          if (response.data.data !== undefined) {
-            this.taskInfo = response.data.data;
+        if (response.data.data !== undefined) {
+          this.taskInfo = response.data.data;
 
-            for (var i = 0; i < response.data.data.length; i++) {
-              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+          for (var i = 0; i < response.data.data.length; i++) {
+            // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
 
-              if (this.taskInfo[i].tsk_deadline === null) {
-                this.taskInfo[i].tsk_deadline = "";
-              } else {
-                this.taskInfo[i].tsk_deadline = moment(response.data.data[i].tsk_deadline).format("MMMM Do YYYY, h:mm a");
-              }
-
-              if (this.taskInfo[i].pri_text === "High") {
-                this.taskInfo[i].pri_badge = "badge-danger";
-              } else if (this.taskInfo[i].pri_text === "Medium") {
-                this.taskInfo[i].pri_badge = "badge-warning";
-              } else if (this.taskInfo[i].pri_text === "Low") {
-                this.taskInfo[i].pri_badge = "badge-info";
-              }
+            if (this.taskInfo[i].tsk_deadline === null) {
+              this.taskInfo[i].tsk_deadline = "";
+            } else {
+              this.taskInfo[i].tsk_deadline = moment(
+                response.data.data[i].tsk_deadline
+              ).format("MMMM Do YYYY, h:mm a");
             }
 
-            // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
+            if (this.taskInfo[i].pri_text === "High") {
+              this.taskInfo[i].pri_badge = "badge-danger";
+            } else if (this.taskInfo[i].pri_text === "Medium") {
+              this.taskInfo[i].pri_badge = "badge-warning";
+            } else if (this.taskInfo[i].pri_text === "Low") {
+              this.taskInfo[i].pri_badge = "badge-info";
+            }
           }
-        });
+
+          // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
+        }
+      });
     }
   },
 
@@ -697,13 +693,8 @@ export default {
     },
 
     showSteps() {
-      if (this.selectedItemID === 0) {
-        this.stepShow = false;
-        return;
-      } else {
-        this.stepShow = true;
-        return;
-      }
+      this.stepShow = this.selectedItemID === 0;
+      return;
     },
 
     deadlineDate() {
@@ -719,7 +710,8 @@ export default {
     },
 
     ...mapState({
-        addStep: state => state.itemAction.addStep
+      addStep: state => state.itemAction.addStep,
+      darkTheme: state => state.darkTheme
     })
   },
 
@@ -732,15 +724,14 @@ export default {
   },
 
   watch: {
-    addStep:function(){
+    addStep: function() {
       // console.log('addstep iz watch-a');
 
-      if(this.selectedItemID !== undefined){
-          this.getTaskInfo(this.selectedItemID);
+      if (this.selectedItemID !== undefined) {
+        this.getTaskInfo(this.selectedItemID);
       }
       // this.getTaskInfo(store.state.selectedItemID);
     },
-
 
     selectedItemID: function(val, oldVal) {
       if (val !== 0) {
@@ -779,12 +770,14 @@ h1 {
   text-align: left;
 }
 
-.task-header {
-  color: #333 !important;
+.card-header.darkTheme,
+.card-footer.darkTheme {
+  background: var(--dark);
+  color: var(--sec-color);
 }
-
-.step-header {
-  color: #fff !important;
+.card.darkTheme {
+  background: var(--dark-super);
+  color: var(--sec-color) !important;
 }
 
 .badge {

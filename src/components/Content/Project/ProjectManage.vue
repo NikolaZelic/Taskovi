@@ -131,12 +131,13 @@ export default {
     //   console.log('clicked row funkcija')
     // },
 
-    changeDeleted(rowIndex){
-      this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
+    changeDeleted(rowIndex) {
+      this.project.users[rowIndex].delete = !this.project.users[rowIndex]
+        .delete;
       // this.usersWorking;
     },
 
-    changeAdmin(rowIndex){
+    changeAdmin(rowIndex) {
       this.project.users[rowIndex].admin = !this.project.users[rowIndex].admin;
       // this.usersWorking;
     },
@@ -145,7 +146,7 @@ export default {
       let user = {
         email: this.email,
         admin: false
-      }
+      };
 
       this.project.users.push(user);
     },
@@ -169,28 +170,24 @@ export default {
           }
         })
         .then(result => {
-          if ((result.status = "OK")) {
+          if (result.data.status === "OK") {
+            console.log("asdd");
             let moreInfo = result.data.data;
 
             for (var i = 0; i < moreInfo.users.length; i++) {
               moreInfo.users[i].delete = false;
-
-              if(moreInfo.users[i].admin === "true"){
-                moreInfo.users[i].admin = true;
-              }else{
-                moreInfo.users[i].admin = false;
-              }
-
-              // console.log(moreInfo.users[i].name + ' ' + moreInfo.users[i].delete);
+              moreInfo.users[i].admin = moreInfo.users[i].admin === "true";
             }
-
-
 
             if (moreInfo.length !== 0) {
               this.project = moreInfo;
-              // this.options = this.project.users;
             }
             this.setupInfo();
+          } else {
+            store.commit("modalStatus", {
+              ok: false,
+              message: "Error: Couldn't get project info"
+            });
           }
         });
     },
@@ -206,7 +203,6 @@ export default {
         .then(r => {
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
-              active: true,
               ok: true,
               message:
                 "Project '" +
@@ -218,7 +214,6 @@ export default {
             });
           } else {
             store.commit("modalStatus", {
-              active: true,
               ok: false,
               message: "Error: Couldn't create project '" + this.project.title
             });
@@ -241,7 +236,6 @@ export default {
         .then(r => {
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
-              active: true,
               message:
                 "Project '" +
                 this.project.title +
@@ -252,7 +246,6 @@ export default {
             });
           } else {
             store.commit("modalStatus", {
-              active: true,
               ok: false,
               message:
                 "Error: Couldn't edit project '" + this.project.title + "'"
@@ -285,13 +278,12 @@ export default {
     }
   },
   computed: {
-
-    usersWorking(){
+    usersWorking() {
       let nizUsera = [];
 
-      if(this.project.users !== undefined){
+      if (this.project.users !== undefined) {
         for (var i = 0; i < this.project.users.length; i++) {
-          if(this.project.users[i].delete === false){
+          if (this.project.users[i].delete === false) {
             let singleUser = {
               email: this.project.users[i].email,
               admin: "" + this.project.users[i].admin + ""
@@ -300,7 +292,7 @@ export default {
           }
         }
 
-        if(this.email !== undefined){
+        if (this.email !== undefined) {
           let singleUser = {
             email: this.email,
             admin: "false"
@@ -310,24 +302,12 @@ export default {
       }
 
       return JSON.stringify(nizUsera);
-      },
-
-
-
-
-
-    ...mapGetters({
-      currentTabData: "currentTabData"
-    }),
-    ...mapState({
-      tabIndex: "currentTabIndex",
-      itemEditButton: state => state.itemAction.edit
-    }),
+    },
     isValidEmail() {
       let email = this.email;
       if (email === undefined || email === "") return true;
-      let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      let check = email.match(regex);
+      let pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let check = email.match(pattern);
       return !check;
     },
     usersString: {
@@ -353,7 +333,14 @@ export default {
         // let splitUsers = val.split(",");
         // this.project.users = splitUsers;
       }
-    }
+    },
+    ...mapGetters({
+      currentTabData: "currentTabData"
+    }),
+    ...mapState({
+      tabIndex: "currentTabIndex",
+      itemEditButton: state => state.itemAction.edit
+    })
   },
   mounted() {
     if (this.itemEditButton !== undefined) {

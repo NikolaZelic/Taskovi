@@ -53,13 +53,10 @@ export default {
     reportWritingToDB(result) {
       if (result.data.status === "OK") {
         store.commit("modalStatus", {
-          active: true,
-          ok: true,
           message: result.data.message
         });
       } else if(result.data.status === "ERR"){
         store.commit("modalStatus", {
-          active: true,
           ok: false,
           message: result.data.message
         });

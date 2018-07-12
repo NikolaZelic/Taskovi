@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <!-- <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/> -->
+      <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
     </div>
   <!-- <router-link to="/user"></router-link> -->
   <router-view></router-view>
@@ -165,11 +165,10 @@ export default {
 
 .item-filter {
   justify-content: unset;
-  /* flex-wrap: wrap; */
 }
 
 .maincontent {
-  padding: 50px 30px 0;
+  padding: 50px 30px 20px;
   flex: 1;
   background-color: var(--main-bg-color);
   color: var(--main-color);
@@ -191,22 +190,10 @@ export default {
 }
 
 @media only screen and (min-width: 900px) {
-  /* body {
-    font-size: 0.9rem;
-  }
-  td {
-    font-size: 1rem;
-  } */
   #wrapper {
     flex-direction: row;
     min-height: 100vh;
   }
-  /* SIDEBAR */
-  /* #wrapper > aside.collapsed {
-    position: fixed;
-    height: 100vh;
-    width: 37%;
-  } */
   #wrapper > aside {
     position: fixed;
     height: 100vh;

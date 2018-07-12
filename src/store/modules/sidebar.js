@@ -14,7 +14,6 @@ const actions = {
       });
     }).catch(e => {
       store.commit("modalError", {
-        active: true,
         message: '' + e,
       });
     });
@@ -28,7 +27,6 @@ const actions = {
       });
     }).catch(e => {
       store.commit("modalError", {
-        active: true,
         message: '' + e,
       });
     });
@@ -45,7 +43,7 @@ const actions = {
   itemAddTaskClick(commit, params) {
     store.commit('itemAddTaskClick', {
       id: params.id,
-    })
+    });
   },
 
   itemActionReset() {

@@ -78,8 +78,6 @@ export default {
           .then(r => {
             if (r.data.status === "OK") {
               store.commit("modalStatus", {
-                active: true,
-                ok: true,
                 message: "Success"
               });
               localStorage.name = this.tableData[0].value;
@@ -87,7 +85,6 @@ export default {
               localStorage.email = this.tableData[2].value;
             } else {
               store.commit("modalStatus", {
-                active: true,
                 ok: false,
                 message: "Error"
               });
