@@ -16,7 +16,7 @@
         <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
 
       </div>
-      <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
+      <!-- <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/> -->
     </div>
   <!-- <router-link to="/user"></router-link> -->
   <router-view></router-view>

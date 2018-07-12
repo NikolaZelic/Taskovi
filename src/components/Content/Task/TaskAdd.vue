@@ -414,16 +414,18 @@ export default {
     reportWritingToDB(result) {
       // console.log(result);
       var status = result.data.status;
+      // var message = result.data.message;
+      // console.log(result.data);
       // console.log("Statis: " + status);
       if (status === "OK") {
         store.commit("modalStatus", {
           active: true,
-          message: "Task Successful Cretaed !!!"
+          message: "Task successfully created"
         });
       } else {
         store.commit("modalStatus", {
           active: true,
-          message: "Error! Task wasn't created."
+          message: result.data.message //"Error! Task wasn't created."
         });
       }
     },

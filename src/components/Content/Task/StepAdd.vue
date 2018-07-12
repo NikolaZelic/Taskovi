@@ -40,12 +40,32 @@ export default {
 
       api.createStep(this.proId, this.taskid, this.title, this.description, this.deadline, this.selectedPriorety, userarray, tagarray)
       .then(result =>{
+        // console.log('iz stepadd-a result ' + result.data.data.status)
+        // console.log('before writing to DB in staepadd');
         this.reportWritingToDB(result);
+        // console.log('after writing to DB in staepadd');
         // console.log('aaaa')
         store.commit("itemAddStep");
         // api.getTaskInfo(store.getters.selectedItemID);
       });
+    },
+
+    reportWritingToDB(result) {
+      if (result.data.status === "OK") {
+        store.commit("modalStatus", {
+          active: true,
+          ok: true,
+          message: result.data.message
+        });
+      } else if(result.data.status === "ERR"){
+        store.commit("modalStatus", {
+          active: true,
+          ok: false,
+          message: result.data.message
+        });
+      }
     }
+
   },
 };
 </script>

@@ -30,8 +30,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()' data-toggle="modal"
-                data-target="#stepInformation">
+              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()'>
 
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
@@ -57,7 +56,8 @@
                 </td>
 
                 <td>
-                  {{task.usrworking}}
+                  <span v-if="task.you_are_worker === 1"><i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
+                  <span v-else>{{task.usrworking}}</span>
                 </td>
 
               </tr>
@@ -216,26 +216,26 @@
 
         <div class="card-body">
 
-          <div>
+          <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="name">Task name:</label>
             <input type="text" class="form-control" id="name" v-model="edit.name">
           </div>
 
-          <div>
+          <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="desc">Description:</label>
             <textarea class="form-control" id="desc" rows="3" v-model="edit.description"></textarea>
           </div>
 
           <label for="status">Change status:</label>
           <select class="form-control" id="status" v-model="edit.status">
-            <option value="2" v-if="stepInfo[0].yours === null">In Progress</option>
-            <option value="3" v-if="stepInfo[0].yours === 1">Completed</option>
-            <option value="4" v-if="stepInfo[0].yours === 1">Failed</option>
-            <option value="5" v-if="stepInfo[0].yours === 1">Rejected</option>
-            <option value="6" v-if="stepInfo[0].yours === null">Cancelled</option>
+            <option value="2" v-if="stepInfo[0].you_are_creator === 1">In Progress</option>
+            <option value="3" v-if="stepInfo[0].you_are_worker === 1">Completed</option>
+            <option value="4" v-if="stepInfo[0].you_are_worker === 1">Failed</option>
+            <option value="5" v-if="stepInfo[0].you_are_worker === 1">Rejected</option>
+            <option value="6" v-if="stepInfo[0].you_are_creator === 1">Cancelled</option>
           </select>
 
-          <div v-if="stepInfo[0].yours === null">
+          <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="priority">Change priority:</label>
             <select class="form-control" id="priority" v-model="edit.priority">
               <option value="1">High</option>
@@ -250,24 +250,24 @@
             :multiple="true" :taggable="true" @tag="addTag">
           </multiselect>
 
-          <div v-if="stepInfo[0].yours === null">
+          <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="deadline">Deadline:</label>
             <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
               :placeholder="stepInfo[0].tsk_deadline"></flat-pickr>
           </div>
 
-          <div v-if="stepInfo[0].yours === 1">
+          <div v-if="stepInfo[0].you_are_worker === 1">
             <label for="estDate">Estimated completion date:</label>
             <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
               :placeholder="stepInfo[0].tsk_estimated_completion_date"></flat-pickr>
           </div>
 
-          <div v-if="stepInfo[0].yours === 1">
+          <div v-if="stepInfo[0].you_are_worker === 1">
             <label for="timeSpent">Time spent [in minutes]:</label>
             <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
           </div>
 
-          <div v-if="stepInfo[0].yours === null">
+          <div v-if="stepInfo[0].you_are_worker === 1">
             <label for="progress">Progress: </label>
             <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
           </div>
@@ -433,7 +433,7 @@ export default {
           this.getStepInfo(this.stepInfo[0].tsk_id);
           this.getTaskInfo(this.selectedItemID);
 
-          (this.edit.name = undefined),
+            (this.edit.name = undefined),
             (this.edit.description = undefined),
             (this.edit.deadline = undefined),
             (this.edit.priority = undefined),
@@ -441,7 +441,26 @@ export default {
             (this.edit.progress = undefined),
             (this.edit.timespent = undefined),
             (this.edit.estTime = undefined);
+
+          this.reportWritingToDB(response);
+
         });
+    },
+
+    reportWritingToDB(result) {
+      if (result.data.status === "OK") {
+        store.commit("modalStatus", {
+          active: true,
+          ok: true,
+          message: 'Step is edited successfully'
+        });
+      } else if(result.data.status === "ERR"){
+        store.commit("modalStatus", {
+          active: true,
+          ok: false,
+          message: result.data.message
+        });
+      }
     },
 
     loadAllProjectUsers(projectID) {
