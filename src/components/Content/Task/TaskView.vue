@@ -273,7 +273,7 @@
           </div>
 
           <label class="tag" for="working">Working:</label>
-          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser"
+          <multiselect v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="aaa"
             :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
@@ -371,6 +371,10 @@ export default {
   },
 
   methods: {
+    aaa(){
+      console.log('aaa');
+    },
+
     itemAddStep() {
       store.commit("itemAddStep");
       // console.log('itemAddStep metoda')
