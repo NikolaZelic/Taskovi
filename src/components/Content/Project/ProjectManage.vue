@@ -21,7 +21,7 @@
 
       <b-btn v-b-modal.modal1 variant="primary">View and change users</b-btn>
 
-      <b-modal id="modal1" title="Add or remove users from project" size="lg"   header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
+      <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
         body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
 
         <b-input-group>
@@ -36,13 +36,16 @@
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin"></b-form-checkbox>
+            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin" v-if="project.users[row.index].isyou === 'false'"></b-form-checkbox>
           </template>
 
           <template slot="delete" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox>
+            <!-- <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox> -->
+
+            <button type="button" class="btn btn-danger btn-sm"  @click="changeDeleted(row.index)" v-if="project.users[row.index].isyou === 'false'">Remove</button>
+
           </template>
 
         </b-table>
@@ -86,7 +89,7 @@ export default {
   data() {
     return {
       // nesto: false,
-      deleteUserID: undefined,
+      UserID: undefined,
 
       project: {
         title: undefined,
@@ -132,9 +135,9 @@ export default {
     // },
 
     changeDeleted(rowIndex) {
-      this.project.users[rowIndex].delete = !this.project.users[rowIndex]
-        .delete;
+      this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
       // this.usersWorking;
+      this.project.users.splice(rowIndex, 1);
     },
 
     changeAdmin(rowIndex) {
