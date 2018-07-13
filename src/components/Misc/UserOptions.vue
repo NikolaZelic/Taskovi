@@ -1,12 +1,12 @@
 <template>
-  <div class='modal-mask'>
+  <div class='modal-mask' @click="closeModal" id='cm'>
     <transition name='fade'>
       <div class="user-modal">
         <div class="header">
           <span>
             <strong>Change User Options</strong>
           </span>
-          <i class="fa fa-times" @click='closeModal'></i>
+          <i class="fa fa-times" id='cm'></i>
         </div>
         <div class="body">
 
@@ -105,8 +105,11 @@ export default {
       var f = e.target.files[0];
       console.log(f.name);
     },
-    closeModal() {
-      this.$router.push("/");
+    closeModal(val) {
+      let tar = val.target.id;
+      if (tar === "cm") {
+        this.$router.push("/");
+      }
     }
   },
   computed: {

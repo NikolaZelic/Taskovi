@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import MergedComp from '@/components/MergedComp';
 import StartPage from '@/components/StartPage';
 // REMOVE BELOW IN FINAL
-import UserOptions from '@/components/UserOptions.vue';
+import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
 import StepView from '@/components/Content/Task/StepView';

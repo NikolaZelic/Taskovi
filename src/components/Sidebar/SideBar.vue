@@ -3,8 +3,8 @@
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span>
-        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar"
-          @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
+        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)"
+          class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
       <div>
@@ -103,7 +103,7 @@
             </template> -->
 
             <template slot='users' slot-scope="data">
-                  <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+              <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
             </template>
 
             <template slot="edit_item" slot-scope="data">
@@ -115,9 +115,11 @@
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span> Add New</button>
       </div>
-      <!-- </div> -->
 
     </div>
+
+    <user-tasks></user-tasks>
+
   </aside>
 </template>
 
@@ -127,10 +129,12 @@ import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 import { mapState } from "vuex";
 import UserPopup from "./UserPopup";
+import UserTasks from "./UserTasks";
 import Multiselect from "vue-multiselect";
 export default {
   components: {
     UserPopup,
+    UserTasks,
     Multiselect
   },
   data() {
@@ -372,12 +376,8 @@ export default {
       this.$refs.search.$el.focus();
     },
     changeTheme() {
-      store.commit("modalStatus", {
-        ok: false,
-        message: "HI llodlalsdasdmaskdnaknsd!"
-      });
-      // localStorage.dark = !this.darkTheme;
-      // store.commit("darkTheme", !this.darkTheme);
+      localStorage.dark = !this.darkTheme;
+      store.commit("darkTheme", !this.darkTheme);
     },
     userOptions() {
       this.$router.push("user");
@@ -414,13 +414,12 @@ export default {
           });
         }
         return this.projectFields;
-      }else 
-      if (
+      } else if (
         this.itemAction.edit !== undefined ||
         this.itemAction.add !== undefined ||
         this.taskID !== undefined
       ) {
-        let shortTask = ["ID", "Tasks", "Edit"];
+        let shortTask = ["ID", "Tasks", "Users", "Edit"];
         return this.taskFields.filter(item => {
           return shortTask.includes(item.label);
         });

@@ -199,17 +199,12 @@ export default {
 
               if(moreInfo.users[i].isyou === "false" && (moreInfo.youAreCreator === "true" || moreInfo.users[i].canEdit === true)){
                 moreInfo.users[i].disabled = true;
-
               }
 
               // if(moreInfo.users[i].admin === "true"){
               //   moreInfo.users[i].canEdit = false;
               // }
-
-
             }
-
-
 
             if (moreInfo.length !== 0) {
               this.project = moreInfo;

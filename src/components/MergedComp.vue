@@ -42,9 +42,8 @@ import ProjectManage from "@/components/Content/Project/ProjectManage";
 import FeedElement from "@/components/Feed/FeedElement";
 
 import ModalError from "@/components/Misc/ModalError";
-// import ModalComplete from "@/components/Misc/ModalComplete";
+import UserOptions from "@/components/Misc/UserOptions";
 
-import UserOptions from "@/components/UserOptions";
 import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 import { mapState } from "vuex";
@@ -59,8 +58,7 @@ export default {
     ProjectManage,
     TaskAdd,
     UserOptions,
-    ModalError,
-    // ModalComplete
+    ModalError
   },
   data() {
     return {
@@ -71,40 +69,33 @@ export default {
   },
   watch: {
     modalStatusActive(val) {
-      console.log(val);
-      if(!val) return;
-      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger"; 
-      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle" ; 
+      if (!val) return;
+      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger";
+      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle";
+      let dur =
+        this.modalStatus.duration !== undefined
+          ? this.modalStatus.duration
+          : 8000;
 
       let message = this.modalStatus.message;
       this.$toasted.show(message, {
         position: "bottom-right",
-        duration: 8000,
+        duration: dur,
         className: bgColor + "",
         icon: {
           name: icon
         },
         action: {
-          // text: "X",
-          class: 'fas fa-times',
+          class: "fas fa-times",
           onClick: (e, toastObject) => {
             toastObject.goAway(0);
           }
         }
       });
-      
-      store.commit('modalStatus',{
-          active: false
-      })
 
-      // console.log(val);
-      // // if (val === true) {
-      // setTimeout(function() {
-      //   store.commit("modalStatus", {
-      //     active: false
-      //   });
-      // }, 4000);
-      // // }
+      store.commit("modalStatus", {
+        active: false
+      });
     },
     itemEditButton(val) {
       this.editBtn = val !== undefined;
