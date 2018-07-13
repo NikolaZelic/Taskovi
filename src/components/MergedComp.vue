@@ -17,7 +17,7 @@
         <step-add v-if="itemAddStepButton" />
 
       </div>
-      <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' />
+      <!-- <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' /> -->
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
@@ -73,8 +73,8 @@ export default {
     modalStatusActive(val) {
       console.log(val);
       if(!val) return;
-      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger"; 
-      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle" ; 
+      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger";
+      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle" ;
 
       let message = this.modalStatus.message;
       this.$toasted.show(message, {
@@ -92,7 +92,7 @@ export default {
           }
         }
       });
-      
+
       store.commit('modalStatus',{
           active: false
       })
