@@ -36,7 +36,14 @@
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin" v-if="project.users[row.index].isyou === 'false'"></b-form-checkbox>
+            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin"
+            :disabled="!project.users[row.index].disabled"></b-form-checkbox>
+              <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
+
+
+          <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === 'true') -->
+            <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') -->
+            <!-- project.users[row.index].isyou === 'false' -->
           </template>
 
           <template slot="delete" slot-scope="row">
@@ -44,8 +51,9 @@
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
             <!-- <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox> -->
 
-            <button type="button" class="btn btn-danger btn-sm"  @click="changeDeleted(row.index)" v-if="project.users[row.index].isyou === 'false'">Remove</button>
-
+            <button type="button" class="btn btn-danger btn-sm"  @click="changeDeleted(row.index)"
+            v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">Remove</button>
+            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
           </template>
 
         </b-table>
@@ -177,10 +185,31 @@ export default {
           if (result.data.status === "OK") {
             let moreInfo = result.data.data;
 
+
             for (var i = 0; i < moreInfo.users.length; i++) {
+              // console.log(moreInfo.users[i].disabled);
+
               moreInfo.users[i].delete = false;
               moreInfo.users[i].admin = moreInfo.users[i].admin === "true";
+
+
+              if(moreInfo.users[i].admin === false){
+                moreInfo.users[i].canEdit = true;
+              }
+
+              if(moreInfo.users[i].isyou === "false" && (moreInfo.youAreCreator === "true" || moreInfo.users[i].canEdit === true)){
+                moreInfo.users[i].disabled = true;
+
+              }
+
+              // if(moreInfo.users[i].admin === "true"){
+              //   moreInfo.users[i].canEdit = false;
+              // }
+
+
             }
+
+
 
             if (moreInfo.length !== 0) {
               this.project = moreInfo;

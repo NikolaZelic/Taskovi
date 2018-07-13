@@ -48,6 +48,10 @@ const actions = {
 
   itemActionReset() {
     store.commit('itemActionReset');
+  },
+
+  resetTaskView() {
+    store.commit('resetTaskView');
   }
 };
 const mutations = {
@@ -95,6 +99,13 @@ const mutations = {
     store.state.itemAction.addTask = undefined;
     store.state.itemAction.addStep = false;
     store.state.mainFocused = false;
+  },
+
+  resetTaskView: () => {
+    store.state.sidebarItemSelection[1] = undefined;
+    let ci = store.state.currentTabIndex;
+    store.state.currentTabIndex = -1;
+    store.state.currentTabIndex = ci;
   },
 
   darkTheme: (state, params) => {

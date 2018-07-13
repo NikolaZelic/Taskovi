@@ -7,11 +7,16 @@
 
     <template v-else>
 
+      <div class='header'>
+      <h4>Task view:</h4>
+      <button class='btn btn-dark' @click='resetTaskView'>
+      <span class='fas fa-arrow-left'></span> Back</button>
+      </div>
+
       <!-- Showing data about all steps inside selected task -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="!stepInfoShow && !stepEditShow">
 
-        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">
-          {{ taskInfo[0].taskname }}
+        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
         </div>
 
         <div class="card-body">
@@ -170,28 +175,32 @@
             </tr>
 
             <tr v-if="stepInfo[0].tsk_timespent !== null">
-              <td class="align-top">Time spent:</td>
+              <td class="align-top">Total time spent:</td>
               <td>{{stepInfo[0].tsk_timespent}}</td>
             </tr>
 
             <tr>
               <td class="align-top">Working:</td>
               <td>
+                <!-- <p>Active users:</p> -->
                 <ul class="list-unstyled">
                   <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
+                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
                     <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{user.usr_name}}</h5>
-                        <span>{{user.usr_email}}</span>
+                        <h5 class="mt-0 mb-1 inline-block">{{user.usr_name}}<small> -- {{user.usr_email}}</small></h5>
+                        <!-- <br> -->
+                        <span>Worked on this step for {{user.timespent}} minutes</span>
                       </div>
                     </div>
 
                   </li>
+
+                  <!-- <li class="mt-5">Show inactive users:</li> -->
+
                 </ul>
               </td>
             </tr>
@@ -264,7 +273,7 @@
           </div>
 
           <div v-if="stepInfo[0].you_are_worker === 1">
-            <label for="timeSpent">Time spent [in minutes]:</label>
+            <label for="timeSpent">Your time spent [in minutes]:</label>
             <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
           </div>
 
@@ -378,6 +387,10 @@ export default {
   },
 
   methods: {
+    resetTaskView(){
+        store.commit("resetTaskView");
+    },
+
     removeUser(removedOption) {
       let user = {
         id: removedOption.id,
@@ -514,6 +527,8 @@ export default {
       axios
         .get(
           "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+
+
           {
             params: {
               tasid: this.selectedItemID,
@@ -827,5 +842,14 @@ label {
 .stepInfoShow td {
   width: 50%;
   padding: 5px 0;
+}
+
+.header {
+  /* background: var(--success); */
+  /* border-radius: 4px; */
+  display: flex;
+  padding: 10px 20px;
+  justify-content: space-between;
+  color: initial;
 }
 </style>
