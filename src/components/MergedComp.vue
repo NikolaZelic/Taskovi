@@ -17,7 +17,7 @@
         <step-add v-if="itemAddStepButton" />
 
       </div>
-      <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' />
+      <!-- <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' /> -->
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>

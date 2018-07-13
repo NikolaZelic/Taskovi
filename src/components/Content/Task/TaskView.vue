@@ -1,11 +1,11 @@
 <template>
-  <div>
+<div>
 
-    <template v-if="selectedItemID <= 0">
+  <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
     </template>
 
-    <template v-else>
+  <template v-else>
 
       <div class='header'>
       <h4>Task view:</h4>
@@ -199,7 +199,23 @@
 
                   </li>
 
-                  <!-- <li class="mt-5">Show inactive users:</li> -->
+                  <li class="mt-3 mb-3 text-primary link" @click="showInactiveUsers; showInactive = !showInactive" v-if="!showInactive">Show inactive workers...</li>
+                  <li class="mt-3 mb-3 text-primary link" @click="showInactive = !showInactive" v-if="showInactive">Hide inactive workers...</li>
+
+                  <li class="media mt-2 text-muted" v-for="inactive in stepInfo[0].usrworking" v-if="showInactive">
+
+                    <img v-if='inactive.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + inactive.usr_picture" />
+
+                    <div class="media-body">
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1 inline-block">{{inactive.usr_name}}<small> -- {{inactive.usr_email}}</small></h5>
+                        <!-- <br> -->
+                        <span>Worked on this step for {{inactive.timespent}} minutes</span>
+                      </div>
+                    </div>
+
+                  </li>
 
                 </ul>
               </td>
@@ -274,7 +290,7 @@
 
           <div v-if="stepInfo[0].you_are_worker === 1">
             <label for="timeSpent">Your time spent [in minutes]:</label>
-            <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far: ' + stepInfo[0].tsk_timespent" v-model="edit.timespent">
+            <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far ' + youWorked + ' minutes'" v-model="edit.timespent">
           </div>
 
           <div v-if="stepInfo[0].you_are_worker === 1">
@@ -306,16 +322,24 @@
       </div>
 
     </template>
-  </div>
+</div>
 </template>
 
 <script>
 import axios from "axios";
-import { store } from "@/store/index.js";
-import { mapGetters } from "vuex";
+import {
+  store
+} from "@/store/index.js";
+import {
+  mapGetters
+} from "vuex";
 import Multiselect from "vue-multiselect";
-import { api } from "@/api/index";
-import { mapState } from "vuex";
+import {
+  api
+} from "@/api/index";
+import {
+  mapState
+} from "vuex";
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -330,8 +354,13 @@ export default {
 
   data() {
     return {
+      // youWorkedFor: 0,
+
       stepInfoShow: false,
       stepEditShow: false,
+
+      showInactive: false,
+      inactiveUsers: [],
 
       valueTag: [],
       optionsTag: [],
@@ -387,8 +416,12 @@ export default {
   },
 
   methods: {
-    resetTaskView(){
-        store.commit("resetTaskView");
+    showInactiveUsers() {
+      //TRAZITI OD CELAVOG API KOJI VRACA SVE NEAKTIVNE USERE
+    },
+
+    resetTaskView() {
+      store.commit("resetTaskView");
     },
 
     removeUser(removedOption) {
@@ -413,8 +446,7 @@ export default {
 
       axios
         .get(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags",
-          {
+          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags", {
             params: {
               proid: this.selectedProjectID,
               type: "task",
@@ -443,8 +475,7 @@ export default {
     saveChanges() {
       axios
         .put(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
-          {
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
             sid: localStorage.sid,
@@ -466,13 +497,13 @@ export default {
           this.getTaskInfo(this.selectedItemID);
 
           (this.edit.name = undefined),
-            (this.edit.description = undefined),
-            (this.edit.deadline = undefined),
-            (this.edit.priority = undefined),
-            (this.edit.status = undefined),
-            (this.edit.progress = undefined),
-            (this.edit.timespent = undefined),
-            (this.edit.estTime = undefined);
+          (this.edit.description = undefined),
+          (this.edit.deadline = undefined),
+          (this.edit.priority = undefined),
+          (this.edit.status = undefined),
+          (this.edit.progress = undefined),
+          (this.edit.timespent = undefined),
+          (this.edit.estTime = undefined);
 
           this.reportWritingToDB(response);
         });
@@ -683,6 +714,21 @@ export default {
   },
 
   computed: {
+
+    youWorked() {
+      if (this.stepInfo !== []) {
+        for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
+          if (this.stepInfo[0].usrworking[i].isyou === 'true') {
+            return this.stepInfo[0].usrworking[i].timespent;
+          } else {
+            continue;
+          }
+        }
+      } else {
+        return 0;
+      }
+    },
+
     tagStringArray() {
       let niz = [];
       for (var i = 0; i < this.valueTag.length; i++) {
@@ -791,20 +837,22 @@ export default {
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<style scoped>
-h1 {
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
+</style><style scoped>h1 {
   text-align: left;
 }
+
 .card-header.darkTheme.bg-warning,
 .card-footer.darkTheme.bg-warning {
   color: initial;
 }
+
 .card-header.darkTheme,
 .card-footer.darkTheme {
   background: var(--dark);
   color: var(--sec-color);
 }
+
 .card.darkTheme {
   background: var(--dark-super);
   color: var(--sec-color) !important;
@@ -850,5 +898,10 @@ label {
   padding: 10px 20px;
   justify-content: space-between;
   color: initial;
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>
