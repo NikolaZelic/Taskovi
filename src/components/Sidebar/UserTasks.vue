@@ -1,6 +1,7 @@
 <template>
   <!-- <transition name="modal"> -->
     <div class="modal" >
+      <div class="modal-content">
       <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
         body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
 
@@ -40,7 +41,7 @@
 
         </b-table>
       </b-modal>
-     </div>
+     </div></div>
   <!--</transition> -->
 </template>
 <script>
@@ -96,7 +97,7 @@ export default {
 };
 </script>
 <style scoped>
-.modal {
+.modal-mask {
   position: fixed;
   z-index: 1;
   padding-top: 12%;

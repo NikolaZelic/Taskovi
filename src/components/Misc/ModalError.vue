@@ -1,6 +1,6 @@
 <template lang="html">
   <transition name="modal">
-    <div class="modal-error-container" @click="closeModal" id='cm'>
+    <div class="modal-mask" @click="closeModal" id='cm'>
       <div class="modal-content">
         <p>
           <i class="fas fa-exclamation-triangle"></i>
@@ -39,7 +39,7 @@ p {
   text-align: center;
 }
 
-.modal-error-container {
+.modal-mask {
   position: fixed;
   z-index: 1;
   padding-top: 12%;
@@ -48,7 +48,6 @@ p {
   margin: 0 !important;
   width: 100% !important;
   height: 100%;
-  /* overflow: auto; */
   background-color: rgb(0, 0, 0) !important;
   background-color: rgba(0, 0, 0, 0.4) !important;
   transition: opacity 0.3s ease;

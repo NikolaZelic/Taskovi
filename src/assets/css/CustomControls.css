@@ -19,7 +19,7 @@
 .multiselect__option--highlight,
 .multiselect__option--highlight::after {
   background: var(--ac-color) !important;
-  color: var( --sec-bg-color) !important;
+  color: var(--sec-bg-color) !important;
 }
 
 .multiselect__tags {

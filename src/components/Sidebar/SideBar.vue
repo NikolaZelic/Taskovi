@@ -65,8 +65,8 @@
             <div class='tag-filter'>
               <b-input-group class='search custom-modern'>
 
-                <multiselect id='tags' v-model='tagValue' :options="tagsNet" :preserveSearch="true" :multiple="true" :taggable="false" track-by='id'
-                  :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" placeholder="Search by Tags"></multiselect>
+                <multiselect id='tags' class='darkTheme' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true" :multiple="true" :taggable="false" track-by='id'
+                 :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags"></multiselect>
 
               </b-input-group>
             </div>
@@ -118,7 +118,7 @@
 
     </div>
 
-    <user-tasks></user-tasks>
+    <user-tasks v-if='showTaskPeople'></user-tasks>
 
   </aside>
 </template>
@@ -126,8 +126,8 @@
 <script>
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
-import { mapGetters } from "vuex";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import { instance as axios } from "@/api/config.js";
 import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
 import Multiselect from "vue-multiselect";
@@ -140,9 +140,11 @@ export default {
   data() {
     return {
       tagsNet: [],
-      tagValue: undefined,
+      tagsInput: [],
+      tagLoading: false,
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
+      showTaskPeople: true,
       activePopup: false,
       activeItem: undefined,
       selectedFilter: [],
@@ -296,6 +298,26 @@ export default {
     }
   },
   methods: {
+    showTagRes({text}){
+      return `${text}`;
+    },
+    getTagSuggestions(query) {
+      this.tagLoading = true;
+      axios
+        .get("projects/:proid/tags", {
+          params: {
+            proid: this.project.id,
+            searchstring: query,
+            type: "task",
+            sid: localStorage.sid
+          }
+        })
+        .then(r => {
+          // console.log(r.data.data);
+          this.tagsNet = r.data.data;
+          this.tagLoading = false;
+        });
+    },
     selectAndSet(item) {
       this.selectItem(item.id);
       this.activeItem = item.id;
@@ -353,7 +375,7 @@ export default {
       store.dispatch("itemAddClick");
     },
     editPeopleButton(item) {
-      console.log("IMPLEMENT USER EDIT");
+      this.showTaskPeople = true;
     },
     editItemButton(item) {
       this.selectItem(item.id);
