@@ -135,7 +135,7 @@ export default {
       currentTabIndex: 0,
       activePopup: false,
       activeItem: undefined,
-      selectedFilter:undefined,
+      selectedFilter:[],
       project: {
         title: undefined,
         id: undefined
