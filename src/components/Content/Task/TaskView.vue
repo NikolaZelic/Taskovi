@@ -199,7 +199,7 @@
 
                   </li>
 
-                  <!-- <li class="mt-5">Show inactive users:</li> -->
+                  <li class="mt-3">Show inactive workers...</li>
 
                 </ul>
               </td>
