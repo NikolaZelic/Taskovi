@@ -20,15 +20,15 @@
             <table>
               <tr v-for='(t,index) in tableData' :key='index'>
                 <td>{{t.name}}:</td>
-                <td> 
+                <td>
                   <input type="text" v-model.trim="t.value" :disabled="editMode" />
-                  </td>
+                </td>
               </tr>
             </table>
           </div>
 
           <button @click='edit' class="op-btn btn btn-warning">
-          <i class="fas fa-pen"></i> {{editMode?"Edit":"Save"}}</button>
+            <i class="fas fa-pen"></i> {{editMode?"Edit":"Save"}}</button>
         </div>
       </div>
     </transition>
@@ -81,7 +81,6 @@ export default {
               store.commit("modalStatus", {
                 message: "Success"
               });
-            console.log('2')
               store.commit("localStorage", {
                 name: this.tableData[0].value,
                 surname: this.tableData[1].value,
@@ -210,6 +209,7 @@ export default {
   align-self: center;
   margin: 0 15px;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;

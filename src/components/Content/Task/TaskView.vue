@@ -797,7 +797,10 @@ export default {
 h1 {
   text-align: left;
 }
-
+.card-header.darkTheme.bg-warning,
+.card-footer.darkTheme.bg-warning {
+  color: initial;
+}
 .card-header.darkTheme,
 .card-footer.darkTheme {
   background: var(--dark);
@@ -806,6 +809,10 @@ h1 {
 .card.darkTheme {
   background: var(--dark-super);
   color: var(--sec-color) !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #6f6f6f1f;
 }
 
 .badge {

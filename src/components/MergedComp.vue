@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar :class="{max: checkShow(0,false,false) || checkShow(1,false,false) && this.taskid === undefined}" />
+    <side-bar :class="{max: checkShow(0,false,false) || checkShow(1,false,false) && this.taskID === undefined}" />
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent" :class='{darkTheme: darkTheme}'>
 
@@ -11,18 +11,18 @@
         <!-- Task -->
         <task-edit v-if="checkShow(1,true)" />
         <task-add v-if="checkShow(1,false,true)" />
-        <task-view v-if='checkShow(1,false,false,false) && this.taskid !== undefined' />
+        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
 
         <!-- Step -->
         <step-add v-if="itemAddStepButton" />
 
       </div>
-      <!-- <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' /> -->
+      <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' />
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
     <!-- <user-options></user-options> -->
-    <modal-complete v-if="modalStatusActive" />
+    <!-- <modal-complete v-if="modalStatusActive" /> -->
     <modal-error v-if="modalErrorActive" />
   </div>
 </template>
@@ -42,7 +42,7 @@ import ProjectManage from "@/components/Content/Project/ProjectManage";
 import FeedElement from "@/components/Feed/FeedElement";
 
 import ModalError from "@/components/Misc/ModalError";
-import ModalComplete from "@/components/Misc/ModalComplete";
+// import ModalComplete from "@/components/Misc/ModalComplete";
 
 import UserOptions from "@/components/UserOptions";
 import { api } from "@/api/index.js";
@@ -60,7 +60,7 @@ export default {
     TaskAdd,
     UserOptions,
     ModalError,
-    ModalComplete
+    // ModalComplete
   },
   data() {
     return {
@@ -71,13 +71,40 @@ export default {
   },
   watch: {
     modalStatusActive(val) {
-      if (val === true) {
-        setTimeout(function() {
-          store.commit("modalStatus", {
-            active: false
-          });
-        }, 4000);
-      }
+      console.log(val);
+      if(!val) return;
+      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger"; 
+      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle" ; 
+
+      let message = this.modalStatus.message;
+      this.$toasted.show(message, {
+        position: "bottom-right",
+        duration: 8000,
+        className: bgColor + "",
+        icon: {
+          name: icon
+        },
+        action: {
+          // text: "X",
+          class: 'fas fa-times',
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0);
+          }
+        }
+      });
+      
+      store.commit('modalStatus',{
+          active: false
+      })
+
+      // console.log(val);
+      // // if (val === true) {
+      // setTimeout(function() {
+      //   store.commit("modalStatus", {
+      //     active: false
+      //   });
+      // }, 4000);
+      // // }
     },
     itemEditButton(val) {
       this.editBtn = val !== undefined;
@@ -94,6 +121,7 @@ export default {
       selectedTab: "currentTabIndex",
       modalErrorActive: state => state.modalError.active,
       modalStatusActive: state => state.modalStatus.active,
+      modalStatus: state => state.modalStatus,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
@@ -103,7 +131,7 @@ export default {
     }),
     ...mapGetters({
       isFocus: "isFocus",
-      taskid: "selectedItemID"
+      taskID: "selectedItemID"
     })
   },
   methods: {
@@ -148,6 +176,22 @@ export default {
   flex-direction: column;
   background-color: #24262d;
   min-height: 100vh;
+}
+
+.toasted.primary .action {
+  color: black;
+}
+
+.alert-success {
+  color: #11441d !important;
+  background-color: #79e292e8 !important;
+  border-color: #37e05e !important;
+}
+
+.alert-danger {
+  color: #441111 !important;
+  background-color: #e28079eb !important;
+  border-color: #e05937 !important;
 }
 
 .rightside {
