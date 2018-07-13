@@ -167,6 +167,7 @@ export default {
         .then(r => {
           let sid = r.data.sid;
           if (sid != undefined || sid != null) {
+            console.log('1')
             store.commit("localStorage", {
               name: r.data.user.name,
               surname: r.data.user.surname,

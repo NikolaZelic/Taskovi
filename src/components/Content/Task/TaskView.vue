@@ -378,12 +378,12 @@ export default {
   },
 
   methods: {
-    removeUser(removedOption){
+    removeUser(removedOption) {
       let user = {
         id: removedOption.id,
         name: removedOption.name,
         email: removedOption.email
-      }
+      };
 
       this.valueUser.push(user);
       // console.log(removedOption.email);
@@ -406,7 +406,7 @@ export default {
               proid: this.selectedProjectID,
               type: "task",
               searchstring: this.$refs.tagSearchString.search,
-              sid: window.localStorage.getItem("sid")
+              sid: localStorage.sid
             }
           }
         )
@@ -434,7 +434,7 @@ export default {
           {
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
-            sid: window.localStorage.getItem("sid"),
+            sid: localStorage.sid,
 
             title: this.edit.name,
             description: this.edit.description,
@@ -483,13 +483,12 @@ export default {
         .get("http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid", {
           params: {
             proid: projectID,
-            sid: window.localStorage.getItem("sid")
+            sid: localStorage.sid
           }
         })
         .then(response => {
-          // console.log(response.data.data);
-          this.optionsUser = response.data.data.users;
-          // console.log(response.data.data)
+          if (response.data.data !== undefined)
+            this.optionsUser = response.data.data.users;
         });
     },
 
@@ -519,7 +518,7 @@ export default {
             params: {
               tasid: this.selectedItemID,
               stepid: stepID,
-              sid: window.localStorage.getItem("sid")
+              sid: localStorage.sid
             }
           }
         )

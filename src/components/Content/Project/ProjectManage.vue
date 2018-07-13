@@ -25,7 +25,7 @@
         body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
 
         <b-input-group>
-          <b-form-input v-model="email" ref="focusThis" placeholder="Type email" />
+          <b-form-input v-model="email" class="emailDark" ref="focusThis" placeholder="Type email" />
           <b-input-group-append>
             <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
           </b-input-group-append>
@@ -167,7 +167,7 @@ export default {
         .get("projects/:proid", {
           params: {
             proid: store.getters.selectedItemID,
-            sid: window.localStorage.sid
+            sid: localStorage.sid
           }
         })
         .then(result => {
@@ -198,7 +198,7 @@ export default {
           description: this.project.description,
           deadline: this.project.deadline,
           usersarray: this.usersString,
-          sid: window.localStorage.sid
+          sid: localStorage.sid
         })
         .then(r => {
           if (r.data.status === "OK") {
@@ -231,7 +231,7 @@ export default {
           deadline: this.project.deadline,
           usersarray: this.usersWorking,
           proid: store.getters.selectedItemID,
-          sid: window.localStorage.sid
+          sid: localStorage.sid
         })
         .then(r => {
           if (r.data.status === "OK") {
@@ -351,10 +351,14 @@ export default {
 </script>
 
 <style scoped>
-
 .pro-edit {
   display: flex;
   flex-direction: column;
+}
+
+.emailDark {
+  background: #2d3436;
+  color: #fff;
 }
 
 .header {

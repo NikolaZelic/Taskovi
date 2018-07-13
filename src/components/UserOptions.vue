@@ -81,6 +81,7 @@ export default {
               store.commit("modalStatus", {
                 message: "Success"
               });
+            console.log('2')
               store.commit("localStorage", {
                 name: this.tableData[0].value,
                 surname: this.tableData[1].value,
@@ -127,7 +128,7 @@ export default {
   height: 100%;
   width: 100%;
   background: #101010c2;
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;

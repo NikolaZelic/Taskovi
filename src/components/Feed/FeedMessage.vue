@@ -69,7 +69,7 @@ export default {
         "/feeds/" +
         this.mess.fed_id +
         "?sid=" +
-        window.localStorage.sid
+        localStorage.sid
       );
     }
   },

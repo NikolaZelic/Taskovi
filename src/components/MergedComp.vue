@@ -1,25 +1,26 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar :class="{max: checkShow(0,false,false)}" />
+    <side-bar :class="{max: checkShow(0,false,false) || checkShow(1,false,false) && this.taskid === undefined}" />
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent" :class='{darkTheme: darkTheme}'>
 
-        <!-- Editing existing -->
+        <!-- checkShow(selectedTab,itemEdit = false,itemAdd = false,itemAddTask = false) -->
+        <!-- Project -->
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
-        <task-edit v-if="checkShow(1,true) || checkShow(2,true)" />
 
-        <!-- Adding new -->
-        <step-add v-if="itemAddStepButton"/>
-        <task-add v-if="checkShow(1,false,true) || checkShow(2,false,true)" />
+        <!-- Task -->
+        <task-edit v-if="checkShow(1,true)" />
+        <task-add v-if="checkShow(1,false,true)" />
+        <task-view v-if='checkShow(1,false,false,false) && this.taskid !== undefined' />
 
-        <!-- Viewing existing -->
-        <task-view v-else-if='checkShow(1,false,false) || checkShow(2,false,false)' />
+        <!-- Step -->
+        <step-add v-if="itemAddStepButton" />
 
       </div>
-      <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}'/>
+      <feed-element v-if="this.taskid && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' />
     </div>
-  <!-- <router-link to="/user"></router-link> -->
-  <router-view></router-view>
+    <!-- <router-link to="/user"></router-link> -->
+    <router-view></router-view>
     <!-- <user-options></user-options> -->
     <modal-complete v-if="modalStatusActive" />
     <modal-error v-if="modalErrorActive" />
@@ -154,10 +155,12 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .feed {
   background-color: var(--main-bg-color);
   color: var(--main-color);
 }
+
 .feed.darkTheme {
   background-color: var(--sec-bg-color);
   color: var(--sec-color);

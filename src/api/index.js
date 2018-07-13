@@ -1,9 +1,9 @@
 import {
   instance as axios
 } from './config.js';
-// import {
-//   store
-// } from '@/store/index.js';
+import {
+  store
+} from '@/store/index.js';
 import router from '../router/index.js';
 
 // KAD PRAVIS API OBAVEZNO KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
@@ -11,8 +11,8 @@ import router from '../router/index.js';
 export const api = {
 
   //#region Zelic
-  createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags){
-    return axios.post('tasks',{
+  createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags) {
+    return axios.post('tasks', {
       sid: window.localStorage.sid,
       type: 'step',
       proid: pro_id,
@@ -28,7 +28,7 @@ export const api = {
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
-  createTask(title, description, deadline, tagarray, priorety,  pro_id) {
+  createTask(title, description, deadline, tagarray, priorety, pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
       type: 'task',
       proid: pro_id,
@@ -52,8 +52,8 @@ export const api = {
     });
   },
   // Koristi se u TaskAdd.vue
-  suggestTags(pro_id,tagFor, searchStr) {
-    return axios.get("projects/"+pro_id+"/tags", {
+  suggestTags(pro_id, tagFor, searchStr) {
+    return axios.get("projects/" + pro_id + "/tags", {
       params: {
         sid: window.localStorage.sid,
         searchstring: searchStr,
@@ -110,8 +110,14 @@ export const api = {
     axios.get('auth/users?sid=' + sid).then(r => {
       let statusOK = r.data.status === 'OK';
       if (statusOK) {
-        window.localStorage.name = r.data.name;
-        window.localStorage.surname = r.data.surname;
+        localStorage.name = r.data.name;
+        localStorage.surname = r.data.surname;
+        localStorage.email = r.data.email;
+        store.commit("localStorage", {
+          name: localStorage.name,
+          surname: localStorage.surname,
+          email: localStorage.email
+        });
         router.push('/');
       } else {
         router.push('/auth');
@@ -156,12 +162,12 @@ export const api = {
 
 
   getTaskInfo(taskID) {
-    return axios.get("tasks/:tasid/steps",{
+    return axios.get("tasks/:tasid/steps", {
       params: {
         tasid: taskID,
         sid: window.localStorage.sid
       }
-    })
+    });
   }
 
 };

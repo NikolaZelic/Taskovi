@@ -133,13 +133,13 @@ export default {
       tagValue: undefined,
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
+      activePopup: false,
+      activeItem: undefined,
+      selectedFilter:undefined,
       project: {
         title: undefined,
         id: undefined
       },
-      activePopup: false,
-      activeItem: undefined,
-      selectedFilter: ["cr", "as"],
       radioFilter: [
         {
           text: "Created",
@@ -205,6 +205,7 @@ export default {
         {
           key: "unseen_feed",
           label: "N",
+          sortable: true,
           class: "text-center"
         },
         {
@@ -227,6 +228,7 @@ export default {
         {
           key: "unseen_feed",
           label: "N",
+          sortable: true,
           class: "text-center"
         },
         {
@@ -675,15 +677,11 @@ h2 {
   border-right: 1px solid var(--ac-color-dark);
 }
 
-/* .form-filter { */
-
-/* border-bottom: 1px solid gray; */
-
-/* margin-bottom: 10px; */
-
-/* } */
-
 .form-filter > form {
+  margin-bottom: 10px;
+}
+
+.tag-filter {
   margin-bottom: 10px;
 }
 
@@ -742,6 +740,9 @@ label {
 @media screen and (max-width: 992px) {
   .sidebar-lower {
     height: 50vh;
+  }
+  #sidebar.max {
+    height: 100vh;
   }
 }
 </style>
