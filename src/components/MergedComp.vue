@@ -42,7 +42,7 @@ import ProjectManage from "@/components/Content/Project/ProjectManage";
 import FeedElement from "@/components/Feed/FeedElement";
 
 import ModalError from "@/components/Misc/ModalError";
-import ModalComplete from "@/components/Misc/ModalComplete";
+// import ModalComplete from "@/components/Misc/ModalComplete";
 
 import UserOptions from "@/components/UserOptions";
 import { api } from "@/api/index.js";
@@ -60,7 +60,7 @@ export default {
     TaskAdd,
     UserOptions,
     ModalError,
-    ModalComplete
+    // ModalComplete
   },
   data() {
     return {
@@ -72,24 +72,30 @@ export default {
   watch: {
     modalStatusActive(val) {
       console.log(val);
-      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger"; // FIX THIS
-      let icon = this.modalStatus.ok ? "exclamation-triangle" : "check"; // FIX THIS
+      if(!val) return;
+      let bgColor = this.modalStatus.ok ? "alert-success" : "alert-danger"; 
+      let icon = this.modalStatus.ok ? "check" : "exclamation-triangle" ; 
 
       let message = this.modalStatus.message;
       this.$toasted.show(message, {
         position: "bottom-right",
-        duration: null,
+        duration: 8000,
         className: bgColor + "",
         icon: {
           name: icon
         },
         action: {
-          text: "X",
+          // text: "X",
+          class: 'fas fa-times',
           onClick: (e, toastObject) => {
             toastObject.goAway(0);
           }
         }
       });
+      
+      store.commit('modalStatus',{
+          active: false
+      })
 
       // console.log(val);
       // // if (val === true) {
@@ -114,7 +120,8 @@ export default {
     ...mapState({
       selectedTab: "currentTabIndex",
       modalErrorActive: state => state.modalError.active,
-      modalStatusActive: state => state.modalStatus,
+      modalStatusActive: state => state.modalStatus.active,
+      modalStatus: state => state.modalStatus,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
@@ -171,16 +178,20 @@ export default {
   min-height: 100vh;
 }
 
+.toasted.primary .action {
+  color: black;
+}
+
 .alert-success {
-  color: #11441d;
-  background-color: #79e292;
-  border-color: #37e05e;
+  color: #11441d !important;
+  background-color: #79e292e8 !important;
+  border-color: #37e05e !important;
 }
 
 .alert-danger {
-  color: #441111;
-  background-color: #e28079;
-  border-color: #e05937;
+  color: #441111 !important;
+  background-color: #e28079eb !important;
+  border-color: #e05937 !important;
 }
 
 .rightside {

@@ -15,7 +15,7 @@ const mutations = {
   },
 
   modalStatus(state, params) {
-    store.state.modalStatus.active = true;
+    store.state.modalStatus.active = params.active !== false;
     store.state.modalStatus.ok = params.ok !== undefined ? params.ok : true;
     store.state.modalStatus.message = params.message !== undefined ? params.message : '';
   },

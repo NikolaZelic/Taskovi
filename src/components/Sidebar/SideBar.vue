@@ -310,12 +310,8 @@ export default {
           this.actionTabDataProject();
           break;
         case 1:
-          // case 2:
           this.getTaskFilterData();
           break;
-        // case 3:
-        //   this.actionTabDataTeam();
-        //   break;
       }
     },
     getTaskFilterData() {
@@ -377,8 +373,8 @@ export default {
     },
     changeTheme() {
       store.commit("modalStatus", {
-        ok: true,
-        message: "HI!"
+        ok: false,
+        message: "HI llodlalsdasdmaskdnaknsd!"
       });
       // localStorage.dark = !this.darkTheme;
       // store.commit("darkTheme", !this.darkTheme);
@@ -418,7 +414,7 @@ export default {
           });
         }
         return this.projectFields;
-      }
+      }else 
       if (
         this.itemAction.edit !== undefined ||
         this.itemAction.add !== undefined ||
