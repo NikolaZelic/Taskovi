@@ -12,16 +12,10 @@
   color: #eee;
 }
 
-/* input.darkTheme,
-textarea.darkTheme, */
-
-/* input.form-control,
-textarea.form-control {
-  border-radius: 0;
-  border: 1px solid #eee5;
+.darkTheme {
+  background: #2d3436;
   color: #eee;
-  background: #f1eadf;
-} */
+}
 
 .maincontent.darkTheme input,
 .maincontent.darkTheme textarea,
@@ -62,14 +56,8 @@ textarea.form-control {
   color: #fff;
 }
 
-/* .darkTheme *{
-  background: #2d3436;
-  border: 0;
-} */
-
 input.darkTheme::placeholder {
   color: #888;
-  /* color: #ffb037; */
 }
 
 .form-control.darkTheme:focus {

@@ -3,7 +3,7 @@
     <table>
       <tr>
         <td>User: </td>
-        <td>{{ SurnameAndName }}</td>
+        <td>{{ userInfo }}</td>
       </tr>
       <tr>
         <td>Tasks working on: </td>
@@ -26,8 +26,11 @@ import { store } from "@/store/index.js";
 import { mapState } from "vuex";
 export default {
   computed: {
-    SurnameAndName() {
-      return localStorage.surname + " " + localStorage.name;
+    ...mapState({
+      user: state => state.userStorage
+    }),
+    userInfo() {
+      return this.user.name + " " + this.user.surname;
     }
   }
 };
@@ -41,6 +44,7 @@ export default {
   border: 1px solid var(--ac-color-light);
   bottom: 0;
   display: inline-block;
+  z-index: 1;
   background: #1d1d1dff;
   min-width: 300px;
   min-height: 140px;

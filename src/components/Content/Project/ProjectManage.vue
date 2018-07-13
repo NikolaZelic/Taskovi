@@ -21,7 +21,7 @@
 
       <b-btn v-b-modal.modal1 variant="primary">View and change users</b-btn>
 
-      <b-modal id="modal1" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
+      <b-modal id="modal1" title="Add or remove users from project" size="lg"   header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
         body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
 
         <b-input-group>
@@ -31,7 +31,7 @@
           </b-input-group-append>
         </b-input-group>
 
-        <b-table :dark=true :items='project.users' :field='usersField' responsive>
+        <b-table :dark=true :items='project.users' :fields='usersField' responsive>
 
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
@@ -75,13 +75,13 @@ import "flatpickr/dist/flatpickr.css";
 import { instance as axios } from "@/api/config.js";
 import { store } from "@/store/index.js";
 import { mapGetters, mapState } from "vuex";
-import Multiselect from "vue-multiselect";
+// import Multiselect from "vue-multiselect";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/themes/confetti.css");
 export default {
   components: {
-    flatPickr,
-    Multiselect
+    flatPickr
+    // Multiselect
   },
   data() {
     return {
@@ -103,7 +103,7 @@ export default {
         altFormat: "j M, Y H:i",
         altInput: true
       },
-      usersField: ["email", "name", "surname", "admin"],
+      usersField: ["email", "name", "surname", "admin", "delete"],
       email: undefined,
       isAdmin: false
       // options: []
@@ -149,6 +149,7 @@ export default {
       };
 
       this.project.users.push(user);
+      this.email = "";
     },
     setupInfo() {
       for (var i = 0; i < this.currentTabData.length; i++) {
@@ -171,7 +172,6 @@ export default {
         })
         .then(result => {
           if (result.data.status === "OK") {
-            console.log("asdd");
             let moreInfo = result.data.data;
 
             for (var i = 0; i < moreInfo.users.length; i++) {
@@ -350,8 +350,8 @@ export default {
 };
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
+
 .pro-edit {
   display: flex;
   flex-direction: column;

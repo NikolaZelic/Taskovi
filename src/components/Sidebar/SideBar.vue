@@ -54,18 +54,29 @@
               <b-input-group-text slot="prepend">
                 <span class="fas fa-search" @click='focusSearch'></span>
               </b-input-group-text>
-              <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Type to Search" />
+              <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
               <b-input-group-append v-if='tabs[currentTabIndex].search'>
                 <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
 
-          <div class="item-filter">
-            <b-form-group v-if="showSubFilter()" role="group">
-              <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-              </b-form-checkbox-group>
-            </b-form-group>
+          <div v-if="showSubFilter()">
+            <div class='tag-filter'>
+              <b-input-group class='search custom-modern'>
+
+                <multiselect id='tags' v-model='tagValue' :options="tagsNet" :preserveSearch="true" :multiple="true" :taggable="false" track-by='id'
+                  :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" placeholder="Search by Tags"></multiselect>
+
+              </b-input-group>
+            </div>
+
+            <div class="item-filter">
+              <b-form-group role="group">
+                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+                </b-form-checkbox-group>
+              </b-form-group>
+            </div>
           </div>
 
         </div>
@@ -81,6 +92,10 @@
 
             <template slot="unseen_feed" slot-scope="data">
               <span class='badge badge-success'>{{data.item.unseen_feed}}</span>
+            </template>
+
+            <template slot='HEAD_unseen_feed' slot-scope="data">
+              <span class="fas fa-bell" title="Notifications"></span>
             </template>
 
             <template slot=''></template>
@@ -106,12 +121,51 @@ import { api } from "@/api/index.js";
 import { mapGetters } from "vuex";
 import { mapState } from "vuex";
 import UserPopup from "./UserPopup";
+import Multiselect from "vue-multiselect";
 export default {
   components: {
-    UserPopup
+    UserPopup,
+    Multiselect
   },
   data() {
     return {
+      tagsNet: [],
+      tagValue: undefined,
+      totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
+      currentTabIndex: 0,
+      project: {
+        title: undefined,
+        id: undefined
+      },
+      activePopup: false,
+      activeItem: undefined,
+      selectedFilter: ["cr", "as"],
+      radioFilter: [
+        {
+          text: "Created",
+          value: "cr"
+        },
+        {
+          text: "Assigned",
+          value: "as"
+        },
+        {
+          text: "Archived",
+          value: "ar"
+        }
+      ],
+      tabs: [
+        {
+          name: "Projects",
+          icon: "fas fa-project-diagram",
+          search: ""
+        },
+        {
+          name: "Tasks",
+          icon: "fas fa-tasks",
+          search: ""
+        }
+      ],
       projectFields: [
         {
           key: "title",
@@ -179,41 +233,6 @@ export default {
           key: "edit_item",
           label: "Edit",
           class: "text-center"
-        }
-      ],
-      totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
-      currentTabIndex: 0,
-      project: {
-        title: undefined,
-        id: undefined
-      },
-      activePopup: false,
-      activeItem: undefined,
-      selectedFilter: ["cr", "as"],
-      radioFilter: [
-        {
-          text: "Created",
-          value: "cr"
-        },
-        {
-          text: "Assigned",
-          value: "as"
-        },
-        {
-          text: "Archived",
-          value: "ar"
-        }
-      ],
-      tabs: [
-        {
-          name: "Projects",
-          icon: "fas fa-project-diagram",
-          search: ""
-        },
-        {
-          name: "Tasks",
-          icon: "fas fa-tasks",
-          search: ""
         }
       ]
     };
@@ -402,6 +421,7 @@ export default {
 };
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 #sidebar {
   color: #eee;

@@ -5,10 +5,11 @@ const mutations = {
   resetState() {
     store.state.sidebarTabData = [];
     store.state.sidebarItemSelection = [];
+    store.state.userStorage = {};
     store.state.darkTheme = undefined;
   },
   modalError(state, params) {
-    store.state.modalError.active = true;
+    store.state.modalError.active = params.active !== false;
     if (params.message !== undefined)
       store.state.modalError.message = params.message;
   },
@@ -17,6 +18,22 @@ const mutations = {
     store.state.modalStatus.active = true;
     store.state.modalStatus.ok = params.ok !== undefined ? params.ok : true;
     store.state.modalStatus.message = params.message !== undefined ? params.message : '';
+  },
+
+  localStorage(state, params) {
+    let name = params.name;
+    let surname = params.surname;
+    let email = params.email;
+    let sid = params.sid;
+    if (name !== undefined) localStorage.name = name;
+    if (surname !== undefined) localStorage.surname = surname;
+    if (email !== undefined) localStorage.email = email;
+    if (sid !== undefined) localStorage.sid = sid;
+    store.state.userStorage = {
+      name: name,
+      surname: surname,
+      email: email,
+    };
   },
 
   itemAddStep: () => {

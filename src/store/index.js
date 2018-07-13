@@ -26,6 +26,12 @@ export const store = new Vuex.Store({
   },
   strict: true,
   state: {
+    userStorage: {
+      name: undefined,
+      surname: undefined,
+      email: undefined,
+      // sid: undefined
+    },
     currentTabIndex: undefined,
     mainFocused: false,
     sidebarTabData: [],

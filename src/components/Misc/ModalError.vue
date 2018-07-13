@@ -1,13 +1,12 @@
 <template lang="html">
   <transition name="modal">
-    <div class="modal-error-container">
-      <!-- BROKEN FOR DIV @click="closeModal" -->
+    <div class="modal-error-container" @click="closeModal" id='cm'>
       <div class="modal-content">
         <p>
           <i class="fas fa-exclamation-triangle"></i>
           Error requesting data or internet not detected.</p>
         <p>{{ message }}</p>
-        <button class='btn btn-danger' @click="closeModal">Dismiss</button>
+        <button class='btn btn-danger' id='cm'>Dismiss</button>
         </div>
     </div>
   </transition>
@@ -18,8 +17,13 @@ import { store } from "@/store/index.js";
 import { mapState } from "vuex";
 export default {
   methods: {
-    closeModal() {
-      store.commit("modalError");
+    closeModal(val) {
+      let tar = val.target.id;
+      if (tar === "cm") {
+        store.commit("modalError", {
+          active: false
+        });
+      }
     }
   },
   computed: {

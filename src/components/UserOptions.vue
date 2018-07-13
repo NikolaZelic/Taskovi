@@ -38,6 +38,7 @@
 <script>
 import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -80,9 +81,11 @@ export default {
               store.commit("modalStatus", {
                 message: "Success"
               });
-              localStorage.name = this.tableData[0].value;
-              localStorage.surname = this.tableData[1].value;
-              localStorage.email = this.tableData[2].value;
+              store.commit("localStorage", {
+                name: this.tableData[0].value,
+                surname: this.tableData[1].value,
+                email: this.tableData[2].value
+              });
             } else {
               store.commit("modalStatus", {
                 ok: false,
@@ -106,10 +109,15 @@ export default {
       this.$router.push("/");
     }
   },
+  computed: {
+    ...mapState({
+      user: state => state.userStorage
+    })
+  },
   created() {
-    this.tableData[0].value = localStorage.name;
-    this.tableData[1].value = localStorage.surname;
-    this.tableData[2].value = localStorage.email;
+    this.tableData[0].value = this.user.name;
+    this.tableData[1].value = this.user.surname;
+    this.tableData[2].value = this.user.email;
   }
 };
 </script>

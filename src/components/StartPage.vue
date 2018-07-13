@@ -85,18 +85,10 @@
                   <a @click='loginVisible = !loginVisible'>Sign In</a>
                 </strong>
               </p>
-
             </div>
-
-
-
           </div>
-
         </transition>
       </template>
-      <!-- </transition-group> -->
-
-
 
       <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
 
@@ -107,6 +99,7 @@
 
 <script>
 import { api } from "@/api/index.js";
+import { store } from "@/store/index.js";
 import VueForm from "vue-form";
 export default {
   mixins: [new VueForm({})],
@@ -174,12 +167,12 @@ export default {
         .then(r => {
           let sid = r.data.sid;
           if (sid != undefined || sid != null) {
-            // WRITE SID TO STORE
-            window.localStorage.sid = sid;
-            window.localStorage.email = r.data.user.email;
-            window.localStorage.name = r.data.user.name;
-            window.localStorage.surname = r.data.user.surname;
-            // console.log(r)
+            store.commit("localStorage", {
+              name: r.data.user.name,
+              surname: r.data.user.surname,
+              email: r.data.user.email,
+              sid: sid
+            });
             this.$router.push("/");
           } else {
             alert(r.data.message);
@@ -195,7 +188,7 @@ export default {
         api
           .register(this.user)
           .then(r => {
-            if(r.data.registration === 'Success'){
+            if (r.data.registration === "Success") {
               this.loginVisible = true;
             }
           })

@@ -28,16 +28,17 @@ export default {
   },
   computed: {
     ...mapState({
-      scrollDownMess: state => state.modulefeed.scrollDownMess //vraca true ili false u zavisnosit da li treba spustiti scroll
+      scrollDownMess: state => state.modulefeed.scrollDownMess, //vraca true ili false u zavisnosit da li treba spustiti scroll
+      user: state => state.userStorage
     }),
     ...mapGetters({
       taskid: "selectedItemID"
     }),
     name() {
-      return window.localStorage.name;
+      return this.user.name;
     },
     surname() {
-      return window.localStorage.surname;
+      return this.user.surname;
     }
   },
   methods: {
