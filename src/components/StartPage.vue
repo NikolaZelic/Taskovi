@@ -4,7 +4,7 @@
       <h1>
         <strong>Tasker</strong>
       </h1>
-      
+
       <template v-if='loginVisible'>
         <transition name="slide-to-left" mode="out-in">
           <div class="form-auth" :key='1'>
@@ -167,7 +167,6 @@ export default {
         .then(r => {
           let sid = r.data.sid;
           if (sid != undefined || sid != null) {
-            console.log('1')
             store.commit("localStorage", {
               name: r.data.user.name,
               surname: r.data.user.surname,
@@ -369,15 +368,18 @@ h2 {
   transition: all 0.4s;
   /* margin-top: -100px; */
 }
+
 .slide-to-left-leave-active,
 .slide-to-right-leave-active {
   transition: all 0.4s;
 }
+
 .slide-to-left-leave-to,
 .slide-to-right-enter {
   opacity: 0;
   transform: translateX(200px);
 }
+
 .slide-to-left-enter,
 .slide-to-right-leave-to {
   opacity: 0;

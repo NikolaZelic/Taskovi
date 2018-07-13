@@ -22,10 +22,11 @@
 .maincontent.darkTheme .multiselect__tags,
 .maincontent.darkTheme .multiselect__input,
 .maincontent.darkTheme .multiselect__single,
-.maincontent.darkTheme .multiselect__option {
+.maincontent.darkTheme .multiselect__option,
+.maincontent.darkTheme .form-control {
   background: #2d3436 !important;
   color: #eee !important;
-  border: 0;
+  /* border: 1; */
   /* border-radius: 0; */
 }
 

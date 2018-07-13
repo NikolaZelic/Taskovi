@@ -3,7 +3,7 @@
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span>
-        <span v-show='currentTabIndex !== 0 || itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar"
+        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar"
           @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
@@ -98,7 +98,13 @@
               <span class="fas fa-bell" title="Notifications"></span>
             </template>
 
-            <template slot=''></template>
+            <!-- <template slot='HEAD_users' slot-scope="data">
+                  <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+            </template> -->
+
+            <template slot='users' slot-scope="data">
+                  <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+            </template>
 
             <template slot="edit_item" slot-scope="data">
               <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit" title="Edit Item"></span>
@@ -135,7 +141,7 @@ export default {
       currentTabIndex: 0,
       activePopup: false,
       activeItem: undefined,
-      selectedFilter:[],
+      selectedFilter: [],
       project: {
         title: undefined,
         id: undefined
@@ -226,9 +232,17 @@ export default {
           sortable: true
         },
         {
+          key: "sta_text",
+          label: "Status",
+          sortable: true
+        },
+        {
           key: "unseen_feed",
-          label: "N",
           sortable: true,
+          class: "text-center"
+        },
+        {
+          key: "users",
           class: "text-center"
         },
         {
@@ -338,6 +352,9 @@ export default {
     addItemButton() {
       store.dispatch("itemAddClick");
     },
+    editPeopleButton(item) {
+      console.log("IMPLEMENT USER EDIT");
+    },
     editItemButton(item) {
       this.selectItem(item.id);
       this.activeItem = item.id;
@@ -359,8 +376,12 @@ export default {
       this.$refs.search.$el.focus();
     },
     changeTheme() {
-      localStorage.dark = !this.darkTheme;
-      store.commit("darkTheme", !this.darkTheme);
+      store.commit("modalStatus", {
+        ok: true,
+        message: "HI!"
+      });
+      // localStorage.dark = !this.darkTheme;
+      // store.commit("darkTheme", !this.darkTheme);
     },
     userOptions() {
       this.$router.push("user");
@@ -379,6 +400,9 @@ export default {
       darkTheme: "darkTheme",
       sidebarActive: state => !state.mainFocused
     }),
+    ...mapGetters({
+      taskID: "selectedItemID"
+    }),
     activeArray() {
       return store.getters.currentTabData;
     },
@@ -394,6 +418,16 @@ export default {
           });
         }
         return this.projectFields;
+      }
+      if (
+        this.itemAction.edit !== undefined ||
+        this.itemAction.add !== undefined ||
+        this.taskID !== undefined
+      ) {
+        let shortTask = ["ID", "Tasks", "Edit"];
+        return this.taskFields.filter(item => {
+          return shortTask.includes(item.label);
+        });
       }
       return this.taskFields;
     }
