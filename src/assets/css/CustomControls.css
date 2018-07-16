@@ -8,9 +8,9 @@
   transform: scale(1.4);
 }
 
-.custom-control-label {
+/* .custom-control-label {
   color: white;
-}
+} */
 
 .multiselect__tag,
 .multiselect__tag-icon:after,
@@ -61,6 +61,11 @@ textarea.custom-modern {
 input.custom-modern::placeholder,
 textarea.custom-modern::placeholder {
   color: #888;
+}
+
+.form-control,
+.form-control:focus {
+  color: black ;
 }
 
 .form-control:hover {

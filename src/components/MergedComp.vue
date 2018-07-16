@@ -165,7 +165,7 @@ export default {
   display: flex;
   align-items: stretch;
   flex-direction: column;
-  background-color: #24262d;
+  background-color: var(--main-bg-color);
   min-height: 100vh;
 }
 

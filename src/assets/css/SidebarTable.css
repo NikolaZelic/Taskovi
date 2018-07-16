@@ -44,7 +44,7 @@
 .item-list tbody tr:hover {
   text-decoration: none;
   color: #ffc107;
-  background: #8e8e8e66 !important;
+  background: #545454fa !important;
 }
 
 .item-list tbody tr:active,

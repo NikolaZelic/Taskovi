@@ -45,48 +45,51 @@
       </div>
 
       <!-- <div class="sidebar-content" > -->
-      <div class="sidebar-body" :class="{ collapsed: !sidebarActive }">
+      <div class="sidebar-body" :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
         <!-- FILTERS -->
         <div class="form-filter">
 
-          <b-form-group>
-            <b-input-group class='search custom-modern'>
-              <b-input-group-text slot="prepend">
-                <span class="fas fa-search" @click='focusSearch'></span>
-              </b-input-group-text>
-              <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
-              <b-input-group-append v-if='tabs[currentTabIndex].search'>
-                <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
+          <template v-if="!showSubFilter()">
+            <b-form-group>
+              <b-input-group :class='{darkTheme:darkTheme}' class='search custom-modern'>
+                <b-input-group-text slot="prepend">
+                  <span class="fas fa-search" @click='focusSearch'></span>
+                </b-input-group-text>
+                <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
+                <b-input-group-append v-if='tabs[currentTabIndex].search'>
+                  <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </template>
 
-          <div v-if="showSubFilter()">
+          <template v-if="showSubFilter()">
             <div class='tag-filter'>
+
               <b-input-group class='search custom-modern'>
 
-                <multiselect id='tags' class='darkTheme' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet"
+                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet"
                   :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                  :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags"></multiselect>
+                  :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
 
               </b-input-group>
             </div>
-          </div>
+          </template>
 
-          <div v-if="showSubFilter()">
+          <template v-if="showSubFilter()">
             <div class="item-filter">
               <b-form-group role="group">
                 <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
                 </b-form-checkbox-group>
               </b-form-group>
             </div>
-          </div>
+          </template>
 
         </div>
-        
+
         <div class="item-list">
 
-          <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
+          <b-table responsive :items="activeArray" :dark='darkTheme' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
             :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
@@ -117,7 +120,7 @@
           </b-table>
         </div>
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add New</button>
+          <span class="fas fa-plus-circle"></span> Add New <span>{{tabs[currentTabIndex].single}}</span></button>
       </div>
 
     </div>
@@ -173,11 +176,13 @@ export default {
       tabs: [
         {
           name: "Projects",
+          single: "Project",
           icon: "fas fa-project-diagram",
           search: ""
         },
         {
           name: "Tasks",
+          single: "Task",
           icon: "fas fa-tasks",
           search: ""
         }
@@ -221,7 +226,7 @@ export default {
         {
           key: "unseen_feed",
           label: "N",
-          sortable: true,
+          // sortable: true,
           class: "text-center"
         },
         {
@@ -248,7 +253,7 @@ export default {
         },
         {
           key: "unseen_feed",
-          sortable: true,
+          // sortable: true,
           class: "text-center"
         },
         {
@@ -481,7 +486,7 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 #sidebar {
-  color: #eee;
+  /* color: #eee; */
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -683,33 +688,32 @@ h2 {
 .form-control {
   border-color: #717171;
 }
-
+ /*
 .search span {
   color: #fff;
-  /*  position: absolute;
+   position: absolute;
   left: 12px;
   top: 10px;
-  opacity: 0.8; */
-}
+  opacity: 0.8; 
+}*/
 
-.search .input-group-text {
-  background: #2d3436;
+/* .search .input-group-text {
   border-right: 0;
 }
 
 .search input {
-  /* text-indent: 25px; */
-  background: #2d3436;
+  text-indent: 25px; 
+   background: #2d3436;
   color: #fff;
-}
+} */
 
-.search input:hover {
+/* .search input:hover {
   border: 1px solid var(--ac-color);
 }
 
 .search input::placeholder {
   color: #888;
-}
+} */
 
 /* SEARCH END*/
 
@@ -722,7 +726,6 @@ h2 {
 
 .sidebar-body {
   max-width: 100%;
-  background: #272a31;
   transition: all 0.5s ease;
   width: 100%;
   flex: 1;

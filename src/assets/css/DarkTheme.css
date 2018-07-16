@@ -1,4 +1,4 @@
-.darkBackground {
+/* .darkBackground {
   background-color: #24262d;
   border-color: #ffb037;
 }
@@ -6,11 +6,11 @@
 .yellowText {
   color: #ffb037;
   border-color: #ffb037;
-}
+} 
 
 .lightGrayText {
   color: #eee;
-}
+}*/
 
 .darkTheme {
   background: #2d3436;
@@ -20,10 +20,13 @@
 .maincontent.darkTheme input,
 .maincontent.darkTheme textarea,
 .maincontent.darkTheme .form-control,
+.input-group.darkTheme div,
+.input-group.darkTheme input,
 .darkTheme .multiselect__tags,
 .darkTheme .multiselect__input,
 .darkTheme .multiselect__single,
-.darkTheme .multiselect__option {
+.darkTheme .multiselect__option,
+.darkTheme .multiselect__spinner {
   background: #2d3436 !important;
   color: #eee !important;
   /* border: 1; */
@@ -37,6 +40,9 @@
   border: 1px solid #eee5 !important;
 }
 
+.maincontent.darkTheme input::placeholder,
+.maincontent.darkTheme textarea::placeholder,
+.darkTheme .multiselect__tags::placeholder,
 .darkTheme .multiselect__input::placeholder,
 .darkTheme .multiselect__single::placeholder {
   color: #999 !important;
@@ -45,7 +51,7 @@
 .maincontent.darkTheme input:hover,
 .maincontent.darkTheme textarea:hover,
 .darkTheme .multiselect__tags:hover {
-  border: 1px solid #ffd391 !important;
+  border: 1px solid var(--ac-color) !important;
 }
 
 .maincontent.darkTheme input:focus,
@@ -57,24 +63,28 @@
   color: #fff;
 }
 
+.sidebar-body.darkTheme {
+  background: #24262d
+}
+
 input.darkTheme::placeholder {
   color: #888;
 }
 
 .form-control.darkTheme:focus {
-  border-color: #ffb037;
+  border-color: var(--ac-color);
   box-shadow: none;
   color: #eee;
 }
 
 .form-control.darkTheme:focus::placeholder {
-  color: #ffb037;
+  color: var(--ac-color);
 }
 
 .btn-outline-secondary:focus,
 .btn-outline-secondary:hover {
-  background-color: #ffb037;
-  border-color: #ffb037;
+  background-color: var(--ac-color);
+  border-color: var(--ac-color);
   color: #2d3436;
   box-shadow: none;
 }
@@ -82,7 +92,7 @@ input.darkTheme::placeholder {
 .btn-outline-secondary:active {
   background-color: #2d3436 !important;
   border-color: #2d3436 !important;
-  color: #ffb037 !important;
+  color: var(--ac-color) !important;
   box-shadow: none !important;
 }
 
