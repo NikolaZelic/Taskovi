@@ -256,7 +256,7 @@ export default {
           name: this.project.title,
           description: this.project.description,
           deadline: this.project.deadline,
-          usersarray: this.usersWorking,
+          usersarray: this.usersString, //usersWorking,
           proid: store.getters.selectedItemID,
           sid: localStorage.sid
         })
@@ -348,7 +348,8 @@ export default {
             // console.log("EMAIL KORISNIKA: "+ users[i].email);
             tempUsers.push({
               email: users[i].email,
-              admin: "false"
+              admin: "false" //"" + this.project.users[i].admin + ""
+              //zmaeniti ovaj parametar za admina da se prikazuje lepo a ne da bude harkodovano false
             });
           }
           return JSON.stringify(tempUsers);
