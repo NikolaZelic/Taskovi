@@ -1,5 +1,9 @@
-import {api} from '@/api/index.js';
-import {store} from '../index';
+import {
+  api
+} from '@/api/index.js';
+import {
+  store
+} from '../index';
 const actions = {
   readeFeeds(commit, params) {
     api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
@@ -16,7 +20,11 @@ const actions = {
       console.log("Dolazi ovde");
       var msg = state.messages;
       if (msg.length === 0) {
-        store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
+        store.dispatch("readeFeeds", {
+          taskid: params.taskid,
+          fedid: 0,
+          direction: "start"
+        });
       } else {
         store.dispatch("readeFeeds", {
           taskid: params.taskid,
@@ -26,47 +34,54 @@ const actions = {
       }
     });
   },
-  sendAttach(commit, params){
-    api.sendAttach(params.taskid, params.file).then(response =>{
-      //For refresh new messages
-      var msg = state.messages;
-      if (msg.length === 0) {
-        store.dispatch("readeFeeds", { taskid: params.taskid, fedid: 0, direction: "start" });
-      } else {
-        store.dispatch("readeFeeds", {
-          taskid: params.taskid,
-          fedid: msg[msg.length - 1].fed_id,
-          direction: "down"
-        });
-      }
-    })
-    .catch(err=>{
-      console.log("Error kod slanja filea");
-    });
+  sendAttach(commit, params) {
+    api.sendAttach(params.taskid, params.file).then(response => {
+        //For refresh new messages
+        var msg = state.messages;
+        if (msg.length === 0) {
+          store.dispatch("readeFeeds", {
+            taskid: params.taskid,
+            fedid: 0,
+            direction: "start"
+          });
+        } else {
+          store.dispatch("readeFeeds", {
+            taskid: params.taskid,
+            fedid: msg[msg.length - 1].fed_id,
+            direction: "down"
+          });
+        }
+      })
+      .catch(err => {
+        console.log("Error kod slanja fajla");
+      });
   }
 }
 
 const mutations = {
   addMessages: (state, params) => {
-    if(params.data){
+    if (params.data) {
       if (params.direction === 'start') {
         state.scrollDownMess = true;
         state.messages = params.data;
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
         params.data.forEach(e => state.messages.unshift(e));
-        if(params.data.length)document.getElementById("all").scrollTop = 300;
+        if (params.data.length) document.getElementById("all").scrollTop = 300;
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
           params.data.forEach(e => state.messages.push(e));
       }
     }
+  },
+  clearFeed: (state) => {
+    state.messages = [];
   }
 }
-const getters ={
+const getters = {
 
-  }
+}
 
 const state = {
   messages: [],

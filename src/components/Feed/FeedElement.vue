@@ -141,6 +141,7 @@ export default {
   },
   destroyed() {
     clearInterval(this.fInterval);
+    store.commit("clearFeed");
   }
 };
 </script>
@@ -188,7 +189,7 @@ export default {
 }
 
 .input textarea {
-  color:black;
+  color: black;
   padding: 5px 40px 5px 10px;
   flex: 1;
   background-color: #f8f8f8;

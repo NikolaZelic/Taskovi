@@ -65,12 +65,15 @@
             <div class='tag-filter'>
               <b-input-group class='search custom-modern'>
 
-                <multiselect id='tags' class='darkTheme' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true" :multiple="true" :taggable="false" track-by='id'
-                 :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags"></multiselect>
+                <multiselect id='tags' class='darkTheme' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet"
+                  :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
+                  :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags"></multiselect>
 
               </b-input-group>
             </div>
+          </div>
 
+          <div v-if="showSubFilter()">
             <div class="item-filter">
               <b-form-group role="group">
                 <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
@@ -80,6 +83,7 @@
           </div>
 
         </div>
+        
         <div class="item-list">
 
           <b-table responsive :items="activeArray" :dark='true' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
@@ -298,7 +302,7 @@ export default {
     }
   },
   methods: {
-    showTagRes({text}){
+    showTagRes({ text }) {
       return `${text}`;
     },
     getTagSuggestions(query) {
