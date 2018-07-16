@@ -148,6 +148,7 @@ export default {
     return {
       tagsNet: [],
       tagsInput: [],
+      tagsText: undefined,
       tagLoading: false,
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
@@ -299,6 +300,15 @@ export default {
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
       this.actionTabDataTeam();
+    },
+    tagsInput(val) {
+      // this.tagsText = "";
+      // WHEN A TAG IS CHANGED INVOKE API TASKS GET
+      // console.log(val.length);
+      this.getTaskFilterData();
+    },
+    tagsText(val) {
+      if (val !== undefined || val != "") this.getTaskFilterData();
     }
   },
   methods: {
@@ -306,6 +316,7 @@ export default {
       return `${text}`;
     },
     getTagSuggestions(query) {
+      this.tagsText = query;
       this.tagLoading = true;
       axios
         .get("projects/:proid/tags", {
@@ -338,7 +349,8 @@ export default {
       let index = this.currentTabIndex;
       switch (index) {
         case 0:
-          this.project.id = undefined;
+          // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
+          this.project = {};
           this.actionTabDataProject();
           break;
         case 1:
@@ -365,7 +377,9 @@ export default {
         pro_id: this.project.id,
         created: cr,
         assigned: as,
-        archived: ar
+        archived: ar,
+        searchstr: this.tagsText,
+        tagarray: this.tagIds
       });
     },
     actionTabDataProject() {
@@ -453,6 +467,13 @@ export default {
         });
       }
       return this.taskFields;
+    },
+    tagIds() {
+      let local = [];
+      this.tagsInput.forEach(element => {
+        local.push(element.id);
+      });
+      return local;
     }
   },
   created() {

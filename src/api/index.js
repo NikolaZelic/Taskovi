@@ -155,6 +155,8 @@ export const api = {
         created: params.created,
         assigned: params.assigned,
         archived: params.archived,
+        searchstr: params.searchstr,
+        tagarray: JSON.stringify(params.tagarray),
       }
     });
   },

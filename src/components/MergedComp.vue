@@ -64,7 +64,9 @@ export default {
     return {
       editBtn: false,
       addBtn: false,
-      addTaskBtn: false
+      addTaskBtn: false,
+      intervalSession: null,
+      intervalNotification: null
     };
   },
   watch: {
@@ -138,9 +140,25 @@ export default {
         itemAdd === this.addBtn &&
         itemAddTask === this.addTaskBtn
       );
+    },
+    checkNotifications() {
+      console.log("check notif");
+    },
+    refreshSession() {
+      // EVERY 15 MINUTES
+      api.sessionActive();
     }
   },
   beforeCreate() {
+    // this.intervalNotification = setInterval(function() {
+    //   this.checkNotifications();
+    // }.bind(this), 20000);
+    this.intervalSession = setInterval(
+      function() {
+        this.refreshSession();
+      }.bind(this),
+      900000
+    );
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
       this.$router.push("/auth");
@@ -152,6 +170,10 @@ export default {
     if (dark === "true") {
       store.commit("darkTheme", true);
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalSession);
+    clearInterval(this.intervalNotification);
   },
   destroyed() {
     console.log("User " + localStorage.name + " signed out. Destroying data.");
