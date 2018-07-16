@@ -15,9 +15,9 @@
 
         <!-- Step -->
         <step-add v-if="itemAddStepButton" />
+        <!-- <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' /> -->
 
       </div>
-      <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' />
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
@@ -32,6 +32,8 @@ import { store } from "@/store/index.js";
 import SideBar from "@/components/Sidebar/SideBar";
 
 import TaskView from "@/components/Content/Task/TaskView";
+
+
 import StepAdd from "@/components/Content/Task/StepAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
 

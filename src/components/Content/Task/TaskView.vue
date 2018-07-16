@@ -7,14 +7,114 @@
 
   <template v-else>
 
-      <div class='header'>
+      <nav class="nav nav-pills nav-fill mb-3">
+        <a class="nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General Info</a>
+        <a class="nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</a>
+        <a class="nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</a>
+      </nav>
+
+      <!-- <div class='header'>
       <h4>Task view:</h4>
       <button class='btn btn-dark' @click='resetTaskView'>
       <span class='fas fa-arrow-left'></span> Back</button>
+      </div> -->
+
+
+<!-- tesssssssst -->
+      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
+        <div class="card-header">
+          <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
+        </div>
+        <div class="card-body">
+          <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
+          <p>Description: {{this.taskGeneralInfo.description}}</p>
+          <p>Created by: {{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</p>
+          <p>Time created: {{this.taskGeneralInfo.tsk_timecreated}}</p>
+          <p>Deadline: {{this.taskGeneralInfo.tsk_deadline}}</p>
+          <p>Status: {{this.taskGeneralInfo.sta_text}}</p>
+          <p>Priority: {{this.taskGeneralInfo.pri_text}}</p>
+          <p>Tags: <span class="badge badge-success" v-for="tag in this.taskGeneralInfo.tags">{{ tag.text }}</span></p>
+        </div>
       </div>
 
+       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
+
+
+
+         <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
+         </div>
+
+         <div class="card-body">
+
+           <table class="table table-borderless text-center table-hover">
+
+             <thead>
+               <tr>
+                 <th scope="col">Status</th>
+                 <th scope="col">Title</th>
+                 <th scope="col">Deadline</th>
+                 <th scope="col">Tags</th>
+                 <th scope="col">Priority</th>
+                 <th scope="col">Working</th>
+               </tr>
+             </thead>
+
+             <tbody>
+               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()'>
+
+                 <td>
+                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
+                   <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
+                   <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
+                 </td>
+
+                 <td>
+                   {{ task.tsk_title}}
+                 </td>
+
+                 <td>
+                   {{ task.tsk_deadline }}
+                 </td>
+
+                 <td>
+                   <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
+                   <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
+                 </td>
+
+                 <td>
+                   <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
+                 </td>
+
+                 <td>
+                   <span v-if="task.you_are_worker === 1">
+                     <i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
+                   <span v-else>{{task.usrworking}}</span>
+                 </td>
+
+               </tr>
+             </tbody>
+
+           </table>
+
+         </div>
+
+         <div class="card-footer" :class='{darkTheme: darkTheme}'>
+           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
+         </div>
+
+
+
+      </div>
+
+      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
+        <feed-element />
+
+      </div>
+
+
+
       <!-- Showing data about all steps inside selected task -->
-      <div class="card" :class='{darkTheme: darkTheme}' v-if="!stepInfoShow && !stepEditShow">
+      <!-- <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
 
         <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
         </div>
@@ -77,10 +177,10 @@
           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
         </div>
 
-      </div>
+      </div> -->
 
       <!-- Showing data about selected step -->
-      <div class="card" :class='{darkTheme: darkTheme}' v-if='stepInfoShow && !stepEditShow && stepInfo[0] !== undefined'>
+      <!-- <div class="card" :class='{darkTheme: darkTheme}'  v-if="tabs.steps">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -182,7 +282,6 @@
             <tr>
               <td class="align-top">Working:</td>
               <td>
-                <!-- <p>Active users:</p> -->
                 <ul class="list-unstyled">
                   <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
 
@@ -192,7 +291,6 @@
                     <div class="media-body">
                       <div class="media-body">
                         <h5 class="mt-0 mb-1 inline-block">{{user.usr_name}}<small> -- {{user.usr_email}}</small></h5>
-                        <!-- <br> -->
                         <span>Worked on this step for {{user.timespent}} minutes</span>
                       </div>
                     </div>
@@ -210,7 +308,6 @@
                     <div class="media-body">
                       <div class="media-body">
                         <h5 class="mt-0 mb-1 inline-block">{{inactive.usr_name}}<small> -- {{inactive.usr_email}}</small></h5>
-                        <!-- <br> -->
                         <span>Worked on this step for {{inactive.timespent}} minutes</span>
                       </div>
                     </div>
@@ -231,10 +328,10 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
 
       <!-- Showing edit fields about selected step -->
-      <div class="card" :class='{darkTheme: darkTheme}' v-if='!stepInfoShow && stepEditShow && stepInfo[0] !== undefined'>
+      <!-- <div class="card" :class='{darkTheme: darkTheme}' v-if='tabs.messages'>
 
         <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -319,9 +416,10 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
 
     </template>
+
 </div>
 </template>
 
@@ -340,6 +438,7 @@ import {
 import {
   mapState
 } from "vuex";
+import FeedElement from "@/components/Feed/FeedElement";
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -349,12 +448,21 @@ require("flatpickr/dist/themes/confetti.css");
 export default {
   components: {
     flatPickr,
-    Multiselect
+    Multiselect,
+    FeedElement
   },
 
   data() {
     return {
       // youWorkedFor: 0,
+
+      tabs: {
+        generalInfo: true,
+        messages: false,
+        steps: false
+      },
+
+      taskGeneralInfo: [],
 
       stepInfoShow: false,
       stepEditShow: false,
@@ -416,6 +524,43 @@ export default {
   },
 
   methods: {
+    getGeneralInfo(taskID){
+      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+        params: {
+          tasid: taskID,
+          sid: localStorage.sid
+        }
+      }).then( response => {
+        this.taskGeneralInfo = response.data.data[0];
+        // console.log(response.data.data[0]);
+      })
+    },
+
+    changeTab(parameter){
+      if(parameter === "generalInfo"){
+        this.tabs.generalInfo = true;
+        this.tabs.steps = false;
+        this.tabs.messages = false;
+        this.getGeneralInfo(this.selectedItemID);
+      }
+
+      if(parameter === "steps"){
+        this.tabs.generalInfo = false;
+        this.tabs.steps = true;
+        this.tabs.messages = false;
+        this.getTaskInfo(this.selectedItemID);
+      }
+
+      if(parameter === "messages"){
+        this.tabs.generalInfo = false;
+        this.tabs.steps = false;
+        this.tabs.messages = true;
+        console.log('Parametar messages')
+      }
+
+      // console.log(parameter);
+    },
+
     showInactiveUsers() {
       //TRAZITI OD CELAVOG API KOJI VRACA SVE NEAKTIVNE USERE
     },
@@ -493,7 +638,7 @@ export default {
           }
         )
         .then(response => {
-          this.getStepInfo(this.stepInfo[0].tsk_id);
+          // this.getStepInfo(this.stepInfo[0].tsk_id);
           this.getTaskInfo(this.selectedItemID);
 
           (this.edit.name = undefined),
@@ -715,6 +860,18 @@ export default {
 
   computed: {
 
+
+
+      generalInfoTrue(){
+        // if(this.tabs.generalInfo === true){
+        //   console.log('baaa');
+        // } else {
+        //   console.log('babaababa');
+        // }
+        return this.tabs.generalInfo;
+      },
+
+
     youWorked() {
       if (this.stepInfo !== []) {
         for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
@@ -759,10 +916,10 @@ export default {
     },
 
     selectedTaskID() {
-      var a = store.getters.selectedItemID;
-      // console.log(a);
-      if (a === undefined) return 0;
-      else return a;
+      // var a = store.getters.selectedTaskID;
+      // // console.log(a);
+      // if (a === undefined) return 0;
+      // else return a;
     },
 
     showSteps() {
@@ -790,10 +947,12 @@ export default {
 
   mounted() {
     if (this.selectedItemID !== 0) {
-      this.getTaskInfo(this.selectedItemID);
+      // this.getTaskInfo(this.selectedItemID);
+      this.getGeneralInfo(this.selectedItemID);
     }
 
     this.loadAllProjectUsers(this.selectedProjectID);
+
   },
 
   watch: {
@@ -801,15 +960,17 @@ export default {
       // console.log('addstep iz watch-a');
 
       if (this.selectedItemID !== undefined) {
-        this.getTaskInfo(this.selectedItemID);
+        // this.getTaskInfo(this.selectedItemID);
       }
       // this.getTaskInfo(store.state.selectedItemID);
     },
 
     selectedItemID: function(val, oldVal) {
       if (val !== 0) {
-        this.getTaskInfo(val);
-        this.getStepInfo(val);
+        // this.getTaskInfo(val);
+        // this.getStepInfo(val);
+        this.getGeneralInfo(val);
+        this.changeTab("generalInfo");
 
         this.stepInfoShow = false;
         this.stepEditShow = false;
@@ -833,6 +994,8 @@ export default {
         // console.log('novi je task broj' + val);
       }
     }
+
+
   }
 };
 </script>
