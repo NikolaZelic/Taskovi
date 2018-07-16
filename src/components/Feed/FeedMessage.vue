@@ -1,5 +1,5 @@
 <template>
-<div v-bind:class="mojaPoruka()?'cont right-con':'cont left-con'" :id="mess.fed_id">
+<div v-bind:class="mojaPoruka()?'cont right-con':'cont left-con'" class='selektor' :id="mess.fed_id">
   <img :src="icon()" />
   <div class="message-body">
     <div class="message-body-header">

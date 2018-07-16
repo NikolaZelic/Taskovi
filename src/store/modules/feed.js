@@ -10,7 +10,7 @@ const actions = {
       store.commit('addMessages', {
         'direction': params.direction,
         'data': response.data.data
-      })
+      });
     });
   },
 
@@ -60,6 +60,7 @@ const actions = {
 
 const mutations = {
   addMessages: (state, params) => {
+    // console.log( document.querySelectorAll(".selektor") );
     if (params.data) {
       if (params.direction === 'start') {
         state.scrollDownMess = true;
@@ -67,7 +68,11 @@ const mutations = {
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
         params.data.forEach(e => state.messages.unshift(e));
-        if (params.data.length) document.getElementById("all").scrollTop = 300;
+        if (params.data.length) {
+          var a = document.querySelectorAll(".selektor")[9];
+          if(a!==undefined)
+            a.scrollIntoView(true);
+        }  
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)

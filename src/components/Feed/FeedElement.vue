@@ -101,7 +101,9 @@ export default {
         taskid: this.taskid,
         fedid: this.messages[0].fed_id,
         direction: "up"
-      });
+      }).then( response => {
+        // console.log('call back');
+      } );
     },
     handleScroll() {
       if (!document.getElementById("all").scrollTop) {
