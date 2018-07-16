@@ -12,6 +12,10 @@
   color: white;
 } */
 
+#sidebar .multiselect__single {
+  display: none !important;
+}
+
 .multiselect__tag,
 .multiselect__tag-icon:after,
 .multiselect__tag-icon:focus,
@@ -65,7 +69,7 @@ textarea.custom-modern::placeholder {
 
 .form-control,
 .form-control:focus {
-  color: black ;
+  color: black;
 }
 
 .form-control:hover {

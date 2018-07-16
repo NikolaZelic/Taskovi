@@ -270,16 +270,11 @@ export default {
   },
   watch: {
     selectedFilter() {
-      //   console.log(val);
-      //   delete this.tabs[this.currentTabIndex].itemIndex;
-      //   this.activeItem = undefined;
       this.getTaskFilterData();
     },
     currentTabIndex(val) {
       let tabItem = this.tabs[val].itemIndex;
-
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
-      // console.log(tabItem);
       if (tabItem === undefined) {
         store.commit("setSidebarItemSelection", {
           index: this.currentTabIndex,
@@ -322,8 +317,9 @@ export default {
           }
         })
         .then(r => {
-          // console.log(r.data.data);
-          this.tagsNet = r.data.data;
+          // WHY IS IT UNDEFINED SOMETIMES??
+          let arr = r.data.data;
+          this.tagsNet = arr !== undefined ? arr : [];
           this.tagLoading = false;
         });
     },
@@ -342,6 +338,7 @@ export default {
       let index = this.currentTabIndex;
       switch (index) {
         case 0:
+          this.project.id = undefined;
           this.actionTabDataProject();
           break;
         case 1:
@@ -533,7 +530,7 @@ export default {
   padding: 12px 0;
   line-height: 30px;
   display: block;
-  color: #fff;
+  color: #dacbcb;
   cursor: pointer;
 }
 
@@ -588,10 +585,7 @@ export default {
 }
 
 .sidebar-body.collapsed *,
-  .sidebar-header.collapsed>div
-  /* .sidebar-header.collapsed .theme-changer  */
-
- {
+.sidebar-header.collapsed > div {
   display: none;
 }
 
@@ -688,7 +682,7 @@ h2 {
 .form-control {
   border-color: #717171;
 }
- /*
+/*
 .search span {
   color: #fff;
    position: absolute;

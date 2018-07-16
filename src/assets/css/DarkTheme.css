@@ -12,9 +12,27 @@
   color: #eee;
 }*/
 
-.darkTheme {
+.darkTheme,
+.darkTheme .multiselect__option {
   background: #2d3436;
   color: #eee;
+}
+
+.sidebar-body #tags {
+  width: auto !important;
+  display: inline-block !important;
+}
+
+.sidebar-body #tags {
+  color: black !important;
+}
+
+.sidebar-body.darkTheme #tags {
+  color: white !important;
+}
+
+.sidebar-body.darkTheme {
+  background: #24262d
 }
 
 .maincontent.darkTheme input,
@@ -25,7 +43,6 @@
 .darkTheme .multiselect__tags,
 .darkTheme .multiselect__input,
 .darkTheme .multiselect__single,
-.darkTheme .multiselect__option,
 .darkTheme .multiselect__spinner {
   background: #2d3436 !important;
   color: #eee !important;
@@ -57,14 +74,10 @@
 .maincontent.darkTheme input:focus,
 .maincontent.darkTheme textarea:focus,
 .darkTheme .multiselect__tags:focus,
-.multiselect__input,
-.multiselect__single:focus {
+.darkTheme .multiselect__input,
+.darkTheme .multiselect__single:focus {
   background: #2d3436;
   color: #fff;
-}
-
-.sidebar-body.darkTheme {
-  background: #24262d
 }
 
 input.darkTheme::placeholder {
