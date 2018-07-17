@@ -138,6 +138,8 @@ export default {
       if(a!==undefined)
         a.scrollIntoView(true);
     });
+    // ZX - POZIVA REFRESH NOTIFA
+    store.dispatch("getFeedCount");
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
       if (this.count % this.countNumber == 0 && this.taskid != -1) {
