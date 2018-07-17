@@ -76,11 +76,14 @@ export const api = {
   //#endregion
   //#region Sveta
 
-  readeFeeds(tasid, fedid, direction) {
+  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {
         fedid: fedid,
         pravac: direction,
+        type: type,
+        searchstring: searchingstring,
+        fed_important: fed_important,
         sid: window.localStorage.sid,
       }
     });

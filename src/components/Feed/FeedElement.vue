@@ -1,12 +1,15 @@
 <template>
   <div class="feed" v-show="showFeeds">
-    <div class="search-inputs">
-      <input :v-model="searchText" type='text' placeholder="Search Feed"/>
-      <form>
-        <input type="radio" id="all" value="all" checked v-model='searchType'> <label for="all">All</label>
-        <input type="radio" id="messages" value="messages" v-model='searchType'> <label for="messages">Messages</label>
-        <input type="radio" id="statuses" value="statuses" v-model='searchType'> <label for="statuses">Statuses</label>  
-        <input type="radio" id="files" value="files" v-model='searchType'> <label for="files">Files</label>  
+    <div class="search-inputs" >
+      <input @blur="searchFeeds" v-model="searchText" type='text' placeholder="Search Feed"/>
+      <form >
+        <span class='radio-wrapper'>
+          <input type="radio" id="all" value="all" checked v-model='searchType'> <label for="all">All</label>
+          <input type="radio" id="messages" value="messages" v-model='searchType'> <label for="messages">Messages</label>
+          <input type="radio" id="statuses" value="statuses" v-model='searchType'> <label for="statuses">Statuses</label>  
+          <input type="radio" id="files" value="files" v-model='searchType'> <label for="files">Files</label>  
+        </span>
+        <input type="checkbox" id='important' v-model='searchImportant'> <label for="important">Important</label>  
       </form> 
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
@@ -55,6 +58,7 @@ export default {
       inProgress: false,
       searchType: 'all',
       searchText: '',
+      searchImportant: false,
     };
   },
   computed: {
@@ -63,7 +67,16 @@ export default {
     }),
     ...mapGetters({
       taskid: "selectedItemID"
-    })
+    }),
+    searchOn(){
+      if(this.searchType!=='all')
+        return true;
+      if(this.searchImportant)
+        return true;
+      if(this.searchText!==null&&this.searchText.length>0)
+        return true;
+      return false;
+    },
   },
   watch: {
     taskid(val) {
@@ -78,9 +91,31 @@ export default {
     messages() {
       this.countNumber = 5;
       this.count = 1;
-    }
+    },
+    searchType(){
+      this.searchFeeds();
+    },
+    searchImportant(){
+      this.searchFeeds();
+    },
   },
   methods: {
+    searchFeeds(){
+      store.commit('clearFeed');
+
+      store.dispatch("readeFeeds", {
+        taskid: this.taskid,
+        fedid: 0,
+        direction: "start",
+        type: this.searchType,
+        searchingstring: this.searchText,
+        fed_important: this.searchImportant,
+      }).then( ()=>{
+        var a = document.querySelectorAll(".selektor")[9];
+        if(a!==undefined)
+          a.scrollIntoView(false);
+      });
+    },
     writeMessageFeed() {
       if (this.taskid === -1) return;
       var text = this.feed.trim();
@@ -108,11 +143,15 @@ export default {
     },
     addUp() {
       // console.log('add up');
-      if (this.taskid === -1) return;
+      if (this.taskid === -1) 
+        return;
       store.dispatch("readeFeeds", {
         taskid: this.taskid,
         fedid: this.messages[0].fed_id,
-        direction: "up"
+        direction: "up",
+        type: this.searchType,
+        searchingstring: this.searchText,
+        fed_important: this.searchImportant,
       }).then( response => {
         var a = document.querySelectorAll(".selektor")[10];
         // console.log(a);
@@ -144,7 +183,7 @@ export default {
 
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
-      if (this.count % this.countNumber == 0 && this.taskid != -1) {
+      if (this.count % this.countNumber == 0 && this.taskid != -1 && !this.searchOn ) {
         var msg = this.messages;
 
         if (msg.length > 0) {
@@ -176,6 +215,10 @@ export default {
 };
 </script>
 <style scoped>
+.radio-wrapper{
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
 .search-inputs{
   margin: 10px;
   text-align: center;
@@ -184,7 +227,7 @@ export default {
   padding: 5px;
 }
 .search-inputs input[type="text"]{
-  width: 300px;
+  width: 400px;
 }
 .trans {
   flex: 0 0 30px;
