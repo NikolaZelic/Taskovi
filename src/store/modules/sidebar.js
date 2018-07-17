@@ -52,7 +52,10 @@ const actions = {
 
   resetTaskView() {
     store.commit('resetTaskView');
-  }
+  },
+  // resetSidebarData() {
+  //   store.commit('resetSidebarData');
+  // }
 };
 const mutations = {
   setSidebarData: (state, params) => {
@@ -107,7 +110,9 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = ci;
   },
-
+  // resetSidebarData: () => {
+  //   store.state.sidebarTabData = [];
+  // },
   darkTheme: (state, params) => {
     store.state.darkTheme = params;
   },

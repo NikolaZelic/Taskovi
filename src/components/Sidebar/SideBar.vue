@@ -148,6 +148,7 @@ export default {
     return {
       tagsNet: [],
       tagsInput: [],
+      tagsText: undefined,
       tagLoading: false,
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
@@ -270,16 +271,11 @@ export default {
   },
   watch: {
     selectedFilter() {
-      //   console.log(val);
-      //   delete this.tabs[this.currentTabIndex].itemIndex;
-      //   this.activeItem = undefined;
       this.getTaskFilterData();
     },
     currentTabIndex(val) {
       let tabItem = this.tabs[val].itemIndex;
-
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
-      // console.log(tabItem);
       if (tabItem === undefined) {
         store.commit("setSidebarItemSelection", {
           index: this.currentTabIndex,
@@ -304,6 +300,15 @@ export default {
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
       this.actionTabDataTeam();
+    },
+    tagsInput(val) {
+      // this.tagsText = "";
+      // WHEN A TAG IS CHANGED INVOKE API TASKS GET
+      // console.log(val.length);
+      this.getTaskFilterData();
+    },
+    tagsText(val) {
+      if (val !== undefined || val != "") this.getTaskFilterData();
     }
   },
   methods: {
@@ -311,6 +316,7 @@ export default {
       return `${text}`;
     },
     getTagSuggestions(query) {
+      this.tagsText = query;
       this.tagLoading = true;
       axios
         .get("projects/:proid/tags", {
@@ -322,8 +328,9 @@ export default {
           }
         })
         .then(r => {
-          // console.log(r.data.data);
-          this.tagsNet = r.data.data;
+          // WHY IS IT UNDEFINED SOMETIMES??
+          let arr = r.data.data;
+          this.tagsNet = arr !== undefined ? arr : [];
           this.tagLoading = false;
         });
     },
@@ -342,6 +349,8 @@ export default {
       let index = this.currentTabIndex;
       switch (index) {
         case 0:
+          // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
+          this.project = {};
           this.actionTabDataProject();
           break;
         case 1:
@@ -368,7 +377,9 @@ export default {
         pro_id: this.project.id,
         created: cr,
         assigned: as,
-        archived: ar
+        archived: ar,
+        searchstr: this.tagsText,
+        tagarray: this.tagIds
       });
     },
     actionTabDataProject() {
@@ -456,6 +467,13 @@ export default {
         });
       }
       return this.taskFields;
+    },
+    tagIds() {
+      let local = [];
+      this.tagsInput.forEach(element => {
+        local.push(element.id);
+      });
+      return local;
     }
   },
   created() {
@@ -533,7 +551,7 @@ export default {
   padding: 12px 0;
   line-height: 30px;
   display: block;
-  color: #fff;
+  color: #dacbcb;
   cursor: pointer;
 }
 
@@ -588,10 +606,7 @@ export default {
 }
 
 .sidebar-body.collapsed *,
-  .sidebar-header.collapsed>div
-  /* .sidebar-header.collapsed .theme-changer  */
-
- {
+.sidebar-header.collapsed > div {
   display: none;
 }
 
@@ -688,7 +703,7 @@ h2 {
 .form-control {
   border-color: #717171;
 }
- /*
+/*
 .search span {
   color: #fff;
    position: absolute;

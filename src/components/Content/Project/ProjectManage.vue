@@ -2,10 +2,10 @@
   <div>
     <div class='pro-edit'>
       <div class='header' :class='{"back-warning":itemEditButton!==undefined}'>
-        <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
-        <h4 v-else>Adding project:</h4>
         <button class='btn btn-dark' @click='resetProjectView'>
           <span class='fas fa-arrow-left'></span> BACK</button>
+        <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
+        <h4 v-else>Adding project:</h4>
       </div>
 
       <label for="name" class="mt-3">Project name</label>
