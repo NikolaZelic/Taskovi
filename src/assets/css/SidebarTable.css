@@ -16,9 +16,9 @@
   color: #222;
 }
 
-.item-list th:not(:first-child) {
+/* .item-list th:not(:first-child) {
   border-left: 1px solid #00000077;
-}
+} */
 
 .item-list td,
 .item-list th {

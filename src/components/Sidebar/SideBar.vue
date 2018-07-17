@@ -3,7 +3,7 @@
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span>
-        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)"
+        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined || taskID !== undefined' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)"
           class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
@@ -93,10 +93,11 @@
 
         </div>
 
-        <div class="item-list">
+        <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
-          <b-table responsive :items="activeArray" :dark='darkTheme' :striped='false' :hover='false' :small='true' :bordered='true'
-            :outlined='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
+          <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :striped='false' :hover='false' :small='true'
+            :bordered='true' :outlined='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered"
+            @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
@@ -124,7 +125,9 @@
             </template>
 
           </b-table>
+
         </div>
+
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span> Add New
           <span>{{tabs[currentTabIndex].single}}</span>
@@ -152,24 +155,19 @@ export default {
     UserTasks,
     Multiselect
   },
-  metaInfo() {
-    return {
-      title: "Task Master",
-      titleTemplate: this.notifTitle ? "🔹" : " " + "%s"
-    };
-  },
   data() {
     return {
-      notifTitle: false,
       tagsNet: [],
       tagsInput: [],
       tagsText: undefined,
       tagLoading: false,
+      scrollPos: 0,
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
       activeItem: undefined,
+      intervalNotification: null,
       selectedFilter: [],
       project: {
         title: undefined,
@@ -311,7 +309,9 @@ export default {
         });
       }
     },
+    // IS IT USED???
     adminFilter(val) {
+      console.log("HELLO FROM ADMINFILTER");
       let i = this.currentTabIndex;
       this.tabs[i].isAdmin = val;
       this.actionTabDataTeam();
@@ -324,9 +324,18 @@ export default {
     },
     tagsText(val) {
       if (val !== undefined || val != "") this.getTaskFilterData();
-    }
+    },
+    scrollPos(val) {}
   },
   methods: {
+    tableScroll(event) {
+      let sp = event.target.scrollTop;
+      // if (sp !== 0)
+      this.$refs.tabdata.getElementsByClassName(
+        "head-resp"
+      )[0].style.transform =
+        sp !== 0 ? "translate(0," + sp + "px)" : "";
+    },
     showTagRes({ text }) {
       return `${text}`;
     },
@@ -373,12 +382,6 @@ export default {
           break;
       }
     },
-    getTaskFilterData() {
-      let cr = this.selectedFilter.includes("cr");
-      let as = this.selectedFilter.includes("as");
-      let ar = this.selectedFilter.includes("ar");
-      this.actionTabDataTask(cr, as, ar);
-    },
     selectItem(itemID) {
       this.tabs[this.currentTabIndex].itemIndex = itemID;
       store.commit("setSidebarItemSelection", {
@@ -386,7 +389,14 @@ export default {
         id: itemID
       });
     },
+    getTaskFilterData() {
+      let cr = this.selectedFilter.includes("cr");
+      let as = this.selectedFilter.includes("as");
+      let ar = this.selectedFilter.includes("ar");
+      this.actionTabDataTask(cr, as, ar);
+    },
     actionTabDataTask(cr, as, ar) {
+      clearInterval(this.intervalNotification);
       store.dispatch("getTasks", {
         index: this.currentTabIndex,
         pro_id: this.project.id,
@@ -396,20 +406,48 @@ export default {
         searchstr: this.tagsText,
         tagarray: this.tagIds
       });
+      this.intervalNotification = setInterval(
+        function() {
+          this.checkNotifications();
+        }.bind(this),
+        20000
+      );
     },
     actionTabDataProject() {
+      clearInterval(this.intervalNotification);
       store.dispatch("getProjects", {
         index: this.currentTabIndex
       });
+      this.intervalNotification = setInterval(
+        function() {
+          this.checkNotifications();
+        }.bind(this),
+        20000
+      );
+    },
+    checkNotifications() {
+      // EVERY 20 SECONDS
+      store.dispatch("getFeedCount");
+      // REFRESH TAB DATA
+
+      
+      // BREAKS THE UX FLOW - RESETS VIEW
+
+      // FIX TIMERS
+
+      // if (this.currentTabIndex === 0) {
+      //   this.actionTabDataProject();
+      // }
+      // else if (this.currentTabIndex === 1) {
+      //   this.getTaskFilterData();
+      // }
     },
     showSubFilter() {
       let i = this.currentTabIndex;
       return i === 1 || i === 2;
     },
     addItemButton() {
-      console.log(this.metaInfo);
-      // this.metaInfo.title = 'asd'
-      // store.dispatch("itemAddClick");
+      store.dispatch("itemAddClick");
     },
     editPeopleButton(item) {
       this.showTaskPeople = true;
@@ -453,7 +491,7 @@ export default {
       getTabIndex: "currentTabIndex",
       itemAction: "itemAction",
       darkTheme: "darkTheme",
-      notifCount: 'notificationCount',
+      notifCount: "notificationCount",
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
@@ -495,6 +533,7 @@ export default {
     }
   },
   created() {
+    document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
       index: this.currentTabIndex
@@ -509,12 +548,26 @@ export default {
     // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
     // if (this.itemsFiltered !== undefined)
     //   console.log("mn" + this.itemsFiltered.length);
+
+    store.dispatch("getFeedCount");
+    this.intervalNotification = setInterval(
+      function() {
+        this.checkNotifications();
+      }.bind(this),
+      20000
+    );
     if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
       console.log(
         "Ubacujem u jedini projekat = " + this.itemsFiltered[0].title
       );
       this.selectAndSet(this.itemsFiltered[0]);
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalNotification);
+  },
+  destroyed() {
+    document.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>
@@ -723,6 +776,8 @@ h2 {
 
 .search {
   position: relative;
+  max-width: 700px;
+  margin: auto;
 }
 
 .search * {

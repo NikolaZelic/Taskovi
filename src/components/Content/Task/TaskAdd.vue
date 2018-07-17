@@ -47,10 +47,10 @@
               <!-- <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
                 @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
               /> -->
-              <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom"
-                :options="suggestedWorker" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
-                @search-change="searchUsers" @close="usersOut" >
+              <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
+                :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
+                :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
+                @search-change="searchUsers" @close="usersOut">
               </multiselect>
             </div>
 
@@ -58,8 +58,8 @@
             <div class="form-group">
               <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
-                @search-change="searchTags" @close="multiselectOut" >
+                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
                 <!-- <template slot="clear" slot-scope="props">
                   <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
                 </template>
@@ -79,7 +79,10 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-warning"><p v-show='edit'>Edit</p><p v-show='!edit'>Create</p></button>
+              <button @click='createTask' type="submit" class="btn btn-warning">
+                <span v-show='edit'>Edit</span>
+                <span v-show='!edit'>Create</span>
+              </button>
             </div>
           </div>
         </div>
@@ -219,7 +222,9 @@ export default {
         return;
       for (var i in this.selectedTags)
         if (this.selectedTags[i].text == tag) return;
-      this.selectedTags.push({ text: tag });
+      this.selectedTags.push({
+        text: tag
+      });
     },
     selectUser() {
       this.teamSelect = false;
@@ -538,23 +543,16 @@ export default {
   border-top: 1px solid #d3d3d3;
 }
 
-.autosuggest__results
-  .autosuggest__results_item.autosuggest__results_item-highlighted,
+.autosuggest__results,
+.autosuggest__results_item.autosuggest__results_item-highlighted,
 .autosuggest__results .autosuggest__results_item:active,
 .autosuggest__results .autosuggest__results_item:focus,
-.autosuggest__results .autosuggest__results_item:hover {
-  background-color: #2e3038;
-}
-
-.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly] {
-  background: #2e3038;
-}
-
+.autosuggest__results .autosuggest__results_item:hover,
+.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly],
 .tmp-content .multiselect .multiselect__tags,
 .tmp-content .multiselect .multiselect__single,
 .tmp-content .multiselect #tags-component {
-  background: #2e3038;
-  /* color: #eee; */
+  background: #f3f3f3;
 }
 
 .tmp-content .multiselect #tags-component:focus {
@@ -715,7 +713,7 @@ export default {
 .content {
   position: relative;
   padding: 20px;
-  background: #24262d;
+  background: #b7b7b7;
   border-radius: 0 0 15px 15px;
   padding: 15px;
 }
@@ -740,8 +738,8 @@ export default {
 .form-control {
   display: inline;
   position: relative;
-  background-color: #2e3038 !important;
-  color: #eee !important;
+  background-color: #ffffff !important;
+  color: #111 !important;
 }
 
 #tsk_deadline {
@@ -751,7 +749,7 @@ export default {
 
 .fas,
 .far {
-  color: #fff;
+  color: #000;
   font-size: 25px;
   margin: 3px;
   padding: 3px;

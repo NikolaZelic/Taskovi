@@ -6,7 +6,12 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  metaInfo() {
+    return {
+      title: "Task Master"
+    };
+  }
 };
 </script>
 

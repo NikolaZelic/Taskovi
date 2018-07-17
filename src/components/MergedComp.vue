@@ -9,9 +9,11 @@
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
 
         <!-- Task -->
-        <task-edit v-if="checkShow(1,true)" />
-        <task-add v-if="checkShow(1,false,true)" />
-        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
+        <div>
+          <task-edit v-if="checkShow(1,true)" />
+          <task-add v-if="checkShow(1,false,true)" />
+          <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
+        </div>
 
         <!-- Step -->
         <step-add v-if="itemAddStepButton" />
@@ -65,8 +67,7 @@ export default {
       editBtn: false,
       addBtn: false,
       addTaskBtn: false,
-      intervalSession: null,
-      intervalNotification: null
+      intervalSession: null
     };
   },
   watch: {
@@ -112,20 +113,24 @@ export default {
   computed: {
     ...mapState({
       selectedTab: "currentTabIndex",
+      isFocus: "mainFocused",
+      darkTheme: "darkTheme",
+      notifCount: "notificationCount",
+      modalStatus: "modalStatus",
       modalErrorActive: state => state.modalError.active,
       modalStatusActive: state => state.modalStatus.active,
-      modalStatus: state => state.modalStatus,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
-      itemAddStepButton: state => state.itemAction.addStep,
-      isFocus: state => state.mainFocused,
-      darkTheme: state => state.darkTheme
+      itemAddStepButton: state => state.itemAction.addStep
     }),
     ...mapGetters({
       isFocus: "isFocus",
       taskID: "selectedItemID"
-    })
+    }),
+    notifTitle() {
+      return this.notifCount !== undefined && this.notifCount !== 0 ? "🔔" : "";
+    }
   },
   methods: {
     checkShow(
@@ -141,29 +146,18 @@ export default {
         itemAddTask === this.addTaskBtn
       );
     },
-    checkNotifications() {
-      // EVERY 20 SECONDS
-      store.dispatch("getFeedCount");
-    },
     refreshSession() {
       // EVERY 15 MINUTES
       api.sessionActive();
     }
   },
+  metaInfo() {
+    return {
+      title: "Task Master",
+      titleTemplate: this.notifTitle + " %s"
+    };
+  },
   beforeCreate() {
-    store.dispatch("getFeedCount");
-    this.intervalNotification = setInterval(
-      function() {
-        this.checkNotifications();
-      }.bind(this),
-      20000
-    );
-    this.intervalSession = setInterval(
-      function() {
-        this.refreshSession();
-      }.bind(this),
-      900000
-    );
     let sid = localStorage.sid;
     if (sid === undefined || sid === null) {
       this.$router.push("/auth");
@@ -176,9 +170,16 @@ export default {
       store.commit("darkTheme", true);
     }
   },
+  mounted() {
+    this.intervalSession = setInterval(
+      function() {
+        this.refreshSession();
+      }.bind(this),
+      900000
+    );
+  },
   beforeDestroy() {
     clearInterval(this.intervalSession);
-    clearInterval(this.intervalNotification);
   },
   destroyed() {
     console.log("User " + localStorage.name + " signed out. Destroying data.");
@@ -233,7 +234,6 @@ export default {
 }
 
 .maincontent {
-  padding: 50px 30px 20px;
   flex: 1;
   background-color: var(--main-bg-color);
   color: var(--main-color);
@@ -243,6 +243,10 @@ export default {
 .maincontent.darkTheme {
   background-color: var(--sec-bg-color);
   color: var(--sec-color);
+}
+
+.maincontent > * {
+  margin: 50px 30px 20px;
 }
 
 .maincontent h1 {
@@ -260,14 +264,13 @@ export default {
     flex-direction: row;
     min-height: 100vh;
   }
+
   #wrapper > aside {
     position: fixed;
     height: 100vh;
     width: 37%;
   }
   #wrapper > aside.max {
-    position: fixed;
-    height: 100vh;
     width: 100%;
   }
 
