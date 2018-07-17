@@ -2,7 +2,7 @@
   <div>
     <div class='pro-edit'>
       <div class='header' :class='{"back-warning":itemEditButton!==undefined}'>
-        <button class='btn btn-dark' @click='resetProjectView'>
+        <button class='btn btn-dark' @click='confirmation()'>
           <span class='fas fa-arrow-left'></span> BACK</button>
         <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
         <h4 v-else>Adding project:</h4>
@@ -33,6 +33,8 @@
 
         <b-table :dark=true :items='project.users' :fields='usersField' responsive>
 
+
+
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
@@ -55,6 +57,12 @@
             v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">Remove</button>
             <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
           </template>
+
+          <template slot="new" slot-scope="row">
+            <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
+            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
+          </template>
+
 
         </b-table>
       </b-modal>
@@ -114,7 +122,7 @@ export default {
         altFormat: "j M, Y H:i",
         altInput: true
       },
-      usersField: ["email", "name", "surname", "admin", "delete"],
+      usersField: ["new", "email", "name", "surname", "admin", "delete"],
       email: undefined,
       isAdmin: false
       // options: []
@@ -130,6 +138,12 @@ export default {
     }
   },
   methods: {
+
+    confirmation(){
+        if (confirm("Are you sure? You might have unsaved changes!")) {
+          this.resetProjectView();
+        }
+      },
     // clickedRow(item, index, event){
     //   // console.log('index ' + item);
     //   // return item;
@@ -156,7 +170,9 @@ export default {
     submitEmail() {
       let user = {
         email: this.email,
-        admin: false
+        admin: false,
+        new: true,
+        disabled: true
       };
 
       this.project.users.push(user);
@@ -348,7 +364,7 @@ export default {
             // console.log("EMAIL KORISNIKA: "+ users[i].email);
             tempUsers.push({
               email: users[i].email,
-              admin: "false" //"" + this.project.users[i].admin + ""
+              admin: "" + this.project.users[i].admin + "" //"false" //
               //zmaeniti ovaj parametar za admina da se prikazuje lepo a ne da bude harkodovano false
             });
           }

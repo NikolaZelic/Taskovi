@@ -121,7 +121,7 @@
             </template>
 
             <template slot="edit_item" slot-scope="data">
-              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit" title="Edit Item"></span>
+              <button v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons btn btn-warning fas fa-edit" title="Edit Item"></button>
             </template>
 
           </b-table>
@@ -430,7 +430,6 @@ export default {
       store.dispatch("getFeedCount");
       // REFRESH TAB DATA
 
-      
       // BREAKS THE UX FLOW - RESETS VIEW
 
       // FIX TIMERS
@@ -729,6 +728,11 @@ export default {
 
 .sidebar-header > a > .fas {
   margin-right: 15px;
+}
+
+.td-icons.fa-edit {
+  line-height: 20px;
+  padding: 0 7px;
 }
 
 /* ADD BUTTON */
