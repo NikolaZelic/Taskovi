@@ -234,6 +234,7 @@ export default {
   flex: 1;
   background-color: var(--main-bg-color);
   color: var(--main-color);
+  height: 100%;
 }
 
 .maincontent.darkTheme {
