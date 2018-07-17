@@ -15,6 +15,9 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import {
+  baseURL as baseURL
+} from '@/api/config.js';
 export default {
   props: {
     mess: {
@@ -74,6 +77,7 @@ export default {
     }
   },
   mounted() {
+    console.log(baseURL);
     if (this.scrollDownMess)
       document.getElementById("all").scrollTop = document.getElementById(
         "all"
