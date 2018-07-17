@@ -2,29 +2,26 @@
 <div class="height100 pb-5">
 
   <template v-if="selectedItemID <= 0">
-      <h1>Select task first...</h1>
-    </template>
+    <h1>Select task first...</h1>
+  </template>
 
   <template v-else>
 
+      <!-- Tabovi na vrhu stranice -->
       <nav class="nav nav-pills nav-fill mb-3">
+        <a class="nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</a>
         <a class="nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General Info</a>
         <a class="nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</a>
         <a class="nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</a>
       </nav>
 
-      <!-- <div class='header'>
-      <h4>Task view:</h4>
-      <button class='btn btn-dark' @click='resetTaskView'>
-      <span class='fas fa-arrow-left'></span> Back</button>
-      </div> -->
-
-
-<!-- tesssssssst -->
+      <!-- TAB GeneralInfo -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
+
         <div class="card-header">
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
+
         <div class="card-body">
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
           <p>Description: {{this.taskGeneralInfo.description}}</p>
@@ -35,87 +32,17 @@
           <p>Priority: {{this.taskGeneralInfo.pri_text}}</p>
           <p>Tags: <span class="badge badge-success" v-for="tag in this.taskGeneralInfo.tags">{{ tag.text }}</span></p>
         </div>
+
       </div>
 
-       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-         <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
-         </div>
-
-         <div class="card-body">
-
-           <table class="table table-borderless text-center table-hover">
-
-             <thead>
-               <tr>
-                 <th scope="col">Status</th>
-                 <th scope="col">Title</th>
-                 <th scope="col">Deadline</th>
-                 <th scope="col">Tags</th>
-                 <th scope="col">Priority</th>
-                 <th scope="col">Working</th>
-               </tr>
-             </thead>
-
-             <tbody>
-               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()'>
-
-                 <td>
-                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
-                   <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
-                   <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
-                 </td>
-
-                 <td>
-                   {{ task.tsk_title}}
-                 </td>
-
-                 <td>
-                   {{ task.tsk_deadline }}
-                 </td>
-
-                 <td>
-                   <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
-                   <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
-                 </td>
-
-                 <td>
-                   <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
-                 </td>
-
-                 <td>
-                   <span v-if="task.you_are_worker === 1">
-                     <i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
-                   <span v-else>{{task.usrworking}}</span>
-                 </td>
-
-               </tr>
-             </tbody>
-
-           </table>
-
-         </div>
-
-         <div class="card-footer" :class='{darkTheme: darkTheme}'>
-           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
-         </div>
-       </div>
-
-      <div class="card height100" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
-        <feed-element />
-      </div>
-
-
-
-      <!-- Showing data about all steps inside selected task -->
-      <!-- <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-
-        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
+      <!-- TAB Steps -->
+      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
+        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">
+          {{ taskInfo[0].taskname }}
         </div>
 
         <div class="card-body">
-
           <table class="table table-borderless text-center table-hover">
-
             <thead>
               <tr>
                 <th scope="col">Status</th>
@@ -128,8 +55,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle()'>
-
+              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
                   <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
@@ -137,7 +63,7 @@
                 </td>
 
                 <td>
-                  {{ task.tsk_title}}
+                 {{ task.tsk_title}}
                 </td>
 
                 <td>
@@ -158,22 +84,28 @@
                     <i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
                   <span v-else>{{task.usrworking}}</span>
                 </td>
-
               </tr>
             </tbody>
 
-          </table>
+           </table>
 
-        </div>
+         </div>
 
-        <div class="card-footer" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
-        </div>
+         <div class="card-footer" :class='{darkTheme: darkTheme}'>
+           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
+         </div>
+       </div>
 
-      </div> -->
+      <!-- TAB Feeds -->
+      <div class="card height100" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
+        <feed-element />
+      </div>
+
+
+      <!-- STEP data -->
 
       <!-- Showing data about selected step -->
-      <!-- <div class="card" :class='{darkTheme: darkTheme}'  v-if="tabs.steps">
+      <div class="card mt-5" :class='{darkTheme: darkTheme}'  v-if="stepInfo.length > 0 &&  stepInfoShow">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -245,10 +177,8 @@
                 <ul class="list-unstyled">
                   <li class="media mt-2">
 
-                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"
-                    />
+                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"/>
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"/>
 
                     <div class="media-body">
                       <div class="media-body">
@@ -293,7 +223,7 @@
                   <li class="mt-3 mb-3 text-primary link" @click="showInactiveUsers; showInactive = !showInactive" v-if="!showInactive">Show inactive workers...</li>
                   <li class="mt-3 mb-3 text-primary link" @click="showInactive = !showInactive" v-if="showInactive">Hide inactive workers...</li>
 
-                  <li class="media mt-2 text-muted" v-for="inactive in stepInfo[0].usrworking" v-if="showInactive">
+                  <li class="media mt-2 text-muted" v-for="inactive in stepInfo[0].usrinactive" v-if="showInactive">
 
                     <img v-if='inactive.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
                     <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + inactive.usr_picture" />
@@ -317,14 +247,13 @@
         <div class="card-footer" :class='{darkTheme: darkTheme}'>
           <div class="float-right">
             <button type="button" class="btn btn-warning" @click="stepEditToggle()">Edit</button>
-            <button type="button" class="btn btn-primary" @click="stepInfoToggle()">Back</button>
+            <button type="button" class="btn btn-primary" @click="tabs.steps = true; stepInfoShow = false">Back</button>
           </div>
         </div>
-
-      </div> -->
+      </div>
 
       <!-- Showing edit fields about selected step -->
-      <!-- <div class="card" :class='{darkTheme: darkTheme}' v-if='tabs.messages'>
+      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && tabs.steps && stepEditShow'>
 
         <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -409,7 +338,7 @@
           </div>
         </div>
 
-      </div> -->
+      </div>
 
     </template>
 
@@ -517,34 +446,34 @@ export default {
   },
 
   methods: {
-    getGeneralInfo(taskID){
+    getGeneralInfo(taskID) {
       axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
         params: {
           tasid: taskID,
           sid: localStorage.sid
         }
-      }).then( response => {
+      }).then(response => {
         this.taskGeneralInfo = response.data.data[0];
         // console.log(response.data.data[0]);
       })
     },
 
-    changeTab(parameter){
-      if(parameter === "generalInfo"){
+    changeTab(parameter) {
+      if (parameter === "generalInfo") {
         this.tabs.generalInfo = true;
         this.tabs.steps = false;
         this.tabs.messages = false;
         this.getGeneralInfo(this.selectedItemID);
       }
 
-      if(parameter === "steps"){
+      if (parameter === "steps") {
         this.tabs.generalInfo = false;
         this.tabs.steps = true;
         this.tabs.messages = false;
         this.getTaskInfo(this.selectedItemID);
       }
 
-      if(parameter === "messages"){
+      if (parameter === "messages") {
         this.tabs.generalInfo = false;
         this.tabs.steps = false;
         this.tabs.messages = true;
@@ -631,8 +560,9 @@ export default {
           }
         )
         .then(response => {
-          // this.getStepInfo(this.stepInfo[0].tsk_id);
+
           this.getTaskInfo(this.selectedItemID);
+          this.getStepInfo(this.stepInfo[0].tsk_id);
 
           (this.edit.name = undefined),
           (this.edit.description = undefined),
@@ -683,12 +613,12 @@ export default {
 
     stepInfoToggle() {
       this.stepEditShow = false;
-      this.stepInfoShow = !this.stepInfoShow;
+      this.stepInfoShow = true; //!this.stepInfoShow;
     },
 
     stepEditToggle() {
       this.stepInfoShow = false;
-      this.stepEditShow = !this.stepEditShow;
+      this.stepEditShow = true; //!this.stepEditShow;
     },
 
     getStepInfo(stepID) {
@@ -813,6 +743,19 @@ export default {
               this.valueUser.push(user);
             }
           }
+        }).then(response => {
+          axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid/inactiveusers", {
+            params: {
+              tasid: this.selectedItemID,
+              stepid: stepID,
+              sid: localStorage.sid
+            }
+          }).then(response => {
+            // console.log('Inactive users');
+            // console.log(resp.data.data);
+            // this.stepInfo = response.data.data;
+            this.stepInfo[0].usrinactive = response.data.data;
+          })
         });
 
       // .then(response => {
@@ -855,14 +798,14 @@ export default {
 
 
 
-      generalInfoTrue(){
-        // if(this.tabs.generalInfo === true){
-        //   console.log('baaa');
-        // } else {
-        //   console.log('babaababa');
-        // }
-        return this.tabs.generalInfo;
-      },
+    generalInfoTrue() {
+      // if(this.tabs.generalInfo === true){
+      //   console.log('baaa');
+      // } else {
+      //   console.log('babaababa');
+      // }
+      return this.tabs.generalInfo;
+    },
 
 
     youWorked() {
@@ -1063,5 +1006,10 @@ label {
 
 .height100 {
   height: 100%;
+}
+
+.back-button{
+  /* width: 20px !important; */
+  flex-grow: 0.1;
 }
 </style>
