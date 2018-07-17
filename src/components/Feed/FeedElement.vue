@@ -1,28 +1,36 @@
 <template>
   <div class="feed" v-show="showFeeds">
-      <div id="all" @scroll="handleScroll()" class="feed-back">
-        <div class="messages">
-          <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
-        </div>
+    <div class="search-inputs">
+      <form>
+        <input type="radio" id="all" value="male" checked v-model='searchType'> <label for="all">All</label>
+        <input type="radio" id="messages" value="female" v-model='searchType'> <label for="messages">Messages</label>
+        <input type="radio" id="statuses" value="other" v-model='searchType'> <label for="statuses">Statuses</label>  
+        <input type="radio" id="files" value="other" v-model='searchType'> <label for="files">Files</label>  
+      </form> 
+    </div>
+    <div id="all" @scroll="handleScroll" class="feed-back">
+      <div class="messages">
+        <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
-      <div class="progress" v-show="inProgress">
-        <p>LOADING FILE {{uploadProgress}}</p>
-        <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
-      </div>
-      <div class="input">
-        <button class="load btn btn-primary" @click="addUp">
-          <span class="fas fa-sync-alt"></span>
-        </button>
-        <input type="file" id="file" @change="changeFile" style="display:none;" />
-        <button class="btn attac" @click="uploadFile">
-          <span class="fas fa-paperclip"></span>
-        </button>
-        <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-        <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
-        <button class="btn btn-success send" v-on:click="writeMessageFeed">
-          <span class="fas fa-paper-plane"></span>
-        </button>
-      </div>
+    </div>
+    <div class="progress" v-show="inProgress">
+      <p>LOADING FILE {{uploadProgress}}</p>
+      <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
+    </div>
+    <div class="input">
+      <button class="load btn btn-primary" @click="addUp">
+        <span class="fas fa-sync-alt"></span>
+      </button>
+      <input type="file" id="file" @change="changeFile" style="display:none;" />
+      <button class="btn attac" @click="uploadFile">
+        <span class="fas fa-paperclip"></span>
+      </button>
+      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+      <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+      <button class="btn btn-success send" v-on:click="writeMessageFeed">
+        <span class="fas fa-paper-plane"></span>
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -43,7 +51,8 @@ export default {
       fInterval: null,
       feed: "",
       uploadProgress: 50,
-      inProgress: false
+      inProgress: false,
+      searchType: 'all',
     };
   },
   computed: {
@@ -96,50 +105,63 @@ export default {
       });
     },
     addUp() {
+      // console.log('add up');
       if (this.taskid === -1) return;
       store.dispatch("readeFeeds", {
         taskid: this.taskid,
         fedid: this.messages[0].fed_id,
         direction: "up"
       }).then( response => {
-        // console.log('call back');
+        var a = document.querySelectorAll(".selektor")[10];
+        // console.log(a);
+        if(a!==undefined)
+          a.scrollIntoView(true);
       } );
     },
-    handleScroll() {
-      if (!document.getElementById("all").scrollTop) {
+    handleScroll(e) {
+      // console.log(e.target.scrollTop);
+      // console.log( document.getElementById("all").scrollY );
+      if ( e.target.scrollTop===0 ) {
         this.addUp();
       }
     },
-    startFeed() {
-      //poziva api svaki put kada je count deljiv sa countNumber
-      this.fInterval = setInterval(() => {
-        if (this.count % this.countNumber == 0 && this.taskid != -1) {
-          var msg = this.messages;
-
-          if (msg.length > 0) {
-            store.dispatch("readeFeeds", {
-              taskid: this.taskid,
-              fedid: msg[msg.length - 1].fed_id,
-              direction: "down"
-            });
-          } else {
-            store.dispatch("readeFeeds", {
-              taskid: this.taskid,
-              fedid: 0,
-              direction: "start"
-            });
-          }
-        } //kraj if unutar intervala
-
-        if (this.count++ >= 25) {
-          this.countNumber = 10;
-          this.count = 1;
-        }
-      }, 1000);
-    }
   },
   mounted() {
-    this.startFeed();
+    store.dispatch("readeFeeds", {
+      taskid: this.taskid,
+      fedid: 0,
+      direction: "start"
+    }).then( ()=>{
+      var a = document.querySelectorAll(".selektor")[9];
+      if(a!==undefined)
+        a.scrollIntoView(true);
+    });
+    //poziva api svaki put kada je count deljiv sa countNumber
+    this.fInterval = setInterval(() => {
+      if (this.count % this.countNumber == 0 && this.taskid != -1) {
+        var msg = this.messages;
+
+        if (msg.length > 0) {
+          store.dispatch("readeFeeds", {
+            taskid: this.taskid,
+            fedid: msg[msg.length - 1].fed_id,
+            direction: "down"
+          });
+        } 
+        // else {
+        //   store.dispatch("readeFeeds", {
+        //     taskid: this.taskid,
+        //     fedid: 0,
+        //     direction: "start"
+        //   });
+        // }
+      }
+
+      if (this.count++ >= 25) {
+        this.countNumber = 10;
+        this.count = 1;
+      }
+    }, 1000);
   },
   destroyed() {
     clearInterval(this.fInterval);

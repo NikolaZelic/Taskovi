@@ -6,7 +6,16 @@ import {
 } from '../index';
 const actions = {
   readeFeeds(commit, params) {
-    api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
+    return api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
+      store.commit('addMessages', {
+        'direction': params.direction,
+        'data': response.data.data
+      });
+    });
+  },
+
+  readeFeeds2(commit, params) {
+    return api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
       store.commit('addMessages', {
         'direction': params.direction,
         'data': response.data.data
@@ -70,8 +79,8 @@ const mutations = {
         params.data.forEach(e => state.messages.unshift(e));
         if (params.data.length) {
           var a = document.querySelectorAll(".selektor")[9];
-          if(a!==undefined)
-            a.scrollIntoView(true);
+          // if(a!==undefined)
+          //   a.scrollIntoView(true);
         }  
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
