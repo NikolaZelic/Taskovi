@@ -16,16 +16,16 @@ export default {
 @import "./assets/css/DarkTheme.css";
 @import "./assets/css/CssVars.css";
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "TitilliumWeb";
-}
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "TitilliumWeb";
 }
 
 @font-face {

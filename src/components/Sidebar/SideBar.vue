@@ -9,7 +9,9 @@
       </span>
       <div>
         <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
-         <button class="btn btn-warning pro-title"> <strong>{{ project.title }}</strong></button> / </a>
+          <button class="btn btn-warning pro-title">
+            <strong>{{ project.title }}</strong>
+          </button> / </a>
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
@@ -28,9 +30,10 @@
         </ul>
 
         <div class="user-sidebar">
-          <div>
-          <span title="Notifications" class="fas fa-bell"></span>
-          <span class="badge badge-warning notif-count">3</span></div>
+          <div title="Notifications" class="notif">
+            <span class="fas fa-bell"></span>
+            <span class="badge badge-warning count">3</span>
+          </div>
           <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
 
@@ -71,9 +74,9 @@
 
               <b-input-group class='search custom-modern'>
 
-                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet"
-                  :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                  :clear-on-select="false" :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true"
+                  :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false"
+                  :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
 
               </b-input-group>
             </div>
@@ -92,8 +95,8 @@
 
         <div class="item-list">
 
-          <b-table responsive :items="activeArray" :dark='darkTheme' :striped='false' :hover='false' :small='true' :bordered='true' :outlined='false'
-            :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
+          <b-table responsive :items="activeArray" :dark='darkTheme' :striped='false' :hover='false' :small='true' :bordered='true'
+            :outlined='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
@@ -123,7 +126,9 @@
           </b-table>
         </div>
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add New <span>{{tabs[currentTabIndex].single}}</span></button>
+          <span class="fas fa-plus-circle"></span> Add New
+          <span>{{tabs[currentTabIndex].single}}</span>
+        </button>
       </div>
 
     </div>
@@ -147,8 +152,15 @@ export default {
     UserTasks,
     Multiselect
   },
+  metaInfo() {
+    return {
+      title: "Task Master",
+      titleTemplate: this.notifTitle ? "🔹" : " " + "%s"
+    };
+  },
   data() {
     return {
+      notifTitle: false,
       tagsNet: [],
       tagsInput: [],
       tagsText: undefined,
@@ -395,7 +407,9 @@ export default {
       return i === 1 || i === 2;
     },
     addItemButton() {
-      store.dispatch("itemAddClick");
+      console.log(this.metaInfo);
+      // this.metaInfo.title = 'asd'
+      // store.dispatch("itemAddClick");
     },
     editPeopleButton(item) {
       this.showTaskPeople = true;
@@ -532,7 +546,8 @@ export default {
 }
 
 .static-side > span,
-.user-sidebar > span {
+.user-sidebar > span,
+.notif .fa-bell {
   padding: 15px;
   display: block;
   text-align: center;
@@ -716,6 +731,7 @@ h2 {
 .form-control {
   border-color: #717171;
 }
+
 /*
 .search span {
   color: #fff;
@@ -813,8 +829,14 @@ label {
   margin: 20px auto;
 }
 
-.notif-count {
+.notif {
   position: relative;
+}
+
+.notif .count {
+  position: absolute;
+  top: 5px;
+  right: 15px;
 }
 
 .fade-enter-active,

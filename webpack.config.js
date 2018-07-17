@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js',
@@ -29,11 +30,21 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|ico)$/,
+        // loader: 'file-loader?name=img/[path][name].[ext]&context=./app/images',
         loader: 'file-loader',
+        exclude: /node_modules/,
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.ttf$/,
+        loader: 'file-loader',
+        exclude: /node_modules/,
+        options: {
+          limit: 50000,
+        },
       }
     ]
   },
@@ -51,11 +62,19 @@ module.exports = {
   performance: {
     hints: false
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'HtmlWebpackPlugin example',
+      favicon: 'favicon.ico',
+      filename: 'favicon.html'
+      //'src/assets/img/favicon.ico'
+    }),
+  ],
   devtool: '#eval-source-map'
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#source-map';
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -72,8 +91,5 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
-    new webpack.HtmlWebpackPlugin({
-      favicon: 'src/assets/img/favicon.ico'
-    })
   ]);
 }
