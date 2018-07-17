@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="height100 pb-5">
 
   <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -38,9 +38,6 @@
       </div>
 
        <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-
-
-
          <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}
          </div>
 
@@ -101,14 +98,10 @@
          <div class="card-footer" :class='{darkTheme: darkTheme}'>
            <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
          </div>
+       </div>
 
-
-
-      </div>
-
-      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
+      <div class="card height100" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
         <feed-element />
-
       </div>
 
 
@@ -1066,5 +1059,9 @@ label {
 .link {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.height100 {
+  height: 100%;
 }
 </style>
