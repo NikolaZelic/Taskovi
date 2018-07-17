@@ -15,7 +15,6 @@
 
         <!-- Step -->
         <step-add v-if="itemAddStepButton" />
-        <!-- <feed-element v-if="this.taskID && checkShow(1,false,false)" :class='{darkTheme: darkTheme}' /> -->
 
       </div>
     </div>
@@ -32,7 +31,6 @@ import { store } from "@/store/index.js";
 import SideBar from "@/components/Sidebar/SideBar";
 
 import TaskView from "@/components/Content/Task/TaskView";
-
 
 import StepAdd from "@/components/Content/Task/StepAdd";
 import TaskEdit from "@/components/Content/Task/TaskEdit";
@@ -144,7 +142,8 @@ export default {
       );
     },
     checkNotifications() {
-      console.log("check notif");
+      // EVERY 20 SECONDS
+      store.dispatch("getFeedCount");
     },
     refreshSession() {
       // EVERY 15 MINUTES
@@ -152,9 +151,13 @@ export default {
     }
   },
   beforeCreate() {
-    // this.intervalNotification = setInterval(function() {
-    //   this.checkNotifications();
-    // }.bind(this), 20000);
+    store.dispatch("getFeedCount");
+    this.intervalNotification = setInterval(
+      function() {
+        this.checkNotifications();
+      }.bind(this),
+      20000
+    );
     this.intervalSession = setInterval(
       function() {
         this.refreshSession();

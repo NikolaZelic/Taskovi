@@ -142,7 +142,7 @@ export const api = {
   getProjects() {
     return axios.get('projects', {
       params: {
-        sid: window.localStorage.sid,
+        sid: localStorage.sid,
       }
     });
   },
@@ -150,13 +150,21 @@ export const api = {
   getTasks(params) {
     return axios.get('/users/tasks', {
       params: {
-        sid: window.localStorage.sid,
+        sid: localStorage.sid,
         pro_id: params.pro_id,
         created: params.created,
         assigned: params.assigned,
         archived: params.archived,
         searchstr: params.searchstr,
         tagarray: JSON.stringify(params.tagarray),
+      }
+    });
+  },
+  getFeedCount() {
+    return axios.get('/users/feed', {
+      params: {
+        sid: localStorage.sid,
+        count: true
       }
     });
   },

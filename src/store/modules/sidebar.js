@@ -5,7 +5,7 @@ import {
   store
 } from '../index';
 const actions = {
-
+  // API
   getProjects(commit, params) {
     api.getProjects(params).then(r => {
       store.commit('setSidebarData', {
@@ -32,6 +32,7 @@ const actions = {
     });
   },
 
+  // STORE
   itemEditClick(commit, params) {
     store.commit('itemEditClick', {
       id: params,

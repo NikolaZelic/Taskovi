@@ -41,6 +41,10 @@ const mutations = {
   itemAddStep: () => {
     store.state.itemAction.addStep = !store.state.itemAction.addStep;
   },
+
+  notificationCount(state, params) {
+    store.state.notificationCount = params;
+  }
 };
 export default {
   mutations,

@@ -32,7 +32,7 @@
         <div class="user-sidebar">
           <div title="Notifications" class="notif">
             <span class="fas fa-bell"></span>
-            <span class="badge badge-warning count">3</span>
+            <span class="badge badge-warning count">{{notifCount === 0 ? '' : notifCount}}</span>
           </div>
           <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
@@ -104,7 +104,7 @@
             </template>
 
             <template slot="unseen_feed" slot-scope="data">
-              <span class='badge badge-success'>{{data.item.unseen_feed}}</span>
+              <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
             </template>
 
             <template slot='HEAD_unseen_feed' slot-scope="data">
@@ -453,6 +453,7 @@ export default {
       getTabIndex: "currentTabIndex",
       itemAction: "itemAction",
       darkTheme: "darkTheme",
+      notifCount: 'notificationCount',
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
@@ -586,7 +587,7 @@ export default {
 }
 
 .tablinks:hover,
-.static-side span:hover {
+.static-side span:not(.badge):hover {
   background: #eadc903b;
   color: var(--ac-color-light);
   /* border-left: 3px solid #a7a7a7; */

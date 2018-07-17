@@ -33,7 +33,7 @@
           <p>Deadline: {{this.taskGeneralInfo.tsk_deadline}}</p>
           <p>Status: {{this.taskGeneralInfo.sta_text}}</p>
           <p>Priority: {{this.taskGeneralInfo.pri_text}}</p>
-          <p>Tags: <span class="badge badge-success" v-for="tag in this.taskGeneralInfo.tags">{{ tag.text }}</span></p>
+          <p>Tags: <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span></p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@
        </div>
 
       <div class="card height100" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
-        <feed-element />
+        <feed-element :class='{darkTheme: darkTheme}' />
       </div>
 
 
