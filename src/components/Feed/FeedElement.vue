@@ -1,11 +1,12 @@
 <template>
   <div class="feed" v-show="showFeeds">
     <div class="search-inputs">
+      <input :v-model="searchText" type='text' placeholder="Search Feed"/>
       <form>
-        <input type="radio" id="all" value="male" checked v-model='searchType'> <label for="all">All</label>
-        <input type="radio" id="messages" value="female" v-model='searchType'> <label for="messages">Messages</label>
-        <input type="radio" id="statuses" value="other" v-model='searchType'> <label for="statuses">Statuses</label>  
-        <input type="radio" id="files" value="other" v-model='searchType'> <label for="files">Files</label>  
+        <input type="radio" id="all" value="all" checked v-model='searchType'> <label for="all">All</label>
+        <input type="radio" id="messages" value="messages" v-model='searchType'> <label for="messages">Messages</label>
+        <input type="radio" id="statuses" value="statuses" v-model='searchType'> <label for="statuses">Statuses</label>  
+        <input type="radio" id="files" value="files" v-model='searchType'> <label for="files">Files</label>  
       </form> 
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
@@ -53,6 +54,7 @@ export default {
       uploadProgress: 50,
       inProgress: false,
       searchType: 'all',
+      searchText: '',
     };
   },
   computed: {
@@ -170,6 +172,16 @@ export default {
 };
 </script>
 <style scoped>
+.search-inputs{
+  margin: 10px;
+  text-align: center;
+}
+.search-inputs *{
+  padding: 5px;
+}
+.search-inputs input[type="text"]{
+  width: 300px;
+}
 .trans {
   flex: 0 0 30px;
 }
