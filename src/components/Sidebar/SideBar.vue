@@ -9,7 +9,7 @@
       </span>
       <div>
         <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
-          <strong>{{ project.title }}</strong> / </a>
+         <button class="btn btn-warning pro-title"> <strong>{{ project.title }}</strong></button> / </a>
         <span>{{ tabs[currentTabIndex].name }}</span>
         <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
@@ -28,6 +28,9 @@
         </ul>
 
         <div class="user-sidebar">
+          <div>
+          <span title="Notifications" class="fas fa-bell"></span>
+          <span class="badge badge-warning notif-count">3</span></div>
           <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
           <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
 
@@ -528,7 +531,8 @@ export default {
   /* border-right: 1px solid #444; */
 }
 
-.static-side span {
+.static-side > span,
+.user-sidebar > span {
   padding: 15px;
   display: block;
   text-align: center;
@@ -571,6 +575,15 @@ export default {
   background: #eadc903b;
   color: var(--ac-color-light);
   /* border-left: 3px solid #a7a7a7; */
+}
+
+.popup.show {
+  color: white;
+}
+
+.pro-title {
+  padding: 3px 20px;
+  background-color: #ffcf3d;
 }
 
 /* TABS END */
@@ -798,6 +811,10 @@ label {
   height: 25px;
   width: 25px;
   margin: 20px auto;
+}
+
+.notif-count {
+  position: relative;
 }
 
 .fade-enter-active,
