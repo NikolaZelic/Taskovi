@@ -11,6 +11,7 @@
     <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
     <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()"  height="600px">
   </div>
+  <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" ></i>
 </div>
 </template>
 
@@ -43,9 +44,18 @@ export default {
     },
     surname() {
       return this.user.surname;
-    }
+    },
+    isImportant(){
+      return this.mess.fed_important;
+    },
   },
   methods: {
+    importantFeed(){
+      // console.log('Important feed');
+      this.mess.fed_important = 1;
+      console.log(this.mess.fed_important);
+      this.mess.fed_important = this.mess.fed_important;
+    },
     openImage(){
       window.open(this.showFile());
     },
@@ -93,11 +103,20 @@ export default {
       document.getElementById("all").scrollTop = document.getElementById(
         "all"
       ).scrollHeight;
-  }
+  },
 };
 </script>
 
 <style scoped>
+.important{
+  color: palevioletred !important;
+}
+.cont .fa-star{
+  color: lightgray;
+  font-size: 130%;
+  padding: 5px;
+  cursor: pointer;
+}
 .cont {
   padding: 5px 10px;
   margin: 7px;
