@@ -11,6 +11,12 @@ import router from '../router/index.js';
 export const api = {
 
   //#region Zelic
+  setFeedImportant(fed_id, important){
+    return axios.post('feeds/'+fed_id, {
+      important: important,
+      sid: window.localStorage.sid,
+    } );
+  },
   createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags) {
     return axios.post('tasks', {
       sid: window.localStorage.sid,

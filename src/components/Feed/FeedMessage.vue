@@ -6,7 +6,7 @@
       <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
       <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
     </div>
-    <p class="message">{{mess.fed_text}}</p>
+    <pre class="message">{{mess.fed_text}}</pre>
     <div class="attachment"></div>
     <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
     <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()"  height="600px">
@@ -20,6 +20,8 @@ import { mapState, mapGetters } from "vuex";
 import {
   baseURL as baseURL
 } from '@/api/config.js';
+import { store } from "@/store/index.js";
+
 export default {
   props: {
     mess: {
@@ -52,9 +54,10 @@ export default {
   methods: {
     importantFeed(){
       // console.log('Important feed');
-      this.mess.fed_important = 1;
-      console.log(this.mess.fed_important);
-      this.mess.fed_important = this.mess.fed_important;
+      // this.mess.fed_important = !this.mess.fed_important;
+      // console.log(this.mess.fed_important);
+      // this.mess.fed_important = this.mess.fed_important;
+      store.commit('changeImportant', {mess: this.mess});
     },
     openImage(){
       window.open(this.showFile());
