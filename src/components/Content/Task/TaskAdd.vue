@@ -58,7 +58,7 @@
             <div class="form-group">
               <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
                 :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
                 <!-- <template slot="clear" slot-scope="props">
                   <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
@@ -118,7 +118,7 @@ export default {
       description: "",
       deadline: null,
       config: {
-        wrap: true, // set wrap to true only when using 'input-group'
+        //wrap: true, // set wrap to true only when using 'input-group'
         defaultDate: null,
         enableTime: true,
         time_24hr: true,

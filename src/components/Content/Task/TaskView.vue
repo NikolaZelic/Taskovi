@@ -29,8 +29,8 @@
           <p>Time created: {{this.taskGeneralInfo.tsk_timecreated}}</p>
           <p>Deadline: {{this.taskGeneralInfo.tsk_deadline}}</p>
           <p>Status: {{this.taskGeneralInfo.sta_text}}</p>
-          <p>Priority: {{this.taskGeneralInfo.pri_text}}</p>
-          <p>Tags: <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span></p>
+          <!-- <p>Priority: {{this.taskGeneralInfo.pri_text}}</p> -->
+          <!-- <p>Tags: <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span></p> -->
         </div>
 
       </div>
@@ -48,8 +48,8 @@
                 <th scope="col">Status</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
-                <th scope="col">Tags</th>
-                <th scope="col">Priority</th>
+                <!-- <th scope="col">Tags</th> -->
+                <!-- <th scope="col">Priority</th> -->
                 <th scope="col">Working</th>
               </tr>
             </thead>
@@ -70,14 +70,14 @@
                   {{ task.tsk_deadline }}
                 </td>
 
-                <td>
+                <!-- <td>
                   <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
                   <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
                 </td>
 
                 <td>
                   <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
-                </td>
+                </td> -->
 
                 <td>
                   <span v-if="task.you_are_worker === 1">
@@ -147,19 +147,19 @@
               </td>
             </tr>
 
-            <tr v-if="stepInfo[0].pri_text !== null">
+            <!-- <tr v-if="stepInfo[0].pri_text !== null">
               <td class="align-top">Priority:</td>
               <td>
                 <span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span>
               </td>
-            </tr>
+            </tr> -->
 
-            <tr v-if="stepInfo[0].tags.length > 0">
+            <!-- <tr v-if="stepInfo[0].tags.length > 0">
               <td class="align-top">Tags:</td>
               <td>
                 <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
               </td>
-            </tr>
+            </tr> -->
 
             <tr v-if="stepInfo[0].tsk_deadline !== ''">
               <td class="align-top">Deadline:</td>
@@ -253,7 +253,7 @@
       </div>
 
       <!-- Showing edit fields about selected step -->
-      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && tabs.steps && stepEditShow'>
+      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
 
         <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -272,7 +272,7 @@
           </div>
 
           <label for="status">Change status:</label>
-          <select class="form-control" id="status" v-model="edit.status">
+            <select class="form-control" id="status" v-model="edit.status">
             <option value="2" v-if="stepInfo[0].you_are_creator === 1">In Progress</option>
             <option value="3" v-if="stepInfo[0].you_are_worker === 1">Completed</option>
             <option value="4" v-if="stepInfo[0].you_are_worker === 1">Failed</option>
@@ -280,20 +280,20 @@
             <option value="6" v-if="stepInfo[0].you_are_creator === 1">Cancelled</option>
           </select>
 
-          <div v-if="stepInfo[0].you_are_creator === 1">
+          <!-- <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="priority">Change priority:</label>
             <select class="form-control" id="priority" v-model="edit.priority">
               <option value="1">High</option>
               <option value="2">Medium</option>
               <option value="3">Low</option>
             </select>
-          </div>
+          </div> -->
 
-          <label class="tag" for="tags">Tags</label>
+          <!-- <label class="tag" for="tags">Tags</label>
           <multiselect @search-change="loadTags" :preserveSearch="true" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag"
             id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag"
             :multiple="true" :taggable="true" @tag="addTag">
-          </multiselect>
+          </multiselect> -->
 
           <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="deadline">Deadline:</label>
@@ -392,8 +392,8 @@ export default {
       showInactive: false,
       inactiveUsers: [],
 
-      valueTag: [],
-      optionsTag: [],
+      // valueTag: [],
+      // optionsTag: [],
 
       // editDescription: false,
 
@@ -401,7 +401,7 @@ export default {
         name: undefined,
         description: undefined,
         status: undefined,
-        priority: undefined,
+        // priority: undefined,
         deadline: undefined,
         estTime: undefined,
         timespent: undefined,
@@ -550,13 +550,13 @@ export default {
             title: this.edit.name,
             description: this.edit.description,
             deadline: this.edit.deadline,
-            priority: this.edit.priority,
+            // priority: this.edit.priority,
             status: this.edit.status,
             progress: this.edit.progress,
             timespent: this.edit.timespent,
             estimateddate: this.edit.estTime,
             usersarray: this.userStringArray,
-            tagarray: this.tagStringArray
+            // tagarray: this.tagStringArray
           }
         )
         .then(response => {
@@ -567,7 +567,7 @@ export default {
           (this.edit.name = undefined),
           (this.edit.description = undefined),
           (this.edit.deadline = undefined),
-          (this.edit.priority = undefined),
+          // (this.edit.priority = undefined),
           (this.edit.status = undefined),
           (this.edit.progress = undefined),
           (this.edit.timespent = undefined),
@@ -639,6 +639,22 @@ export default {
           if (response.data.data !== undefined) {
             // console.log(response.data.data);
             this.stepInfo = response.data.data;
+
+            // this.edit.name = response.data.data[0].tsk_title;
+            // this.edit.description = response.data.data[0].description;
+            // this.edit.status = response.data.data[0].sta_id;
+            // this.edit.deadline = response.data.data[0].tsk_deadline;
+            // this.edit.estTime = response.data.data[0].tsk_estimated_completion_date;
+            // this.edit.timespent = response.data.data[0].tsk_timespent;
+            // this.edit.progress = response.data.data[0].tsk_progress;
+            // this.valueUser = response.data.data[0].usrworking;
+
+
+
+
+
+
+
 
             for (var i = 0; i < response.data.data.length; i++) {
               // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
