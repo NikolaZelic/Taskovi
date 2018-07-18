@@ -20,6 +20,8 @@ import { mapState, mapGetters } from "vuex";
 import {
   baseURL as baseURL
 } from '@/api/config.js';
+import { store } from "@/store/index.js";
+
 export default {
   props: {
     mess: {
@@ -52,9 +54,10 @@ export default {
   methods: {
     importantFeed(){
       // console.log('Important feed');
-      this.mess.fed_important = 1;
-      console.log(this.mess.fed_important);
-      this.mess.fed_important = this.mess.fed_important;
+      // this.mess.fed_important = !this.mess.fed_important;
+      // console.log(this.mess.fed_important);
+      // this.mess.fed_important = this.mess.fed_important;
+      store.commit('changeImportant', {mess: this.mess});
     },
     openImage(){
       window.open(this.showFile());

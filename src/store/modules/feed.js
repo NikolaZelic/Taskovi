@@ -82,7 +82,17 @@ const mutations = {
   },
   clearFeed: (state) => {
     state.messages = [];
-  }
+  },
+  changeImportant: (state, params) => {
+    var fed_id = params.mess.fed_id;
+    for(var i in state.messages){
+      var message = state.messages[i];
+      if(message.fed_id == fed_id){
+        message.fed_important = !message.fed_important;
+        api.setFeedImportant(message.fed_id, message.fed_important);
+      }
+    }
+  },
 }
 const getters = {
 
