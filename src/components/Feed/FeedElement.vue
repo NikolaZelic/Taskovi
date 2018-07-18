@@ -121,9 +121,7 @@ export default {
         searchingstring: this.searchText,
         fed_important: this.searchImportant,
       }).then( ()=>{
-        var a = document.querySelectorAll(".selektor")[9];
-        if(a!==undefined)
-          a.scrollIntoView(false);
+        this.scrollToBegining();
       });
     },
     writeMessageFeed() {
@@ -156,6 +154,8 @@ export default {
       // console.log('add up');
       if (this.taskid === -1) 
         return;
+      if(this.messages==null||this.messages.length==0)
+        return;
       store.dispatch("readeFeeds", {
         taskid: this.taskid,
         fedid: this.messages[0].fed_id,
@@ -177,6 +177,16 @@ export default {
         this.addUp();
       }
     },
+    scrollToBegining(){
+      var a = document.querySelectorAll(".selektor");
+      if(a===undefined||a===null)
+        return;
+      if(a.length==0)
+        a = a[0];
+      else
+        a = a[a.length-1];
+      a.scrollIntoView(false);
+    },
   },
   mounted() {
     store.dispatch("readeFeeds", {
@@ -184,9 +194,7 @@ export default {
       fedid: 0,
       direction: "start"
     }).then( ()=>{
-      var a = document.querySelectorAll(".selektor")[9];
-      if(a!==undefined)
-        a.scrollIntoView(false);
+      this.scrollToBegining();
     });
 
     // ZX - POZIVA REFRESH NOTIFA
