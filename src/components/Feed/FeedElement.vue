@@ -30,7 +30,7 @@
         <span class="fas fa-paperclip"></span>
       </button>
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-      <textarea v-model="feed" placeholder="New Message..." @keyup.13="writeMessageFeed"></textarea>
+      <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp' ></textarea>
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
@@ -100,6 +100,16 @@ export default {
     },
   },
   methods: {
+    processKeyUp(event){
+      if(event.key=='Enter'){
+        if(event.shiftKey){
+          this.feed += '\n';
+        }
+        else{
+          this.writeMessageFeed();
+        }
+      }
+    },
     searchFeeds(){
       store.commit('clearFeed');
 
@@ -117,7 +127,8 @@ export default {
       });
     },
     writeMessageFeed() {
-      if (this.taskid === -1) return;
+      if (this.taskid === -1) 
+        return;
       var text = this.feed.trim();
       if (text === "") {
         this.feed = "";

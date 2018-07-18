@@ -17,7 +17,7 @@ const actions = {
   postMessage(commit, params) {
     api.postMessage(params.taskid, params.text).then(response => {
       // KORISTI GETTER UMESTO DIREKTNO STORE
-      console.log("Dolazi ovde");
+      // console.log("Dolazi ovde");
       var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", {
