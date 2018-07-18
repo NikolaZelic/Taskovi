@@ -464,6 +464,8 @@ export default {
         this.tabs.steps = false;
         this.tabs.messages = false;
         this.getGeneralInfo(this.selectedItemID);
+        this.stepInfoShow = false;
+        this.stepEditShow = false;
       }
 
       if (parameter === "steps") {
@@ -477,7 +479,9 @@ export default {
         this.tabs.generalInfo = false;
         this.tabs.steps = false;
         this.tabs.messages = true;
-        console.log('Parametar messages')
+        this.stepInfoShow = false;
+        this.stepEditShow = false;
+        // console.log('Parametar messages')
       }
 
       // console.log(parameter);
