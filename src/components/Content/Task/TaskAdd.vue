@@ -5,9 +5,9 @@
         <div class='tmp-content'>
           <div class="header">
             <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
-            <div class='exit-wrapper'>
+            <!-- <div class='exit-wrapper'> -->
               <i class="exit-position far fa-times-circle" @click='closeModal'></i>
-            </div>
+            <!-- </div> -->
           </div>
 
           <div class="content">
@@ -67,13 +67,13 @@
               </multiselect>
             </div>
 
-            <!-- PRIORETY -->
+            <!-- PRIORITY -->
             <div v-show='task' class="form-group">
-              <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
-                <option disabled value=null>Select Priority</option>
+              <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' style='cursor: pointer'>
+                <option value=null>None</option>
+                <option value='3'>Low</option>
+                <option value='2'>Medium</option>
                 <option value='1'>High</option>
-                <option value='2'>Low</option>
-                <option value='3'>Medium</option>
               </select>
             </div>
 
@@ -130,8 +130,6 @@ export default {
       inputWorker: null,
       inputWorkerHaveChange: 0,
       choosenWorker: null,
-      // personClass: "fas fa-user fas-selected",
-      // teamClass: "fas fa-users",
       inputProps: {
         class: "autosuggest__input",
         onInputChange: this.onInputChange,
@@ -142,14 +140,14 @@ export default {
       tagSearchStr: null,
       task: true,
       edit: false,
-      selectedPrioretyClass: "unselected form-control",
+      selectedPriorityClass: "unselected form-control",
       suggestedProjets: [],
       inputPropsProject: {
         class: "autosuggest__input",
         onInputChange: this.onInputChangeProject,
         placeholder: "Enter Project"
       },
-      selectedPriorety: null,
+      selectedPriority: null,
       projectSuggestionHaveChange: 0,
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
@@ -202,9 +200,9 @@ export default {
     selectedTags: function() {
       store.dispatch("cleanSuggestedTags");
     },
-    selectedPriorety: function() {
-      if (this.selectedPrioretyClass != "form-control")
-        this.selectedPrioretyClass = "form-control";
+    selectedPriority: function() {
+      if (this.selectedPriorityClass != "form-control")
+        this.selectedPriorityClass = "form-control";
     }
   },
 
@@ -402,7 +400,7 @@ export default {
           this.description,
           this.deadline,
           tagarray,
-          this.selectedPriorety,
+          this.selectedPriority,
           this.selectedProjectID
         )
         .then(result => {
@@ -542,27 +540,18 @@ export default {
   padding: 15px 13px 5px;
   border-top: 1px solid #d3d3d3;
 }
-
-.autosuggest__results,
-.autosuggest__results_item.autosuggest__results_item-highlighted,
-.autosuggest__results .autosuggest__results_item:active,
-.autosuggest__results .autosuggest__results_item:focus,
-.autosuggest__results .autosuggest__results_item:hover,
-.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly],
-.tmp-content .multiselect .multiselect__tags,
-.tmp-content .multiselect .multiselect__single,
-.tmp-content .multiselect #tags-component {
+ {
   background: #f3f3f3;
 }
 
 .tmp-content .multiselect #tags-component:focus {
-  color: #eee;
+  color: #333;
 }
 
 .tmp-content .multiselect .multiselect__tags,
 .tmp-content .multiselect .multiselect__single,
 .tmp-content .multiselect #tags-component::placeholder {
-  color: #6c757d;
+  color: #444;
 }
 
 .tmp-content .multiselect .multiselect__option--highlight {
@@ -580,7 +569,7 @@ export default {
 }
 
 .tmp-content .deadline {
-  color: #eee !important;
+  color: #222 !important;
   display: inline !important;
 }
 
@@ -676,18 +665,11 @@ export default {
 
 .header {
   position: relative;
+  height: 100px;
   padding: 20px 0 0;
   border-radius: 15px 15px 0 0;
   background: var(--ac-color);
   color: black;
-}
-
-.exit-wrapper {
-  right: 0px;
-  top: 0px;
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
 }
 
 .exit-text {
@@ -713,7 +695,7 @@ export default {
 .content {
   position: relative;
   padding: 20px;
-  background: #b7b7b7;
+  background: #ccc;
   border-radius: 0 0 15px 15px;
   padding: 15px;
 }
@@ -735,11 +717,25 @@ export default {
   font-size: 38px;
 } */
 
+.autosuggest__results,
+.autosuggest__results_item.autosuggest__results_item-highlighted,
+.autosuggest__results .autosuggest__results_item:active,
+.autosuggest__results .autosuggest__results_item:focus,
+.autosuggest__results .autosuggest__results_item:hover,
+.tmp-content .calender-wrapper .flatpickr-input.form-control[readonly],
+.tmp-content .multiselect .multiselect__tags,
+.tmp-content .multiselect .multiselect__single,
+.tmp-content .multiselect #tags-component,
+.form-control,
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: #fff !important;
+  color: #111 !important;
+}
+
 .form-control {
   display: inline;
   position: relative;
-  background-color: #ffffff !important;
-  color: #111 !important;
 }
 
 #tsk_deadline {

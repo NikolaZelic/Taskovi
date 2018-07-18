@@ -1,5 +1,5 @@
 <template>
-<div class="height100 pb-5">
+<div class="height100 pb-5"  :class='{darkTheme: darkTheme}'>
 
   <template v-if="selectedItemID <= 0">
     <h1>Select task first...</h1>
@@ -18,7 +18,7 @@
       <!-- TAB GeneralInfo -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
-        <div class="card-header">
+        <div class="card-header"  :class='{darkTheme: darkTheme}'>
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
 

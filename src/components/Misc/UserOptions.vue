@@ -21,7 +21,7 @@
               <tr v-for='(t,index) in tableData' :key='index'>
                 <td>{{t.name}}:</td>
                 <td>
-                  <input type="text" v-model.trim="t.value" :disabled="editMode" />
+                  <input :type='inputType(t)' v-model.trim="t.value" :disabled="editMode" />
                 </td>
               </tr>
             </table>
@@ -65,6 +65,9 @@ export default {
     };
   },
   methods: {
+    inputType(t) {
+      return t.name === "Password" ? "password" : "text";
+    },
     edit() {
       this.editMode = !this.editMode;
       if (this.editMode === true) {

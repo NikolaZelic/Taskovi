@@ -183,7 +183,7 @@ export default {
           value: "as"
         },
         {
-          text: "Archived",
+          text: "Finished",
           value: "ar"
         }
       ],

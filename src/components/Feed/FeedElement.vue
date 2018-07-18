@@ -1,5 +1,5 @@
 <template>
-  <div class="feed" v-show="showFeeds">
+  <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs" >
       <input @blur="searchFeeds" v-model="searchText" type='text' placeholder="Search Feed"/>
       <form >
@@ -63,7 +63,8 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.modulefeed.messages
+      messages: state => state.modulefeed.messages,
+      darkTheme: state => state.darkTheme
     }),
     ...mapGetters({
       taskid: "selectedItemID"

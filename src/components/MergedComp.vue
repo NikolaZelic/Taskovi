@@ -8,16 +8,16 @@
         <!-- Project -->
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
 
-        <!-- Task -->
-        <div>
-          <task-edit v-if="checkShow(1,true)" />
-          <task-add v-if="checkShow(1,false,true)" />
-          <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
-        </div>
 
         <!-- Step -->
+        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
         <step-add v-if="itemAddStepButton" />
 
+      </div>
+      <!-- Task -->
+      <div>
+        <task-edit v-if="checkShow(1,true)" />
+        <task-add v-if="checkShow(1,false,true)" />
       </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->

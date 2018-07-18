@@ -15,11 +15,16 @@
       <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
         class="form-control mb-3" spellcheck="false"></textarea>
 
-      <label for="users">
-        <span class='badge badge-warning'>{{project.users_count}}</span> Users
-      </label>
+      <label for="date">Deadline</label>
+      <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
+        placeholder="Pick a deadline (optional)">
+      </flat-pickr>
 
-      <b-btn v-b-modal.modal1 variant="primary">View and change users</b-btn>
+      <!-- <label for="users">
+        <span class='badge badge-warning'></span> Users
+      </label> -->
+
+      <b-btn v-b-modal.modal1 variant="primary" class="mb-3"><span class="fa fa-user"></span> View and change {{project.users_count}} users </b-btn>
 
       <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
         body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
@@ -74,16 +79,12 @@
         track-by='email' @tag="addTag" :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" :custom-label='CustomPersonLabel'
         placeholder="Enter email of people"></multiselect> -->
 
-      <label for="date">Deadline</label>
-      <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
-        placeholder="Pick a deadline (optional)">
-      </flat-pickr>
 
       <div v-if='itemEditButton!==undefined' class='d-block'>
         <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
-        <button @click="projectEdit" class="btn btn-warning btn-block">Save changes</button>
+        <button @click="projectEdit" class="btn btn-warning btn-block"><span class="fas fa-save"></span> Save changes</button>
       </div>
-      <button v-else @click="projectCreate" class="btn btn-success">Create project</button>
+      <button v-else @click="projectCreate" class="btn btn-success"><span class="fas fa-plus-square"></span> Create project</button>
     </div>
   </div>
 </template>

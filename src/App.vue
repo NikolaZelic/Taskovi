@@ -30,7 +30,7 @@ export default {
 body {
   margin: 0;
   padding: 0;
-  font-family: "TitilliumWeb";
+  font-family: "TitilliumWeb" !important;
 }
 
 @font-face {
