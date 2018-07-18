@@ -42,7 +42,7 @@
             <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition>
-            <img title="User Options" src="@/assets/img/user.png" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)'
+            <img title="User Options" :src="imgUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)'
             />
           </div>
           <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
@@ -149,6 +149,7 @@ import { instance as axios } from "@/api/config.js";
 import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
 import Multiselect from "vue-multiselect";
+import {baseURL as baseURL} from '@/api/config.js';
 export default {
   components: {
     UserPopup,
@@ -162,6 +163,7 @@ export default {
       tagsText: undefined,
       tagLoading: false,
       scrollPos: 0,
+      imgUrl: '',
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       showTaskPeople: true,
@@ -358,6 +360,18 @@ export default {
           this.tagLoading = false;
         });
     },
+    getAvatar() {
+      let link = 'auth/users/img';
+      axios
+        .get(link, {
+          params: {
+            sid: localStorage.sid
+          }
+        })
+        .then(r => {
+          this.imgUrl = baseURL + link + "?sid=" +localStorage.sid
+        });
+    },
     selectAndSet(item) {
       this.selectItem(item.id);
       this.activeItem = item.id;
@@ -532,6 +546,7 @@ export default {
     }
   },
   created() {
+    this.getAvatar()
     document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {

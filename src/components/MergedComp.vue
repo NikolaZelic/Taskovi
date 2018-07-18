@@ -11,11 +11,11 @@
 
         <!-- Step -->
         <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
-        <step-add v-if="itemAddStepButton" />
 
       </div>
       <!-- Task -->
       <div>
+        <step-add v-if="itemAddStepButton" />
         <task-edit v-if="checkShow(1,true)" />
         <task-add v-if="checkShow(1,false,true)" />
       </div>

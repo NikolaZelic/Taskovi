@@ -1,12 +1,12 @@
 <template>
   <transition name="modal">
-    <div class="tmp-content-mask">
-      <div class="tmp-content-wrapper">
+    <div class="tmp-content-mask" @click="closeModal" id='cm'>
+      <!-- <div class="tmp-content-wrapper" > -->
         <div class='tmp-content'>
           <div class="header">
             <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
             <!-- <div class='exit-wrapper'> -->
-              <i class="exit-position far fa-times-circle" @click='closeModal'></i>
+              <i class="exit-position far fa-times-circle" id='cm'></i>
             <!-- </div> -->
           </div>
 
@@ -39,7 +39,7 @@
               </span>
             </div>
 
-            <!-- ADING WORKERS -->
+            <!-- ADDING WORKERS -->
             <div v-show='!task' class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
               <!-- @click='selectUser' -->
@@ -86,7 +86,7 @@
             </div>
           </div>
         </div>
-      </div>
+      <!-- </div> -->
     </div>
   </transition>
 </template>
@@ -410,7 +410,7 @@ export default {
           });
 
           this.reportWritingToDB(result);
-          this.closeModal();
+          this.closeModal("cm");
         });
     },
     reportWritingToDB(result) {
@@ -469,8 +469,11 @@ export default {
     onProjectSelected() {
       store.dispatch("clleaneSuggestedProjects");
     },
-    closeModal() {
-      store.commit("itemActionReset");
+     closeModal(val) {
+      let tar = val.target.id;
+      if (tar === "cm") {
+         store.commit("itemActionReset");
+      }
     },
     searchUsers(str) {
       if (str == undefined || str == null) return;
@@ -565,7 +568,7 @@ export default {
 .tmp-content .multiselect--active .multiselect__option--highlight::after,
 .tmp-content .multiselect .multiselect__tag span,
 .tmp-content .multiselect .multiselect__tag {
-  background: var(--ac-bg-light-color);
+  background: var(--ac-color);
 }
 
 .tmp-content .deadline {
@@ -650,9 +653,6 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
   transition: opacity 0.3s ease;
-}
-
-.tmp-content-wrapper {
   display: flex;
   height: 100%;
   justify-content: center;

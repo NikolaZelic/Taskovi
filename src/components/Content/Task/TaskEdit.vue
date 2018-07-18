@@ -16,10 +16,6 @@ export default {
       deadline: undefined,
       selectedPriorety: undefined,
       selectedTags: [],
-
-
-
-
       task: true,
       haveChange: false,
       edit: true,
@@ -27,9 +23,7 @@ export default {
       currentInfo: [],
       title: undefined,
       description: undefined,
-      deadline: undefined,
-      // selectedTags: [],
-      // selectedPriorety: undefined
+      deadline: undefined
     };
   },
   computed: {
@@ -89,6 +83,10 @@ export default {
         })
         .then(response => {
           if (response.data.status === "OK") {
+            store.dispatch("getTasks", {
+              index: 1,
+              pro_id: this.proId
+            });
             store.commit("modalStatus", {
               message: "Task has been edited succesfully"
             });
@@ -103,26 +101,27 @@ export default {
         });
     },
 
-    loadInfo(){
-      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-        params: {
-          sid: localStorage.sid,
-          tasid: store.state.itemAction.edit
-        }
-      }).then(response => {
-        console.log(response.data.data);
-        // this.currentInfo = response.data.data[0];
-        this.title = response.data.data[0].tsk_title;
-        this.description = response.data.data[0].description;
-        this.deadline = response.data.data[0].tsk_deadline;
-        this.selectedPriorety = response.data.data[0].pri_id;
-        this.selectedTags = response.data.data[0].tags;
-
-      })
+    loadInfo() {
+      axios
+        .get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+          params: {
+            sid: localStorage.sid,
+            tasid: store.state.itemAction.edit
+          }
+        })
+        .then(response => {
+          console.log(response.data.data);
+          // this.currentInfo = response.data.data[0];
+          this.title = response.data.data[0].tsk_title;
+          this.description = response.data.data[0].description;
+          this.deadline = response.data.data[0].tsk_deadline;
+          this.selectedPriorety = response.data.data[0].pri_id;
+          this.selectedTags = response.data.data[0].tags;
+        });
     }
   },
 
-  mounted(){
+  mounted() {
     this.loadInfo();
   }
 };

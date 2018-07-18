@@ -11,7 +11,7 @@
         <div class="body">
 
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
-            <img src="@/assets/img/user.png" class="picture" />
+            <img :src="imgUrl" class="picture" />
             <span class='fas fa-camera'></span>
             <input ref='avatarUpload' type="file" style="display: none;" @change='changeFile'>
           </div>
@@ -39,10 +39,12 @@
 import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
 import { mapState } from "vuex";
+import { baseURL } from "@/api/config.js";
 
 export default {
   data() {
     return {
+      imgUrl: "",
       tableData: [
         {
           name: "Name",
@@ -97,9 +99,10 @@ export default {
             }
           })
           .catch(e => {
-            console.log("e " + e);
+            console.log("e: " + e);
           });
       }
+      this.closeModal("cm");
     },
     changeAvatar() {
       this.$refs.avatarUpload.click();
@@ -113,6 +116,18 @@ export default {
       if (tar === "cm") {
         this.$router.push("/");
       }
+    },
+    getAvatar() {
+      let link = "auth/users/img";
+      axios
+        .get(link, {
+          params: {
+            sid: localStorage.sid
+          }
+        })
+        .then(r => {
+          this.imgUrl = baseURL + link + "?sid=" + localStorage.sid;
+        });
     }
   },
   computed: {
@@ -121,6 +136,7 @@ export default {
     })
   },
   created() {
+    this.getAvatar();
     this.tableData[0].value = this.user.name;
     this.tableData[1].value = this.user.surname;
     this.tableData[2].value = this.user.email;

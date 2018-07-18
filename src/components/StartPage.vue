@@ -130,8 +130,6 @@ export default {
       ],
       formstate: {},
       user: {}
-      // signedIn: false,
-      // login: true
     };
   },
   methods: {

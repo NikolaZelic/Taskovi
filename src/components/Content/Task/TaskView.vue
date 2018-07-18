@@ -1007,8 +1007,6 @@ label {
 }
 
 .header {
-  /* background: var(--success); */
-  /* border-radius: 4px; */
   display: flex;
   padding: 10px 20px;
   justify-content: space-between;
@@ -1020,12 +1018,8 @@ label {
   text-decoration: underline;
 }
 
-.height100 {
-  height: 100%;
-}
 
 .back-button{
-  /* width: 20px !important; */
   flex-grow: 0.1;
 }
 </style>
