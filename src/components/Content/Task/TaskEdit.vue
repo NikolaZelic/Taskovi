@@ -1,3 +1,4 @@
+
 <script>
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 import TaskView from "@/components/Content/Task/TaskView";
@@ -10,16 +11,25 @@ export default {
   mixins: [TaskAdd],
   data() {
     return {
+      title: undefined,
+      description: undefined,
+      deadline: undefined,
+      selectedPriorety: undefined,
+      selectedTags: [],
+
+
+
+
       task: true,
       haveChange: false,
       edit: true,
       componentTitle: "Edit Task",
-
+      currentInfo: [],
       title: undefined,
       description: undefined,
       deadline: undefined,
-      selectedTags: [],
-      selectedPriorety: undefined
+      // selectedTags: [],
+      // selectedPriorety: undefined
     };
   },
   computed: {
@@ -91,7 +101,29 @@ export default {
           store.dispatch("itemActionReset");
           // store.dispatch("getTasks()", this.proId);
         });
+    },
+
+    loadInfo(){
+      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+        params: {
+          sid: localStorage.sid,
+          tasid: store.state.itemAction.edit
+        }
+      }).then(response => {
+        console.log(response.data.data);
+        // this.currentInfo = response.data.data[0];
+        this.title = response.data.data[0].tsk_title;
+        this.description = response.data.data[0].description;
+        this.deadline = response.data.data[0].tsk_deadline;
+        this.selectedPriorety = response.data.data[0].pri_id;
+        this.selectedTags = response.data.data[0].tags;
+
+      })
     }
+  },
+
+  mounted(){
+    this.loadInfo();
   }
 };
 </script>

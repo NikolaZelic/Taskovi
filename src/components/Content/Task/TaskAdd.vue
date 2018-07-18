@@ -58,7 +58,7 @@
             <div class="form-group">
               <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
                 :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
                 <!-- <template slot="clear" slot-scope="props">
                   <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
@@ -71,9 +71,11 @@
             <div v-show='task' class="form-group">
               <select v-model="selectedPriorety" v-bind:class='selectedPrioretyClass' style='cursor: pointer'>
                 <option disabled value=null>Select Priority</option>
+
                 <option value='1'>High</option>
-                <option value='2'>Low</option>
-                <option value='3'>Medium</option>
+                <option value='2'>Medium</option>
+                <option value='3'>Low</option>
+
               </select>
             </div>
 
@@ -118,7 +120,7 @@ export default {
       description: "",
       deadline: null,
       config: {
-        wrap: true, // set wrap to true only when using 'input-group'
+        //wrap: true, // set wrap to true only when using 'input-group'
         defaultDate: null,
         enableTime: true,
         time_24hr: true,
@@ -580,7 +582,7 @@ export default {
 }
 
 .tmp-content .deadline {
-  color: #eee !important;
+  color: #111 !important;
   display: inline !important;
 }
 
