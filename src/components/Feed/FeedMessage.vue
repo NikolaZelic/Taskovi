@@ -1,5 +1,5 @@
 <template>
-<div v-bind:class="mojaPoruka()?'cont right-con':'cont left-con'" class='selektor' :id="mess.fed_id">
+<div class='cont selektor' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
   <img :src="icon()" />
   <div class="message-body">
     <div class="message-body-header">
@@ -8,13 +8,18 @@
     </div>
     <p class="message">{{mess.fed_text}}</p>
     <div class="attachment"></div>
-    <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'">Show file</a>
+    <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
+    <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()"  height="600px">
   </div>
+  <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" ></i>
 </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import {
+  baseURL as baseURL
+} from '@/api/config.js';
 export default {
   props: {
     mess: {
@@ -39,9 +44,29 @@ export default {
     },
     surname() {
       return this.user.surname;
-    }
+    },
+    isImportant(){
+      return this.mess.fed_important;
+    },
   },
   methods: {
+    importantFeed(){
+      // console.log('Important feed');
+      this.mess.fed_important = 1;
+      console.log(this.mess.fed_important);
+      this.mess.fed_important = this.mess.fed_important;
+    },
+    openImage(){
+      window.open(this.showFile());
+    },
+    isImage(){
+      var extension = this.mess.fed_text.replace( /.+([.].+)/i, '$1' );
+      // console.log(this.mess.fed_text);
+      // console.log(extension);
+      if(extension=='.jpg'||extension=='.png'||extension=='.gif')
+        return true;
+      return false;
+    },
     mojaPoruka() {
       if (
         this.name == this.mess.usr_name &&
@@ -64,7 +89,7 @@ export default {
     },
     showFile() {
       return (
-        "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+        baseURL+"tasks/" +
         this.taskid +
         "/feeds/" +
         this.mess.fed_id +
@@ -78,11 +103,20 @@ export default {
       document.getElementById("all").scrollTop = document.getElementById(
         "all"
       ).scrollHeight;
-  }
+  },
 };
 </script>
 
 <style scoped>
+.important{
+  color: palevioletred !important;
+}
+.cont .fa-star{
+  color: lightgray;
+  font-size: 130%;
+  padding: 5px;
+  cursor: pointer;
+}
 .cont {
   padding: 5px 10px;
   margin: 7px;
@@ -103,7 +137,13 @@ export default {
 .cont .attach {
   color: #139cbf;
 }
-
+#attachment-image{
+  height: initial;
+  /* max-height: 250px; */
+  width: 90%;
+  border-radius: 0;
+  cursor: pointer;
+}
 .message-body {
   margin-left: 10px;
   flex: 1;

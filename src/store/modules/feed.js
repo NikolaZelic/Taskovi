@@ -6,16 +6,7 @@ import {
 } from '../index';
 const actions = {
   readeFeeds(commit, params) {
-    return api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
-      store.commit('addMessages', {
-        'direction': params.direction,
-        'data': response.data.data
-      });
-    });
-  },
-
-  readeFeeds2(commit, params) {
-    return api.readeFeeds(params.taskid, params.fedid, params.direction).then(response => {
+    return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important ).then(response => {
       store.commit('addMessages', {
         'direction': params.direction,
         'data': response.data.data
