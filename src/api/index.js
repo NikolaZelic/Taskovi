@@ -94,6 +94,16 @@ export const api = {
       }
     });
   },
+  readeGloablFeeds(offset, type, searchingstring, fed_important){
+    return axios.get('users/feeds', {params: {
+      sid: window.localStorage.sid,
+      type: type,
+      searchstring: searchingstring,
+      fed_important: fed_important,
+      offset: offset,
+      count: false,
+    }});
+  },
   postMessage(tasid, mess) {
     // var msg = store.state.messages;
     var fd = new FormData();
@@ -170,7 +180,7 @@ export const api = {
     });
   },
   getFeedCount() {
-    return axios.get('/users/feed', {
+    return axios.get('/users/feeds', {
       params: {
         sid: localStorage.sid,
         count: true

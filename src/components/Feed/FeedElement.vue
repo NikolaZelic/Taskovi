@@ -1,7 +1,7 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs" >
-      <input @blur="searchFeeds" v-model="searchText" type='text' placeholder="Search Feed"/>
+      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed"/>
       <form >
         <span class='radio-wrapper'>
           <input type="radio" id="all" value="all" checked v-model='searchType'> <label for="all">All</label>
@@ -94,10 +94,10 @@ export default {
       this.count = 1;
     },
     searchType(){
-      this.searchFeeds();
+      this.readeFeeds();
     },
     searchImportant(){
-      this.searchFeeds();
+      this.readeFeeds();
     },
   },
   methods: {
@@ -111,7 +111,7 @@ export default {
         }
       }
     },
-    searchFeeds(){
+    readeFeeds(){
       store.commit('clearFeed');
 
       store.dispatch("readeFeeds", {
@@ -152,7 +152,6 @@ export default {
       });
     },
     addUp() {
-      // console.log('add up');
       if (this.taskid === -1) 
         return;
       if(this.messages==null||this.messages.length==0)
@@ -165,11 +164,15 @@ export default {
         searchingstring: this.searchText,
         fed_important: this.searchImportant,
       }).then( response => {
-        var a = document.querySelectorAll(".selektor")[10];
-        // console.log(a);
-        if(a!==undefined)
-          a.scrollIntoView(true);
+        this.scrollToBegining();
       } );
+    },
+    addDown(){
+      store.dispatch("readeFeeds", {
+        taskid: this.taskid,
+        fedid: this.messages[this.messages.length - 1].fed_id,
+        direction: "down"
+      });
     },
     handleScroll(e) {
       // console.log(e.target.scrollTop);
@@ -188,15 +191,10 @@ export default {
         a = a[a.length-1];
       a.scrollIntoView(false);
     },
+
   },
   mounted() {
-    store.dispatch("readeFeeds", {
-      taskid: this.taskid,
-      fedid: 0,
-      direction: "start"
-    }).then( ()=>{
-      this.scrollToBegining();
-    });
+    this.readeFeeds();
 
     // ZX - POZIVA REFRESH NOTIFA
     store.dispatch("getFeedCount");
@@ -204,22 +202,9 @@ export default {
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
       if (this.count % this.countNumber == 0 && this.taskid != -1 && !this.searchOn ) {
-        var msg = this.messages;
-
-        if (msg.length > 0) {
-          store.dispatch("readeFeeds", {
-            taskid: this.taskid,
-            fedid: msg[msg.length - 1].fed_id,
-            direction: "down"
-          });
+        if ( this.messages.length > 0) {
+          this.addDown();
         } 
-        // else {
-        //   store.dispatch("readeFeeds", {
-        //     taskid: this.taskid,
-        //     fedid: 0,
-        //     direction: "start"
-        //   });
-        // }
       }
 
       if (this.count++ >= 25) {

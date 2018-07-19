@@ -13,6 +13,14 @@ const actions = {
       });
     });
   },
+  readeGloablFeeds(commit, params) {
+    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important ).then(response => {
+      store.commit('addMessages', {
+        'direction': 'up',
+        'data': response.data.data
+      });
+    });
+  },
 
   postMessage(commit, params) {
     api.postMessage(params.taskid, params.text).then(response => {
@@ -67,12 +75,7 @@ const mutations = {
         state.messages = params.data;
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
-        params.data.forEach(e => state.messages.unshift(e));
-        if (params.data.length) {
-          var a = document.querySelectorAll(".selektor")[9];
-          // if(a!==undefined)
-          //   a.scrollIntoView(true);
-        }  
+        params.data.forEach(e => state.messages.unshift(e)); 
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
