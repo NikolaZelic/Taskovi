@@ -63,6 +63,8 @@ export default {
       window.open(this.showFile());
     },
     isImage(){
+      if(this.mess.fed_text===undefined||this.mess.fed_text==null)
+        return false;
       var extension = this.mess.fed_text.replace( /.+([.].+)/i, '$1' );
       // console.log(this.mess.fed_text);
       // console.log(extension);

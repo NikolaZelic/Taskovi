@@ -152,7 +152,6 @@ export default {
       });
     },
     addUp() {
-      // console.log('add up');
       if (this.taskid === -1) 
         return;
       if(this.messages==null||this.messages.length==0)
@@ -167,6 +166,13 @@ export default {
       }).then( response => {
         this.scrollToBegining();
       } );
+    },
+    addDown(){
+      store.dispatch("readeFeeds", {
+        taskid: this.taskid,
+        fedid: this.messages[this.messages.length - 1].fed_id,
+        direction: "down"
+      });
     },
     handleScroll(e) {
       // console.log(e.target.scrollTop);
@@ -188,13 +194,6 @@ export default {
 
   },
   mounted() {
-    // store.dispatch("readeFeeds", {
-    //   taskid: this.taskid,
-    //   fedid: 0,
-    //   direction: "start"
-    // }).then( ()=>{
-    //   this.scrollToBegining();
-    // });
     this.readeFeeds();
 
     // ZX - POZIVA REFRESH NOTIFA
@@ -203,14 +202,8 @@ export default {
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
       if (this.count % this.countNumber == 0 && this.taskid != -1 && !this.searchOn ) {
-        var msg = this.messages;
-
-        if (msg.length > 0) {
-          store.dispatch("readeFeeds", {
-            taskid: this.taskid,
-            fedid: msg[msg.length - 1].fed_id,
-            direction: "down"
-          });
+        if ( this.messages.length > 0) {
+          this.addDown();
         } 
       }
 
