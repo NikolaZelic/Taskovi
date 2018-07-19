@@ -14,7 +14,8 @@
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
       <div class="messages">
-        <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        <feed-message v-else v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
     </div>
     <div class="progress" v-show="inProgress">
@@ -40,15 +41,18 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import FeedMessage from "./FeedMessage";
+import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {
   components: {
-    FeedMessage
+    FeedMessage,
+    GlobalFeedMessage,
   },
   data() {
     return {
+      global: false,
       showFeeds: true,
       count: 0,
       countNumber: 10,
