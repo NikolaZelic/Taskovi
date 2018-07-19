@@ -20,40 +20,44 @@
 
     <div class="sidebar-lower">
 
-      <div class="static-side" @onmouseover='sideHover=true' @onmouseout='sideHover=false'>
+      <div class="static-side">
 
         <div class="tabs">
-        <div class="notif">
-          <span class="fas fa-bell"></span>
-          <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
-          <span v-if='sideHover'>Notifications</span>
-        </div>
+          <div class="notif">
+            <span class="fas fa-bell"></span>
+            <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
+            <transition name='slide'>
+              <span class='left-al'>Notifications</span>
+            </transition>
+          </div>
 
           <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index}"
             @click="getTabData(currentTabIndex = index), setSidebarBoolean(true)" :disabled="tab.disabled">
             <span :class='tab.icon'></span>
-            <span v-if='sideHover'>{{tab.name}}</span>
-            </div>
+            <span class='left-al'>{{tab.name}}</span>
+          </div>
         </div>
 
         <div class="user-sidebar">
 
           <div class="theme-placeholder">
             <span @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
-            <span v-if='sideHover'>Change Theme</span>
+            <span class='left-al'>Theme</span>
           </div>
 
           <div class='user-placeholder'>
             <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition>
-            <img :src="avatarUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
-            <span v-if='sideHover'>User Options</span>
+            <span>
+              <img :src="avatarUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+            </span>
+            <span class='left-al'>Options</span>
           </div>
 
           <div class="logout-placeholder">
             <span class="fas fa-sign-out-alt" @click="signOut"></span>
-            <span v-if='sideHover'>Sign Out</span>
+            <span class='left-al'>Sign Out</span>
           </div>
 
         </div>
@@ -62,58 +66,58 @@
 
       <div class="sidebar-body" :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
 
-<div class="flex-form-action">
+        <div class="flex-form-action">
 
-        <div class="form-filter">
+          <div class="form-filter">
 
-          <template v-if="!showSubFilter()">
-            <b-form-group>
-              <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-                <b-input-group-text slot="prepend">
-                  <span class="fas fa-search" @click='focusSearch'></span>
-                </b-input-group-text>
-                <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
-                <b-input-group-append v-if='tabs[currentTabIndex].search'>
-                  <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
-          </template>
-
-          <template v-if="showSubFilter()">
-            <div class='tag-filter'>
-
-              <b-input-group class='search'>
-
-                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true"
-                  :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false"
-                  :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
-
-              </b-input-group>
-            </div>
-          </template>
-
-          <template v-if="showSubFilter()">
-            <div class="item-filter">
-              <b-form-group role="group">
-                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-                </b-form-checkbox-group>
+            <template v-if="!showSubFilter()">
+              <b-form-group>
+                <b-input-group :class='{darkTheme:darkTheme}' class='search'>
+                  <b-input-group-text slot="prepend">
+                    <span class="fas fa-search" @click='focusSearch'></span>
+                  </b-input-group-text>
+                  <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
+                  <b-input-group-append v-if='tabs[currentTabIndex].search'>
+                    <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
+                  </b-input-group-append>
+                </b-input-group>
               </b-form-group>
-            </div>
-          </template>
+            </template>
 
+            <template v-if="showSubFilter()">
+              <div class='tag-filter'>
+
+                <b-input-group class='search'>
+
+                  <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true"
+                    :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false"
+                    :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+
+                </b-input-group>
+              </div>
+            </template>
+
+            <template v-if="showSubFilter()">
+              <div class="item-filter">
+                <b-form-group role="group">
+                  <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+                  </b-form-checkbox-group>
+                </b-form-group>
+              </div>
+            </template>
+
+          </div>
+
+          <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
+            <span class="fas fa-plus-circle"></span> Add New
+            <span>{{tabs[currentTabIndex].single}}</span>
+          </button>
         </div>
-        
-        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add New
-          <span>{{tabs[currentTabIndex].single}}</span>
-        </button></div>
 
         <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
           <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :striped='false' :hover='false' :small='true'
-            :bordered='true' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered"
-            @row-clicked="selectAndSet">
+            :bordered='true' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
@@ -176,7 +180,7 @@ export default {
       tagsText: undefined,
       tagLoading: false,
       scrollPos: 0,
-      sideHover: false,
+      // sideHover: false,
       avatarUrl: "",
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
@@ -304,6 +308,7 @@ export default {
     },
     currentTabIndex(val) {
       let tabItem = this.tabs[val].itemIndex;
+      this.tagsText = "";
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
       if (tabItem === undefined) {
         store.commit("setSidebarItemSelection", {
@@ -346,7 +351,6 @@ export default {
   methods: {
     tableScroll(event) {
       let sp = event.target.scrollTop;
-      // if (sp !== 0)
       this.$refs.tabdata.getElementsByClassName(
         "head-resp"
       )[0].style.transform =
@@ -389,9 +393,7 @@ export default {
     selectAndSet(item) {
       this.selectItem(item.id);
       this.activeItem = item.id;
-      // console.log(this.currentTabIndex)
       if (this.currentTabIndex === 0) {
-        // console.log(this.currentTabIndex)
         this.project = item;
         this.currentTabIndex = 1;
         this.getTabData();
@@ -623,6 +625,7 @@ export default {
   display: flex;
   flex-direction: column;
   transition: all 0.1s ease-in-out;
+  z-index: 9;
   /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
@@ -636,9 +639,17 @@ export default {
 }
 
 .tablinks > span,
-.user-sidebar > * > span,
+.user-sidebar > * > .left-al,
 .notif .fa-bell {
   padding: 15px 0;
+  width: 70px;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+.user-sidebar > * > span {
   width: 70px;
   display: block;
   text-align: center;
@@ -670,9 +681,10 @@ export default {
   display: inline;
 } */
 
-.tablinks {
-  /* text-align: center; */
-  /* padding: 12px 0; */
+.notif,
+.tablinks,
+.user-sidebar > * {
+  width: 100%;
   line-height: 30px;
   display: block;
   color: #dacbcb;
@@ -686,19 +698,17 @@ export default {
 
 .tablinks.active {
   background: #24262d;
-  color: yellow;
-  border-left: 3px solid var(--ac-bg-light-color);
+  border-left: 3px solid var(--ac-color);
 }
 
-.tablinks:hover,
-  .notif>*:hover,
-  .fas .fa-bell
-  /* .static-side span:not(.badge):hover */
+.tablinks.active span {
+  color: yellow;
+}
 
- {
+.notif:hover,
+.user-sidebar > *:hover {
   background: #eadc903b;
   color: var(--ac-color-light);
-  /* border-left: 3px solid #a7a7a7; */
 }
 
 .popup.show {
@@ -794,6 +804,7 @@ export default {
 .td-icon-width {
   width: 40px;
 }
+
 /* TASK LIST END */
 
 #btn-pocetak {
@@ -832,9 +843,13 @@ h2 {
   margin: auto;
 }
 
+.input-group-text,
+.search .form-control {
+  border-color: #717171;
+}
+
 .search .form-control {
   min-width: 300px;
-  border-color: #717171;
 }
 
 /* SEARCH END*/
@@ -863,6 +878,7 @@ h2 {
   transition: all 0.5s ease;
   width: 100%;
   flex: 1;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 15px;
@@ -920,10 +936,13 @@ label {
   border: 1px solid #fff03799;
   box-shadow: 0 0 2px #fff81d;
   background: var(--sec-bg-color);
-  /* height: 25px;
-  width: 25px; */
-  /* margin: 20px auto; */
-  margin: 20px;
+  margin: 22px;
+  width: 30px !important;
+  height: 30px;
+}
+
+.left-al {
+  text-align: left !important;
 }
 
 .notif,
@@ -934,6 +953,7 @@ label {
   position: relative;
   display: flex;
   align-items: center;
+  width: 180px;
 }
 
 .notif .count {
@@ -949,6 +969,17 @@ label {
 
 .fade-enter,
 .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition-delay: 3s;
+  transition: opacity 0.5s;
+}
+
+.slide-enter,
+.slide-leave-to {
   opacity: 0;
 }
 
