@@ -92,7 +92,7 @@
          </div>
 
          <div class="card-footer" :class='{darkTheme: darkTheme}'>
-           <button type="button" class="btn btn-primary" @click="itemAddStep">Add new step...</button>
+           <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
          </div>
        </div>
 
@@ -377,6 +377,7 @@ export default {
   data() {
     return {
       // youWorkedFor: 0,
+      // inProgress: false,
 
       tabs: {
         generalInfo: true,
@@ -816,7 +817,17 @@ export default {
 
   computed: {
 
+    inProgressExists(){
+      let exists = false;
 
+      for (var i = 0; i < this.taskInfo.length; i++) {
+        if(this.taskInfo[i].sta_text === "In Progress"){
+          exists = true
+        }
+      }
+
+      return exists;
+    },
 
     generalInfoTrue() {
       // if(this.tabs.generalInfo === true){
@@ -912,12 +923,23 @@ export default {
   },
 
   watch: {
-    addStep: function() {
+
+    // 'taskInfo': function(val, oldVal) {
+    //   this.inProgressExists();
+    // },
+
+    addStep: function(val, oldVal) {
+      // console.log('val ' + val);
+      // console.log('Oldval ' + oldVal);
+      if(val === false){
+        this.getTaskInfo(this.selectedItemID);
+        //this.getStepInfo(this.stepInfo[0].tsk_id);
+      }
       // console.log('addstep iz watch-a');
 
-      if (this.selectedItemID !== undefined) {
+      // if (this.selectedItemID !== undefined) {
         // this.getTaskInfo(this.selectedItemID);
-      }
+      // }
       // this.getTaskInfo(store.state.selectedItemID);
     },
 
