@@ -5,9 +5,10 @@
   margin: 0 0 10px 0;
 }
 
-.item-list>table {
+.item-list table {
   padding: 0;
   width: 100%;
+  border: 1px solid #3e3e3e42 !important;
 }
 
 .item-list thead tr {
@@ -23,7 +24,7 @@
 .item-list td,
 .item-list th {
   height: 100%;
-  padding: 0 7px;
+  padding: 0 7px !important;
 }
 
 .item-list td:first-child,

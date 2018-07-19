@@ -68,7 +68,7 @@
 
                 <validate class="form-group">
                   <span class='fas fa-lock'></span>
-                  <input type="password" name="pass" v-model='user.password' :class='fieldClassName(formstate.pass)' class="form-control" placeholder="Password"
+                  <input type="Password" name="pass" v-model='user.password' :class='fieldClassName(formstate.pass)' class="form-control" placeholder="Password"
                     required minlength="3">
                 </validate>
                 <validate class="form-group">

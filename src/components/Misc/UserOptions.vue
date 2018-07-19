@@ -21,14 +21,15 @@
               <tr v-for='(t,index) in tableData' :key='index'>
                 <td>{{t.name}}:</td>
                 <td>
-                  <input :type='inputType(t)' v-model.trim="t.value" :disabled="editMode" />
+                  <input :type='inputType(t)' v-model.trim="t.value" :disabled="toEdit" />
                 </td>
               </tr>
+              <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
             </table>
           </div>
 
-          <button @click='edit' class="op-btn btn btn-warning">
-            <i class="fas fa-pen"></i> {{editMode?"Edit":"Save"}}</button>
+          <button @click='edit' class="op-btn btn btn-warning" :disabled='passNotMatched'>
+            <i class="fas fa-pen"></i> {{toEdit?"Edit":"Save"}}</button>
         </div>
       </div>
     </transition>
@@ -61,18 +62,22 @@ export default {
         {
           name: "Password",
           value: ""
+        },
+        {
+          name: "Confirm Password",
+          value: ""
         }
       ],
-      editMode: true
+      toEdit: true
     };
   },
   methods: {
     inputType(t) {
-      return t.name === "Password" ? "password" : "text";
+      return t.name.includes("Password") ? "password" : "text";
     },
     edit() {
-      this.editMode = !this.editMode;
-      if (this.editMode === true) {
+      this.toEdit = !this.toEdit;
+      if (this.toEdit === true) {
         axios
           .put("auth/users", {
             name: this.tableData[0].value,
@@ -132,7 +137,14 @@ export default {
   computed: {
     ...mapState({
       user: state => state.userStorage
-    })
+    }),
+    passNotMatched(){
+      let a = this.tableData[3].value;
+      let b = this.tableData[4].value;
+      let empty = a.length === 0 || b.length === 0;
+      let match = a === b;
+      return !empty && !match;
+    }
   },
   created() {
     this.getAvatar();

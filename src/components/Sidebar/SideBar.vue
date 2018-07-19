@@ -3,8 +3,8 @@
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span>
-        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined || taskID !== undefined' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)"
-          class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
+        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined || taskID !== undefined' title="Collapse Sidebar"
+          @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
       <div>
@@ -20,44 +20,55 @@
 
     <div class="sidebar-lower">
 
-      <div class="static-side">
+      <div class="static-side" @onmouseover='sideHover=true' @onmouseout='sideHover=false'>
 
-        <ul class="tabs">
-          <li v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" :title="tab.name" class="tablinks"
-            :class="[{active:currentTabIndex === index}, tab.icon]" @click="getTabData(currentTabIndex = index), setSidebarBoolean(true)"
-            :disabled="tab.disabled">
-          </li>
-        </ul>
+        <div class="tabs">
+        <div class="notif">
+          <span class="fas fa-bell"></span>
+          <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
+          <span v-if='sideHover'>Notifications</span>
+        </div>
+
+          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index}"
+            @click="getTabData(currentTabIndex = index), setSidebarBoolean(true)" :disabled="tab.disabled">
+            <span :class='tab.icon'></span>
+            <span v-if='sideHover'>{{tab.name}}</span>
+            </div>
+        </div>
 
         <div class="user-sidebar">
-          <div title="Notifications" class="notif">
-            <span class="fas fa-bell"></span>
-            <span class="badge badge-warning count">{{notifCount === 0 ? '' : notifCount}}</span>
-          </div>
-          <span title='Change Theme' @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
-          <!-- <span title="User Options" class="fas fa-user-cog"></span> -->
 
-          <!-- <popup/> -->
+          <div class="theme-placeholder">
+            <span @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
+            <span v-if='sideHover'>Change Theme</span>
+          </div>
+
           <div class='user-placeholder'>
             <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition>
-            <img title="User Options" :src="imgUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)'
-            />
+            <img :src="avatarUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+            <span v-if='sideHover'>User Options</span>
           </div>
-          <span title="Sign Out" class="fas fa-sign-out-alt" @click="signOut"></span>
+
+          <div class="logout-placeholder">
+            <span class="fas fa-sign-out-alt" @click="signOut"></span>
+            <span v-if='sideHover'>Sign Out</span>
+          </div>
+
         </div>
 
       </div>
 
-      <!-- <div class="sidebar-content" > -->
       <div class="sidebar-body" :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
-        <!-- FILTERS -->
+
+<div class="flex-form-action">
+
         <div class="form-filter">
 
           <template v-if="!showSubFilter()">
             <b-form-group>
-              <b-input-group :class='{darkTheme:darkTheme}' class='search custom-modern'>
+              <b-input-group :class='{darkTheme:darkTheme}' class='search'>
                 <b-input-group-text slot="prepend">
                   <span class="fas fa-search" @click='focusSearch'></span>
                 </b-input-group-text>
@@ -72,7 +83,7 @@
           <template v-if="showSubFilter()">
             <div class='tag-filter'>
 
-              <b-input-group class='search custom-modern'>
+              <b-input-group class='search'>
 
                 <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true"
                   :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false"
@@ -92,11 +103,16 @@
           </template>
 
         </div>
+        
+        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
+          <span class="fas fa-plus-circle"></span> Add New
+          <span>{{tabs[currentTabIndex].single}}</span>
+        </button></div>
 
         <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
           <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :striped='false' :hover='false' :small='true'
-            :bordered='true' :outlined='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered"
+            :bordered='true' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered"
             @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
@@ -121,17 +137,14 @@
             </template>
 
             <template slot="edit_item" slot-scope="data">
-              <button v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons btn btn-warning fas fa-edit" title="Edit Item"></button>
+              <button v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons btn btn-warning fas fa-edit"
+                title="Edit Item"></button>
             </template>
 
           </b-table>
 
         </div>
 
-        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add New
-          <span>{{tabs[currentTabIndex].single}}</span>
-        </button>
       </div>
 
     </div>
@@ -149,7 +162,7 @@ import { instance as axios } from "@/api/config.js";
 import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
 import Multiselect from "vue-multiselect";
-import {baseURL as baseURL} from '@/api/config.js';
+import { baseURL } from "@/api/config.js";
 export default {
   components: {
     UserPopup,
@@ -163,7 +176,8 @@ export default {
       tagsText: undefined,
       tagLoading: false,
       scrollPos: 0,
-      imgUrl: '',
+      sideHover: false,
+      avatarUrl: "",
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       showTaskPeople: true,
@@ -243,12 +257,12 @@ export default {
           key: "unseen_feed",
           label: "N",
           // sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "edit_item",
           label: "Edit",
-          class: "text-center"
+          class: "text-center td-icon-width"
         }
       ],
       taskFields: [
@@ -270,16 +284,16 @@ export default {
         {
           key: "unseen_feed",
           // sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "users",
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "edit_item",
           label: "Edit",
-          class: "text-center"
+          class: "text-center td-icon-width"
         }
       ]
     };
@@ -361,7 +375,7 @@ export default {
         });
     },
     getAvatar() {
-      let link = 'auth/users/img';
+      let link = "auth/users/img";
       axios
         .get(link, {
           params: {
@@ -369,7 +383,7 @@ export default {
           }
         })
         .then(r => {
-          this.imgUrl = baseURL + link + "?sid=" +localStorage.sid
+          this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
         });
     },
     selectAndSet(item) {
@@ -546,7 +560,7 @@ export default {
     }
   },
   created() {
-    this.getAvatar()
+    this.getAvatar();
     document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
@@ -589,11 +603,9 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 #sidebar {
-  /* color: #eee; */
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* height: 470px; */
 }
 
 .static-side .fas,
@@ -604,19 +616,30 @@ export default {
 /* SIDEBAR STATIC */
 
 .static-side {
-  background: #2d3436;
+  background: #222829f7;
+  color: #eee;
   width: 70px;
   min-width: 70px;
   display: flex;
   flex-direction: column;
+  transition: all 0.1s ease-in-out;
   /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
 
-.static-side > span,
-.user-sidebar > span,
+.static-side:hover {
+  transition-delay: 0.3s;
+  width: 180px;
+  /* position: fixed;
+  height: 100vh; */
+  /* width: 100px; */
+}
+
+.tablinks > span,
+.user-sidebar > * > span,
 .notif .fa-bell {
-  padding: 15px;
+  padding: 15px 0;
+  width: 70px;
   display: block;
   text-align: center;
   cursor: pointer;
@@ -625,6 +648,7 @@ export default {
 
 .static-side > * {
   padding: 5px 0;
+  display: inline;
 }
 
 /* TABS START */
@@ -633,9 +657,22 @@ export default {
   margin: 0 0 auto;
 }
 
+.tabs > *,
+.user-sidebar > * {
+  width: 70px;
+  cursor: pointer;
+  /* height: 70px; */
+}
+
+/* .tabs > *:hover,
+.user-sidebar > *:hover
+{
+  display: inline;
+} */
+
 .tablinks {
-  text-align: center;
-  padding: 12px 0;
+  /* text-align: center; */
+  /* padding: 12px 0; */
   line-height: 30px;
   display: block;
   color: #dacbcb;
@@ -654,7 +691,11 @@ export default {
 }
 
 .tablinks:hover,
-.static-side span:not(.badge):hover {
+  .notif>*:hover,
+  .fas .fa-bell
+  /* .static-side span:not(.badge):hover */
+
+ {
   background: #eadc903b;
   color: var(--ac-color-light);
   /* border-left: 3px solid #a7a7a7; */
@@ -750,18 +791,9 @@ export default {
   padding: 0 7px;
 }
 
-/* ADD BUTTON */
-
-#addItem {
-  line-height: 10px;
-  max-width: 500px;
-  align-self: center;
+.td-icon-width {
+  width: 40px;
 }
-
-#addItem:hover {
-  box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
-}
-
 /* TASK LIST END */
 
 #btn-pocetak {
@@ -795,46 +827,29 @@ h2 {
 
 .search {
   position: relative;
+  min-width: 400px;
   max-width: 700px;
   margin: auto;
 }
 
-.search * {
+.search .form-control {
+  min-width: 300px;
   border-color: #717171;
 }
-
-.form-control {
-  border-color: #717171;
-}
-
-/*
-.search span {
-  color: #fff;
-   position: absolute;
-  left: 12px;
-  top: 10px;
-  opacity: 0.8; 
-}*/
-
-/* .search .input-group-text {
-  border-right: 0;
-}
-
-.search input {
-  text-indent: 25px; 
-   background: #2d3436;
-  color: #fff;
-} */
-
-/* .search input:hover {
-  border: 1px solid var(--ac-color);
-}
-
-.search input::placeholder {
-  color: #888;
-} */
 
 /* SEARCH END*/
+
+/* ADD BUTTON */
+
+#addItem {
+  max-width: 300px;
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+#addItem:hover {
+  box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
+}
 
 .headeritem:hover {
   color: gray;
@@ -852,6 +867,12 @@ h2 {
   flex-direction: column;
   padding: 15px;
   border-right: 1px solid var(--ac-color-dark);
+}
+
+.flex-form-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .form-filter > form {
@@ -899,19 +920,26 @@ label {
   border: 1px solid #fff03799;
   box-shadow: 0 0 2px #fff81d;
   background: var(--sec-bg-color);
-  height: 25px;
-  width: 25px;
-  margin: 20px auto;
+  /* height: 25px;
+  width: 25px; */
+  /* margin: 20px auto; */
+  margin: 20px;
 }
 
-.notif {
+.notif,
+.tablinks,
+.theme-placeholder,
+.user-placeholder,
+.logout-placeholder {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .notif .count {
   position: absolute;
-  top: 5px;
-  right: 15px;
+  top: 8px;
+  left: 37px;
 }
 
 .fade-enter-active,

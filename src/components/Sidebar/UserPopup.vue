@@ -11,12 +11,12 @@
           <span class="badge badge-warning">3</span>
         </td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td>Unread Messages: </td>
         <td>
           <span class="badge badge-danger">0</span>
         </td>
-      </tr>
+      </tr> -->
     </table>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
   z-index: 1;
   background: #1d1d1dff;
   min-width: 300px;
-  min-height: 140px;
+  /* min-height: 140px; */
   user-select: none;
   padding: 20px;
 }
