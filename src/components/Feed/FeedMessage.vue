@@ -4,6 +4,8 @@
   <div class="message-body">
     <div class="message-body-header">
       <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
+      <span class='time-right' v-if='global' >Project:&nbsp;{{mess.pro_name}}</span>
+      <span class='time-right' v-if='global' >Task:&nbsp;{{mess.tsk_title}}</span>
       <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
     </div>
     <pre class="message"  width="100">{{mess.fed_text}}</pre>
@@ -30,7 +32,8 @@ export default {
   },
   data() {
     return {
-      uploadProgress: 0
+      uploadProgress: 0,
+      global: false,
     };
   },
   computed: {

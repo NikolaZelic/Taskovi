@@ -14,14 +14,15 @@
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
       <div class="messages">
-        <feed-message v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
     </div>
     <div class="progress" v-show="inProgress">
       <p>LOADING FILE {{uploadProgress}}</p>
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
-    <div class="input">
+    <div v-if='!global' class="input">
       <button class="load btn btn-primary" @click="addUp">
         <span class="fas fa-sync-alt"></span>
       </button>
@@ -40,15 +41,18 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import FeedMessage from "./FeedMessage";
+import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {
   components: {
-    FeedMessage
+    FeedMessage,
+    GlobalFeedMessage,
   },
   data() {
     return {
+      global: false,
       showFeeds: true,
       count: 0,
       countNumber: 10,
@@ -89,9 +93,10 @@ export default {
       });
       // }
     },
-    messages() {
+    messages(newVal, oldVal) {
       this.countNumber = 5;
       this.count = 1;
+      // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
     searchType(){
       this.readeFeeds();
@@ -164,7 +169,8 @@ export default {
         searchingstring: this.searchText,
         fed_important: this.searchImportant,
       }).then( response => {
-        this.scrollToBegining();
+        if(response.data.data!==undefined&&response.data.data.length>0)
+          this.scrollToBegining();
       } );
     },
     addDown(){
@@ -183,15 +189,19 @@ export default {
     },
     scrollToBegining(){
       var a = document.querySelectorAll(".selektor");
-      if(a===undefined||a===null)
+      if(a===undefined||a===null||a.length==0)
         return;
       if(a.length==0)
         a = a[0];
-      else
-        a = a[a.length-1];
-      a.scrollIntoView(false);
+      else{
+        if(a.length<=10)
+          a = a[a.length-1];
+        else
+          a = a[11];
+      }
+      if(a!==undefined)
+        a.scrollIntoView(true);
     },
-
   },
   mounted() {
     this.readeFeeds();

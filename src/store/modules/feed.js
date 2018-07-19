@@ -11,15 +11,11 @@ const actions = {
         'direction': params.direction,
         'data': response.data.data
       });
+      return response;
     });
   },
   readeGloablFeeds(commit, params) {
-    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important ).then(response => {
-      store.commit('addMessages', {
-        'direction': 'up',
-        'data': response.data.data
-      });
-    });
+    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important );
   },
 
   postMessage(commit, params) {
