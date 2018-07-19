@@ -101,8 +101,8 @@ export default {
           .catch(e => {
             console.log("e: " + e);
           });
+        this.closeModal("cm");
       }
-      this.closeModal("cm");
     },
     changeAvatar() {
       this.$refs.avatarUpload.click();
@@ -112,8 +112,7 @@ export default {
       console.log(f.name);
     },
     closeModal(val) {
-      let tar = val.target.id;
-      if (tar === "cm") {
+      if (val === "cm" || val.target.id === "cm") {
         this.$router.push("/");
       }
     },
@@ -187,6 +186,7 @@ export default {
   position: relative;
   cursor: pointer;
   margin: auto 20px;
+  width: 100px;
 }
 
 .op-avatar span {

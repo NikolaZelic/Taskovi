@@ -470,8 +470,7 @@ export default {
       store.dispatch("clleaneSuggestedProjects");
     },
      closeModal(val) {
-      let tar = val.target.id;
-      if (tar === "cm") {
+      if (val === 'cm' || val.target.id === "cm") {
          store.commit("itemActionReset");
       }
     },
