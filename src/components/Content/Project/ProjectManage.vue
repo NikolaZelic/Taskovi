@@ -24,19 +24,28 @@
         <span class='badge badge-warning'></span> Users
       </label> -->
 
-      <b-btn v-b-modal.modal1 variant="primary" class="mb-3"><span class="fa fa-user"></span> View and change {{project.users_count}} users </b-btn>
+      <!-- <b-btn v-b-modal.modal1 variant="primary" class="mb-3"><span class="fa fa-user"></span> View and change {{project.users_count}} users </b-btn> -->
 
-      <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
-        body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement">
+      <!-- <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
+        body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement"> -->
+        <!-- <p></p> -->
+        <div id="users">
+          <label for="users">Manage users on this project</label>
 
         <b-input-group>
-          <b-form-input v-model="email" class="emailDark" ref="focusThis" placeholder="Type email" />
+          <b-form-input v-model="email" ref="focusThis" placeholder="Type email to add new user" />
           <b-input-group-append>
             <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
           </b-input-group-append>
         </b-input-group>
 
-        <b-table :dark=true :items='project.users' :fields='usersField' responsive>
+        <b-table :items='project.users' :fields='usersField' responsive v-if="this.project.users.length > 0">
+
+<template slot="email" slot-scope="row">
+  <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
+  {{project.users[row.index].email}}
+
+</template>
 
 
 
@@ -53,7 +62,7 @@
             <!-- project.users[row.index].isyou === 'false' -->
           </template>
 
-          <template slot="delete" slot-scope="row">
+          <template slot="remove" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
             <!-- <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox> -->
@@ -63,14 +72,16 @@
             <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
           </template>
 
-          <template slot="new" slot-scope="row">
-            <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
+          <!-- <template slot="new" slot-scope="row">
+            <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span> -->
             <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
-          </template>
+          <!-- </template> -->
 
 
         </b-table>
-      </b-modal>
+
+      </div>
+      <!-- </b-modal> -->
 
       <div class='usersModal'>
 
@@ -123,7 +134,7 @@ export default {
         altFormat: "j M, Y H:i",
         altInput: true
       },
-      usersField: ["new", "email", "name", "surname", "admin", "delete"],
+      usersField: ["email", "name", "surname", "admin", "remove"],
       email: undefined,
       isAdmin: false
       // options: []
@@ -132,7 +143,10 @@ export default {
   watch: {
     itemEditButton(val) {
       if (val === undefined) {
-        this.project.deadline = Date.now();
+        this.project.title = undefined;
+        this.project.description = undefined;
+        this.project.deadline = undefined;
+        this.project.users = [];
       } else {
         this.getProjectInfo();
       }
@@ -173,7 +187,10 @@ export default {
         email: this.email,
         admin: false,
         new: true,
-        disabled: true
+        disabled: true,
+        canEdit: true,
+        isyou: "false",
+        delete: false
       };
 
       this.project.users.push(user);
@@ -330,7 +347,8 @@ export default {
           if (this.project.users[i].delete === false) {
             let singleUser = {
               email: this.project.users[i].email,
-              admin: "" + this.project.users[i].admin + ""
+              admin: "" + this.project.users[i].admin + "",
+              delete: "false"
             };
             nizUsera.push(singleUser);
           }
@@ -339,7 +357,8 @@ export default {
         if (this.email !== undefined) {
           let singleUser = {
             email: this.email,
-            admin: "false"
+            admin: "false",
+              delete: "false"
           };
           nizUsera.push(singleUser);
         }
@@ -359,14 +378,13 @@ export default {
         let users = this.project.users;
         if (users !== undefined) {
           let tempUsers = [];
-          console.log(users.length + " KORISNIKA");
+          // console.log(users.length + " KORISNIKA");
           for (let i = 0; i < users.length; i++) {
             // console.log('Nesto' + users[i].surname);
             // console.log("EMAIL KORISNIKA: "+ users[i].email);
             tempUsers.push({
               email: users[i].email,
-              admin: "" + this.project.users[i].admin + "" //"false" //
-              //zmaeniti ovaj parametar za admina da se prikazuje lepo a ne da bude harkodovano false
+              admin: "" + this.project.users[i].admin + ""
             });
           }
           return JSON.stringify(tempUsers);
@@ -425,6 +443,10 @@ export default {
 
 #users {
   width: 100% !important;
+  /* border: 1px solid #aaaaaa; */
+  /* box-shadow: 5px auto #888888; */
+  /* padding: 30px; */
+  margin-bottom: 30px;
 }
 
 .input-group {
