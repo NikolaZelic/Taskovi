@@ -40,17 +40,17 @@
 
         <div class="user-sidebar">
 
-          <div class="theme-placeholder">
-            <span @click='changeTheme' class='theme-changer' :class='{darkTheme : darkTheme}'></span>
+          <div class="theme-placeholder" @click='changeTheme'>
+            <span  class='theme-changer' :class='{darkTheme : darkTheme}'></span>
             <span class='left-al'>Theme</span>
           </div>
 
-          <div class='user-placeholder'>
+          <div class='user-placeholder' @click="userOptions" >
             <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition>
             <span>
-              <img :src="avatarUrl" @click="userOptions" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+              <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
             </span>
             <span class='left-al'>Options</span>
           </div>
@@ -877,12 +877,17 @@ h2 {
   max-width: 100%;
   transition: all 0.5s ease;
   width: 100%;
+  background: white;
   flex: 1;
   z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 15px;
   border-right: 1px solid var(--ac-color-dark);
+}
+
+.sidebar-body.darkTheme {
+  background: #24262d;
 }
 
 .flex-form-action {
