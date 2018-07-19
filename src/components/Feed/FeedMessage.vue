@@ -6,7 +6,7 @@
       <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
       <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
     </div>
-    <pre class="message">{{mess.fed_text}}</pre>
+    <pre class="message"  width="100">{{mess.fed_text}}</pre>
     <div class="attachment"></div>
     <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
     <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()"  height="600px">
@@ -111,6 +111,11 @@ export default {
 </script>
 
 <style scoped>
+pre{
+  white-space: pre-wrap; /* Opera */
+  word-wrap: break-word; /* IE 5.5+ */
+  width: 700px;
+}
 .important{
   color: palevioletred !important;
 }

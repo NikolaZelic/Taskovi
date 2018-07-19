@@ -7,6 +7,7 @@ import StartPage from '@/components/StartPage';
 import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
+import FeedElement from '@/components/Feed/FeedElement.vue';
 
 Vue.use(Router);
 Vue.use(Meta);
@@ -34,7 +35,10 @@ export default new Router({
       path: '/stepadd',
       component: StepAdd
     },
-
+    {
+      path: '/feeds',
+      component: FeedElement
+    },
   ],
   mode: 'history',
 });
