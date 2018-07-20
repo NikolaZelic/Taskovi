@@ -2,23 +2,17 @@
   <div id="wrapper">
     <side-bar :class="{max: checkShow(0,false,false) || checkShow(1,false,false) && this.taskID === undefined}" />
     <div class="rightside" :class="{focus: isFocus}">
-      <div class="maincontent" :class='{darkTheme: darkTheme}'>
+      <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
 
         <!-- checkShow(selectedTab,itemEdit = false,itemAdd = false,itemAddTask = false) -->
         <!-- Project -->
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
-
 
         <!-- Step -->
         <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
 
       </div>
       <!-- Task -->
-      <div>
-        <step-add v-if="itemAddStepButton" />
-        <task-edit v-if="checkShow(1,true)" />
-        <task-add v-if="checkShow(1,false,true)" />
-      </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
@@ -238,6 +232,7 @@ export default {
   background-color: var(--main-bg-color);
   color: var(--main-color);
   height: 100%;
+  /* z-index: 0; */
 }
 
 .maincontent.darkTheme {
@@ -257,9 +252,12 @@ export default {
   .rightside {
     flex-direction: row;
   }
+  .search {
+    min-width: 0;
+  }
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 992px) {
   #wrapper {
     flex-direction: row;
     min-height: 100vh;

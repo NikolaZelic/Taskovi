@@ -11,7 +11,7 @@
         <div class="body">
 
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
-            <img :src="imgUrl" class="picture" />
+            <img :src="avatarUrl" class="picture" />
             <span class='fas fa-camera'></span>
             <input ref='avatarUpload' type="file" style="display: none;" @change='changeFile'>
           </div>
@@ -45,7 +45,7 @@ import { baseURL } from "@/api/config.js";
 export default {
   data() {
     return {
-      imgUrl: "",
+      avatarUrl: "",
       tableData: [
         {
           name: "Name",
@@ -123,6 +123,7 @@ export default {
     },
     getAvatar() {
       let link = "auth/users/img";
+      let localImg = "static/img/user.png";
       axios
         .get(link, {
           params: {
@@ -130,7 +131,9 @@ export default {
           }
         })
         .then(r => {
-          this.imgUrl = baseURL + link + "?sid=" + localStorage.sid;
+          if (r.data["unset key"] === null) {
+            this.avatarUrl = localImg;
+          } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
         });
     }
   },
@@ -138,7 +141,7 @@ export default {
     ...mapState({
       user: state => state.userStorage
     }),
-    passNotMatched(){
+    passNotMatched() {
       let a = this.tableData[3].value;
       let b = this.tableData[4].value;
       let empty = a.length === 0 || b.length === 0;
@@ -198,7 +201,7 @@ export default {
   position: relative;
   cursor: pointer;
   margin: auto 20px;
-  width: 100px;
+  width: 120px;
 }
 
 .op-avatar span {
@@ -213,6 +216,8 @@ export default {
 
 .op-avatar img {
   height: 120px;
+  display: block;
+  margin: auto;
   border-radius: 40px;
   transition: 0.5s ease;
   backface-visibility: hidden;

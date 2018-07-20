@@ -9,10 +9,17 @@
 
       <!-- Tabovi na vrhu stranice -->
       <nav class="nav nav-pills nav-fill mb-3">
-        <a class="nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</a>
-        <a class="nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General Info</a>
+
+        <!-- <a class="nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</a>
         <a class="nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</a>
         <a class="nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</a>
+        <a class="nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</a> -->
+
+<button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</button>
+<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
+<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button>
+<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
+
       </nav>
 
       <!-- TAB GeneralInfo -->
@@ -97,7 +104,7 @@
        </div>
 
       <!-- TAB Feeds -->
-      <div class="card height100" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
+      <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
         <feed-element />
       </div>
 
@@ -380,9 +387,9 @@ export default {
       // inProgress: false,
 
       tabs: {
-        generalInfo: true,
+        generalInfo: false,
         messages: false,
-        steps: false
+        steps: true
       },
 
       taskGeneralInfo: [],
@@ -474,6 +481,8 @@ export default {
         this.tabs.steps = true;
         this.tabs.messages = false;
         this.getTaskInfo(this.selectedItemID);
+        this.stepInfoShow = false;
+        this.stepEditShow = false;
       }
 
       if (parameter === "messages") {
@@ -915,7 +924,9 @@ export default {
   mounted() {
     if (this.selectedItemID !== 0) {
       // this.getTaskInfo(this.selectedItemID);
-      this.getGeneralInfo(this.selectedItemID);
+      // this.getGeneralInfo(this.selectedItemID);
+      this.getTaskInfo(this.selectedItemID);
+
     }
 
     this.loadAllProjectUsers(this.selectedProjectID);
@@ -1046,6 +1057,21 @@ label {
 
 
 .back-button{
-  flex-grow: 0.1;
+  flex-grow: 0.1 !important;
+}
+
+button.nav-item{
+  margin: 5px;
+}
+
+.height100{
+  height: 90vh; /*100%;*/
+  /* margin-bottom: 20px; */
+
+}
+
+.chat-box{
+  height: 100%;
+  /* padding-bottom: 50px; */
 }
 </style>

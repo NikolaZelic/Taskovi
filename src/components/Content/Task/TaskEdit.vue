@@ -1,4 +1,3 @@
-
 <script>
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 import TaskView from "@/components/Content/Task/TaskView";
@@ -48,26 +47,6 @@ export default {
       return nizTagova;
     }
   },
-  // created: function() {
-  //   var response = api.selectTask(this.taskID);
-  //   console.log(response);
-  //   var data = response.data.data;
-  //
-  //   this.title = data.task - title;
-  //   this.description = data.task - description;
-  //   this.deadline = data.deadline;
-  //   if (data.user - working != null) {
-  //     this.teamSelect = 0; // Boolean koji govori da li je tim selektovan ili covek
-  //     this.choosenWorker = data.user - working;
-  //   } else {
-  //     this.teamSelect = 1; // Boolean koji govori da li je tim selektovan ili covek
-  //     this.choosenWorker = data.group - working;
-  //   }
-  //
-  //   // Treba dodati
-  //   // this.selectedTags = [];
-  //   // this.selectedPriorety = null;
-  // },
 
   methods: {
     createTask() {
@@ -97,7 +76,6 @@ export default {
             });
           }
           store.dispatch("itemActionReset");
-          // store.dispatch("getTasks()", this.proId);
         });
     },
 
@@ -110,8 +88,6 @@ export default {
           }
         })
         .then(response => {
-          console.log(response.data.data);
-          // this.currentInfo = response.data.data[0];
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
           this.deadline = response.data.data[0].tsk_deadline;

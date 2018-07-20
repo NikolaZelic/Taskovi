@@ -20,7 +20,7 @@
             <!-- DESCRIPTION -->
             <div class="form-group">
               <!-- <label for="tsk_desc">Task description</label> -->
-              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task"></textarea>
+              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task (optional)"></textarea>
             </div>
 
             <!-- DEADLINE -->
@@ -40,37 +40,30 @@
             </div>
 
             <!-- ADDING WORKERS -->
-            <div v-show='!task' class="form-group" id='adding-worker'>
+            <!-- <div v-show='!task' class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <!-- @click='selectUser' -->
-              <!-- <i :class="teamClass" @click='selectTeam'></i> -->
-              <!-- <vue-autosuggest id='auto-suggestion' ref="suggestionTag" :suggestions="[ { data: suggestedWorker } ]" :renderSuggestion="renderSuggestion"
-                @click="refreshWorkerError" :onSelected="onSelected" :inputProps="inputProps" :getSuggestionValue="getSuggestionValue"
-              /> -->
               <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">
               </multiselect>
-            </div>
+            </div> -->
 
             <!-- TAGS -->
             <div class="form-group">
-              <multiselect v-model="selectedTags" id="tags-component" label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
+              <span class='fas fa-tags' title='Tags'></span>
+              <multiselect v-model="selectedTags" id="tags-component" class='task-modal-input' label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
                 :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
                 :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
-                <!-- <template slot="clear" slot-scope="props">
-                  <div class="multiselect__clear" v-if="selectedTags.length" @mousedown.prevent.stop="clearAll(props.search)"></div>
-                </template>
-                <span slot="noResult">Oops! No elements found. Consider changing the search query.</span> -->
               </multiselect>
             </div>
 
             <!-- PRIORITY -->
             <div v-show='task' class="form-group">
-              <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' style='cursor: pointer'>
-                <option value=null>None</option>
+              <span class='fas fa-exclamation-circle' title='Priority'></span>
+              <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' class='task-modal-input'>
+                <option value=null>Priority: None</option>
                 <option value='3'>Low</option>
                 <option value='2'>Medium</option>
                 <option value='1'>High</option>
@@ -79,9 +72,9 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-warning">
-                <span v-show='edit'>Edit</span>
-                <span v-show='!edit'>Create</span>
+              <button @click='createTask' type="submit" class="btn btn-warning modal-btn">
+                <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
+                <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
             </div>
           </div>
@@ -469,9 +462,9 @@ export default {
     onProjectSelected() {
       store.dispatch("clleaneSuggestedProjects");
     },
-     closeModal(val) {
-      if (val === 'cm' || val.target.id === "cm") {
-         store.commit("itemActionReset");
+    closeModal(val) {
+      if (val === "cm" || val.target.id === "cm") {
+        store.commit("itemActionReset");
       }
     },
     searchUsers(str) {
@@ -662,6 +655,11 @@ export default {
   padding-top: 50px;
 }
 
+.task-modal-input {
+  width: 520px;
+  margin-left: auto;
+}
+
 .header {
   position: relative;
   height: 100px;
@@ -699,22 +697,9 @@ export default {
   padding: 15px;
 }
 
-/* .calender-wrapper {
-  position: absolute;
-  left: 50px;
-  right: 0px;
-} */
-
-/* .calender-icon {
-  position: absolute;
-  width: 10%;
-  left: 0px;
-  cursor: pointer;
-} */
-
-/* .fa-calendar-alt {
-  font-size: 38px;
-} */
+.calender-icon {
+  width: 43px;
+}
 
 .autosuggest__results,
 .autosuggest__results_item.autosuggest__results_item-highlighted,
@@ -786,11 +771,10 @@ div.form-group {
   justify-content: right;
 }
 
-/* .btn-success {
-  position: absolute;
-  right: 0px;
-  bottom: -13px;
-} */
+.modal-btn {
+  margin-left: auto;
+  width: 110px;
+}
 
 .modal-enter {
   opacity: 0;
