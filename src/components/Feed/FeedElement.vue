@@ -94,8 +94,9 @@ export default {
       // }
     },
     messages(newVal, oldVal) {
-      this.countNumber = 5;
-      this.count = 1;
+      this.countNumber = 1;
+      this.count = 0;
+      // console.log('Poziv na sekundu');
       // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
     searchType(){
@@ -216,10 +217,14 @@ export default {
           this.addDown();
         } 
       }
-
-      if (this.count++ >= 25) {
-        this.countNumber = 10;
-        this.count = 1;
+      this.count++;
+      if( this.count==10 ){
+        this.countNumber = 5;
+        // console.log('Poziv na 5 sekundi');
+      }
+      else if( this.count==60 ){
+        this.countNumber = 30;
+        // console.log('Poziv na 30 sekundi');
       }
     }, 1000);
   },
