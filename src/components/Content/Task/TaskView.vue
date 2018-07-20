@@ -247,7 +247,7 @@
 
         <div class="card-footer" :class='{darkTheme: darkTheme}'>
           <div class="float-right">
-            <button type="button" class="btn btn-warning" @click="stepEditToggle()">Edit</button>
+            <button type="button" class="btn btn-warning" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null">Edit</button>
             <button type="button" class="btn btn-primary" @click="tabs.steps = true; stepInfoShow = false">Back</button>
           </div>
         </div>
@@ -495,7 +495,7 @@ export default {
       //TRAZITI OD CELAVOG API KOJI VRACA SVE NEAKTIVNE USERE
     },
 
-    resetTaskView() {      
+    resetTaskView() {
       store.commit("itemActionReset");
       store.commit("resetTaskView");
     },
@@ -954,7 +954,7 @@ export default {
         // this.getTaskInfo(val);
         // this.getStepInfo(val);
         this.getGeneralInfo(val);
-        this.changeTab("generalInfo");
+        this.changeTab("steps");
 
         this.stepInfoShow = false;
         this.stepEditShow = false;
