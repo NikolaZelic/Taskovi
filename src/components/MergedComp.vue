@@ -1,6 +1,7 @@
 <template lang="html">
   <div id="wrapper">
-    <side-bar :class="{max: checkShow(0,false,false) || checkShow(1,false,false) && this.taskID === undefined}" />
+    <side-bar :class="{max: !(checkShow(1,false,false,false) && this.taskID !== undefined) 
+    && !checkShow(0,true) && !checkShow(0,false,true)}" />
     <div class="rightside" :class="{focus: isFocus}">
       <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
 
@@ -9,16 +10,16 @@
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
 
         <!-- Step -->
-        <!-- <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' /> -->
+        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
 
       </div>
       <!-- Task -->
-    </div> 
-     <div>
-        <step-add v-if="itemAddStepButton" />
-        <task-edit v-if="checkShow(1,true)" />
-        <task-add v-if="checkShow(1,false,true)" />
-      </div>
+    </div>
+    <div>
+      <step-add v-if="itemAddStepButton" />
+      <task-edit v-if="checkShow(1,true)" />
+      <task-add v-if="checkShow(1,false,true)" />
+    </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
     <!-- <user-options></user-options> -->
@@ -253,6 +254,10 @@ export default {
   text-align: center;
 }
 
+.static-side {
+  position: static;
+}
+
 @media only screen and (min-width: 1350px) {
   .rightside {
     flex-direction: row;
@@ -263,6 +268,16 @@ export default {
 }
 
 @media only screen and (min-width: 992px) {
+  .static-side {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: 40px;
+  }
+.sidebar-body{
+  margin-left: 70px; 
+}
+
   #wrapper {
     flex-direction: row;
     min-height: 100vh;

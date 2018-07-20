@@ -72,7 +72,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-warning modal-btn">
+              <button @click='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
@@ -120,6 +120,7 @@ export default {
         altInput: true
       },
       teamSelect: 0,
+      waitNet: false,
       inputWorker: null,
       inputWorkerHaveChange: 0,
       choosenWorker: null,
@@ -378,6 +379,7 @@ export default {
 
     // Kreiranje taska
     createTask() {
+      this.waitNet = true;
       this.refreshErrors();
       // Provera ulaznih vrednosti
       if (this.title == null || this.title.length == 0) {
@@ -404,14 +406,14 @@ export default {
 
           this.reportWritingToDB(result);
           this.closeModal("cm");
+          this.waitNet = false;
+        })
+        .catch(e => {
+          this.waitNet = false;
         });
     },
     reportWritingToDB(result) {
-      // console.log(result);
       var status = result.data.status;
-      // var message = result.data.message;
-      // console.log(result.data);
-      // console.log("Statis: " + status);
       if (status === "OK") {
         store.commit("modalStatus", {
           message: "Task successfully created"

@@ -501,7 +501,8 @@ export default {
       //TRAZITI OD CELAVOG API KOJI VRACA SVE NEAKTIVNE USERE
     },
 
-    resetTaskView() {
+    resetTaskView() {      
+      store.commit("itemActionReset");
       store.commit("resetTaskView");
     },
 

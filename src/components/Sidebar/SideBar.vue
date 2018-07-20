@@ -3,7 +3,7 @@
 
     <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
       <span>
-        <span v-show='itemAction.edit !== undefined || itemAction.add !== undefined || taskID !== undefined' title="Collapse Sidebar"
+        <span v-show='currentTabIndex === 0 &&( itemAction.edit !== undefined || itemAction.add !== undefined) || taskID !== undefined' title="Collapse Sidebar"
           @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
@@ -626,10 +626,6 @@ export default {
   overflow-x: hidden;
   flex-direction: column;
   transition: all 0.1s ease-in-out;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  top: 40px;
   /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
@@ -882,7 +878,7 @@ h2 {
   transition: all 0.5s ease;
   width: 0px;
   background: white;
-  margin-left: 70px;
+  /* margin-left: 70px; */
   flex: 1;
   z-index: 10;
   display: flex;

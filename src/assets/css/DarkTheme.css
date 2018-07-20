@@ -27,7 +27,8 @@
   color: black !important;
 }
 
-.sidebar-body.darkTheme #tags {
+.sidebar-body.darkTheme #tags,
+.darkTheme .chat-box pre {
   color: white !important;
 }
 

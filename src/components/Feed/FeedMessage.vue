@@ -119,8 +119,8 @@ export default {
 pre{
   white-space: pre-wrap; /* Opera */
   word-wrap: break-word; /* IE 5.5+ */
-  width: 700px;
-  font-size: 120%;
+  /* width: 700px; */
+  font-size: 90%;
   font-family: "TitilliumWeb";
 }
 .important{

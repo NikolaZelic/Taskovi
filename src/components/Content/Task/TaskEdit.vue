@@ -50,6 +50,7 @@ export default {
 
   methods: {
     createTask() {
+      this.waitNet = true;
       axios
         .put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
           sid: localStorage.sid,
@@ -76,6 +77,10 @@ export default {
             });
           }
           store.dispatch("itemActionReset");
+          this.waitNet = false;
+        })
+        .catch(e => {
+          this.waitNet = false;
         });
     },
 
