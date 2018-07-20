@@ -30,7 +30,21 @@ export default {
             fed_important: this.searchImportant,
             }).then(response => {
                 this.offset += response.data.data.length;
-                setTimeout( ()=>{this.scrollToBegining();}, 50 );
+                var time = 50;
+                if(response.data.type=='files')
+                    time = 500;
+                setTimeout( ()=>{
+                    var a = document.querySelectorAll(".selektor");
+                    if(a===undefined||a===null||a.length==0)
+                        return;
+                    if(a.length==0)
+                        a = a[0];
+                    else{
+                        a = a[a.length-1];
+                    }
+                    if(a!==undefined)
+                        a.scrollIntoView(true);
+                }, time );
                 store.commit('addMessages', {
                 'direction': 'up',
                 'data': response.data.data
