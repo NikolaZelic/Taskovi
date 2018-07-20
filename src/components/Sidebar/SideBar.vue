@@ -8,11 +8,11 @@
         </span>
       </span>
       <div>
-        <a v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
-          <button class="btn btn-warning pro-title">
-            <strong>{{ project.title }}</strong>
-          </button> / </a>
-        <span>{{ tabs[currentTabIndex].name }}</span>
+          <button class="btn btn-warning pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
+            <strong><span class='fa fa-arrow-left'></span></strong>
+          </button>
+          <span v-if='currentTabIndex !== 0'> {{ project.title }} /</span>
+        <span> {{ tabs[currentTabIndex].name }}</span>
         <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
       <span></span>
@@ -716,7 +716,7 @@ export default {
 }
 
 .pro-title {
-  padding: 3px 20px;
+  padding: 0px 12px;
   background-color: #ffcf3d;
 }
 
