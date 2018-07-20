@@ -9,7 +9,7 @@
         <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
 
         <!-- Step -->
-        <!-- <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' /> -->
+        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
 
       </div>
       <!-- Task -->
