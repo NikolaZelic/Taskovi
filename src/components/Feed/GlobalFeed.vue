@@ -60,8 +60,10 @@ export default {
             searchingstring: this.searchText,
             fed_important: this.searchImportant,
         }).then(response => {
-            this.offset += response.data.data.length;
-            setTimeout( ()=>{this.scrollToBegining();}, 50 );
+            var length = response.data.data.length;
+            this.offset += length;
+            if(length>0)
+                setTimeout( ()=>{this.scrollToBegining();}, 50 );
             store.commit('addMessages', {
             'direction': 'up',
             'data': response.data.data
