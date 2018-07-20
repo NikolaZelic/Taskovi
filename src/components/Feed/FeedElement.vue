@@ -143,10 +143,17 @@ export default {
         taskid: this.taskid,
         text: text
       });
+      setTimeout( ()=>{ 
+          var a = document.querySelectorAll(".selektor");
+          a = a[a.length-1];
+          a.scrollIntoView(true);
+        } , 500 
+        );
       this.feed = "";
     },
     uploadFile() {
-      if (this.taskid == -1) return -1;
+      if (this.taskid == -1) 
+        return -1;
       document.getElementById("file").click();
     },
     changeFile(e) {
