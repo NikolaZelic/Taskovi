@@ -34,7 +34,7 @@ export const api = {
   getUserInfo() {
     return axios.get('auth/users?sid=' + window.localStorage.sid);
   },
-  createTask(title, description, deadline, tagarray, priorety, pro_id) {
+  createTask(title, description, deadline, tagarray, userarray, priorety, pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
       type: 'task',
       proid: pro_id,
@@ -42,6 +42,7 @@ export const api = {
       description: description,
       deadline: deadline,
       tagarray: JSON.stringify(tagarray),
+      userarray: JSON.stringify(userarray),
       priority: priorety,
     });
   },

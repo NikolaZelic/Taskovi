@@ -40,7 +40,7 @@
             </div>
 
             <!-- ADDING WORKERS -->
-            <div class="form-group" id='adding-worker' v-if="!task">
+            <div class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
               <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
@@ -191,6 +191,7 @@ export default {
   },
 
   watch: {
+
     selectedTags: function() {
       store.dispatch("cleanSuggestedTags");
     },
@@ -388,6 +389,8 @@ export default {
       }
 
       var tagarray = this.selectedTags.map(e => e.text);
+      var userarray = this.selectedUSers.map( e => e.id );
+
 
       api
         .createTask(
@@ -395,10 +398,15 @@ export default {
           this.description,
           this.deadline,
           tagarray,
+          userarray,
           this.selectedPriority,
           this.selectedProjectID
         )
         .then(result => {
+          // console.log(result.data.data.tsk_id);
+          store.commit("itemActionReset");
+          store.commit("resetTaskView");
+
           store.dispatch("getTasks", {
             index: 1,
             pro_id: this.proId
