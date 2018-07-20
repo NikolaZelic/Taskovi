@@ -9,17 +9,10 @@
 
       <!-- Tabovi na vrhu stranice -->
       <nav class="nav nav-pills nav-fill mb-3">
-
-        <!-- <a class="nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</a>
-        <a class="nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</a>
-        <a class="nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</a>
-        <a class="nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</a> -->
-
-<button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</button>
-<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
-<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button>
-<button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
-
+        <button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</button>
+        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
+        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button>
+        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
       </nav>
 
       <!-- TAB GeneralInfo -->
@@ -65,7 +58,7 @@
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
-                  <i class="fas fa-spinner text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
+                  <i class="far fa-hourglass text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
                   <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
                 </td>
 
@@ -123,25 +116,26 @@
 
             <tr>
               <td class="align-top">Project:</td>
-              <td>{{stepInfo[0].pro_name}}</td>
+              <td><h5>{{stepInfo[0].pro_name}}</h5></td>
             </tr>
 
             <tr>
               <td class="align-top">Task:</td>
-              <td>{{stepInfo[0].taskname}}</td>
+              <td><h5>{{stepInfo[0].taskname}}</h5></td>
             </tr>
 
             <tr v-if="stepInfo[0].description !== null">
               <td class="align-top">Description:</td>
-              <td>{{stepInfo[0].description}}</td>
+              <td><h5>{{stepInfo[0].description}}</h5></td>
             </tr>
 
             <tr>
               <td class="align-top">Status:</td>
-              <td>{{stepInfo[0].sta_text}}
+              <td><h5>{{stepInfo[0].sta_text}}
                 <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-                <i class="fas fa-spinner text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+                <i class="far fa-hourglass text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
                 <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+                </h5>
               </td>
             </tr>
 
@@ -170,12 +164,12 @@
 
             <tr v-if="stepInfo[0].tsk_deadline !== ''">
               <td class="align-top">Deadline:</td>
-              <td>{{stepInfo[0].tsk_deadline}}</td>
+              <td><h5>{{stepInfo[0].tsk_deadline}}</h5></td>
             </tr>
 
             <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
               <td class="align-top">Estimated completion date:</td>
-              <td>{{stepInfo[0].tsk_estimated_completion_date}}</td>
+              <td><h5>{{stepInfo[0].tsk_estimated_completion_date}}</h5></td>
             </tr>
 
             <tr>
@@ -201,15 +195,15 @@
 
             <tr>
               <td class="align-top">Time created:</td>
-              <td>{{stepInfo[0].tsk_timecreated}}</td>
+              <td><h5>{{stepInfo[0].tsk_timecreated}}</h5></td>
             </tr>
 
             <tr v-if="stepInfo[0].tsk_timespent !== null">
               <td class="align-top">Total time spent:</td>
-              <td>{{stepInfo[0].tsk_timespent}}</td>
+              <td><h5>{{stepInfo[0].tsk_timespent}}</h5></td>
             </tr>
 
-            <tr>
+            <tr class="poslednjiRed">
               <td class="align-top">Working:</td>
               <td>
                 <ul class="list-unstyled">
@@ -1074,5 +1068,17 @@ button.nav-item{
 .chat-box{
   height: 100%;
   /* padding-bottom: 50px; */
+}
+
+td.align-top{
+  width: 20%;
+}
+
+.stepInfoShow tr{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.poslednjiRed{
+  border-bottom: 0px !important;
 }
 </style>
