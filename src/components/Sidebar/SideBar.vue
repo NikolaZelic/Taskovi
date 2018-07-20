@@ -23,7 +23,7 @@
       <div class="static-side">
 
         <div class="tabs">
-          <div class="notif">
+          <div class="notif" @click='showGlobalFeed'>
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
             <transition name='slide'>
@@ -64,7 +64,7 @@
 
       </div>
 
-      <div class="sidebar-body" :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
+      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
 
         <div class="flex-form-action">
 
@@ -299,6 +299,12 @@ export default {
     };
   },
   watch: {
+    globalFeed(val) {
+      console.log(this.$refs.sidBody);
+      // this.$refs.sidBody.classList(
+      //   "sidebar-body"
+      // )[0].style.display = val ? "none" : "flex";
+    },
     selectedFilter() {
       this.getTaskFilterData();
     },
@@ -345,6 +351,9 @@ export default {
     scrollPos(val) {}
   },
   methods: {
+    showGlobalFeed() {
+      store.commit("showGlobalFeed", true);
+    },
     tableScroll(event) {
       let sp = event.target.scrollTop;
       this.$refs.tabdata.getElementsByClassName(
@@ -400,6 +409,7 @@ export default {
     },
     getTabData() {
       let index = this.currentTabIndex;
+      store.commit("showGlobalFeed", false);
       switch (index) {
         case 0:
           // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
@@ -520,6 +530,7 @@ export default {
       itemAction: "itemAction",
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
+      globalFeed: "globalFeed",
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
@@ -880,7 +891,7 @@ h2 {
   background: white;
   /* margin-left: 70px; */
   flex: 1;
-  z-index: 10;
+  /* z-index: 10; */
   display: flex;
   flex-direction: column;
   padding: 15px;

@@ -3,7 +3,9 @@
     <side-bar :class="{max: !(checkShow(1,false,false,false) && this.taskID !== undefined) 
     && !checkShow(0,true) && !checkShow(0,false,true)}" />
     <div class="rightside" :class="{focus: isFocus}">
-      <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
+      
+      <global-feed v-if='globalFeed' />
+      <div v-else class="maincontent" :class='[{darkTheme: darkTheme}]'>
 
         <!-- checkShow(selectedTab,itemEdit = false,itemAdd = false,itemAddTask = false) -->
         <!-- Project -->
@@ -16,6 +18,7 @@
       <!-- Task -->
     </div>
     <div>
+      
       <step-add v-if="itemAddStepButton" />
       <task-edit v-if="checkShow(1,true)" />
       <task-add v-if="checkShow(1,false,true)" />
@@ -41,7 +44,8 @@ import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import ProjectManage from "@/components/Content/Project/ProjectManage";
 
-import FeedElement from "@/components/Feed/FeedElement";
+// import FeedElement from "@/components/Feed/FeedElement";
+import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 
 import ModalError from "@/components/Misc/ModalError";
 import UserOptions from "@/components/Misc/UserOptions";
@@ -53,14 +57,14 @@ import { mapState } from "vuex";
 export default {
   components: {
     SideBar,
-    FeedElement,
     TaskView,
     StepAdd,
     TaskEdit,
     ProjectManage,
     TaskAdd,
     UserOptions,
-    ModalError
+    ModalError,
+    GlobalFeed
   },
   data() {
     return {
@@ -117,6 +121,7 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       modalStatus: "modalStatus",
+      globalFeed: "globalFeed",
       modalErrorActive: state => state.modalError.active,
       modalStatusActive: state => state.modalStatus.active,
       itemEditButton: state => state.itemAction.edit,
@@ -274,9 +279,9 @@ export default {
     left: 0;
     top: 40px;
   }
-.sidebar-body{
-  margin-left: 70px; 
-}
+  .sidebar-body {
+    margin-left: 70px;
+  }
 
   #wrapper {
     flex-direction: row;

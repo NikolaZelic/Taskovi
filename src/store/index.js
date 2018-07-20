@@ -32,6 +32,7 @@ export const store = new Vuex.Store({
       email: undefined,
       // sid: undefined
     },
+    globalFeed: false,
     currentTabIndex: undefined,
     mainFocused: false,
     sidebarTabData: [],

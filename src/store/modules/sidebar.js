@@ -114,6 +114,10 @@ const mutations = {
   // resetSidebarData: () => {
   //   store.state.sidebarTabData = [];
   // },
+  showGlobalFeed: (state, params) => {
+    // console.log(params);
+    store.state.globalFeed = params;
+  },
   darkTheme: (state, params) => {
     store.state.darkTheme = params;
   },
