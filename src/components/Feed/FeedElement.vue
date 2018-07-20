@@ -13,7 +13,7 @@
       </form> 
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
-      <div class="messages">
+      <div  id='all2' class="messages">
         <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
         <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
@@ -218,7 +218,9 @@ export default {
       } );
     },
     handleScroll(e) {
-      // console.log(e.target.scrollDown);
+      // console.log(e.target.scrollTop);
+      // console.log( document.getElementById('all').scrollHeight   );
+      // console.log(this.$refs.all.height);;
       // console.log( document.getElementById("all").scrollY );
       if ( e.target.scrollTop===0 ) {
         this.addUp();
