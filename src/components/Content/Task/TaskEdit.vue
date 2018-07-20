@@ -37,6 +37,10 @@ export default {
       suggestedProjects: state => state.modulework.suggestedProjects,
       proId: state => state.sidebarItemSelection[0]
     }),
+    
+    blankTitle() {
+      return this.title.length === 0;
+    },
 
     tags() {
       let nizTagova = [];

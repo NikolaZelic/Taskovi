@@ -1,11 +1,10 @@
 <template lang="html">
-  <div id="wrapper">
+  <div id="wrapper" :class='{darkMain: darkTheme}'>
     <side-bar :class="{max: !(checkShow(1,false,false,false) && this.taskID !== undefined) 
     && !checkShow(0,true) && !checkShow(0,false,true)}" />
-    <div class="rightside" :class="{focus: isFocus}">
+    <div class="rightside" v-if='!globalFeed'  :class="{focus: isFocus}">
       
-      <global-feed v-if='globalFeed' />
-      <div v-else class="maincontent" :class='[{darkTheme: darkTheme}]'>
+      <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
 
         <!-- checkShow(selectedTab,itemEdit = false,itemAdd = false,itemAddTask = false) -->
         <!-- Project -->
@@ -23,10 +22,12 @@
       <task-edit v-if="checkShow(1,true)" />
       <task-add v-if="checkShow(1,false,true)" />
     </div>
+
+      <div class='feed-wrap' v-if='globalFeed'>
+      <global-feed />
+</div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
-    <!-- <user-options></user-options> -->
-    <!-- <modal-complete v-if="modalStatusActive" /> -->
     <modal-error v-if="modalErrorActive" />
   </div>
 </template>
@@ -198,8 +199,12 @@ export default {
   display: flex;
   align-items: stretch;
   flex-direction: column;
-  background-color: var(--main-bg-color);
+  background-color: #d0d0d0;
   min-height: 100vh;
+}
+
+#wrapper.darkMain {
+  background: #1b1c1d;
 }
 
 .toasted.primary .action {
@@ -261,6 +266,21 @@ export default {
 
 .static-side {
   position: static;
+}
+
+.feed-wrap {
+  margin-left: 70px;
+  margin: 0 auto;
+}
+
+.feed {
+  margin: 10px auto;
+  max-width: 70%;
+  height: 95%;
+}
+
+.feed.darkTheme pre{
+  color: #eee;
 }
 
 @media only screen and (min-width: 1350px) {

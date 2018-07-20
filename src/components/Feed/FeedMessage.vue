@@ -1,27 +1,25 @@
 <template>
-<div class='cont selektor' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
-  <img :src="icon()" />
-  <div class="message-body">
-    <div class="message-body-header">
-      <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
-      <span class='time-right' v-if='global' >Project:&nbsp;{{mess.pro_name}}</span>
-      <span class='time-right' v-if='global' >Task:&nbsp;{{mess.tsk_title}}</span>
-      <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
+  <div class='cont selektor' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
+    <img :src="icon()" />
+    <div class="message-body">
+      <div class="message-body-header">
+        <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
+        <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
+        <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
+        <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
+      </div>
+      <pre class="message" width="100">{{mess.fed_text}}</pre>
+      <div class="attachment"></div>
+      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
+      <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
-    <pre class="message"  width="100">{{mess.fed_text}}</pre>
-    <div class="attachment"></div>
-    <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
-    <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()"  height="600px">
+    <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }"></i>
   </div>
-  <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" ></i>
-</div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import {
-  baseURL as baseURL
-} from '@/api/config.js';
+import { baseURL } from "@/api/config.js";
 import { store } from "@/store/index.js";
 
 export default {
@@ -33,7 +31,7 @@ export default {
   data() {
     return {
       uploadProgress: 0,
-      global: false,
+      global: false
     };
   },
   computed: {
@@ -50,28 +48,24 @@ export default {
     surname() {
       return this.user.surname;
     },
-    isImportant(){
+    isImportant() {
       return this.mess.fed_important;
-    },
+    }
   },
   methods: {
-    importantFeed(){
-      // console.log('Important feed');
-      // this.mess.fed_important = !this.mess.fed_important;
-      // console.log(this.mess.fed_important);
-      // this.mess.fed_important = this.mess.fed_important;
-      store.commit('changeImportant', {mess: this.mess});
+    importantFeed() {
+      store.commit("changeImportant", {
+        mess: this.mess
+      });
     },
-    openImage(){
+    openImage() {
       window.open(this.showFile());
     },
-    isImage(){
-      if(this.mess.fed_text===undefined||this.mess.fed_text==null)
+    isImage() {
+      if (this.mess.fed_text === undefined || this.mess.fed_text == null)
         return false;
-      var extension = this.mess.fed_text.replace( /.+([.].+)/i, '$1' );
-      // console.log(this.mess.fed_text);
-      // console.log(extension);
-      if(extension=='.jpg'||extension=='.png'||extension=='.gif')
+      var extension = this.mess.fed_text.replace(/.+([.].+)/i, "$1");
+      if (extension == ".jpg" || extension == ".png" || extension == ".gif")
         return true;
       return false;
     },
@@ -97,7 +91,8 @@ export default {
     },
     showFile() {
       return (
-        baseURL+"tasks/" +
+        baseURL +
+        "tasks/" +
         this.taskid +
         "/feeds/" +
         this.mess.fed_id +
@@ -111,27 +106,32 @@ export default {
       document.getElementById("all").scrollTop = document.getElementById(
         "all"
       ).scrollHeight;
-  },
+  }
 };
 </script>
 
 <style scoped>
-pre{
-  white-space: pre-wrap; /* Opera */
-  word-wrap: break-word; /* IE 5.5+ */
+pre {
+  white-space: pre-wrap;
+  /* Opera */
+  word-wrap: break-word;
+  /* IE 5.5+ */
   /* width: 700px; */
   font-size: 90%;
   font-family: "TitilliumWeb";
 }
-.important{
+
+.important {
   color: palevioletred !important;
 }
-.cont .fa-star{
+
+.cont .fa-star {
   color: lightgray;
   font-size: 130%;
   padding: 5px;
   cursor: pointer;
 }
+
 .cont {
   padding: 5px 10px;
   margin: 7px;
@@ -149,16 +149,19 @@ pre{
   font-style: oblique;
   color: var(--ac-color-dark);
 }
+
 .cont .attach {
   color: #139cbf;
 }
-#attachment-image{
+
+#attachment-image {
   height: initial;
   /* max-height: 250px; */
-  width: 90%;
+  max-width: 400px;
   border-radius: 0;
   cursor: pointer;
 }
+
 .message-body {
   margin-left: 10px;
   flex: 1;
@@ -176,6 +179,7 @@ pre{
   display: flex;
   flex-direction: row-reverse;
 }
+
 .right-con .message-body-header {
   flex-direction: row-reverse;
 }

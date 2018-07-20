@@ -72,7 +72,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click.once='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
@@ -159,6 +159,9 @@ export default {
       proId: state => state.sidebarItemSelection[0]
     }),
 
+    blankTitle() {
+      return this.title.length === 0;
+    },
     selectedProjectID() {
       var a = store.state.sidebarItemSelection[0];
       if (a === undefined) return 0;

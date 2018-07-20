@@ -163,21 +163,29 @@ export default {
       api
         .login(mail, pass)
         .then(r => {
-          let sid = r.data.sid;
-          if (sid != undefined || sid != null) {
-            store.commit("localStorage", {
-              name: r.data.user.name,
-              surname: r.data.user.surname,
-              email: r.data.user.email,
-              sid: sid
-            });
-            this.$router.push("/");
+          console.log(r);
+          if (r.data.login !== "failed") {
+            let sid = r.data.sid;
+            if (sid !== undefined || sid !== null) {
+              console.log("aad");
+              store.commit("localStorage", {
+                name: r.data.user.name,
+                surname: r.data.user.surname,
+                email: r.data.user.email,
+                sid: sid
+              });
+              this.$router.push("/");
+            } else {
+              console.log("sd");
+            }
           } else {
-            alert(r.data.message);
+            alert("Login failed. Please fix your username or password.");
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(e => {
+          store.commit("modalError", {
+            message: "" + e
+          });
         });
     },
     register() {
@@ -190,19 +198,21 @@ export default {
               this.loginVisible = true;
             }
           })
-          .catch(error => {
-            alert(error);
+          .catch(e => {
+            store.commit("modalError", {
+              message: "" + e
+            });
           });
       }
     },
     onSubmit() {
-      if (this.formstate.$invalid) {
-        alert("invalid");
-        // alert user and exit early
-        return;
-      }
-      alert("submitt");
-      // otherwise submit form
+      // if (this.formstate.$invalid) {
+      //   alert("invalid");
+      //   // alert user and exit early
+      //   return;
+      // }
+      // alert("submit");
+      // // otherwise submit form
     }
   },
   computed: {
@@ -236,7 +246,6 @@ export default {
   display: flex;
   height: 100vh;
   background: linear-gradient(to top, #f46b45, #eea849);
-  /* background: linear-gradient(to left, #fc4a1a, #f7b733); */
 }
 
 h1 {

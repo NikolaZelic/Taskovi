@@ -1,7 +1,7 @@
 <template>
-  <aside id="sidebar" :class="{ collapsed: !sidebarActive }">
+  <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <div class="sidebar-header" :class="{ collapsed: !sidebarActive }">
+    <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed }">
       <span>
         <span v-show='currentTabIndex === 0 &&( itemAction.edit !== undefined || itemAction.add !== undefined) || taskID !== undefined' title="Collapse Sidebar"
           @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
@@ -23,7 +23,7 @@
       <div class="static-side">
 
         <div class="tabs">
-          <div class="notif" @click='showGlobalFeed'>
+          <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
             <transition name='slide'>
@@ -31,8 +31,8 @@
             </transition>
           </div>
 
-          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index}"
-            @click="getTabData(currentTabIndex = index), setSidebarBoolean(true)" :disabled="tab.disabled">
+          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index && !notifSelected}"
+            @click="getTabData(currentTabIndex = index), setSidebarBoolean(true), notifSelected=false" :disabled="tab.disabled">
             <span :class='tab.icon'></span>
             <span class='left-al'>{{tab.name}}</span>
           </div>
@@ -64,9 +64,14 @@
 
       </div>
 
-      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive, darkTheme: darkTheme }">
+      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed, darkTheme: darkTheme }">
 
         <div class="flex-form-action">
+
+          <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
+            <span class="fas fa-plus-circle"></span> Add New
+            <span>{{tabs[currentTabIndex].single}}</span>
+          </button>
 
           <div class="form-filter">
 
@@ -108,10 +113,6 @@
 
           </div>
 
-          <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> Add New
-            <span>{{tabs[currentTabIndex].single}}</span>
-          </button>
         </div>
 
         <div class="item-list" ref='tabdata' @scroll='tableScroll'>
@@ -162,13 +163,15 @@ import { mapGetters, mapState } from "vuex";
 import { instance as axios } from "@/api/config.js";
 import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
+import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
 export default {
   components: {
     UserPopup,
     UserTasks,
-    Multiselect
+    Multiselect,
+    GlobalFeed
   },
   data() {
     return {
@@ -184,6 +187,7 @@ export default {
       activePopup: false,
       activeItem: undefined,
       intervalNotification: null,
+      notifSelected: false,
       selectedFilter: [],
       project: {
         title: undefined,
@@ -309,8 +313,9 @@ export default {
       this.getTaskFilterData();
     },
     currentTabIndex(val) {
-      let tabItem = this.tabs[val].itemIndex;
       this.tagsText = "";
+      if (val < 0) return;
+      let tabItem = this.tabs[val].itemIndex;
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
       if (tabItem === undefined) {
         store.commit("setSidebarItemSelection", {
@@ -333,12 +338,12 @@ export default {
       }
     },
     // IS IT USED???
-    adminFilter(val) {
-      console.log("HELLO FROM ADMINFILTER");
-      let i = this.currentTabIndex;
-      this.tabs[i].isAdmin = val;
-      this.actionTabDataTeam();
-    },
+    // adminFilter(val) {
+    //   console.log("HELLO FROM ADMINFILTER");
+    //   let i = this.currentTabIndex;
+    //   this.tabs[i].isAdmin = val;
+    //   this.actionTabDataTeam();
+    // },
     tagsInput(val) {
       // this.tagsText = "";
       // WHEN A TAG IS CHANGED INVOKE API TASKS GET
@@ -352,7 +357,9 @@ export default {
   },
   methods: {
     showGlobalFeed() {
+      // this.currentTabIndex = -1;
       store.commit("showGlobalFeed", true);
+      // this.$refs.sidBody.style.display = "none";
     },
     tableScroll(event) {
       let sp = event.target.scrollTop;
@@ -410,6 +417,7 @@ export default {
     getTabData() {
       let index = this.currentTabIndex;
       store.commit("showGlobalFeed", false);
+      // this.$refs.sidBody.style.display = "flex";
       switch (index) {
         case 0:
           // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
@@ -705,12 +713,12 @@ export default {
   background: #4c4c4c;
 }
 
-.tablinks.active {
-  background: #24262d;
+.tabs > .active {
+  background: #191919;
   border-left: 3px solid var(--ac-color);
 }
 
-.tablinks.active span {
+.tabs > .active span {
   color: yellow;
 }
 
@@ -867,7 +875,6 @@ h2 {
 /* ADD BUTTON */
 
 #addItem {
-  margin: auto;
   max-width: 300px;
   align-self: center;
   margin-bottom: 0.6rem;
@@ -899,7 +906,7 @@ h2 {
 }
 
 .sidebar-body.darkTheme {
-  background: #24262d;
+  background: #191a1d;
 }
 
 .flex-form-action {
@@ -913,7 +920,7 @@ h2 {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin: auto;
+  /* margin: auto; */
   /* width: 30rem; */
 }
 
@@ -961,6 +968,11 @@ h2 {
 
 label {
   margin: 0;
+}
+
+.feed-wrap {
+  margin-left: 70px;
+  margin: 0 auto;
 }
 
 .theme-changer.darkTheme {
@@ -1030,6 +1042,11 @@ label {
   }
   #sidebar.max {
     height: 100vh;
+  }
+}
+@media screen and (max-width: 700px) {
+  .flex-form-action {
+    justify-content: center;
   }
 }
 </style>
