@@ -15,6 +15,7 @@ export default {
       deadline: undefined,
       selectedPriorety: undefined,
       selectedTags: [],
+      selectedUSers: [],
       task: true,
       haveChange: false,
       edit: true,
@@ -55,6 +56,8 @@ export default {
   methods: {
     createTask() {
       this.waitNet = true;
+      var userarray = this.selectedUSers.map( e => e.id );
+
       axios
         .put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
           sid: localStorage.sid,
@@ -63,6 +66,7 @@ export default {
           description: this.description,
           deadline: this.deadline,
           tagarray: JSON.stringify(this.tags),
+          userarray: JSON.stringify(userarray),
           priority: this.selectedPriorety
         })
         .then(response => {
@@ -102,6 +106,7 @@ export default {
           this.deadline = response.data.data[0].tsk_deadline;
           this.selectedPriorety = response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
+          this.selectedUSers = response.data.data[0].usrworking;
         });
     }
   },

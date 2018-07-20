@@ -10,9 +10,9 @@
       <!-- Tabovi na vrhu stranice -->
       <nav class="nav nav-pills nav-fill mb-3">
         <button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</button>
+        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
         <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
         <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
       </nav>
 
       <!-- TAB GeneralInfo -->
@@ -42,7 +42,7 @@
         </div>
 
         <div class="card-body">
-          <table class="table table-borderless text-center table-hover">
+          <table class="table table-borderless table-hover">
             <thead>
               <tr>
                 <th scope="col">Status</th>
@@ -381,9 +381,9 @@ export default {
       // inProgress: false,
 
       tabs: {
-        generalInfo: false,
+        generalInfo: true,
         messages: false,
-        steps: true
+        steps: false
       },
 
       taskGeneralInfo: [],
@@ -821,6 +821,10 @@ export default {
 
   computed: {
 
+    // addingNewTask(){
+    //   return store.state.itemAction.add;
+    // },
+
     inProgressExists(){
       let exists = false;
 
@@ -919,8 +923,8 @@ export default {
   mounted() {
     if (this.selectedItemID !== 0) {
       // this.getTaskInfo(this.selectedItemID);
-      // this.getGeneralInfo(this.selectedItemID);
-      this.getTaskInfo(this.selectedItemID);
+      this.getGeneralInfo(this.selectedItemID);
+      // this.getTaskInfo(this.selectedItemID);
 
     }
 
@@ -932,6 +936,9 @@ export default {
 
     // 'taskInfo': function(val, oldVal) {
     //   this.inProgressExists();
+    // },
+    // addingNewTask: function(val, oldVal){
+    //   console.log(val);
     // },
 
     addStep: function(val, oldVal) {
@@ -954,7 +961,7 @@ export default {
         // this.getTaskInfo(val);
         // this.getStepInfo(val);
         this.getGeneralInfo(val);
-        this.changeTab("steps");
+        this.changeTab("generalInfo");
 
         this.stepInfoShow = false;
         this.stepEditShow = false;
@@ -1080,5 +1087,10 @@ td.align-top{
 
 .poslednjiRed{
   border-bottom: 0px !important;
+}
+
+nav .btn-warning.active{
+  background-color: #ffe186 !important;
+  border-color: #ffe186 !important;
 }
 </style>
