@@ -63,6 +63,10 @@ const actions = {
 }
 
 const mutations = {
+  setSearchFeedParams: (state, params) => {
+    state.searchFeedsParams = params;
+  },
+
   addMessages: (state, params) => {
     // console.log( document.querySelectorAll(".selektor") );
     if (params.data) {
@@ -100,6 +104,7 @@ const getters = {
 const state = {
   messages: [],
   scrollDownMess: true,
+  searchFeedsParams: null,
 }
 
 export default {
