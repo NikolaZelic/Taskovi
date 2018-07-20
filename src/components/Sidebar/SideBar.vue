@@ -46,17 +46,17 @@
           </div>
 
           <div class='user-placeholder' @click="userOptions" >
-            <transition name='fade'>
+            <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
-            </transition>
+            </transition> -->
             <span>
               <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
             </span>
             <span class='left-al'>Options</span>
           </div>
 
-          <div class="logout-placeholder">
-            <span class="fas fa-sign-out-alt" @click="signOut"></span>
+          <div class="logout-placeholder" @click="signOut">
+            <span class="fas fa-sign-out-alt" ></span>
             <span class='left-al'>Sign Out</span>
           </div>
 
@@ -146,11 +146,8 @@
             </template>
 
           </b-table>
-
         </div>
-
       </div>
-
     </div>
 
     <user-tasks v-if='showTaskPeople'></user-tasks>
@@ -180,7 +177,6 @@ export default {
       tagsText: undefined,
       tagLoading: false,
       scrollPos: 0,
-      // sideHover: false,
       avatarUrl: "",
       totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
@@ -380,6 +376,7 @@ export default {
     },
     getAvatar() {
       let link = "auth/users/img";
+      let localImg = "static/img/user.png";
       axios
         .get(link, {
           params: {
@@ -387,7 +384,9 @@ export default {
           }
         })
         .then(r => {
-          this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
+          if (r.data["unset key"] === null) {
+            this.avatarUrl = localImg;
+          } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
         });
     },
     selectAndSet(item) {
@@ -618,24 +617,27 @@ export default {
 /* SIDEBAR STATIC */
 
 .static-side {
-  background: #222829f7;
+  background: #222829f0;
   color: #eee;
   width: 70px;
   min-width: 70px;
   display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
   flex-direction: column;
   transition: all 0.1s ease-in-out;
-  z-index: 9;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  top: 40px;
   /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
 
 .static-side:hover {
-  transition-delay: 0.3s;
+  /* transition-delay: 0.3s; */
+  z-index: 11;
   width: 180px;
-  /* position: fixed;
-  height: 100vh; */
-  /* width: 100px; */
 }
 
 .tablinks > span,
@@ -706,6 +708,7 @@ export default {
 }
 
 .notif:hover,
+.tablinks:hover,
 .user-sidebar > *:hover {
   background: #eadc903b;
   color: var(--ac-color-light);
@@ -838,8 +841,8 @@ h2 {
 
 .search {
   position: relative;
-  min-width: 400px;
-  max-width: 700px;
+  width: 100%;
+  max-width: 600px;
   margin: auto;
 }
 
@@ -848,8 +851,8 @@ h2 {
   border-color: #717171;
 }
 
-.search .form-control {
-  min-width: 300px;
+.multiselect {
+  margin: auto;
 }
 
 /* SEARCH END*/
@@ -857,9 +860,10 @@ h2 {
 /* ADD BUTTON */
 
 #addItem {
+  margin: auto;
   max-width: 300px;
   align-self: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 
 #addItem:hover {
@@ -876,8 +880,9 @@ h2 {
 .sidebar-body {
   max-width: 100%;
   transition: all 0.5s ease;
-  width: 100%;
+  width: 0px;
   background: white;
+  margin-left: 70px;
   flex: 1;
   z-index: 10;
   display: flex;
@@ -893,14 +898,37 @@ h2 {
 .flex-form-action {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.form-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  /* width: 30rem; */
+}
+
+.form-filter fieldset {
+  /* display: block; */
+  width: 100%;
+}
+
+.form-filter > * {
+  margin: auto 5px;
 }
 
 .form-filter > form {
   margin-bottom: 10px;
 }
 
+.form-group {
+  margin-bottom: 0.6rem;
+}
+
 .tag-filter {
+  flex: 1;
   margin-bottom: 10px;
 }
 
@@ -941,13 +969,14 @@ label {
   border: 1px solid #fff03799;
   box-shadow: 0 0 2px #fff81d;
   background: var(--sec-bg-color);
-  margin: 22px;
+  margin: 16px 22px;
   width: 30px !important;
   height: 30px;
 }
 
 .left-al {
   text-align: left !important;
+  margin-left: 5px;
 }
 
 .notif,
