@@ -1,17 +1,19 @@
 <template>
   <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed }">
-      <span>
-        <span v-show='currentTabIndex === 0 &&( itemAction.edit !== undefined || itemAction.add !== undefined) || taskID !== undefined' title="Collapse Sidebar"
-          @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn' :class='{"collapsed":!sidebarActive}'>
+    <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
+      <span class='leaveme'>
+        <span v-if='showArrow' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn'
+          :class='{"collapsed":!sidebarActive}'>
         </span>
       </span>
       <div>
-          <button class="btn btn-warning pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
-            <strong><span class='fa fa-arrow-left'></span></strong>
-          </button>
-          <span v-if='currentTabIndex !== 0'> {{ project.title }} /</span>
+        <button class="btn pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
+          <strong>
+            <span class='fa fa-arrow-left'></span>
+          </strong>
+        </button>
+        <span v-if='currentTabIndex !== 0'> {{ project.title }} /</span>
         <span> {{ tabs[currentTabIndex].name }}</span>
         <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
@@ -41,11 +43,11 @@
         <div class="user-sidebar">
 
           <div class="theme-placeholder" @click='changeTheme'>
-            <span  class='theme-changer' :class='{darkTheme : darkTheme}'></span>
+            <span class='theme-changer' :class='{darkTheme : darkTheme}'></span>
             <span class='left-al'>Theme</span>
           </div>
 
-          <div class='user-placeholder' @click="userOptions" >
+          <div class='user-placeholder' @click="userOptions">
             <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition> -->
@@ -56,7 +58,7 @@
           </div>
 
           <div class="logout-placeholder" @click="signOut">
-            <span class="fas fa-sign-out-alt" ></span>
+            <span class="fas fa-sign-out-alt"></span>
             <span class='left-al'>Sign Out</span>
           </div>
 
@@ -118,19 +120,53 @@
         <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
           <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :striped='false' :hover='false' :small='true'
-            :bordered='true' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
+            :bordered='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
 
             <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
             <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
-              <span>{{data.item.title}}</span>
+              <span>{{data.item.title}} </span>
+              <!-- <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span> -->
+            </template>
+
+            <template slot='HEAD_unseen_feed' slot-scope="data">
+              <span class="fas fa-bell" title="Notifications"></span>
             </template>
 
             <template slot="unseen_feed" slot-scope="data">
               <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
             </template>
 
-            <template slot='HEAD_unseen_feed' slot-scope="data">
-              <span class="fas fa-bell" title="Notifications"></span>
+            <template slot="HEAD_failed_tasks" slot-scope="data">
+              <span class='fas fa-times-circle' title="Failed Tasks"></span>
+            </template>
+
+            <template slot="failed_tasks" slot-scope="data">
+              <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
+            </template>
+            
+            <template slot="HEAD_completed_tasks" slot-scope="data">
+              <span class='fas fa-check' title="Completed Tasks"></span>
+            </template>
+
+            <template slot="completed_tasks" slot-scope="data">
+              <span class='badge badge-success' v-if='data.item.completed_tasks !== 0'>{{data.item.completed_tasks}}</span>
+            </template>
+            
+            <template slot="HEAD_inprogress_tasks" slot-scope="data">
+              <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
+            </template>
+
+            <template slot="inprogress_tasks" slot-scope="data">
+              <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
+            </template>
+            
+            <template slot="HEAD_users_count" slot-scope="data">
+              <span class='fas fa-users' title="InProgress Tasks"></span>
+            </template>
+
+            <template slot="users_count" slot-scope="data">
+              <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
             </template>
 
             <!-- <template slot='HEAD_users' slot-scope="data">
@@ -139,11 +175,6 @@
 
             <template slot='users' slot-scope="data">
               <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
-            </template>
-
-            <template slot="edit_item" slot-scope="data">
-              <button v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons btn btn-warning fas fa-edit"
-                title="Edit Item"></button>
             </template>
 
           </b-table>
@@ -225,7 +256,8 @@ export default {
         {
           key: "title",
           label: "Projects",
-          sortable: true
+          sortable: true,
+          class: "flex-td"
         },
         {
           key: "pro_deadline",
@@ -235,39 +267,39 @@ export default {
         },
         {
           key: "users_count",
-          label: "Users on Project",
+          label: "Users",
           sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "inprogress_tasks",
-          label: "In Progress Tasks",
+          label: "In Progress",
           sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "failed_tasks",
-          label: "Failed Tasks",
+          label: "Failed",
           sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width"
         },
         {
           key: "completed_tasks",
-          label: "Completed Tasks",
+          label: "Completed",
           sortable: true,
-          class: "text-center"
+          class: "text-center td-icon-width "
         },
         {
           key: "unseen_feed",
           label: "N",
           // sortable: true,
           class: "text-center td-icon-width"
-        },
-        {
-          key: "edit_item",
-          label: "Edit",
-          class: "text-center td-icon-width"
         }
+        // {
+        //   key: "edit_item",
+        //   label: "Edit",
+        //   class: "text-center td-icon-width"
+        // }
       ],
       taskFields: [
         {
@@ -293,18 +325,18 @@ export default {
         {
           key: "users",
           class: "text-center td-icon-width"
-        },
-        {
-          key: "edit_item",
-          label: "Edit",
-          class: "text-center td-icon-width"
         }
+        // {
+        //   key: "edit_item",
+        //   label: "Edit",
+        //   class: "text-center td-icon-width"
+        // }
       ]
     };
   },
   watch: {
     globalFeed(val) {
-      console.log(this.$refs.sidBody);
+      // console.log(this.$refs.sidBody);
       // this.$refs.sidBody.classList(
       //   "sidebar-body"
       // )[0].style.display = val ? "none" : "flex";
@@ -314,6 +346,7 @@ export default {
     },
     currentTabIndex(val) {
       this.tagsText = "";
+      this.selectedFilter = [];
       if (val < 0) return;
       let tabItem = this.tabs[val].itemIndex;
       // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
@@ -542,8 +575,15 @@ export default {
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
-      taskID: "selectedItemID"
+      selectedItemID: "selectedItemID"
     }),
+    showArrow() {
+      return (
+        this.itemAction.edit !== undefined ||
+        this.itemAction.add !== undefined ||
+        (this.currentTabIndex === 1 && this.selectedItemID !== undefined)
+      );
+    },
     activeArray() {
       return store.getters.currentTabData;
     },
@@ -562,7 +602,7 @@ export default {
       } else if (
         this.itemAction.edit !== undefined ||
         this.itemAction.add !== undefined ||
-        this.taskID !== undefined
+        this.selectedItemID !== undefined
       ) {
         let shortTask = ["ID", "Tasks", "Users", "Edit"];
         return this.taskFields.filter(item => {
@@ -719,7 +759,7 @@ export default {
 }
 
 .tabs > .active span {
-  color: yellow;
+  color: var(--ac-color);
 }
 
 .notif:hover,
@@ -735,7 +775,6 @@ export default {
 
 .pro-title {
   padding: 0px 12px;
-  background-color: #ffcf3d;
 }
 
 /* TABS END */
@@ -770,8 +809,13 @@ export default {
   width: unset;
 }
 
+.hideArrow.collapsed {
+  background: #2c3233 !important;
+}
+
 .sidebar-body.collapsed *,
-.sidebar-header.collapsed > div {
+.sidebar-header.collapsed > div,
+.hideArrow .collapse-btn {
   display: none;
 }
 
@@ -789,7 +833,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: black;
-  background: var(--ac-bg-light-color);
+  background: #fff;
   padding: 5px 5px 3px;
   font-size: 18px;
   text-align: center;
@@ -816,6 +860,7 @@ export default {
 
 .td-icons.fa-edit {
   line-height: 20px;
+  color: #28a745;
   padding: 0 7px;
 }
 
@@ -863,7 +908,8 @@ h2 {
 
 .input-group-text,
 .search .form-control {
-  border-color: #717171;
+  background-color: whitesmoke;
+  border-color: #d0d0d0;
 }
 
 .multiselect {
@@ -952,7 +998,8 @@ h2 {
 }
 
 .badge-purple {
-  background: #8c28a7;
+  background: #bf6cd6;
+  color: #fff;
 }
 
 .user-sidebar img {
@@ -971,6 +1018,7 @@ label {
 }
 
 .feed-wrap {
+  display: flex;
   margin-left: 70px;
   margin: 0 auto;
 }
@@ -1044,6 +1092,7 @@ label {
     height: 100vh;
   }
 }
+
 @media screen and (max-width: 700px) {
   .flex-form-action {
     justify-content: center;

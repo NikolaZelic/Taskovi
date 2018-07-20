@@ -16,12 +16,12 @@
       </div>
       <!-- Task -->
     </div>
-    <div>
+   
       
       <step-add v-if="itemAddStepButton" />
       <task-edit v-if="checkShow(1,true)" />
       <task-add v-if="checkShow(1,false,true)" />
-    </div>
+    
 
       <div class='feed-wrap' v-if='globalFeed'>
       <global-feed />
@@ -273,7 +273,7 @@ export default {
   margin: 0 auto;
 }
 
-.feed {
+/* .feed {
   margin: 10px auto;
   max-width: 70%;
   height: 95%;
@@ -281,7 +281,7 @@ export default {
 
 .feed.darkTheme pre{
   color: #eee;
-}
+} */
 
 @media only screen and (min-width: 1350px) {
   .rightside {

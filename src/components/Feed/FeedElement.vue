@@ -31,10 +31,12 @@
         <span class="fas fa-paperclip"></span>
       </button>
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+      <!-- <div class='message-input'> -->
       <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp' ></textarea>
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -48,7 +50,7 @@ import { api } from "@/api/index.js";
 export default {
   components: {
     FeedMessage,
-    GlobalFeedMessage,
+    GlobalFeedMessage
   },
   data() {
     return {
@@ -60,9 +62,9 @@ export default {
       feed: "",
       uploadProgress: 50,
       inProgress: false,
-      searchType: 'all',
-      searchText: '',
-      searchImportant: false,
+      searchType: "all",
+      searchText: "",
+      searchImportant: false
     };
   },
   computed: {
@@ -73,15 +75,12 @@ export default {
     ...mapGetters({
       taskid: "selectedItemID"
     }),
-    searchOn(){
-      if(this.searchType!=='all')
-        return true;
-      if(this.searchImportant)
-        return true;
-      if(this.searchText!==null&&this.searchText.length>0)
-        return true;
+    searchOn() {
+      if (this.searchType !== "all") return true;
+      if (this.searchImportant) return true;
+      if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
-    },
+    }
   },
   watch: {
     taskid(val) {
@@ -99,41 +98,41 @@ export default {
       // console.log('Poziv na sekundu');
       // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
-    searchType(){
+    searchType() {
       this.readeFeeds();
     },
-    searchImportant(){
+    searchImportant() {
       this.readeFeeds();
-    },
+    }
   },
   methods: {
-    processKeyUp(event){
-      if(event.key=='Enter'){
-        if(event.shiftKey){
-          this.feed += '\n';
-        }
-        else{
+    processKeyUp(event) {
+      if (event.key == "Enter") {
+        if (event.shiftKey) {
+          this.feed += "\n";
+        } else {
           this.writeMessageFeed();
         }
       }
     },
-    readeFeeds(){
-      store.commit('clearFeed');
+    readeFeeds() {
+      store.commit("clearFeed");
 
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        fedid: 0,
-        direction: "start",
-        type: this.searchType,
-        searchingstring: this.searchText,
-        fed_important: this.searchImportant,
-      }).then( ()=>{
-        this.scrollToBegining();
-      });
+      store
+        .dispatch("readeFeeds", {
+          taskid: this.taskid,
+          fedid: 0,
+          direction: "start",
+          type: this.searchType,
+          searchingstring: this.searchText,
+          fed_important: this.searchImportant
+        })
+        .then(() => {
+          this.scrollToBegining();
+        });
     },
     writeMessageFeed() {
-      if (this.taskid === -1) 
-        return;
+      if (this.taskid === -1) return;
       var text = this.feed.trim();
       if (text === "") {
         this.feed = "";
@@ -143,17 +142,15 @@ export default {
         taskid: this.taskid,
         text: text
       });
-      setTimeout( ()=>{ 
-          var a = document.querySelectorAll(".selektor");
-          a = a[a.length-1];
-          a.scrollIntoView(true);
-        } , 500 
-        );
+      setTimeout(() => {
+        var a = document.querySelectorAll(".selektor");
+        a = a[a.length - 1];
+        a.scrollIntoView(true);
+      }, 500);
       this.feed = "";
     },
     uploadFile() {
-      if (this.taskid == -1) 
-        return -1;
+      if (this.taskid == -1) return -1;
       document.getElementById("file").click();
     },
     changeFile(e) {
@@ -165,23 +162,23 @@ export default {
       });
     },
     addUp() {
-      if (this.taskid === -1) 
-        return;
-      if(this.messages==null||this.messages.length==0)
-        return;
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        fedid: this.messages[0].fed_id,
-        direction: "up",
-        type: this.searchType,
-        searchingstring: this.searchText,
-        fed_important: this.searchImportant,
-      }).then( response => {
-        if(response.data.data!==undefined&&response.data.data.length>0)
-          this.scrollToBegining();
-      } );
+      if (this.taskid === -1) return;
+      if (this.messages == null || this.messages.length == 0) return;
+      store
+        .dispatch("readeFeeds", {
+          taskid: this.taskid,
+          fedid: this.messages[0].fed_id,
+          direction: "up",
+          type: this.searchType,
+          searchingstring: this.searchText,
+          fed_important: this.searchImportant
+        })
+        .then(response => {
+          if (response.data.data !== undefined && response.data.data.length > 0)
+            this.scrollToBegining();
+        });
     },
-    addDown(){
+    addDown() {
       store.dispatch("readeFeeds", {
         taskid: this.taskid,
         fedid: this.messages[this.messages.length - 1].fed_id,
@@ -191,25 +188,20 @@ export default {
     handleScroll(e) {
       // console.log(e.target.scrollTop);
       // console.log( document.getElementById("all").scrollY );
-      if ( e.target.scrollTop===0 ) {
+      if (e.target.scrollTop === 0) {
         this.addUp();
       }
     },
-    scrollToBegining(){
+    scrollToBegining() {
       var a = document.querySelectorAll(".selektor");
-      if(a===undefined||a===null||a.length==0)
-        return;
-      if(a.length==0)
-        a = a[0];
-      else{
-        if(a.length<=10)
-          a = a[a.length-1];
-        else
-          a = a[11];
+      if (a === undefined || a === null || a.length == 0) return;
+      if (a.length == 0) a = a[0];
+      else {
+        if (a.length <= 10) a = a[a.length - 1];
+        else a = a[11];
       }
-      if(a!==undefined)
-        a.scrollIntoView(true);
-    },
+      if (a !== undefined) a.scrollIntoView(true);
+    }
   },
   mounted() {
     this.readeFeeds();
@@ -219,17 +211,20 @@ export default {
 
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
-      if (this.count % this.countNumber == 0 && this.taskid != -1 && !this.searchOn ) {
-        if ( this.messages.length > 0) {
+      if (
+        this.count % this.countNumber == 0 &&
+        this.taskid != -1 &&
+        !this.searchOn
+      ) {
+        if (this.messages.length > 0) {
           this.addDown();
-        } 
+        }
       }
       this.count++;
-      if( this.count==10 ){
+      if (this.count == 10) {
         this.countNumber = 5;
         // console.log('Poziv na 5 sekundi');
-      }
-      else if( this.count==60 ){
+      } else if (this.count == 60) {
         this.countNumber = 30;
         // console.log('Poziv na 30 sekundi');
       }
@@ -242,18 +237,14 @@ export default {
 };
 </script>
 <style scoped>
-.radio-wrapper{
-  border: 2px solid lightgray;
-  border-radius: 5px;
-}
-.search-inputs{
+.search-inputs {
   margin: 10px;
   text-align: center;
 }
-.search-inputs *{
+.search-inputs * {
   padding: 5px;
 }
-.search-inputs input[type="text"]{
+.search-inputs input[type="text"] {
   width: 400px;
 }
 .trans {
@@ -270,6 +261,7 @@ export default {
   border-left: 1px solid #ffc10742;
   border-top: 1px solid #ffb037;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
@@ -316,11 +308,16 @@ export default {
 }
 
 .input button:last-child {
-  right: 60px;
+  position: absolute;
+  right: 15px;
 }
 
 .input button > span {
   font-size: 16px;
+}
+
+.message-input {
+  position: relative;
 }
 
 .progress {
