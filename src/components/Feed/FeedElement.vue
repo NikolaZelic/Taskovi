@@ -36,6 +36,9 @@
         <span class="fas fa-paper-plane"></span>
       </button>
     </div>
+    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload' >
+      You have a new message
+    </div>
   </div>
 </template>
 <script>
@@ -63,6 +66,8 @@ export default {
       searchType: 'all',
       searchText: '',
       searchImportant: false,
+      dataFromBegining: true,
+      haveNewMessage: false,
     };
   },
   computed: {
@@ -108,6 +113,18 @@ export default {
     },
   },
   methods: {
+    reload(){
+      store.commit("clearFeed");
+      this.refreshSearchParams();
+      this.dataFromBegining = true;
+      this.haveNewMessage =  false,
+      this.readeFeeds();
+    },
+    refreshSearchParams(){
+      this.searchType = 'all';
+      this.searchText = '';
+      this.searchImportant = false;
+    },
     processKeyUp(event){
       if(event.key=='Enter'){
         if(event.shiftKey){
@@ -183,18 +200,32 @@ export default {
       } );
     },
     addDown(){
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        fedid: this.messages[this.messages.length - 1].fed_id,
-        direction: "down"
-      });
+      // store.dispatch("readeFeeds", {
+      //   taskid: this.taskid,
+      //   fedid: this.messages[this.messages.length - 1].fed_id,
+      //   direction: "down"
+      // });
+      api.readeFeeds(this.taskid, this.messages[this.messages.length - 1].fed_id, "down").then( result =>{
+          if( result.data.status !='OK' ){
+            return;
+          }
+          if(result.data.data.length>0){
+            this.haveNewMessage = true;
+            if(this.dataFromBegining){
+              store.commit('addMessages', {'direction': "down",'data': result.data.data});
+            }
+          }
+      } );
     },
     handleScroll(e) {
-      // console.log(e.target.scrollTop);
+      // console.log(e.target.scrollDown);
       // console.log( document.getElementById("all").scrollY );
       if ( e.target.scrollTop===0 ) {
         this.addUp();
       }
+      // else if (e.target.scrollDown===0 ){
+      //   console.log('Scroll down');
+      // }
     },
     scrollToBegining(){
       var a = document.querySelectorAll(".selektor");
@@ -215,7 +246,7 @@ export default {
       var tsk_id = this.searchFeedsParams.tsk_id;
       var stp_time_created = this.searchFeedsParams.stp_time_created;
       api.searchStepFeeds(tsk_id, stp_time_created).then( result => {
-        console.log(result);
+        // console.log(result);
         if(result.data.status!='OK'){
           alert('Faild to load data');
           return;
@@ -229,6 +260,7 @@ export default {
       this.readeFeeds();
     }
     else{
+      this.dataFromBegining = false;
       this.jumpToStepFeed();
     }
 
@@ -260,6 +292,19 @@ export default {
 };
 </script>
 <style scoped>
+.message-notificaton{
+  background-color: green;
+  padding: 20px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 100px;
+  width: 150px;
+  display: none;
+}
+.notification-on{
+  display: block;
+}
 .radio-wrapper{
   border: 2px solid lightgray;
   border-radius: 5px;
