@@ -40,17 +40,17 @@
             </div>
 
             <!-- ADDING WORKERS -->
-            <!-- <div v-show='!task' class="form-group" id='adding-worker'>
+            <div class="form-group" id='adding-worker' v-if="!task">
               <i class="fas fa-user"></i>
               <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">
               </multiselect>
-            </div> -->
+            </div>
 
             <!-- TAGS -->
-            <div class="form-group">
+            <div class="form-group" v-if="task">
               <span class='fas fa-tags' title='Tags'></span>
               <multiselect v-model="selectedTags" id="tags-component" class='task-modal-input' label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
@@ -72,7 +72,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
