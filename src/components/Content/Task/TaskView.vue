@@ -45,6 +45,7 @@
           <table class="table table-borderless text-center table-hover">
             <thead>
               <tr>
+                <th scope="col">Link</th>
                 <th scope="col">Status</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
@@ -56,6 +57,10 @@
 
             <tbody>
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
+                <td>
+                  <i class="far fa-hand-point-right link-feed" @click='jumpToFeed(task)' ></i>
+                </td>
+
                 <td>
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
                   <i class="far fa-hourglass text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
@@ -448,6 +453,13 @@ export default {
   },
 
   methods: {
+    jumpToFeed(task){
+      var stp_time_created = task.tsk_timecreated;
+      var tsk_id = this.selectedItemID;
+      store.commit('setSearchFeedParams', {tsk_id: tsk_id, stp_time_created, stp_time_created});
+      this.changeTab('messages');
+    },
+
     getGeneralInfo(taskID) {
       axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
         params: {
@@ -988,7 +1000,10 @@ export default {
 </style><style scoped>h1 {
   text-align: left;
 }
-
+.link-feed{
+  font-size: 200%;
+  cursor: pointer;
+}
 .card-header.darkTheme.bg-warning,
 .card-footer.darkTheme.bg-warning {
   color: initial;

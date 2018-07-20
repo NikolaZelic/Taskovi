@@ -68,7 +68,8 @@ export default {
   computed: {
     ...mapState({
       messages: state => state.modulefeed.messages,
-      darkTheme: state => state.darkTheme
+      darkTheme: state => state.darkTheme,
+      searchFeedsParams : state => state.modulefeed.searchFeedsParams,
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -210,9 +211,26 @@ export default {
       if(a!==undefined)
         a.scrollIntoView(true);
     },
+    jumpToStepFeed(){
+      var tsk_id = this.searchFeedsParams.tsk_id;
+      var stp_time_created = this.searchFeedsParams.stp_time_created;
+      api.searchStepFeeds(tsk_id, stp_time_created).then( result => {
+        console.log(result);
+        if(result.data.status!='OK'){
+          alert('Faild to load data');
+          return;
+        }
+        store.commit('addMessages', {direction: 'start', data:result.data.data } );
+      });
+    },
   },
   mounted() {
-    this.readeFeeds();
+    if(this.searchFeedsParams===null){
+      this.readeFeeds();
+    }
+    else{
+      this.jumpToStepFeed();
+    }
 
     // ZX - POZIVA REFRESH NOTIFA
     store.dispatch("getFeedCount");
