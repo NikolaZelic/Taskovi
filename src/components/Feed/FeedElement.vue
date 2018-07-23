@@ -1,6 +1,6 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
-    <div class="search-inputs">
+    <div class="search-inputs" >
       <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
@@ -74,6 +74,7 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {
+  
   components: {
     FeedMessage,
     GlobalFeedMessage
@@ -95,6 +96,7 @@ export default {
       haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
+      test: true,
     };
   },
   computed: {
@@ -138,6 +140,9 @@ export default {
     }
   },
   methods: {
+    visibilityChanged(isVisible, entity){
+      console.log(isVisible);
+    },
     reload() {
       store.commit("clearFeed");
       this.refreshSearchParams();
@@ -174,7 +179,9 @@ export default {
           this.scrollToBegining();
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
-        });
+        }).catch( err => {
+           this.loadingData = false;
+        } );
     },
     writeMessageFeed() {
       if (this.taskid === -1) return;
@@ -224,21 +231,18 @@ export default {
             this.scrollAfterUp(response.data.data.length);
           }           
           this.loadingData = false;
-        });
+        }).catch( err => {
+           this.loadingData = false;
+        } );
     },
     addDown() {
-      // store.dispatch("readeFeeds", {
-      //   taskid: this.taskid,
-      //   fedid: this.messages[this.messages.length - 1].fed_id,
-      //   direction: "down"
-      // });
-      api
-        .readeFeeds(
+      api.readeFeeds(
           this.taskid,
           this.messages[this.messages.length - 1].fed_id,
           "down"
         )
         .then(result => {
+          this.loadingData = false;
           if (result.data.status != "OK") {
             return;
           }
@@ -251,13 +255,12 @@ export default {
               });
             }
           }
-        });
+        }).scrollIntoView.catch( err => {
+           this.loadingData = false;
+        } );
     },
     handleScroll(e) {
       // console.log(e.target.scrollTop);
-      // console.log( document.getElementById('all').scrollHeight   );
-      // console.log(this.$refs.all.height);;
-      // console.log( document.getElementById("all").scrollY );
       if (e.target.scrollTop === 0) {
         this.addUp();
       }
