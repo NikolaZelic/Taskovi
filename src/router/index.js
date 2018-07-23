@@ -8,6 +8,7 @@ import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
 import GlobalFeed from '@/components/Feed/GlobalFeed.vue';
+import ProjectConfig from '@/components/Content/Project/ProjectConfig.vue';
 
 Vue.use(Router);
 Vue.use(Meta);
@@ -38,6 +39,11 @@ export default new Router({
     {
       path: '/feeds',
       component: GlobalFeed
+    },
+
+    {
+      path: '/config',
+      component: ProjectConfig
     },
   ],
   mode: 'history',

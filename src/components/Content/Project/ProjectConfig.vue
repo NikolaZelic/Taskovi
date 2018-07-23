@@ -109,7 +109,6 @@ export default {
     return {
       // nesto: false,
       UserID: undefined,
-      editProjectData: [],
 
       project: {
         title: undefined,
@@ -146,13 +145,9 @@ export default {
   },
   methods: {
     confirmation() {
-      // if(this.editProjectData.title !== this.project.title || this.editProjectData.description !== this.project.description || this.editProjectData.deadline !== this.project.deadline){
-        if (confirm("Are you sure? You might have unsaved changes!")) {
-          this.resetProjectView();
-        }
-      // }else{
-      //   this.resetProjectView();
-      // }
+      if (confirm("Are you sure? You might have unsaved changes!")) {
+        this.resetProjectView();
+      }
     },
     // clickedRow(item, index, event){
     //   // console.log('index ' + item);
@@ -240,7 +235,6 @@ export default {
 
             if (moreInfo.length !== 0) {
               this.project = moreInfo;
-              this.editProjectData = moreInfo;
             }
             this.setupInfo();
           } else {
