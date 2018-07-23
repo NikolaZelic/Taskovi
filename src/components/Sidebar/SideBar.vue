@@ -1,26 +1,19 @@
 <template>
   <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
-      <span class='leaveme'>
-        <span v-if='showArrow' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn'
-          :class='{"collapsed":!sidebarActive}'>
-        </span>
-      </span>
+    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">    
       <div>
         <button class="btn pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
           <strong>
             <span class='fa fa-arrow-left'></span>
           </strong>
         </button>
-        <span v-if='currentTabIndex !== 0'> {{ project.title }} /</span>
+        <span v-if='currentTabIndex !== 0 && project.title != undefined'> Project: {{ project.title }} /</span>
         <span> {{ tabs[currentTabIndex].name }}</span>
-        <span v-if='totalRows !== 0' class='badge badge-dark'>{{ totalRows }}</span>
       </div>
       <span></span>
-    </div>
+    </div> -->
 
-    <div class="sidebar-lower">
 
       <div class="static-side">
 
@@ -66,6 +59,17 @@
 
       </div>
 
+    <!-- <div class="sidebar-lower"> -->
+
+
+<!-- FIX THIS! -->
+      <!-- <span class='leaveme'>
+        <span v-if='showArrow' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn'
+          :class='{"collapsed":!sidebarActive}'>
+        </span>
+      </span> -->
+
+
       <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed, darkTheme: darkTheme }">
 
         <div class="flex-form-action">
@@ -96,8 +100,8 @@
 
                 <b-input-group class='search'>
 
-                  <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='tagsInput' :options="tagsNet" :preserveSearch="true"
-                    :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false"
+                  <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet" :preserveSearch="true"
+                    :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false" :show-no-results='false'
                     :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
 
                 </b-input-group>
@@ -119,16 +123,63 @@
 
         <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
-          <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :striped='false' :hover='false' :small='true'
-            :bordered='false' :fields="fieldsToShow" :filter="tabs[currentTabIndex].search" @filtered="onFiltered" @row-clicked="selectAndSet">
+          <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false'
+            :bordered='false' :outlined='false' :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
-            <!-- FIX ACTIVE ITEM SELECTION!!!!!!!!!!!!!!!!1 -->
-            <template slot="title" slot-scope="data" :class="{ active: activeItem === data.item.id}">
+            <template slot="title" slot-scope="data" >
               <span>{{data.item.title}} </span>
-              <!-- <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span> -->
+              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span>
+            </template>
+            
+            <!-- DUE DATE -->
+            <template slot="due_date" slot-scope="data">
+              <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('YYYY-MM-DD')}}</span>
             </template>
 
+            <!-- DUE TIME -->
+            <template slot="due_time" slot-scope="data">
+              <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('HH:mm')}}</span>
+            </template>
+
+
+            <!-- IN PROGRESS TASKS -->
+            <template slot="HEAD_inprogress_tasks" slot-scope="data">
+              <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
+            </template>
+
+            <template slot="inprogress_tasks" slot-scope="data">
+              <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
+            </template>
+
+            <!-- FAILED TASKS -->
+            <template slot="HEAD_failed_tasks" slot-scope="data">
+              <span class='fas fa-times-circle' title="Failed Tasks"></span>
+            </template>
+
+            <template slot="failed_tasks" slot-scope="data">
+              <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
+            </template>
+
+            <!-- COMPLETED TASKS -->
+            <template slot="HEAD_completed_tasks" slot-scope="data">
+              <span class='fas fa-check' title="Completed Tasks"></span>
+            </template>
+
+            <template slot="completed_tasks" slot-scope="data">
+              <span class='badge badge-success' v-if='data.item.completed_tasks !== 0'>{{data.item.completed_tasks}}</span>
+            </template>
+
+            <!-- USERS COUNT -->
+            <template slot="HEAD_users_count" slot-scope="data">
+              <span class='fas fa-users' title="Users on project"></span>
+            </template>
+
+            <template slot="users_count" slot-scope="data">
+              <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
+            </template>
+            
+            <!-- FEEDS -->
             <template slot='HEAD_unseen_feed' slot-scope="data">
               <span class="fas fa-bell" title="Notifications"></span>
             </template>
@@ -137,41 +188,26 @@
               <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
             </template>
 
-            <template slot="HEAD_failed_tasks" slot-scope="data">
-              <span class='fas fa-times-circle' title="Failed Tasks"></span>
-            </template>
 
-            <template slot="failed_tasks" slot-scope="data">
-              <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
-            </template>
-            
-            <template slot="HEAD_completed_tasks" slot-scope="data">
-              <span class='fas fa-check' title="Completed Tasks"></span>
-            </template>
-
-            <template slot="completed_tasks" slot-scope="data">
-              <span class='badge badge-success' v-if='data.item.completed_tasks !== 0'>{{data.item.completed_tasks}}</span>
-            </template>
-            
-            <template slot="HEAD_inprogress_tasks" slot-scope="data">
-              <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
-            </template>
-
-            <template slot="inprogress_tasks" slot-scope="data">
-              <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
-            </template>
-            
-            <template slot="HEAD_users_count" slot-scope="data">
-              <span class='fas fa-users' title="InProgress Tasks"></span>
-            </template>
-
-            <template slot="users_count" slot-scope="data">
-              <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
-            </template>
 
             <!-- <template slot='HEAD_users' slot-scope="data">
                   <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
             </template> -->
+
+            
+            <!-- STATUS -->
+            <template slot="HEAD_sta_text" slot-scope="data">
+              <span class='fas fa-sync-alt' title="Status"></span>
+            </template>
+
+            <!-- <template slot="sta_text" slot-scope="data">
+              <span class='badge badge-warning' v-if='data.item.sta_text !== 0'>{{data.item.sta_text}}</span>
+            </template> -->
+
+            <!-- TASK USERS -->
+            <template slot="HEAD_users" slot-scope="data">
+              <span class='fas fa-users' title="View users on task"></span>
+            </template>
 
             <template slot='users' slot-scope="data">
               <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
@@ -180,7 +216,7 @@
           </b-table>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
 
     <user-tasks v-if='showTaskPeople'></user-tasks>
 
@@ -207,16 +243,14 @@ export default {
   data() {
     return {
       tagsNet: [],
-      tagsInput: [],
-      tagsText: undefined,
+      taskSearchTag: [],
+      taskSearchText: undefined,
       tagLoading: false,
       scrollPos: 0,
       avatarUrl: "",
-      totalRows: this.activeArray === undefined ? 0 : this.activeArray.length,
       currentTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
-      activeItem: undefined,
       intervalNotification: null,
       notifSelected: false,
       selectedFilter: [],
@@ -257,43 +291,58 @@ export default {
           key: "title",
           label: "Projects",
           sortable: true,
-          class: "flex-td"
+          class: "flex-td",
+          thClass: "td-blue"
         },
         {
-          key: "pro_deadline",
-          label: "Deadline",
-          sortable: true,
-          class: "text-center"
+          //key: 'pro_deadline',
+          key: "due_date",
+          label: "Due Date",
+          // sortable: true,
+          class: "text-center",
+          thClass: "td-blue"
+        },
+        {
+          key: "due_time",
+          label: "Due Time",
+          // sortable: true,
+          class: "text-center",
+          thClass: "td-blue"
         },
         {
           key: "users_count",
           label: "Users",
           sortable: true,
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width",
+          thClass: "td-purple"
         },
         {
           key: "inprogress_tasks",
           label: "In Progress",
           sortable: true,
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width",
+          thClass: "td-blue"
         },
         {
           key: "failed_tasks",
           label: "Failed",
           sortable: true,
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width",
+          thClass: "td-red"
         },
         {
           key: "completed_tasks",
           label: "Completed",
           sortable: true,
-          class: "text-center td-icon-width "
+          class: "text-center td-icon-width",
+          thClass: "td-green"
         },
         {
           key: "unseen_feed",
           label: "N",
           // sortable: true,
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width ",
+          thClass: "td-yellow"
         }
         // {
         //   key: "edit_item",
@@ -305,26 +354,32 @@ export default {
         {
           key: "id",
           label: "ID",
-          sortable: true
+          sortable: true,
+          thClass: "td-blue"
         },
         {
           key: "title",
           label: "Tasks",
-          sortable: true
+          sortable: true,
+          class: "flex-td",
+          thClass: "td-blue"
         },
         {
           key: "sta_text",
           label: "Status",
-          sortable: true
+          sortable: true,
+          thClass: "td-orange"
         },
         {
           key: "unseen_feed",
           // sortable: true,
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width",
+          thClass: "td-yellow"
         },
         {
           key: "users",
-          class: "text-center td-icon-width"
+          class: "text-center td-icon-width",
+          thClass: "td-purple"
         }
         // {
         //   key: "edit_item",
@@ -341,49 +396,27 @@ export default {
       //   "sidebar-body"
       // )[0].style.display = val ? "none" : "flex";
     },
-    selectedFilter() {
-      this.getTaskFilterData();
-    },
     currentTabIndex(val) {
-      this.tagsText = "";
-      this.selectedFilter = [];
+      this.taskSearchText = "";
+      if (val === 1) this.selectedFilter = [];
       if (val < 0) return;
-      let tabItem = this.tabs[val].itemIndex;
-      // HAVE TO CHECK IF AN ITEM WITH THE SPECIFIED ID EXIST ON THE LIST TO DISPLAY IT
-      if (tabItem === undefined) {
-        store.commit("setSidebarItemSelection", {
-          index: this.currentTabIndex,
-          id: undefined
-        });
-      } else {
-        for (var i = 0; i < this.itemsFiltered; i++) {
-          if (this.itemsFiltered[i].id === tabItem) {
-            // ID FOUND
-            this.activeItem = tabItem; // MERGE ACTIVEITEM AND TABITEM IN FUTURE IF U CAN
-            return;
-          }
-        }
-        this.activeItem = undefined;
+      this.removeActiveClass(null);
+      if (this.tabs[val].itemIndex === undefined) {
+        // IF ITEM INDEX IS UNDEFINED, COMMIT TO STORE
         store.commit("setSidebarItemSelection", {
           index: this.currentTabIndex,
           id: undefined
         });
       }
     },
-    // IS IT USED???
-    // adminFilter(val) {
-    //   console.log("HELLO FROM ADMINFILTER");
-    //   let i = this.currentTabIndex;
-    //   this.tabs[i].isAdmin = val;
-    //   this.actionTabDataTeam();
-    // },
-    tagsInput(val) {
-      // this.tagsText = "";
-      // WHEN A TAG IS CHANGED INVOKE API TASKS GET
-      // console.log(val.length);
+    selectedFilter() {
+      // FIRES WHEN CHECKBOXES CHANGE
       this.getTaskFilterData();
     },
-    tagsText(val) {
+    taskSearchTag() {
+      this.getTaskFilterData();
+    },
+    taskSearchText(val) {
       if (val !== undefined || val != "") this.getTaskFilterData();
     },
     scrollPos(val) {}
@@ -405,7 +438,7 @@ export default {
       return `${text}`;
     },
     getTagSuggestions(query) {
-      this.tagsText = query;
+      this.taskSearchText = query;
       this.tagLoading = true;
       axios
         .get("projects/:proid/tags", {
@@ -419,7 +452,7 @@ export default {
         .then(r => {
           // WHY IS IT UNDEFINED SOMETIMES??
           let arr = r.data.data;
-          this.tagsNet = arr !== undefined ? arr : [];
+          this.tagsNet = arr !== undefined ? arr : []; // alt need-test: arr || []
           this.tagLoading = false;
         });
     },
@@ -438,17 +471,40 @@ export default {
           } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
         });
     },
-    selectAndSet(item) {
+    removeActiveClass(e, elParentID) {
+      if (elParentID === undefined) {
+        elParentID = document
+          .getElementsByTagName("table")[0]
+          .getElementsByTagName("tbody")[0];
+      }
+      let chNodes = elParentID.childNodes;
+      for (let index = 0; index < chNodes.length; index++) {
+        if (chNodes[index].classList !== undefined)
+          chNodes[index].classList.remove("active");
+      }
+    },
+    selectAndSet(item, i, event) {
+      let tagName = event.target.tagName;
+      let tableRow =
+        tagName === "TD"
+          ? event.target.parentElement // TD Element
+          : event.target.parentElement.parentElement; // SPAN Element
+      this.removeActiveClass(null, tableRow.parentElement);
+
       this.selectItem(item.id);
-      this.activeItem = item.id;
       if (this.currentTabIndex === 0) {
         this.project = item;
         this.currentTabIndex = 1;
-        this.getTabData();
+        // this.getTabData(); // WHAT IS THIS?
+      } else if (this.currentTabIndex === 1) {
+        // ADD ACTIVE CLASS IF TASKS
+        tableRow.classList.add("active");
       }
     },
     getTabData() {
       let index = this.currentTabIndex;
+      this.currentTabIndex = -1;
+      this.currentTabIndex = index;
       store.commit("showGlobalFeed", false);
       // this.$refs.sidBody.style.display = "flex";
       switch (index) {
@@ -483,7 +539,7 @@ export default {
         created: cr,
         assigned: as,
         archived: ar,
-        searchstr: this.tagsText,
+        searchstr: this.taskSearchText,
         tagarray: this.tagIds
       });
       this.intervalNotification = setInterval(
@@ -509,11 +565,7 @@ export default {
       // EVERY 20 SECONDS
       store.dispatch("getFeedCount");
       // REFRESH TAB DATA
-
       // BREAKS THE UX FLOW - RESETS VIEW
-
-      // FIX TIMERS
-
       // if (this.currentTabIndex === 0) {
       //   this.actionTabDataProject();
       // }
@@ -533,7 +585,6 @@ export default {
     },
     editItemButton(item) {
       this.selectItem(item.id);
-      this.activeItem = item.id;
       store.dispatch("itemEditClick", item.id);
     },
     deadlineSplit(dateTime) {
@@ -560,9 +611,6 @@ export default {
     },
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);
-    },
-    onFiltered(filteredItems) {
-      this.totalRows = filteredItems.length;
     }
   },
   computed: {
@@ -613,7 +661,7 @@ export default {
     },
     tagIds() {
       let local = [];
-      this.tagsInput.forEach(element => {
+      this.taskSearchTag.forEach(element => {
         local.push(element.id);
       });
       return local;
@@ -621,6 +669,15 @@ export default {
   },
   created() {
     this.getAvatar();
+
+    // GET FEED TIMER - HAS TO BE IN CREATED
+    store.dispatch("getFeedCount");
+    this.intervalNotification = setInterval(
+      function() {
+        this.checkNotifications("INITIAL SETUP");
+      }.bind(this),
+      20000
+    );
     document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
@@ -637,13 +694,6 @@ export default {
     // if (this.itemsFiltered !== undefined)
     //   console.log("mn" + this.itemsFiltered.length);
 
-    store.dispatch("getFeedCount");
-    this.intervalNotification = setInterval(
-      function() {
-        this.checkNotifications();
-      }.bind(this),
-      20000
-    );
     if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
       console.log(
         "Ubacujem u jedini projekat = " + this.itemsFiltered[0].title
@@ -664,8 +714,11 @@ export default {
 <style scoped>
 #sidebar {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  /* flex-direction: column; */
+  /* align-items: stretch; */
+  z-index: 1;
+  /* MAYBE REMOVE WIDTH? */
+  /* width: 100%; */
 }
 
 .static-side .fas,
@@ -690,7 +743,7 @@ export default {
 }
 
 .static-side:hover {
-  /* transition-delay: 0.3s; */
+  transition-delay: 0.2s;
   z-index: 11;
   width: 180px;
 }
@@ -715,7 +768,7 @@ export default {
 }
 
 .static-side > * {
-  padding: 5px 0;
+  padding: 5px 0 0 0;
   display: inline;
 }
 
@@ -765,7 +818,7 @@ export default {
 .notif:hover,
 .tablinks:hover,
 .user-sidebar > *:hover {
-  background: #eadc903b;
+  background: #03a9f42e;
   color: var(--ac-color-light);
 }
 
@@ -906,10 +959,24 @@ h2 {
   margin: auto;
 }
 
-.input-group-text,
-.search .form-control {
+.darkTheme .input-group-text {
   background-color: whitesmoke;
-  border-color: #d0d0d0;
+  border: 1px solid #d2d2d236;
+}
+
+.darkTheme .search .form-control {
+  background-color: #232323 !important;
+  border: 1px solid #d2d2d236;
+}
+
+.search .form-control {
+  background-color: #fff;
+  border: 1px solid #d2d2d2b3;
+}
+
+.input-group-text {
+  background-color: whitesmoke;
+  border: 1px solid #d2d2d2b3;
 }
 
 .multiselect {
@@ -921,9 +988,9 @@ h2 {
 /* ADD BUTTON */
 
 #addItem {
-  max-width: 300px;
+  max-width: 210px;
   align-self: center;
-  margin-bottom: 0.6rem;
+  margin: 0 auto 0.6rem 4px;
 }
 
 #addItem:hover {
@@ -941,24 +1008,24 @@ h2 {
   max-width: 100%;
   transition: all 0.5s ease;
   width: 0px;
-  background: white;
-  /* margin-left: 70px; */
+  background: var(--main-bg-color);
   flex: 1;
-  /* z-index: 10; */
+  height: 95%;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  border-right: 1px solid var(--ac-color-dark);
+  padding: 40px 35px 20px 35px;
+  border-right: 1px solid #a5adb53d;
 }
 
 .sidebar-body.darkTheme {
-  background: #191a1d;
+  background: var(--sec-bg-color);
 }
 
 .flex-form-action {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 .form-filter {

@@ -1,44 +1,54 @@
+ /* TABLE */
+
  .item-list {
    width: 100%;
    flex: 1 0px;
    overflow-x: hidden;
    margin: 0 0 10px 0;
+   /* border: 1px solid #77777740 !important; */
+ }
+
+ .darkTheme .item-list {
+   /* border: 1px solid #dee2e640 !important; */
  }
 
  .item-list table {
    padding: 0;
    width: 100%;
-   border: 1px solid #3e3e3e42 !important;
  }
 
+ /* THEAD */
+
  .item-list thead th {
-   border-bottom: 1px solid #cacaca;
+   border-bottom: none !important;
  }
 
  .item-list thead tr {
-   /* border-radius: 10px 10px 0 0; */
+   /* border-bottom: 2px solid #dee2e6a1; */
    background: whitesmoke;
-   /* background: var(--ac-bg-light-color); */
    color: #222;
  }
 
  .darkTheme .item-list thead tr {
-   background: #171717;
+   /* border-bottom: 2px solid #dee2e633; */
+   background: #191b1d;
    color: #eee;
  }
 
- /* .item-list th:not(:first-child) {
-  border-left: 1px solid #00000077;
-} */
+ /* TBODY */
+
+ .darkTheme .item-list tbody tr:nth-child(even) {
+   background-color: #0000001f;
+ }
 
  .item-list td,
  .item-list th {
-   border: 0;
+   /* border: 0; */
    height: 100%;
    padding: 0 7px !important;
  }
 
- .item-list td:first-child,
+ /* .item-list td:first-child,
  .item-list th:first-child {
    border-left: none;
  }
@@ -46,10 +56,9 @@
  .item-list td:last-child,
  .item-list th:last-child {
    border-right: none;
- }
+ } */
 
  .item-list tr {
-   /* display: flex; */
    line-height: 30px;
  }
 
@@ -60,9 +69,13 @@
  }
 
  .item-list tbody tr:hover {
-   text-decoration: none;
    color: #504e40;
    background: #56565652 !important;
+ }
+
+ .darkTheme .item-list tbody tr:hover {
+   color: #ffffff;
+   background: #67676752 !important;
  }
 
  .item-list tbody tr:active,
@@ -76,8 +89,9 @@
  }
 
  .item-list tbody tr.active {
-   border-left: 3px solid #ffc107;
-   background-color: #1d1d1d;
+   border-left: 5px solid var(--ac-color);
+   background-color: #7979797a;
+   /* color: #171717; */
  }
 
  .td-flex {
@@ -94,22 +108,26 @@
    font-size: 15px;
  }
 
- .item-list th .fa-users {
+ .td-purple {
    color: #bf6cd6;
  }
 
- .item-list th .fa-check {
+ .td-green {
    color: #28a745;
  }
 
- .item-list th .fa-ellipsis-h {
+ .td-blue {
    color: #007bff;
  }
 
- .item-list th .fa-times-circle {
+ .td-red {
    color: #dc3545;
  }
 
- .item-list th .fa-bell {
-   color: #c3a23e;
+ .td-yellow {
+   color: #dbb647;
+ }
+
+ .td-orange {
+   color: #c37a3e
  }

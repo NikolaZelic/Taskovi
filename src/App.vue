@@ -21,6 +21,11 @@ export default {
 @import "./assets/css/DarkTheme.css";
 @import "./assets/css/CssVars.css";
 
+@font-face {
+  font-family: TitilliumWeb;
+  src: url(~./assets/fonts/TitilliumWeb.ttf);
+}
+
 *,
 *::before,
 *::after {
@@ -31,10 +36,5 @@ body {
   margin: 0;
   padding: 0;
   font-family: "TitilliumWeb" !important;
-}
-
-@font-face {
-  font-family: TitilliumWeb;
-  src: url(~./assets/fonts/TitilliumWeb.ttf);
 }
 </style>

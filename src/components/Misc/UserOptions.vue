@@ -3,9 +3,7 @@
     <transition name='fade'>
       <div class="user-modal">
         <div class="header">
-          <span>
-            <strong>Change User Options</strong>
-          </span>
+            Change User Options
           <i class="fa fa-times" id='cm'></i>
         </div>
         <div class="body">
@@ -25,11 +23,12 @@
                 </td>
               </tr>
               <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
+              <tr><td colspan="2">
+          <button @click='edit' class="op-btn btn btn-primary" :disabled='passNotMatched'>
+            <i class="fas fa-pen"></i> {{toEdit?" Edit":" Save"}}</button></td></tr>
             </table>
           </div>
 
-          <button @click='edit' class="op-btn btn btn-warning" :disabled='passNotMatched'>
-            <i class="fas fa-pen"></i> {{toEdit?"Edit":"Save"}}</button>
         </div>
       </div>
     </transition>
@@ -164,6 +163,7 @@ export default {
   width: 100%;
   background: #101010c2;
   position: fixed;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,11 +175,11 @@ export default {
 }
 
 .user-modal .header {
-  background: var(--warning);
+  color: white;
+  background: var(--primary);
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
-  border-radius: 10px 10px 0 0;
 }
 
 .user-modal .header i {
@@ -194,7 +194,6 @@ export default {
   display: flex;
   flex-direction: row;
   min-width: 500px;
-  border-radius: 0 0 10px 10px;
 }
 
 .op-avatar {
@@ -239,14 +238,16 @@ export default {
 
 .op-edit input {
   border: 1px solid #7777;
-  border-radius: 2px;
   padding: 4px 10px;
 }
 
 .op-btn {
-  height: 50px;
-  align-self: center;
-  margin: 0 15px;
+  display: flex;
+  margin: 10px 0 0 auto;
+}
+
+.fa-pen {
+  margin: 5px 10px 5px 0;
 }
 
 .fade-enter-active,

@@ -64,7 +64,6 @@ const actions = {
 
 const mutations = {
   addMessages: (state, params) => {
-    // console.log( document.querySelectorAll(".selektor") );
     if (params.data) {
       if (params.direction === 'start') {
         state.scrollDownMess = true;

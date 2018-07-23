@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class='pro-edit'>
-      <div class='header' :class='{"back-warning":itemEditButton!==undefined}'>
+      <div class='header' :class='{"back-primary":itemEditButton!==undefined}'>
         <button class='btn btn-dark' @click='confirmation()'>
           <span class='fas fa-arrow-left'></span> BACK</button>
         <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
@@ -20,15 +20,6 @@
         placeholder="Pick a deadline (optional)">
       </flat-pickr>
 
-      <!-- <label for="users">
-        <span class='badge badge-warning'></span> Users
-      </label> -->
-
-      <!-- <b-btn v-b-modal.modal1 variant="primary" class="mb-3"><span class="fa fa-user"></span> View and change {{project.users_count}} users </b-btn> -->
-
-      <!-- <b-modal id="modal1" size="lg" title="Add or remove users from project" header-bg-variant="dark" header-text-variant="light" body-bg-variant="dark"
-        body-text-variant="light" footer-bg-variant="dark" footer-text-variant="light" @shown="focusMyElement"> -->
-        <!-- <p></p> -->
         <div id="users">
           <label for="users">Manage users on this project</label>
 
@@ -93,7 +84,7 @@
 
       <div v-if='itemEditButton!==undefined' class='d-block'>
         <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
-        <button @click="projectEdit" class="btn btn-warning btn-block"><span class="fas fa-save"></span> Save changes</button>
+        <button @click="projectEdit" class="btn btn-primary btn-block"><span class="fas fa-save"></span> Save changes</button>
       </div>
       <button v-else @click="projectCreate" class="btn btn-success"><span class="fas fa-plus-square"></span> Create project</button>
     </div>
@@ -433,8 +424,8 @@ export default {
   color: initial;
 }
 
-.header.back-warning {
-  background: var(--warning);
+.header.back-primary {
+  background: var(--primary);
 }
 
 .header * {

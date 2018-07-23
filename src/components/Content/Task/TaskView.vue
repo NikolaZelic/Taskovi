@@ -1,24 +1,35 @@
 <template>
-<div class="height100 pb-5"  :class='{darkTheme: darkTheme}'>
+  <div class="height100 mh-100">
 
-  <template v-if="selectedItemID <= 0">
-    <h1>Select task first...</h1>
-  </template>
+    <template v-if="selectedItemID <= 0">
+      <h1>Select task first...</h1>
+    </template>
 
-  <template v-else>
+    <template v-else>
 
-      <!-- Tabovi na vrhu stranice -->
-      <nav class="nav nav-pills nav-fill mb-3">
-        <button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'><span class='fas fa-arrow-left'></span> Back</button>
+      <!-- <nav class="nav nav-pills nav-fill mb-3"> -->
+      <!-- <button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'>
+          <span class='fas fa-arrow-left'></span> Back</button> -->
+
+
+      <b-tabs v-model='currentMiniTab'>
+        <b-tab title="General" @click="changeTab('generalInfo')" active>
+        </b-tab>
+        <b-tab title="Steps" @click="changeTab('steps')">
+        </b-tab>
+        <b-tab title="Messages" @click="changeTab('messages')">
+        </b-tab>
+      </b-tabs>
+      <!-- <div>
         <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
         <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button>
-      </nav>
+        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button></div> -->
+      <!-- </nav> -->
 
       <!-- TAB GeneralInfo -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
-        <div class="card-header"  :class='{darkTheme: darkTheme}'>
+        <div class="card-header" :class='{darkTheme: darkTheme}'>
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
 
@@ -26,8 +37,8 @@
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
           <p>Description: {{this.taskGeneralInfo.description}}</p>
           <p>Created by: {{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</p>
-          <p>Time created: {{this.taskGeneralInfo.tsk_timecreated}}</p>
-          <p>Deadline: {{this.taskGeneralInfo.tsk_deadline}}</p>
+          <p>Time created: {{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</p>
+          <p>Deadline: {{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</p>
           <p>Status: {{this.taskGeneralInfo.sta_text}}</p>
           <!-- <p>Priority: {{this.taskGeneralInfo.pri_text}}</p> -->
           <!-- <p>Tags: <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span></p> -->
@@ -37,8 +48,10 @@
 
       <!-- TAB Steps -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-        <div class="card-header task-header" :class='{darkTheme: darkTheme}' v-if="taskInfo[0] !== undefined">
-          {{ taskInfo[0].taskname }}
+        <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
+          <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
+          <h4 v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}</h4>
+
         </div>
 
         <div class="card-body">
@@ -63,7 +76,7 @@
                 </td>
 
                 <td>
-                 {{ task.tsk_title}}
+                  {{ task.tsk_title}}
                 </td>
 
                 <td>
@@ -87,14 +100,11 @@
               </tr>
             </tbody>
 
-           </table>
+          </table>
 
-         </div>
+        </div>
 
-         <div class="card-footer" :class='{darkTheme: darkTheme}'>
-           <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
-         </div>
-       </div>
+      </div>
 
       <!-- TAB Feeds -->
       <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
@@ -105,7 +115,7 @@
       <!-- STEP data -->
 
       <!-- Showing data about selected step -->
-      <div class="card mt-5" :class='{darkTheme: darkTheme}'  v-if="stepInfo.length > 0 &&  stepInfoShow">
+      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if="stepInfo.length > 0 &&  stepInfoShow">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -116,25 +126,32 @@
 
             <tr>
               <td class="align-top">Project:</td>
-              <td><h5>{{stepInfo[0].pro_name}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].pro_name}}</h5>
+              </td>
             </tr>
 
             <tr>
               <td class="align-top">Task:</td>
-              <td><h5>{{stepInfo[0].taskname}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].taskname}}</h5>
+              </td>
             </tr>
 
             <tr v-if="stepInfo[0].description !== null">
               <td class="align-top">Description:</td>
-              <td><h5>{{stepInfo[0].description}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].description}}</h5>
+              </td>
             </tr>
 
             <tr>
               <td class="align-top">Status:</td>
-              <td><h5>{{stepInfo[0].sta_text}}
-                <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
-                <i class="far fa-hourglass text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
-                <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
+              <td>
+                <h5>{{stepInfo[0].sta_text}}
+                  <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
+                  <i class="far fa-hourglass text-info" v-if="stepInfo[0].sta_text === 'In Progress' || stepInfo[0].sta_text === 'Assigned'"></i>
+                  <i class="fas fa-exclamation-triangle text-danger" v-if="stepInfo[0].sta_text === 'Failed' || stepInfo[0].sta_text === 'Rejected' || stepInfo[0].sta_text === 'Cancelled'"></i>
                 </h5>
               </td>
             </tr>
@@ -164,12 +181,16 @@
 
             <tr v-if="stepInfo[0].tsk_deadline !== ''">
               <td class="align-top">Deadline:</td>
-              <td><h5>{{stepInfo[0].tsk_deadline}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].tsk_deadline}}</h5>
+              </td>
             </tr>
 
             <tr v-if="stepInfo[0].tsk_estimated_completion_date !== ''">
               <td class="align-top">Estimated completion date:</td>
-              <td><h5>{{stepInfo[0].tsk_estimated_completion_date}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].tsk_estimated_completion_date}}</h5>
+              </td>
             </tr>
 
             <tr>
@@ -178,8 +199,10 @@
                 <ul class="list-unstyled">
                   <li class="media mt-2">
 
-                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"/>
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"/>
+                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                    />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"
+                    />
 
                     <div class="media-body">
                       <div class="media-body">
@@ -195,12 +218,16 @@
 
             <tr>
               <td class="align-top">Time created:</td>
-              <td><h5>{{stepInfo[0].tsk_timecreated}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].tsk_timecreated}}</h5>
+              </td>
             </tr>
 
             <tr v-if="stepInfo[0].tsk_timespent !== null">
               <td class="align-top">Total time spent:</td>
-              <td><h5>{{stepInfo[0].tsk_timespent}}</h5></td>
+              <td>
+                <h5>{{stepInfo[0].tsk_timespent}}</h5>
+              </td>
             </tr>
 
             <tr class="poslednjiRed">
@@ -209,12 +236,15 @@
                 <ul class="list-unstyled">
                   <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
+                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                    />
                     <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 inline-block">{{user.usr_name}}<small> -- {{user.usr_email}}</small></h5>
+                        <h5 class="mt-0 mb-1 inline-block">{{user.usr_name}}
+                          <small> -- {{user.usr_email}}</small>
+                        </h5>
                         <span>Worked on this step for {{user.timespent}} minutes</span>
                       </div>
                     </div>
@@ -226,12 +256,16 @@
 
                   <li class="media mt-2 text-muted" v-for="(inactive,index) in stepInfo[0].usrinactive" :key='index' v-if="showInactive">
 
-                    <img v-if='inactive.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png" />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + inactive.usr_picture" />
+                    <img v-if='inactive.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                    />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + inactive.usr_picture"
+                    />
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 inline-block">{{inactive.usr_name}}<small> -- {{inactive.usr_email}}</small></h5>
+                        <h5 class="mt-0 mb-1 inline-block">{{inactive.usr_name}}
+                          <small> -- {{inactive.usr_email}}</small>
+                        </h5>
                         <span>Worked on this step for {{inactive.timespent}} minutes</span>
                       </div>
                     </div>
@@ -273,7 +307,7 @@
           </div>
 
           <label for="status">Change status:</label>
-            <select class="form-control" id="status" v-model="edit.status">
+          <select class="form-control" id="status" v-model="edit.status">
             <option value="2" v-if="stepInfo[0].you_are_creator === 1">In Progress</option>
             <option value="3" v-if="stepInfo[0].you_are_worker === 1">Completed</option>
             <option value="4" v-if="stepInfo[0].you_are_worker === 1">Failed</option>
@@ -320,13 +354,13 @@
 
           <label class="tag" for="working">Working:</label>
 
-          <multiselect v-if="stepInfo[0].you_are_worker === 1 && stepInfo[0].you_are_creator !== 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="removeUser"
-            :multiple="true">
+          <multiselect v-if="stepInfo[0].you_are_worker === 1 && stepInfo[0].you_are_creator !== 1" v-model="valueUser" id="working"
+            placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="removeUser" :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
 
-          <multiselect v-if="stepInfo[0].you_are_creator === 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser"
-            :multiple="true">
+          <multiselect v-if="stepInfo[0].you_are_creator === 1" v-model="valueUser" id="working" placeholder="Search for users" label="name"
+            track-by="id" :options="optionsUser" :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
 
@@ -343,24 +377,16 @@
 
     </template>
 
-</div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import {
-  store
-} from "@/store/index.js";
-import {
-  mapGetters
-} from "vuex";
+import { store } from "@/store/index.js";
+import { mapGetters } from "vuex";
 import Multiselect from "vue-multiselect";
-import {
-  api
-} from "@/api/index";
-import {
-  mapState
-} from "vuex";
+import { api } from "@/api/index";
+import { mapState } from "vuex";
 import FeedElement from "@/components/Feed/FeedElement";
 
 import flatPickr from "vue-flatpickr-component";
@@ -449,15 +475,17 @@ export default {
 
   methods: {
     getGeneralInfo(taskID) {
-      axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-        params: {
-          tasid: taskID,
-          sid: localStorage.sid
-        }
-      }).then(response => {
-        this.taskGeneralInfo = response.data.data[0];
-        // console.log(response.data.data[0]);
-      })
+      axios
+        .get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
+          params: {
+            tasid: taskID,
+            sid: localStorage.sid
+          }
+        })
+        .then(response => {
+          this.taskGeneralInfo = response.data.data[0];
+          // console.log(response.data.data[0]);
+        });
     },
 
     changeTab(parameter) {
@@ -522,7 +550,8 @@ export default {
 
       axios
         .get(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags", {
+          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags",
+          {
             params: {
               proid: this.selectedProjectID,
               type: "task",
@@ -551,7 +580,8 @@ export default {
     saveChanges() {
       axios
         .put(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid", {
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+          {
             tasid: this.selectedItemID,
             stepid: this.stepInfo[0].tsk_id,
             sid: localStorage.sid,
@@ -564,23 +594,22 @@ export default {
             progress: this.edit.progress,
             timespent: this.edit.timespent,
             estimateddate: this.edit.estTime,
-            usersarray: this.userStringArray,
+            usersarray: this.userStringArray
             // tagarray: this.tagStringArray
           }
         )
         .then(response => {
-
           this.getTaskInfo(this.selectedItemID);
           this.getStepInfo(this.stepInfo[0].tsk_id);
 
           (this.edit.name = undefined),
-          (this.edit.description = undefined),
-          (this.edit.deadline = undefined),
-          // (this.edit.priority = undefined),
-          (this.edit.status = undefined),
-          (this.edit.progress = undefined),
-          (this.edit.timespent = undefined),
-          (this.edit.estTime = undefined);
+            (this.edit.description = undefined),
+            (this.edit.deadline = undefined),
+            // (this.edit.priority = undefined),
+            (this.edit.status = undefined),
+            (this.edit.progress = undefined),
+            (this.edit.timespent = undefined),
+            (this.edit.estTime = undefined);
 
           this.reportWritingToDB(response);
         });
@@ -658,13 +687,6 @@ export default {
             // this.edit.progress = response.data.data[0].tsk_progress;
             // this.valueUser = response.data.data[0].usrworking;
 
-
-
-
-
-
-
-
             for (var i = 0; i < response.data.data.length; i++) {
               // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
 
@@ -705,7 +727,7 @@ export default {
               if (this.stepInfo[i].tsk_deadline === null) {
                 this.stepInfo[i].tsk_deadline = "";
               } else {
-                this.stepInfo[i].tsk_deadline = moment(
+                this.stepInfo[i].tsk_deadline = this.$moment(
                   response.data.data[i].tsk_deadline
                 ).format("MMMM Do YYYY, h:mm a");
               }
@@ -713,7 +735,7 @@ export default {
               if (this.stepInfo[i].tsk_estimated_completion_date === null) {
                 this.stepInfo[i].tsk_estimated_completion_date = "";
               } else {
-                this.stepInfo[i].tsk_estimated_completion_date = moment(
+                this.stepInfo[i].tsk_estimated_completion_date = this.$moment(
                   response.data.data[i].tsk_estimated_completion_date
                 ).format("MMMM Do YYYY, h:mm a");
               }
@@ -721,7 +743,7 @@ export default {
               if (this.stepInfo[i].tsk_timecreated === null) {
                 this.stepInfo[i].tsk_timecreated = "";
               } else {
-                this.stepInfo[i].tsk_timecreated = moment(
+                this.stepInfo[i].tsk_timecreated = this.$moment(
                   response.data.data[i].tsk_timecreated
                 ).format("MMMM Do YYYY, h:mm a");
               }
@@ -736,15 +758,12 @@ export default {
             }
           }
 
-          // this.stepInfo.tags = this.tas
           this.stepModal = true;
         })
         .then(response => {
           this.valueTag = [];
           if (this.stepInfo[0] !== undefined) {
             for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
-              // console.log(this.stepInfo[0].tags[i].tag_text)
-              // console.log(this.options.name);
               const tag = {
                 id: this.stepInfo[0].tags[i].id,
                 text: this.stepInfo[0].tags[i].text
@@ -757,35 +776,31 @@ export default {
           this.valueUser = [];
           if (this.stepInfo[0] !== undefined) {
             for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
-              // console.log(this.stepInfo[0].tags[i].tag_text)
-              // console.log(this.options.name);
               const user = {
                 id: this.stepInfo[0].usrworking[i].usr_id,
                 name: this.stepInfo[0].usrworking[i].usr_name,
                 email: this.stepInfo[0].usrworking[i].usr_email
               };
-              // console.log(this.stepInfo[0].usrworking[i]);
               this.valueUser.push(user);
             }
           }
-        }).then(response => {
-          axios.get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid/inactiveusers", {
-            params: {
-              tasid: this.selectedItemID,
-              stepid: stepID,
-              sid: localStorage.sid
-            }
-          }).then(response => {
-            // console.log('Inactive users');
-            // console.log(resp.data.data);
-            // this.stepInfo = response.data.data;
-            this.stepInfo[0].usrinactive = response.data.data;
-          })
+        })
+        .then(response => {
+          axios
+            .get(
+              "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid/inactiveusers",
+              {
+                params: {
+                  tasid: this.selectedItemID,
+                  stepid: stepID,
+                  sid: localStorage.sid
+                }
+              }
+            )
+            .then(response => {
+              this.stepInfo[0].usrinactive = response.data.data;
+            });
         });
-
-      // .then(response => {
-      //   window.location.href = "#step";
-      // });
     },
 
     getTaskInfo(taskID) {
@@ -794,43 +809,45 @@ export default {
           this.taskInfo = response.data.data;
 
           for (var i = 0; i < response.data.data.length; i++) {
-            // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
-
             if (this.taskInfo[i].tsk_deadline === null) {
               this.taskInfo[i].tsk_deadline = "";
             } else {
-              this.taskInfo[i].tsk_deadline = moment(
+              this.taskInfo[i].tsk_deadline = this.$moment(
                 response.data.data[i].tsk_deadline
               ).format("MMMM Do YYYY, h:mm a");
             }
 
-            if (this.taskInfo[i].pri_text === "High") {
+            let j = this.taskInfo[i];
+            if (j.pri_text === "High") {
               this.taskInfo[i].pri_badge = "badge-danger";
-            } else if (this.taskInfo[i].pri_text === "Medium") {
+            } else if (j.pri_text === "Medium") {
               this.taskInfo[i].pri_badge = "badge-warning";
-            } else if (this.taskInfo[i].pri_text === "Low") {
+            } else if (j.pri_text === "Low") {
               this.taskInfo[i].pri_badge = "badge-info";
             }
           }
-
-          // this.taskInfo.tsk_deadline = 'a'//moment(response.data.data.tsk_deadline ).format('MMMM Do YYYY, h:mm:ss a')
         }
       });
     }
   },
 
   computed: {
+    currentMiniTab: {
+      get() {
+        if (this.tabs.generalInfo) return 0;
+        if (this.tabs.steps) return 1;
+        if (this.tabs.messages) return 2;
+        return -1;
+      },
+      set() {}
+    },
 
-    // addingNewTask(){
-    //   return store.state.itemAction.add;
-    // },
-
-    inProgressExists(){
+    inProgressExists() {
       let exists = false;
 
       for (var i = 0; i < this.taskInfo.length; i++) {
-        if(this.taskInfo[i].sta_text === "In Progress"){
-          exists = true
+        if (this.taskInfo[i].sta_text === "In Progress") {
+          exists = true;
         }
       }
 
@@ -846,11 +863,10 @@ export default {
       return this.tabs.generalInfo;
     },
 
-
     youWorked() {
       if (this.stepInfo !== []) {
         for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
-          if (this.stepInfo[0].usrworking[i].isyou === 'true') {
+          if (this.stepInfo[0].usrworking[i].isyou === "true") {
             return this.stepInfo[0].usrworking[i].timespent;
           } else {
             continue;
@@ -903,15 +919,17 @@ export default {
     },
 
     deadlineDate() {
-      return moment(this.taskInfo.deadline, "YYYY-MM-DD HH:mm:ss.S").format(
-        "DD/MM/YYYY (HH:mm)"
-      ); //moment(this.taskInfo.deadline, "YYYY");
+      return this.$moment(
+        this.taskInfo.deadline,
+        "YYYY-MM-DD HH:mm:ss.S"
+      ).format("DD/MM/YYYY (HH:mm)");
     },
 
     createdDate() {
-      return moment(this.taskInfo.createdDate, "YYYY-MM-DD HH:mm:ss.S").format(
-        "DD/MM/YYYY (HH:mm)"
-      ); //moment(this.taskInfo.deadline, "YYYY");
+      return this.$moment(
+        this.taskInfo.createdDate,
+        "YYYY-MM-DD HH:mm:ss.S"
+      ).format("DD/MM/YYYY (HH:mm)");
     },
 
     ...mapState({
@@ -925,15 +943,12 @@ export default {
       // this.getTaskInfo(this.selectedItemID);
       this.getGeneralInfo(this.selectedItemID);
       // this.getTaskInfo(this.selectedItemID);
-
     }
 
     this.loadAllProjectUsers(this.selectedProjectID);
-
   },
 
   watch: {
-
     // 'taskInfo': function(val, oldVal) {
     //   this.inProgressExists();
     // },
@@ -944,14 +959,14 @@ export default {
     addStep: function(val, oldVal) {
       // console.log('val ' + val);
       // console.log('Oldval ' + oldVal);
-      if(val === false){
+      if (val === false) {
         this.getTaskInfo(this.selectedItemID);
         //this.getStepInfo(this.stepInfo[0].tsk_id);
       }
       // console.log('addstep iz watch-a');
 
       // if (this.selectedItemID !== undefined) {
-        // this.getTaskInfo(this.selectedItemID);
+      // this.getTaskInfo(this.selectedItemID);
       // }
       // this.getTaskInfo(store.state.selectedItemID);
     },
@@ -985,15 +1000,30 @@ export default {
         // console.log('novi je task broj' + val);
       }
     }
-
-
   }
 };
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style><style scoped>h1 {
+</style>
+<style scoped>
+h1 {
   text-align: left;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  border: 0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #c3c1c13d;
 }
 
 .card-header.darkTheme.bg-warning,
@@ -1005,6 +1035,10 @@ export default {
 .card-footer.darkTheme {
   background: var(--dark);
   color: var(--sec-color);
+}
+
+.card-body {
+  border: 1px solid #8e8e8e4d;
 }
 
 .card.darkTheme {
@@ -1057,39 +1091,38 @@ label {
   text-decoration: underline;
 }
 
-
-.back-button{
+.back-button {
   flex-grow: 0.1 !important;
 }
 
-button.nav-item{
+button.nav-item {
   margin: 5px;
 }
 
-.height100{
-  height: 90vh; /*100%;*/
+.height100 {
+  height: 90vh;
+  /*100%;*/
   /* margin-bottom: 20px; */
-
 }
 
-.chat-box{
+.chat-box {
   height: 100%;
   /* padding-bottom: 50px; */
 }
 
-td.align-top{
+td.align-top {
   width: 20%;
 }
 
-.stepInfoShow tr{
+.stepInfoShow tr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.poslednjiRed{
+.poslednjiRed {
   border-bottom: 0px !important;
 }
 
-nav .btn-warning.active{
+nav .btn-warning.active {
   background-color: #ffe186 !important;
   border-color: #ffe186 !important;
 }

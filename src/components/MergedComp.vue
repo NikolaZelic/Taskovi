@@ -1,31 +1,37 @@
 <template lang="html">
   <div id="wrapper" :class='{darkMain: darkTheme}'>
-    <side-bar :class="{max: !(checkShow(1,false,false,false) && this.taskID !== undefined) 
-    && !checkShow(0,true) && !checkShow(0,false,true)}" />
-    <div class="rightside" v-if='!globalFeed'  :class="{focus: isFocus}">
-      
-      <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
-
-        <!-- checkShow(selectedTab,itemEdit = false,itemAdd = false,itemAddTask = false) -->
-        <!-- Project -->
-        <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
-
-        <!-- Step -->
-        <task-view v-if='checkShow(1,false,false,false) && this.taskID !== undefined' />
-
+    <div class='flex-head-data'>
+        <div class='pro-text'v-if='!globalFeed'> Project:
+          <span v-if='project.title === undefined'> None</span>
+         <span v-else> <strong>{{ project.title }}</strong></span>
+          <span v-if='currentTabIndex !== 0'> / Tasks</span>
       </div>
-      <!-- Task -->
-    </div>
-   
-      
-      <step-add v-if="itemAddStepButton" />
-      <task-edit v-if="checkShow(1,true)" />
-      <task-add v-if="checkShow(1,false,true)" />
-    
+      <div class='flex-data-row'>
+        <side-bar :class="{max: maxBool}" />
 
-      <div class='feed-wrap' v-if='globalFeed'>
-      <global-feed />
-</div>
+        <div class="rightside" v-if='!(globalFeed || maxBool)' :class="{focus: isFocus}">
+          <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
+
+            <!-- checkShow(currentTabIndex,itemEdit = false,itemAdd = false,itemAddTask = false) -->
+            <!-- Project -->
+            <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
+
+            <!-- Step -->
+            <task-view v-if='checkShow(1,false,false,false) && taskID !== undefined' />
+
+          </div>
+        </div>
+
+       
+      </div>
+       <step-add v-if="itemAddStepButton" />
+        <task-edit v-if="checkShow(1,true)" />
+        <task-add v-if="checkShow(1,false,true)" />
+
+        <div class='feed-wrap' v-if='globalFeed'>
+          <global-feed />
+        </div>
+    </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
     <modal-error v-if="modalErrorActive" />
@@ -117,7 +123,7 @@ export default {
   },
   computed: {
     ...mapState({
-      selectedTab: "currentTabIndex",
+      currentTabIndex: "currentTabIndex",
       isFocus: "mainFocused",
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
@@ -128,25 +134,44 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddTaskButton: state => state.itemAction.addTask,
-      itemAddStepButton: state => state.itemAction.addStep
+      itemAddStepButton: state => state.itemAction.addStep,
+      // currentProjectId: state => state.sidebarItemSelection[0],
+
+      proId: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
       isFocus: "isFocus",
       taskID: "selectedItemID"
     }),
+    prooo() {
+      return store.state.sidebarItemSelection[0];
+    },
+    project() {
+      // return []
+      return store.getters.projData(this.currentProjectId);
+    },
+    maxBool() {
+      return (
+        !(
+          this.checkShow(1, false, false, false) && this.taskID !== undefined
+        ) &&
+        !this.checkShow(0, true) &&
+        !this.checkShow(0, false, true)
+      );
+    },
     notifTitle() {
       return this.notifCount !== undefined && this.notifCount !== 0 ? "🔔" : "";
     }
   },
   methods: {
     checkShow(
-      selectedTab,
+      currentTabIndex,
       itemEdit = false,
       itemAdd = false,
       itemAddTask = false
     ) {
       return (
-        selectedTab === this.selectedTab &&
+        currentTabIndex === this.currentTabIndex &&
         itemEdit === this.editBtn &&
         itemAdd === this.addBtn &&
         itemAddTask === this.addTaskBtn
@@ -207,6 +232,17 @@ export default {
   background: #1b1c1d;
 }
 
+.flex-head-data {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.flex-data-row {
+  display: flex;
+  /* height: 100%; */
+}
+
 .toasted.primary .action {
   color: black;
 }
@@ -264,13 +300,40 @@ export default {
   text-align: center;
 }
 
-.static-side {
+/* .static-side {
   position: static;
-}
+} */
 
 .feed-wrap {
+  width: 60%;
   margin-left: 70px;
+  height: 100vh;
   margin: 0 auto;
+}
+
+.darkMain .feed-wrap span {
+  /* color: #aaa; */
+}
+.darkMain .feed-wrap pre {
+  color: whitesmoke;
+}
+
+.darkMain .pro-text {
+  background: #191b1e;
+}
+
+.pro-text {
+  text-align: center;
+  /* position: fixed;
+    left: 0;
+    right: 0;
+    top: 0; */
+  z-index: 1;
+  background: var(--main-bg-color);
+  font-size: 120%;
+  padding-top: 20px;
+  color: var(--primary);
+  /* border-bottom: 1px solid #c2d0de; */
 }
 
 /* .feed {
@@ -297,7 +360,7 @@ export default {
     position: fixed;
     bottom: 0;
     left: 0;
-    top: 40px;
+    top: 0;
   }
   .sidebar-body {
     margin-left: 70px;
@@ -308,12 +371,12 @@ export default {
     min-height: 100vh;
   }
 
-  #wrapper > aside {
+  #wrapper aside {
     position: fixed;
     height: 100vh;
     width: 37%;
   }
-  #wrapper > aside.max {
+  #wrapper aside.max {
     width: 100%;
   }
 
@@ -321,14 +384,15 @@ export default {
     justify-content: space-around;
   }
   /* MAIN CONTENT */
-  #wrapper > .rightside {
+  #wrapper .rightside {
     width: 63%;
     margin-left: 37%;
-    min-height: 100vh;
+    min-height: 100%;
+    /* min-height: 100vh; */
     transition: all 0.4s ease;
   }
 
-  #wrapper > .rightside.focus {
+  #wrapper .rightside.focus {
     margin-left: 70px;
     transition: all 0.8s ease;
   }

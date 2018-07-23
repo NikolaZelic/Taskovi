@@ -1,16 +1,21 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
-    <div class="search-inputs" >
-      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed"/>
-      <form >
+    <div class="search-inputs">
+      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search'/>
+      <form>
         <span class='radio-wrapper'>
-          <input type="radio" id="all" value="all" checked v-model='searchType'> <label for="all">All</label>
-          <input type="radio" id="messages" value="messages" v-model='searchType'> <label for="messages">Messages</label>
-          <input type="radio" id="statuses" value="statuses" v-model='searchType'> <label for="statuses">Statuses</label>  
-          <input type="radio" id="files" value="files" v-model='searchType'> <label for="files">Files</label>  
+          <input type="radio" id="all" value="all" checked v-model='searchType'>
+          <label for="all">All</label>
+          <input type="radio" id="messages" value="messages" v-model='searchType'>
+          <label for="messages">Messages</label>
+          <input type="radio" id="statuses" value="statuses" v-model='searchType'>
+          <label for="statuses">Statuses</label>
+          <input type="radio" id="files" value="files" v-model='searchType'>
+          <label for="files">Files</label>
         </span>
-        <input type="checkbox" id='important' v-model='searchImportant'> <label for="important">Important</label>  
-      </form> 
+        <input type="checkbox" id='important' v-model='searchImportant'>
+        <label for="important">Important</label>
+      </form>
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
       <div class="messages">
@@ -32,7 +37,7 @@
       </button>
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
       <!-- <div class='message-input'> -->
-      <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp' ></textarea>
+      <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp'></textarea>
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
@@ -84,6 +89,7 @@ export default {
   },
   watch: {
     taskid(val) {
+      if (val === "") return;
       // if(this.taskid != -1){
       store.dispatch("readeFeeds", {
         taskid: this.taskid,
@@ -143,7 +149,7 @@ export default {
         text: text
       });
       setTimeout(() => {
-        var a = document.querySelectorAll(".selektor");
+        var a = document.querySelectorAll(".selector");
         a = a[a.length - 1];
         a.scrollIntoView(true);
       }, 500);
@@ -193,7 +199,7 @@ export default {
       }
     },
     scrollToBegining() {
-      var a = document.querySelectorAll(".selektor");
+      var a = document.querySelectorAll(".selector");
       if (a === undefined || a === null || a.length == 0) return;
       if (a.length == 0) a = a[0];
       else {
@@ -238,15 +244,28 @@ export default {
 </script>
 <style scoped>
 .search-inputs {
-  margin: 10px;
+  margin: 10px auto 0;
   text-align: center;
 }
+
 .search-inputs * {
   padding: 5px;
 }
+
 .search-inputs input[type="text"] {
   width: 400px;
 }
+
+.darkTheme .search {
+  background-color: #232323 !important;
+  border: 1px solid #d2d2d236;
+}
+
+.search {
+  background-color: #fff;
+  border: 1px solid #d2d2d2b3;
+}
+
 .trans {
   flex: 0 0 30px;
 }
@@ -258,8 +277,6 @@ export default {
 
 .feed {
   flex: 1;
-  border-left: 1px solid #ffc10742;
-  border-top: 1px solid #ffb037;
   width: 100%;
   height: 100%;
   display: flex;
@@ -276,7 +293,6 @@ export default {
 .feed-back .load {
   margin: auto;
   display: block;
-  border-radius: 8px;
   line-height: 0.5;
 }
 
@@ -295,7 +311,6 @@ export default {
   padding: 5px 40px 5px 10px;
   flex: 1;
   background-color: #f8f8f8;
-  border-radius: 20px;
   font-size: 16px;
   resize: none;
 }

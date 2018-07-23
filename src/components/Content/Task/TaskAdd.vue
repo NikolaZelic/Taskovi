@@ -72,7 +72,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click.once='createTask' type="submit" class="btn btn-warning modal-btn" :disabled='blankTitle || waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-primary modal-btn" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>

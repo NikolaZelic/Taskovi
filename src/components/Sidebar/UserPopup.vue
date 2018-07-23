@@ -40,7 +40,6 @@ export default {
 .popup {
   position: absolute;
   left: 65px;
-  border-radius: 20px;
   border: 1px solid var(--ac-color-light);
   bottom: 0;
   display: inline-block;
@@ -60,7 +59,6 @@ export default {
   background-color: #555;
   color: #fff;
   text-align: center;
-  border-radius: 6px;
   padding: 8px 0;
   position: absolute;
   /* z-index: 1; */

@@ -120,9 +120,13 @@ export default {
           pass: "123"
         },
         {
-          email: "svetaprogramer@gmail.com",
-          pass: "praksa1234"
+          email: "zex@gmail.com",
+          pass: "123"
         },
+        // {
+        //   email: "svetaprogramer@gmail.com",
+        //   pass: "praksa1234"
+        // },
         {
           email: "paun992@hotmail.com",
           pass: "pass123"

@@ -34,7 +34,7 @@ export default {
                 if(response.data.type=='files')
                     time = 500;
                 setTimeout( ()=>{
-                    var a = document.querySelectorAll(".selektor");
+                    var a = document.querySelectorAll(".selector");
                     if(a===undefined||a===null||a.length==0)
                         return;
                     if(a.length==0)

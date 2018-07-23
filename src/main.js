@@ -8,11 +8,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toasted from "vue-toasted";
 
-import {store} from './store/index';
+import {
+  store
+} from './store/index';
 Vue.use(BootstrapVue);
 Vue.use(Toasted, {
   iconPack: 'fontawesome'
 });
+import moment from 'moment';
+
+Vue.prototype.$moment = moment;
 
 Vue.config.productionTip = false;
 

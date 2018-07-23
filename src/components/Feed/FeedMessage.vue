@@ -1,6 +1,10 @@
 <template>
-  <div class='cont selektor' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
-    <img :src="icon()" />
+  <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
+    <div class='img-placeholder'>
+      <img :src="icon()" v-if='this.mess.fed_type!=="status"' />
+      <span class="fas fa-sync-alt" v-else></span>
+    </div>
+
     <div class="message-body">
       <div class="message-body-header">
         <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
@@ -83,8 +87,8 @@ export default {
           return "static\\img\\file-icon.png";
         case "message":
           return "static/img/user.png";
-        case "status":
-          return "static/img/status.png";
+        // case "status":
+        //   return "static/img/status.png";
         default:
           return "";
       }
@@ -113,16 +117,12 @@ export default {
 <style scoped>
 pre {
   white-space: pre-wrap;
-  /* Opera */
   word-wrap: break-word;
-  /* IE 5.5+ */
-  /* width: 700px; */
   font-size: 90%;
   font-family: "TitilliumWeb";
 }
 
-.important {
-  color: palevioletred !important;
+.important {    color: #199686 !important;
 }
 
 .cont .fa-star {
@@ -134,14 +134,30 @@ pre {
 
 .cont {
   padding: 5px 10px;
-  margin: 7px;
-  border-top: 1px solid var(--ac-color-dark);
+  margin: 0 7px;
+  border-top: 1px solid #1b62e72b;
+}
+
+.img-placeholder {
+  height: 40px;
+  width: 40px;
+  margin: auto 0;
+}
+
+.img-placeholder span {
+  color: var(--primary);
+  font-size: 150%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto 0;
+  padding: auto;
 }
 
 .cont img {
   height: 40px;
   border-radius: 50%;
-  margin: auto 0;
 }
 
 .cont .name {
@@ -163,7 +179,7 @@ pre {
 }
 
 .message-body {
-  margin-left: 10px;
+  margin: 0 10px;
   flex: 1;
 }
 
@@ -173,8 +189,7 @@ pre {
 }
 
 .right-con {
-  border-top: 1px solid #ffc10742;
-
+  /* border-top: 1px solid #1b62e72b; */
   margin-left: 20px;
   display: flex;
   flex-direction: row-reverse;
@@ -185,7 +200,7 @@ pre {
 }
 
 .left-con {
-  font-size: 80%;
+  /* font-size: 80%; */
   margin-right: 20px;
   display: flex;
 }
