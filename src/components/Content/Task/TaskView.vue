@@ -51,11 +51,11 @@
             </tr>
             <tr>
               <td>Time created:</td>
-              <td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
+              <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
             </tr>
             <tr>
               <td>Deadline:</td>
-              <td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td>
             </tr>
             <tr>
               <td>Status:</td>

@@ -21,7 +21,6 @@
             <!-- checkShow(currentTabIndex,itemEdit = false,itemAdd = false,itemAddTask = false) -->
             <!-- Project -->
             <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
-            <project-config v-if='checkShow(2)' />
 
             <!-- Step -->
             <task-view v-if='checkShow(1,false,false,false) && taskID !== undefined' />
@@ -35,8 +34,9 @@
       <task-edit v-if="checkShow(1,true)" />
       <task-add v-if="checkShow(1,false,true)" />
 
-      <div class='feed-wrap' v-if='globalFeed'>
-        <global-feed />
+      <div class='feed-wrap' v-if='!tableShow'>
+        <global-feed v-if='globalFeed'/>
+            <project-config v-if='checkShow(2) && !globalFeed' />
       </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
@@ -323,6 +323,7 @@ export default {
   margin-left: 70px;
   height: 100vh;
   margin: 0 auto;
+  z-index: 1;
 }
 
 .darkMain .feed-wrap span {
