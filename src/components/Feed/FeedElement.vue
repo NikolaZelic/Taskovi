@@ -389,6 +389,7 @@ export default {
 .flex-chat-body {
   display: flex;
   margin-bottom: 10px;
+  flex: 1;
 }
 
 .feed {

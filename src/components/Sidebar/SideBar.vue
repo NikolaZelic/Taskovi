@@ -20,7 +20,7 @@
         <div class="tabs">
           <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
-            <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
+            <span class="badge badge-success count">{{notifDisplay}}</span>
             <transition name='slide'>
               <span class='left-al'>Notifications</span>
             </transition>
@@ -47,7 +47,7 @@
             <span>
               <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
             </span>
-            <span class='left-al'>Options</span>
+            <span class='left-al'>Profile</span>
           </div>
 
           <div class="logout-placeholder" @click="signOut">
@@ -128,8 +128,8 @@
 
             <template slot="title" slot-scope="data" >
               <span>{{data.item.title}} </span>
-              <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span>
+              <!-- <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span> -->
             </template>
             
             <!-- DUE DATE -->
@@ -284,7 +284,18 @@ export default {
           single: "Task",
           icon: "fas fa-tasks",
           search: ""
+        },
+        {
+          name: "Configuration",
+          single: "Task",
+          icon: "fas fa-cog"
         }
+        // {
+        //   name: "Users",
+        //   single: "Task",
+        //   icon: "fas fa-users",
+        //   search: ""
+        // }
       ],
       projectFields: [
         {
@@ -625,6 +636,11 @@ export default {
     ...mapGetters({
       selectedItemID: "selectedItemID"
     }),
+    notifDisplay() {
+      return this.notifCount === 0
+        ? ""
+        : this.notifCount > 99 ? "99+" : this.notif;
+    },
     showArrow() {
       return (
         this.itemAction.edit !== undefined ||
@@ -722,8 +738,8 @@ export default {
   /* width: 100%; */
 }
 
-.darkMain #sidebar{
-  background: var(--sec-bg-color)
+.darkMain #sidebar {
+  background: var(--sec-bg-color);
 }
 
 .static-side .fas,
@@ -817,7 +833,7 @@ export default {
 }
 
 .tabs > .active span {
-  color: var(--ac-color);
+  color: var(--primary);
 }
 
 .notif:hover,
@@ -1018,7 +1034,7 @@ h2 {
   height: 93vh;
   display: flex;
   flex-direction: column;
-  padding: 40px 35px 20px 35px;
+  padding: 35px 35px 20px 35px;
   border-right: 1px solid #a5adb53d;
 }
 

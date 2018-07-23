@@ -13,7 +13,7 @@
 
 
       <b-tabs v-model='currentMiniTab'>
-        <b-tab title="General" @click="changeTab('generalInfo')" active>
+        <b-tab title="Overview" @click="changeTab('generalInfo')" active>
         </b-tab>
         <b-tab title="Steps" @click="changeTab('steps')">
         </b-tab>
@@ -26,23 +26,32 @@
         <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button></div> -->
       <!-- </nav> -->
 
-      <!-- TAB GeneralInfo -->
+      <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
+          <button type="button" class="btn btn-success">Edit step (Broken)...</button>
+        
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
 
         <div class="card-body">
+        <table>
+          <tr><td>Project:</td><td>{{this.taskGeneralInfo.pro_name}}</td></tr>
+          <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr>
+          <tr><td>Created by:</td><td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td></tr>
+          <tr><td>Time created:</td><td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td></tr>
+          <tr><td>Deadline:</td><td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td></tr>
+          <tr><td>Status:</td><td>{{this.taskGeneralInfo.sta_text}}</td></tr>
+        </table></div>
+
+        <!-- <div class="card-body">
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
           <p>Description: {{this.taskGeneralInfo.description}}</p>
           <p>Created by: {{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</p>
           <p>Time created: {{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</p>
           <p>Deadline: {{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</p>
-          <p>Status: {{this.taskGeneralInfo.sta_text}}</p>
-          <!-- <p>Priority: {{this.taskGeneralInfo.pri_text}}</p> -->
-          <!-- <p>Tags: <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span></p> -->
-        </div>
+          <p>Status: {{this.taskGeneralInfo.sta_text}}</p>  </div> -->
 
       </div>
 
@@ -401,7 +410,7 @@ import FeedElement from "@/components/Feed/FeedElement";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/themes/confetti.css");
+require("flatpickr/dist/themes/material_blue.css");
 
 export default {
   components: {
@@ -1059,6 +1068,11 @@ h1 {
 
 .card-body {
   border: 1px solid #8e8e8e4d;
+}
+
+.card-body td:first-child {
+  color: #6f6f6f;
+  padding-right: 30px;
 }
 
 .card.darkTheme {

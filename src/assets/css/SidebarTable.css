@@ -21,6 +21,7 @@
 
  .item-list thead th {
    border-bottom: none !important;
+   font-weight: normal;
  }
 
  .item-list thead tr {
@@ -90,8 +91,7 @@
 
  .item-list tbody tr.active {
    border-left: 5px solid var(--ac-color);
-   background-color: #7979797a;
-   /* color: #171717; */
+   color: var(--ac-color);
  }
 
  .td-flex {
@@ -117,7 +117,7 @@
  }
 
  .td-blue {
-   color: #007bff;
+   color: var(--primary);
  }
 
  .td-red {

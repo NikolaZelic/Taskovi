@@ -1,10 +1,18 @@
 <template lang="html">
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
-        <div class='pro-text'v-if='!globalFeed'> Project:
-          <span v-if='project.title === undefined'> None</span>
-         <span v-else> <strong>{{ project.title }}</strong></span>
-          <span v-if='currentTabIndex !== 0'> / Tasks</span>
+      <div class='head-data'>
+      <div class='pro-text' v-if='!globalFeed'> Project:
+        <span v-if='project.title === undefined'> None</span>
+        <span v-else>
+          <strong>{{ project.title }}</strong>
+        </span>
+        <span v-if='currentTabIndex !== 0'> / Tasks</span>
+      </div>
+      <div class='task-tabs'>
+
+
+      </div>
       </div>
       <div class='flex-data-row'>
         <side-bar :class="{max: maxBool}" />
@@ -22,15 +30,15 @@
           </div>
         </div>
 
-       
-      </div>
-       <step-add v-if="itemAddStepButton" />
-        <task-edit v-if="checkShow(1,true)" />
-        <task-add v-if="checkShow(1,false,true)" />
 
-        <div class='feed-wrap' v-if='globalFeed'>
-          <global-feed />
-        </div>
+      </div>
+      <step-add v-if="itemAddStepButton" />
+      <task-edit v-if="checkShow(1,true)" />
+      <task-add v-if="checkShow(1,false,true)" />
+
+      <div class='feed-wrap' v-if='globalFeed'>
+        <global-feed />
+      </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
     <router-view></router-view>
@@ -294,7 +302,7 @@ export default {
 }
 
 .maincontent > * {
-  margin: 50px 30px 20px;
+  margin: 30px 30px 10px;
 }
 
 .maincontent h1 {
@@ -315,6 +323,7 @@ export default {
 .darkMain .feed-wrap span {
   /* color: #aaa; */
 }
+
 .darkMain .feed-wrap pre {
   color: whitesmoke;
 }
@@ -325,6 +334,7 @@ export default {
 
 .pro-text {
   text-align: center;
+  border-bottom: 1px solid #827e7e59;
   /* position: fixed;
     left: 0;
     right: 0;
@@ -336,6 +346,7 @@ export default {
   color: var(--primary);
   /* border-bottom: 1px solid #c2d0de; */
 }
+
 .static-side {
   position: fixed;
   bottom: 0;

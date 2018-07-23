@@ -109,7 +109,7 @@ export default {
       presets: [
         {
           email: "nzelic@ymail.com",
-          pass: "123456"
+          pass: "123"
         },
         {
           email: "danilopusic@ymail.com",
