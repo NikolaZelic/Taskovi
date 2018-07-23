@@ -50,7 +50,7 @@ export const api = {
       description: description,
       deadline: deadline,
       tagarray: JSON.stringify(tagarray),
-      userarray: JSON.stringify(userarray),
+      usersarray: JSON.stringify(userarray),
       priority: priorety,
     });
   },
