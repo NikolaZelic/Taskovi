@@ -251,6 +251,7 @@ export default {
       if (a !== undefined) a.scrollIntoView(true);
     },
     jumpToStepFeed() {
+      console.log('jumpToStepFeed');
       var tsk_id = this.searchFeedsParams.tsk_id;
       var stp_time_created = this.searchFeedsParams.stp_time_created;
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
