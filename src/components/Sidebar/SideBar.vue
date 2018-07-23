@@ -35,17 +35,17 @@
 
         <div class="user-sidebar">
 
-          <div class="theme-placeholder" @click='changeTheme'>
+          <!-- <div class="theme-placeholder" @click='changeTheme'>
             <span class='theme-changer' :class='{darkTheme : darkTheme}'></span>
             <span class='left-al'>Theme</span>
-          </div>
+          </div> -->
 
           <div class='user-placeholder' @click="userOptions">
             <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition> -->
-            <span>
-              <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+            <span class='fas fa-user'>
+              <!-- <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' /> -->
             </span>
             <span class='left-al'>Profile</span>
           </div>
@@ -75,7 +75,7 @@
         <div class="flex-form-action">
 
           <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> Add New
+            <span class="fas fa-plus-circle"></span> New
             <span>{{tabs[currentTabIndex].single}}</span>
           </button>
 
@@ -743,14 +743,13 @@ export default {
 }
 
 .static-side .fas,
-.sidebar-header .fas {
-  font-size: 140%;
+.sidebar-header .fas {font-size: 170%;
 }
 
 /* SIDEBAR STATIC */
 
 .static-side {
-  background: #222829f0;
+  background: #333842eb;
   color: #eee;
   width: 70px;
   min-width: 70px;
@@ -777,7 +776,7 @@ export default {
   display: block;
   text-align: center;
   cursor: pointer;
-  color: #fff;
+  color: #9599a0;
 }
 
 .user-sidebar > * > span {
@@ -785,7 +784,7 @@ export default {
   display: block;
   text-align: center;
   cursor: pointer;
-  color: #fff;
+  color: #9599a0;
 }
 
 .static-side > * {
@@ -796,13 +795,14 @@ export default {
 /* TABS START */
 
 .tabs {
-  margin: 0 0 auto;
+  margin: 45px 0 auto;
 }
 
 .tabs > *,
 .user-sidebar > * {
   width: 70px;
   cursor: pointer;
+  padding-top: 5px;
   /* height: 70px; */
 }
 
@@ -828,12 +828,12 @@ export default {
 }
 
 .tabs > .active {
-  background: #191919;
-  border-left: 3px solid var(--ac-color);
+  /* background: #191919;
+  border-left: 3px solid #76b8ff; */
 }
 
 .tabs > .active span {
-  color: var(--primary);
+  color: white;
 }
 
 .notif:hover,

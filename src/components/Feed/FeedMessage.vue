@@ -122,11 +122,12 @@ pre {
   font-family: "TitilliumWeb";
 }
 
-.darkTheme pre{
-  color: var(--sec-color)
+.darkTheme pre {
+  color: var(--sec-color);
 }
 
-.important {    color: #199686 !important;
+.important {
+  color: #199686 !important;
 }
 
 .cont .fa-star {
@@ -161,7 +162,7 @@ pre {
 
 .cont img {
   height: 40px;
-  border-radius: 50%;
+  border-radius: 15px;
 }
 
 .cont .name {

@@ -2,12 +2,19 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='pro-text' v-if='tableShow'> Project:
-        <span v-if='project.title === undefined'> None</span>
+      <div class='app-header' v-if='tableShow'>
+        
+        <div class="pro-text">
+
+          <span v-if='currentTabIndex === 0'>Project List</span>
+       <div v-else>
+        <span v-if='project.title === undefined'> Ime Projekta</span>
         <span v-else>
           <strong>{{ project.title }}</strong>
         </span>
-        <span v-if='currentTabIndex !== 0'> / Tasks</span>
+        <span class='far fa-edit'></span></div>
+        <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
+          </div> 
       </div>
       <div class='task-tabs'>
       </div>
@@ -334,23 +341,34 @@ export default {
   color: whitesmoke;
 }
 
-.darkMain .pro-text {
+.darkMain .app-header {
   background: #191b1e;
 }
 
-.pro-text {
-  text-align: center;
+.app-header {
+  /* text-align: center; */
   border-bottom: 1px solid #827e7e59;
   /* position: fixed;
     left: 0;
     right: 0;
     top: 0; */
   z-index: 1;
-  background: var(--main-bg-color);
+  background: #fff;
   font-size: 120%;
   padding-top: 20px;
   color: var(--primary);
   /* border-bottom: 1px solid #c2d0de; */
+}
+
+.pro-text {
+  margin-left: 120px;
+  padding: 0 0 5px 0;
+}
+
+.pro-text .far {
+  color: var(--primary);
+  margin-left: 30px;
+  cursor: pointer;
 }
 
 .static-side {

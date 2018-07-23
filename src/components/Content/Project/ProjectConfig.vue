@@ -99,7 +99,7 @@ import { store } from "@/store/index.js";
 import { mapGetters, mapState } from "vuex";
 // import Multiselect from "vue-multiselect";
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/themes/confetti.css");
+require("flatpickr/dist/themes/material_blue.css");
 export default {
   components: {
     flatPickr
@@ -412,6 +412,8 @@ export default {
   flex-direction: column;
   width: 100%;
 }
+
+.darkMain 
 
 .emailDark {
   background: #2d3436;

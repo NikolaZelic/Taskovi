@@ -13,7 +13,7 @@
 
 
       <b-tabs v-model='currentMiniTab'>
-        <b-tab title="Overview" @click="changeTab('generalInfo')" active>
+        <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
         </b-tab>
         <b-tab title="Steps" @click="changeTab('steps')">
         </b-tab>
@@ -29,49 +29,65 @@
       <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
-        <div class="card-header" :class='{darkTheme: darkTheme}'>
+        <!-- <div class="card-header" :class='{darkTheme: darkTheme}'>
           <button type="button" class="btn btn-success" @click="editSteps">Edit task</button>
 
           <button type="button" class="btn btn-success" @click="editSteps">Back</button>
           <button type="button" class="btn btn-success" @click="editSteps">Save</button>
 
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
-        </div>
+        </div> -->
 
         <div class="card-body">
-        <table id="tabela">
-          <tr><td>Project:</td><td>{{this.taskGeneralInfo.pro_name}}</td></tr>
+          <table id="tabela">
+            <tr>
+              <td>Task Title:</td>
+              <td>{{this.taskGeneralInfo.tsk_title}}</td>
+            </tr>
 
-          <tr>
+            <!-- <tr>
             <td>Title:</td>
             <td>
               <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title" :disabled="!editFields">
             </td>
-          </tr>
+          </tr> -->
 
-          <tr>
-            <td>Description:</td>
-            <td>
-              <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description" :disabled="!editFields"></textarea>
-            </td>
-          </tr>
+            <tr>
+              <td>Description:</td>
+              <td>
+                <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description" :disabled="!editFields"></textarea>
+              </td>
+            </tr>
 
-          <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
-          <tr><td>Created by:</td><td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td></tr>
-          <tr><td>Time created:</td><td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr>
-            <td>Deadline:</td>
-            <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-              <span v-if="!editFields">{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
-              <flat-pickr v-if="editFields" name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-                :placeholder="$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')"></flat-pickr>
+            <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
+            <tr>
+              <td>Created by:</td>
+              <td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td>
+            </tr>
+            <tr>
+              <td>Time created:</td>
+              <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
+            </tr>
+            <tr>
+              <td>Deadline:</td>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
+                <span v-if="!editFields">{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+                <flat-pickr v-if="editFields" name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
+                  :placeholder="$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')"></flat-pickr>
 
 
-            </td>
-          </tr>
+              </td>
+            </tr>
 
-          <tr><td>Status:</td><td>{{this.taskGeneralInfo.sta_text}}</td></tr>
-        </table></div>
+            <tr>
+              <td>Status:</td>
+              <td>{{this.taskGeneralInfo.sta_text}}</td>
+            </tr>
+          </table>
+
+          <button type="button" class="btn btn-success save" @click="editSteps">
+            <span class='fas fa-save'></span> Save</button>
+        </div>
 
         <!-- <div class="card-body">
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
@@ -85,11 +101,11 @@
 
       <!-- TAB Steps -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-        <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
+        <!-- <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
           <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
           <h4 v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}</h4>
 
-        </div>
+        </div> -->
 
         <div class="card-body">
           <table class="table table-borderless table-hover">
@@ -143,7 +159,8 @@
             </tbody>
 
           </table>
-
+  <button type="button" class="btn btn-primary save" @click="itemAddStep" :disabled="inProgressExists"><span class='fas fa-save'></span> New Step...</button>
+        
         </div>
 
       </div>
@@ -521,7 +538,7 @@ export default {
   },
 
   methods: {
-    editSteps(){
+    editSteps() {
       this.editFields = !this.editFields;
     },
 
@@ -1076,6 +1093,17 @@ h1 {
 .tabs {
   display: flex;
   justify-content: center;
+  position: relative;
+  bottom: 70px;
+}
+
+.save {
+  margin-left: auto;
+  display: block;
+}
+
+.save span {
+  margin-right: 5px;
 }
 
 .card {
@@ -1101,10 +1129,11 @@ h1 {
 
 .card-body {
   border: 1px solid #8e8e8e4d;
+  border-radius: 5px;
 }
 
 .card-body td:first-child {
-  color: #6f6f6f;
+  color: #adadad;
   padding-right: 30px;
 }
 
@@ -1196,25 +1225,25 @@ nav .btn-warning.active {
   border-color: #ffe186 !important;
 }
 
-input[type="text" i]:disabled{
+input[type="text" i]:disabled {
   background-color: #ffffff;
   border: 0;
   color: #000000;
   font-weight: 400;
 }
 
-textarea:disabled{
+textarea:disabled {
   background-color: #ffffff;
   border: 0;
   color: #000000;
   font-weight: 400;
 }
 
-#tabela td{
-  padding: 10px;
+#tabela td {
+  padding: 5px 15px 5px 0;
 }
 
-td .form-control{
+td .form-control {
   padding-left: 0px;
 }
 </style>

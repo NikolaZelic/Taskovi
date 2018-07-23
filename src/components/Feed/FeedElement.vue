@@ -46,19 +46,21 @@
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
     <div v-if='!global' class="input">
-      <button class="load btn btn-primary" @click="addUp">
+      <button class="load btn btn-primary" style='display:none' @click="addUp">
         <span class="fas fa-sync-alt"></span>
       </button>
       <input type="file" id="file" @change="changeFile" style="display:none;" />
+      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
+      <!-- <div class='message-input'> -->
       <button class="btn attac" @click="uploadFile">
         <span class="fas fa-paperclip"></span>
       </button>
-      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-      <!-- <div class='message-input'> -->
       <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp'></textarea>
+      <!-- <div class='chat-btn'> -->
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
+      <!-- </div> -->
       <!-- </div> -->
     </div>
     <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
@@ -94,7 +96,7 @@ export default {
       dataFromBegining: true,
       haveNewMessage: false,
       numOfMessages: null,
-      loadingData: false,
+      loadingData: false
     };
   },
   computed: {
@@ -220,9 +222,12 @@ export default {
           fed_important: this.searchImportant
         })
         .then(response => {
-          if (response.data.data !== undefined && response.data.data.length > 0){
+          if (
+            response.data.data !== undefined &&
+            response.data.data.length > 0
+          ) {
             this.scrollAfterUp(response.data.data.length);
-          }           
+          }
           this.loadingData = false;
         });
     },
@@ -267,22 +272,20 @@ export default {
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
-      if (a === undefined || a === null || a.length == 0) 
-        return;
+      if (a === undefined || a === null || a.length == 0) return;
       if (a.length == 0) a = a[0];
       else {
-        a = a[a.length-1];
+        a = a[a.length - 1];
       }
-      if (a !== undefined) 
-        a.scrollIntoView(true);
+      if (a !== undefined) a.scrollIntoView(true);
     },
-    scrollAfterUp(responseLength){
-      var a = document.querySelectorAll('.selector');
+    scrollAfterUp(responseLength) {
+      var a = document.querySelectorAll(".selector");
       a = a[responseLength];
       a.scrollIntoView(true);
     },
     jumpToStepFeed() {
-      console.log('jumpToStepFeed');
+      console.log("jumpToStepFeed");
       var tsk_id = this.searchFeedsParams.tsk_id;
       var stp_time_created = this.searchFeedsParams.stp_time_created;
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
@@ -367,6 +370,7 @@ export default {
 
 .search-inputs input[type="text"] {
   width: 400px;
+  border-radius: 5px;
 }
 
 .darkTheme .search {
@@ -417,6 +421,7 @@ export default {
   word-wrap: break-word;
   flex: 1;
   display: flex;
+  background: white;
 }
 
 .feed-back .load {
@@ -429,6 +434,7 @@ export default {
   bottom: 0px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .input > * {
@@ -437,9 +443,10 @@ export default {
 
 .input textarea {
   color: black;
-  padding: 5px 60px 5px 10px;
+  padding: 5px 60px 5px 80px;
   flex: 1;
-  background-color: #f8f8f8;
+  background-color: #fff;
+  border-radius: 5px;
   font-size: 16px;
   resize: none;
 }
@@ -451,9 +458,19 @@ export default {
   height: 42px;
 }
 
-.input button:last-child {
+/* .chat-btn {
+  position: relative;
+     right: 100px;
+} */
+
+.input .attac {
   position: absolute;
-  right: 45px;
+  left: 15px;
+}
+
+.input .send {
+  position: absolute;
+  right: 15px;
 }
 
 .input button > span {
@@ -487,6 +504,8 @@ export default {
 }
 
 .messages {
+  width: 100%;
   max-height: 350px;
+  background: white;
 }
 </style>
