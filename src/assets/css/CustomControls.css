@@ -87,15 +87,20 @@ textarea.custom-modern::placeholder {
 }
 
 /* TABS */
+
 .tabs .nav-tabs {
   border-bottom: 1px solid #91979c9e;
 }
 
-.tabs .nav-item .nav-link {  
-  background: none;
+.tabs .nav-item .nav-link {
+  background: none !important;
+  color: var(--primary) !important;
   border: none;
-  color: var(--primary);
   border-bottom: 4px solid transparent;
+}
+
+.tabs .nav-item .nav-link:hover {
+  border-color: #4c9af3 !important;
 }
 
 .tabs .nav-item .active.nav-link {
