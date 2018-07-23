@@ -18,7 +18,7 @@
       </form>
     </div>
     <div id="all" @scroll="handleScroll" class="feed-back">
-      <div class="messages">
+      <div  id='all2' class="messages">
         <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
         <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
       </div>
@@ -42,6 +42,9 @@
         <span class="fas fa-paper-plane"></span>
       </button>
       <!-- </div> -->
+    </div>
+    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload' >
+      You have a new message
     </div>
   </div>
 </template>
@@ -69,13 +72,16 @@ export default {
       inProgress: false,
       searchType: "all",
       searchText: "",
-      searchImportant: false
+      searchImportant: false,
+      dataFromBegining: true,
+      haveNewMessage: false
     };
   },
   computed: {
     ...mapState({
       messages: state => state.modulefeed.messages,
-      darkTheme: state => state.darkTheme
+      darkTheme: state => state.darkTheme,
+      searchFeedsParams: state => state.modulefeed.searchFeedsParams
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -112,6 +118,17 @@ export default {
     }
   },
   methods: {
+    reload() {
+      store.commit("clearFeed");
+      this.refreshSearchParams();
+      this.dataFromBegining = true;
+      (this.haveNewMessage = false), this.readeFeeds();
+    },
+    refreshSearchParams() {
+      this.searchType = "all";
+      this.searchText = "";
+      this.searchImportant = false;
+    },
     processKeyUp(event) {
       if (event.key == "Enter") {
         if (event.shiftKey) {
@@ -185,18 +202,43 @@ export default {
         });
     },
     addDown() {
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        fedid: this.messages[this.messages.length - 1].fed_id,
-        direction: "down"
-      });
+      // store.dispatch("readeFeeds", {
+      //   taskid: this.taskid,
+      //   fedid: this.messages[this.messages.length - 1].fed_id,
+      //   direction: "down"
+      // });
+      api
+        .readeFeeds(
+          this.taskid,
+          this.messages[this.messages.length - 1].fed_id,
+          "down"
+        )
+        .then(result => {
+          if (result.data.status != "OK") {
+            return;
+          }
+          if (result.data.data.length > 0) {
+            this.haveNewMessage = true;
+            if (this.dataFromBegining) {
+              store.commit("addMessages", {
+                direction: "down",
+                data: result.data.data
+              });
+            }
+          }
+        });
     },
     handleScroll(e) {
       // console.log(e.target.scrollTop);
+      // console.log( document.getElementById('all').scrollHeight   );
+      // console.log(this.$refs.all.height);;
       // console.log( document.getElementById("all").scrollY );
       if (e.target.scrollTop === 0) {
         this.addUp();
       }
+      // else if (e.target.scrollDown===0 ){
+      //   console.log('Scroll down');
+      // }
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
@@ -207,10 +249,30 @@ export default {
         else a = a[11];
       }
       if (a !== undefined) a.scrollIntoView(true);
+    },
+    jumpToStepFeed() {
+      var tsk_id = this.searchFeedsParams.tsk_id;
+      var stp_time_created = this.searchFeedsParams.stp_time_created;
+      api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
+        // console.log(result);
+        if (result.data.status != "OK") {
+          alert("Faild to load data");
+          return;
+        }
+        store.commit("addMessages", {
+          direction: "start",
+          data: result.data.data
+        });
+      });
     }
   },
   mounted() {
-    this.readeFeeds();
+    if (this.searchFeedsParams === null) {
+      this.readeFeeds();
+    } else {
+      this.dataFromBegining = false;
+      this.jumpToStepFeed();
+    }
 
     // ZX - POZIVA REFRESH NOTIFA
     store.dispatch("getFeedCount");
@@ -245,6 +307,27 @@ export default {
 <style scoped>
 .search-inputs {
   margin: 10px auto 0;
+}
+
+.message-notificaton {
+  background-color: green;
+  padding: 20px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 100px;
+  width: 150px;
+  display: none;
+}
+.notification-on {
+  display: block;
+}
+.radio-wrapper {
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
+.search-inputs {
+  margin: 10px;
   text-align: center;
 }
 

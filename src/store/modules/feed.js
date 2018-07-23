@@ -63,6 +63,10 @@ const actions = {
 }
 
 const mutations = {
+  setSearchFeedParams: (state, params) => {
+    state.searchFeedsParams = params;
+  },
+
   addMessages: (state, params) => {
     if (params.data) {
       if (params.direction === 'start') {
@@ -99,6 +103,7 @@ const getters = {
 const state = {
   messages: [],
   scrollDownMess: true,
+  searchFeedsParams: null,
 }
 
 export default {
