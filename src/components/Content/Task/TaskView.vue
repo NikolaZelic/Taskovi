@@ -30,18 +30,46 @@
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-success">Edit step (Broken)...</button>
-        
+          <button type="button" class="btn btn-success" @click="editSteps">Edit task</button>
+
+          <button type="button" class="btn btn-success" @click="editSteps">Back</button>
+          <button type="button" class="btn btn-success" @click="editSteps">Save</button>
+
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
 
         <div class="card-body">
-        <table>
+        <table id="tabela">
           <tr><td>Project:</td><td>{{this.taskGeneralInfo.pro_name}}</td></tr>
-          <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr>
+
+          <tr>
+            <td>Title:</td>
+            <td>
+              <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title" :disabled="!editFields">
+            </td>
+          </tr>
+
+          <tr>
+            <td>Description:</td>
+            <td>
+              <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description" :disabled="!editFields"></textarea>
+            </td>
+          </tr>
+
+          <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
           <tr><td>Created by:</td><td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td></tr>
           <tr><td>Time created:</td><td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr><td>Deadline:</td><td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td></tr>
+          <tr>
+            <td>Deadline:</td>
+            <td>
+              <span v-if="!editFields">{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+              <flat-pickr v-if="editFields" name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
+                :placeholder="$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')"></flat-pickr>
+
+
+            </td>
+          </tr>
+
           <tr><td>Status:</td><td>{{this.taskGeneralInfo.sta_text}}</td></tr>
         </table></div>
 
@@ -423,6 +451,7 @@ export default {
     return {
       // youWorkedFor: 0,
       // inProgress: false,
+      editFields: false,
 
       tabs: {
         generalInfo: true,
@@ -492,6 +521,10 @@ export default {
   },
 
   methods: {
+    editSteps(){
+      this.editFields = !this.editFields;
+    },
+
     jumpToFeed(task) {
       var stp_time_created = task.tsk_timecreated;
       var tsk_id = this.selectedItemID;
@@ -1161,5 +1194,27 @@ td.align-top {
 nav .btn-warning.active {
   background-color: #ffe186 !important;
   border-color: #ffe186 !important;
+}
+
+input[type="text" i]:disabled{
+  background-color: #ffffff;
+  border: 0;
+  color: #000000;
+  font-weight: 400;
+}
+
+textarea:disabled{
+  background-color: #ffffff;
+  border: 0;
+  color: #000000;
+  font-weight: 400;
+}
+
+#tabela td{
+  padding: 10px;
+}
+
+td .form-control{
+  padding-left: 0px;
 }
 </style>
