@@ -22,7 +22,7 @@
           </div>
         </div>
 
-       
+
       </div>
        <step-add v-if="itemAddStepButton" />
         <task-edit v-if="checkShow(1,true)" />

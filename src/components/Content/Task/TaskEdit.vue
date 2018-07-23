@@ -38,7 +38,7 @@ export default {
       suggestedProjects: state => state.modulework.suggestedProjects,
       proId: state => state.sidebarItemSelection[0]
     }),
-    
+
     blankTitle() {
       return this.title.length === 0;
     },
@@ -66,7 +66,7 @@ export default {
           description: this.description,
           deadline: this.deadline,
           tagarray: JSON.stringify(this.tags),
-          userarray: JSON.stringify(userarray),
+          usersarray: JSON.stringify(userarray),
           priority: this.selectedPriorety
         })
         .then(response => {
