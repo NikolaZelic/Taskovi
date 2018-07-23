@@ -96,7 +96,7 @@ import { mapGetters } from "vuex";
 
 var interval;
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/themes/confetti.css");
+require("flatpickr/dist/themes/material_blue.css");
 
 export default {
   components: {

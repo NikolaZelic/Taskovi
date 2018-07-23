@@ -86,7 +86,13 @@ textarea.custom-modern::placeholder {
   box-shadow: unset;
 }
 
-/* TABS */
+/* TASK TABS */
+
+.tabs .nav-tabs {
+  width: 500px;
+  display: flex;
+  justify-content: space-around;
+}
 
 .tabs .nav-tabs {
   border-bottom: 1px solid #91979c9e;
