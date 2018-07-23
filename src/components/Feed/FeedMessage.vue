@@ -122,6 +122,10 @@ pre {
   font-family: "TitilliumWeb";
 }
 
+.darkTheme pre{
+  color: var(--sec-color)
+}
+
 .important {    color: #199686 !important;
 }
 
