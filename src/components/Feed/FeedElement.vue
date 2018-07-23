@@ -19,7 +19,7 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group>
+      <b-list-group v-if='!global' >
         <b-list-group-item>Cras justo odio</b-list-group-item>
         <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
         <b-list-group-item>Morbi leo risus</b-list-group-item>
@@ -36,7 +36,7 @@
       <div id="all" @scroll="handleScroll" class="feed-back">
         <div id='all2' class="messages" >
           <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
-          <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :ref="''" :mess="mess" />
+          <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
         </div>
       </div>
 
@@ -92,7 +92,9 @@ export default {
       searchText: "",
       searchImportant: false,
       dataFromBegining: true,
-      haveNewMessage: false
+      haveNewMessage: false,
+      numOfMessages: null,
+      loadingData: false,
     };
   },
   computed: {
@@ -158,7 +160,7 @@ export default {
     },
     readeFeeds() {
       store.commit("clearFeed");
-
+      this.loadingData = true;
       store
         .dispatch("readeFeeds", {
           taskid: this.taskid,
@@ -170,6 +172,8 @@ export default {
         })
         .then(() => {
           this.scrollToBegining();
+          this.numOfMessages = this.messages.length;
+          this.loadingData = false;
         });
     },
     writeMessageFeed() {
@@ -205,6 +209,7 @@ export default {
     addUp() {
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
+      this.loadingData = true;
       store
         .dispatch("readeFeeds", {
           taskid: this.taskid,
@@ -215,9 +220,10 @@ export default {
           fed_important: this.searchImportant
         })
         .then(response => {
-          if (response.data.data !== undefined && response.data.data.length > 0);
-          this.$refs['hhj'].scrollTo()
-            
+          if (response.data.data !== undefined && response.data.data.length > 0){
+            this.scrollAfterUp(response.data.data.length);
+          }           
+          this.loadingData = false;
         });
     },
     addDown() {
@@ -269,6 +275,11 @@ export default {
       }
       if (a !== undefined) 
         a.scrollIntoView(true);
+    },
+    scrollAfterUp(responseLength){
+      var a = document.querySelectorAll('.selector');
+      a = a[responseLength];
+      a.scrollIntoView(true);
     },
     jumpToStepFeed() {
       console.log('jumpToStepFeed');
