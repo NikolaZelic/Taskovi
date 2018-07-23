@@ -322,10 +322,6 @@ export default {
 .notification-on {
   display: block;
 }
-.radio-wrapper {
-  border: 2px solid lightgray;
-  border-radius: 5px;
-}
 .search-inputs {
   margin: 10px;
   text-align: center;
