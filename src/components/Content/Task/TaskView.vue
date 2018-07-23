@@ -112,9 +112,9 @@
       </div>
 
       <!-- TAB Feeds -->
-      <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages">
-        <feed-element />
-      </div>
+      <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
+        <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
+      <!-- </div> -->
 
 
       <!-- STEP data -->
@@ -483,11 +483,15 @@ export default {
   },
 
   methods: {
-    jumpToFeed(task){
+    jumpToFeed(task) {
       var stp_time_created = task.tsk_timecreated;
       var tsk_id = this.selectedItemID;
-      store.commit('setSearchFeedParams', {tsk_id: tsk_id, stp_time_created, stp_time_created});
-      this.changeTab('messages');
+      store.commit("setSearchFeedParams", {
+        tsk_id: tsk_id,
+        stp_time_created,
+        stp_time_created
+      });
+      this.changeTab("messages");
     },
 
     getGeneralInfo(taskID) {
@@ -1116,13 +1120,15 @@ button.nav-item {
 }
 
 .height100 {
-  height: 90vh;
-  /*100%;*/
+  /* height: 85%; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   /* margin-bottom: 20px; */
 }
 
 .chat-box {
-  height: 100%;
+  /* height: 100%; */
   /* padding-bottom: 50px; */
 }
 

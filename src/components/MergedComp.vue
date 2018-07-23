@@ -240,7 +240,7 @@ export default {
 
 .flex-data-row {
   display: flex;
-  /* height: 100%; */
+  height: 100%;
 }
 
 .toasted.primary .action {
@@ -280,6 +280,7 @@ export default {
 }
 
 .maincontent {
+  display: flex;
   flex: 1;
   background-color: var(--main-bg-color);
   color: var(--main-color);
@@ -335,6 +336,12 @@ export default {
   color: var(--primary);
   /* border-bottom: 1px solid #c2d0de; */
 }
+.static-side {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  top: 0;
+}
 
 /* .feed {
   margin: 10px auto;
@@ -356,12 +363,6 @@ export default {
 }
 
 @media only screen and (min-width: 992px) {
-  .static-side {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    top: 0;
-  }
   .sidebar-body {
     margin-left: 70px;
   }

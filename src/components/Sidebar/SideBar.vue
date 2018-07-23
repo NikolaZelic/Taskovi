@@ -717,8 +717,13 @@ export default {
   /* flex-direction: column; */
   /* align-items: stretch; */
   z-index: 1;
+  background: var(--main-bg-color);
   /* MAYBE REMOVE WIDTH? */
   /* width: 100%; */
+}
+
+.darkMain #sidebar{
+  background: var(--sec-bg-color)
 }
 
 .static-side .fas,
@@ -1010,7 +1015,7 @@ h2 {
   width: 0px;
   background: var(--main-bg-color);
   flex: 1;
-  height: 95%;
+  height: 93vh;
   display: flex;
   flex-direction: column;
   padding: 40px 35px 20px 35px;

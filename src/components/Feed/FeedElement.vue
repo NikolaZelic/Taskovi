@@ -1,7 +1,7 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs">
-      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search'/>
+      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
           <input type="radio" id="all" value="all" checked v-model='searchType'>
@@ -17,11 +17,29 @@
         <label for="important">Important</label>
       </form>
     </div>
-    <div id="all" @scroll="handleScroll" class="feed-back">
-      <div  id='all2' class="messages">
-        <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
-        <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+
+    <div class='flex-chat-body'>
+      <b-list-group>
+        <b-list-group-item>Cras justo odio</b-list-group-item>
+        <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
+        <b-list-group-item>Morbi leo risus</b-list-group-item>
+        <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+      </b-list-group>
+
+      <div id="all" @scroll="handleScroll" class="feed-back">
+        <div id='all2' class="messages">
+          <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+          <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+        </div>
       </div>
+
     </div>
     <div class="progress" v-show="inProgress">
       <p>LOADING FILE {{uploadProgress}}</p>
@@ -43,7 +61,7 @@
       </button>
       <!-- </div> -->
     </div>
-    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload' >
+    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
       You have a new message
     </div>
   </div>
@@ -320,9 +338,11 @@ export default {
   width: 150px;
   display: none;
 }
+
 .notification-on {
   display: block;
 }
+
 .search-inputs {
   margin: 10px;
   text-align: center;
@@ -346,6 +366,15 @@ export default {
   border: 1px solid #d2d2d2b3;
 }
 
+.list-group {
+  height: 400px;
+  overflow-x: auto;
+}
+
+.darkTheme .list-group-item {
+  background: var(--dark);
+}
+
 .trans {
   flex: 0 0 30px;
 }
@@ -353,6 +382,11 @@ export default {
 .trans .btn {
   width: 100%;
   height: 100%;
+}
+
+.flex-chat-body {
+  display: flex;
+  margin-bottom: 10px;
 }
 
 .feed {
@@ -368,6 +402,7 @@ export default {
   overflow-y: auto;
   word-wrap: break-word;
   flex: 1;
+  display: flex;
 }
 
 .feed-back .load {
@@ -383,12 +418,12 @@ export default {
 }
 
 .input > * {
-  margin: 0 5px;
+  margin: 0 0 0 5px;
 }
 
 .input textarea {
   color: black;
-  padding: 5px 40px 5px 10px;
+  padding: 5px 60px 5px 10px;
   flex: 1;
   background-color: #f8f8f8;
   font-size: 16px;
@@ -404,7 +439,7 @@ export default {
 
 .input button:last-child {
   position: absolute;
-  right: 15px;
+  right: 45px;
 }
 
 .input button > span {
