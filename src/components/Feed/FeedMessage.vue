@@ -2,7 +2,7 @@
   <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
     <div class='img-placeholder'>
       <img :src="icon()" v-if='this.mess.fed_type!=="status"' />
-      <span class="fas fa-sync-alt" v-else></span>
+      <span class="fas fa-info-circle" v-else></span>
     </div>
 
     <div class="message-body">

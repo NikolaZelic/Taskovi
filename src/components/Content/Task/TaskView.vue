@@ -31,19 +31,38 @@
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>
           <button type="button" class="btn btn-success">Edit step (Broken)...</button>
-        
+
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
         </div>
 
         <div class="card-body">
-        <table>
-          <tr><td>Project:</td><td>{{this.taskGeneralInfo.pro_name}}</td></tr>
-          <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr>
-          <tr><td>Created by:</td><td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td></tr>
-          <tr><td>Time created:</td><td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr><td>Deadline:</td><td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr><td>Status:</td><td>{{this.taskGeneralInfo.sta_text}}</td></tr>
-        </table></div>
+          <table>
+            <tr>
+              <td>Project:</td>
+              <td>{{this.taskGeneralInfo.pro_name}}</td>
+            </tr>
+            <tr>
+              <td>Description:</td>
+              <td>{{this.taskGeneralInfo.description}}</td>
+            </tr>
+            <tr>
+              <td>Created by:</td>
+              <td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td>
+            </tr>
+            <tr>
+              <td>Time created:</td>
+              <td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
+            </tr>
+            <tr>
+              <td>Deadline:</td>
+              <td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td>
+            </tr>
+            <tr>
+              <td>Status:</td>
+              <td>{{this.taskGeneralInfo.sta_text}}</td>
+            </tr>
+          </table>
+        </div>
 
         <!-- <div class="card-body">
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
@@ -122,7 +141,7 @@
 
       <!-- TAB Feeds -->
       <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
-        <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
+      <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
       <!-- </div> -->
 
 

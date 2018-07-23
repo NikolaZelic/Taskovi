@@ -21,9 +21,9 @@
           <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifDisplay}}</span>
-            <transition name='slide'>
+            <!-- <transition name='slide'> -->
               <span class='left-al'>Notifications</span>
-            </transition>
+            <!-- </transition> -->
           </div>
 
           <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index && !notifSelected}"
@@ -70,7 +70,7 @@
       </span> -->
 
 
-      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed, darkTheme: darkTheme }">
+      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || currentTabIndex === 2, darkTheme: darkTheme }">
 
         <div class="flex-form-action">
 

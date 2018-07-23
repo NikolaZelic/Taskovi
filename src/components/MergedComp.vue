@@ -2,7 +2,7 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='pro-text' v-if='!globalFeed'> Project:
+      <div class='pro-text' v-if='tableShow'> Project:
         <span v-if='project.title === undefined'> None</span>
         <span v-else>
           <strong>{{ project.title }}</strong>
@@ -10,8 +10,6 @@
         <span v-if='currentTabIndex !== 0'> / Tasks</span>
       </div>
       <div class='task-tabs'>
-
-
       </div>
       </div>
       <div class='flex-data-row'>
@@ -23,6 +21,7 @@
             <!-- checkShow(currentTabIndex,itemEdit = false,itemAdd = false,itemAddTask = false) -->
             <!-- Project -->
             <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
+            <project-config v-if='checkShow(2)' />
 
             <!-- Step -->
             <task-view v-if='checkShow(1,false,false,false) && taskID !== undefined' />
@@ -58,6 +57,7 @@ import TaskEdit from "@/components/Content/Task/TaskEdit";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import ProjectManage from "@/components/Content/Project/ProjectManage";
+import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
 // import FeedElement from "@/components/Feed/FeedElement";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
@@ -79,7 +79,8 @@ export default {
     TaskAdd,
     UserOptions,
     ModalError,
-    GlobalFeed
+    GlobalFeed,
+    ProjectConfig
   },
   data() {
     return {
@@ -151,6 +152,10 @@ export default {
       isFocus: "isFocus",
       taskID: "selectedItemID"
     }),
+    tableShow() {
+      return !(this.globalFeed || this.checkShow(2));
+    },
+
     prooo() {
       return store.state.sidebarItemSelection[0];
     },
