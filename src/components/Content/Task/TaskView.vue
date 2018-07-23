@@ -70,8 +70,8 @@
 
             <tbody>
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
-                <td>
-                  <i class="far fa-hand-point-right link-feed" @click='jumpToFeed(task)' ></i>
+                <td @click.stop='jumpToFeed(task)'>
+                  <i class="far fa-hand-point-right link-feed"></i>
                 </td>
 
                 <td>
@@ -379,6 +379,10 @@
         </div>
 
       </div>
+
+
+
+
 
     </template>
 
