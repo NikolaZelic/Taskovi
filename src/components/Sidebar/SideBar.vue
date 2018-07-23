@@ -20,7 +20,7 @@
         <div class="tabs">
           <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
-            <span class="badge badge-success count">{{notifCount === 0 ? '' : notifCount}}</span>
+            <span class="badge badge-success count">{{notifDisplay}}</span>
             <transition name='slide'>
               <span class='left-al'>Notifications</span>
             </transition>
@@ -625,6 +625,9 @@ export default {
     ...mapGetters({
       selectedItemID: "selectedItemID"
     }),
+    notifDisplay(){
+      return this.notifCount === 0 ? '' : this.notifCount > 99 ? '99+' : this.notif;
+    },
     showArrow() {
       return (
         this.itemAction.edit !== undefined ||

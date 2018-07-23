@@ -294,7 +294,7 @@ export default {
 }
 
 .maincontent > * {
-  margin: 50px 30px 20px;
+  margin: 30px 30px 10px;
 }
 
 .maincontent h1 {

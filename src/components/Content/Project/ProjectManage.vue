@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div> -->
     <div class='pro-edit'>
       <div class='header' :class='{"back-primary":itemEditButton!==undefined}'>
         <button class='btn btn-dark' @click='confirmation()'>
@@ -88,7 +88,7 @@
       </div>
       <button v-else @click="projectCreate" class="btn btn-success"><span class="fas fa-plus-square"></span> Create project</button>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -144,12 +144,11 @@ export default {
     }
   },
   methods: {
-
-    confirmation(){
-        if (confirm("Are you sure? You might have unsaved changes!")) {
-          this.resetProjectView();
-        }
-      },
+    confirmation() {
+      if (confirm("Are you sure? You might have unsaved changes!")) {
+        this.resetProjectView();
+      }
+    },
     // clickedRow(item, index, event){
     //   // console.log('index ' + item);
     //   // return item;
@@ -163,7 +162,8 @@ export default {
     // },
 
     changeDeleted(rowIndex) {
-      this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
+      this.project.users[rowIndex].delete = !this.project.users[rowIndex]
+        .delete;
       // this.usersWorking;
       this.project.users.splice(rowIndex, 1);
     },
@@ -210,19 +210,21 @@ export default {
           if (result.data.status === "OK") {
             let moreInfo = result.data.data;
 
-
             for (var i = 0; i < moreInfo.users.length; i++) {
               // console.log(moreInfo.users[i].disabled);
 
               moreInfo.users[i].delete = false;
               moreInfo.users[i].admin = moreInfo.users[i].admin === "true";
 
-
-              if(moreInfo.users[i].admin === false){
+              if (moreInfo.users[i].admin === false) {
                 moreInfo.users[i].canEdit = true;
               }
 
-              if(moreInfo.users[i].isyou === "false" && (moreInfo.youAreCreator === "true" || moreInfo.users[i].canEdit === true)){
+              if (
+                moreInfo.users[i].isyou === "false" &&
+                (moreInfo.youAreCreator === "true" ||
+                  moreInfo.users[i].canEdit === true)
+              ) {
                 moreInfo.users[i].disabled = true;
               }
 
@@ -349,7 +351,7 @@ export default {
           let singleUser = {
             email: this.email,
             admin: "false",
-              delete: "false"
+            delete: "false"
           };
           nizUsera.push(singleUser);
         }
@@ -408,6 +410,7 @@ export default {
 .pro-edit {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .emailDark {
