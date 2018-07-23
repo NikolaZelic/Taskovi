@@ -57,8 +57,8 @@
 
             <tbody>
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
-                <td>
-                  <i class="far fa-hand-point-right link-feed" @click='jumpToFeed(task)' ></i>
+                <td @click.stop='jumpToFeed(task)'>
+                  <i class="far fa-hand-point-right link-feed"></i>
                 </td>
 
                 <td>
@@ -346,97 +346,10 @@
 
       </div>
 
-      <!-- Showing edit fields about selected step -->
-      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
-
-        <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
-          {{ stepInfo[0].tsk_title }}
-        </div>
-
-        <div class="card-body">
-
-          <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="name">Task name:</label>
-            <input type="text" class="form-control" id="name" v-model="edit.name">
-          </div>
-
-          <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="desc">Description:</label>
-            <textarea class="form-control" id="desc" rows="3" v-model="edit.description"></textarea>
-          </div>
-
-          <label for="status">Change status:</label>
-            <select class="form-control" id="status" v-model="edit.status">
-            <option value="2" v-if="stepInfo[0].you_are_creator === 1">In Progress</option>
-            <option value="3" v-if="stepInfo[0].you_are_worker === 1">Completed</option>
-            <option value="4" v-if="stepInfo[0].you_are_worker === 1">Failed</option>
-            <option value="5" v-if="stepInfo[0].you_are_worker === 1">Rejected</option>
-            <option value="6" v-if="stepInfo[0].you_are_creator === 1">Cancelled</option>
-          </select>
-
-          <!-- <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="priority">Change priority:</label>
-            <select class="form-control" id="priority" v-model="edit.priority">
-              <option value="1">High</option>
-              <option value="2">Medium</option>
-              <option value="3">Low</option>
-            </select>
-          </div> -->
-
-          <!-- <label class="tag" for="tags">Tags</label>
-          <multiselect @search-change="loadTags" :preserveSearch="true" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag"
-            id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag"
-            :multiple="true" :taggable="true" @tag="addTag">
-          </multiselect> -->
-
-          <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="deadline">Deadline:</label>
-            <flat-pickr name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-              :placeholder="stepInfo[0].tsk_deadline"></flat-pickr>
-          </div>
-
-          <div v-if="stepInfo[0].you_are_worker === 1">
-            <label for="estDate">Estimated completion date:</label>
-            <flat-pickr name="estDate" ref='estDate' :config="estDate" id='estDate' class="form-control mb-3" v-model="edit.estTime"
-              :placeholder="stepInfo[0].tsk_estimated_completion_date"></flat-pickr>
-          </div>
-
-          <div v-if="stepInfo[0].you_are_worker === 1">
-            <label for="timeSpent">Your time spent [in minutes]:</label>
-            <input type="number" class="form-control" id="timeSpent" :placeholder=" 'So far ' + youWorked + ' minutes'" v-model="edit.timespent">
-          </div>
-
-          <div v-if="stepInfo[0].you_are_worker === 1">
-            <label for="progress">Progress: </label>
-            <input type="range" class="custom-range" min="0" max="100" step="1" id="progress" v-model="edit.progress">
-          </div>
-
-          <label class="tag" for="working">Working:</label>
-
-          <multiselect v-if="stepInfo[0].you_are_worker === 1 && stepInfo[0].you_are_creator !== 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser" @remove="removeUser"
-            :multiple="true">
-            <span slot="noResult">There's no users with searched name in this project.</span>
-          </multiselect>
-
-          <multiselect v-if="stepInfo[0].you_are_creator === 1" v-model="valueUser" id="working" placeholder="Search for users" label="name" track-by="id" :options="optionsUser"
-            :multiple="true">
-            <span slot="noResult">There's no users with searched name in this project.</span>
-          </multiselect>
-
-        </div>
-
-        <div class="card-footer" :class='{darkTheme: darkTheme}'>
-          <div class="float-right">
-            <button type="button" class="btn btn-warning" @click="saveChanges(); stepInfoToggle();">Save</button>
-            <button type="button" class="btn btn-primary" @click="stepInfoToggle() ">Back</button>
-          </div>
-        </div>
-
-      </div>
 
 
 
-      
+
     </template>
 
 </div>
