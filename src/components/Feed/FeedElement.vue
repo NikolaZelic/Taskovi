@@ -34,9 +34,9 @@
       </b-list-group>
 
       <div id="all" @scroll="handleScroll" class="feed-back">
-        <div id='all2' class="messages">
+        <div id='all2' class="messages" >
           <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
-          <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
+          <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :ref="''" :mess="mess" />
         </div>
       </div>
 
@@ -215,8 +215,9 @@ export default {
           fed_important: this.searchImportant
         })
         .then(response => {
-          if (response.data.data !== undefined && response.data.data.length > 0)
-            this.scrollToBegining();
+          if (response.data.data !== undefined && response.data.data.length > 0);
+          this.$refs['hhj'].scrollTo()
+            
         });
     },
     addDown() {
@@ -260,13 +261,14 @@ export default {
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
-      if (a === undefined || a === null || a.length == 0) return;
+      if (a === undefined || a === null || a.length == 0) 
+        return;
       if (a.length == 0) a = a[0];
       else {
-        if (a.length <= 10) a = a[a.length - 1];
-        else a = a[11];
+        a = a[a.length-1];
       }
-      if (a !== undefined) a.scrollIntoView(true);
+      if (a !== undefined) 
+        a.scrollIntoView(true);
     },
     jumpToStepFeed() {
       console.log('jumpToStepFeed');
@@ -304,7 +306,7 @@ export default {
         !this.searchOn
       ) {
         if (this.messages.length > 0) {
-          this.addDown();
+          // this.addDown();
         }
       }
       this.count++;
