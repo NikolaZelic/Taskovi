@@ -140,9 +140,6 @@ export default {
     }
   },
   methods: {
-    visibilityChanged(isVisible, entity){
-      console.log(isVisible);
-    },
     reload() {
       store.commit("clearFeed");
       this.refreshSearchParams();
@@ -260,13 +257,12 @@ export default {
         } );
     },
     handleScroll(e) {
-      // console.log(e.target.scrollTop);
+      if(parseInt(e.target.offsetHeight) + parseInt(e.target.scrollTop) == parseInt(e.target.scrollHeight)){       
+        this.addDown();
+      }
       if (e.target.scrollTop === 0) {
         this.addUp();
       }
-      // else if (e.target.scrollDown===0 ){
-      //   console.log('Scroll down');
-      // }
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
