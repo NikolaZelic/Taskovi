@@ -1,6 +1,6 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
-    <div class="search-inputs" >
+    <div class="search-inputs">
       <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
@@ -20,13 +20,13 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' >
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected'>
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
 
       <div id="all-messages" @scroll="handleScroll" class="feed-back">
-        <div id='all2' class="messages" >
+        <div id='all2' class="messages">
           <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
           <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
         </div>
@@ -126,6 +126,9 @@ export default {
     },
     searchImportant() {
       this.readeFeeds();
+    },
+    steps() {
+      console.log("Steps changed");
     }
   },
   methods: {
@@ -255,7 +258,6 @@ export default {
         });
     },
     addDown() {
-      console.log("addDown");
       if (this.loadingData) return;
       api
         .readeFeeds(
@@ -280,6 +282,16 @@ export default {
         });
     },
     handleScroll(e) {
+      var messages = document.querySelectorAll(".selector");
+      for (var i in messages) {
+        var message = messages[i];
+        if (this.isInViewport(message)) {
+          var selectedMessage = this.messages[i];
+          var time = selectedMessage.fed_time;
+          this.selectStep(time);
+          break;
+        }
+      }
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
@@ -290,6 +302,31 @@ export default {
       }
       if (e.target.scrollTop === 0) {
         this.addUp();
+      }
+    },
+    selectStep(time) {
+      this.deselectSteps();
+      time = this.$moment(time);
+      var length = this.steps.length;
+      for (var i = 0; i < length; i++) {
+        var stepTime = this.$moment(this.steps[i].tsk_timecreated);
+        if (
+          time >= stepTime &&
+          (i + 1 >= length ||
+            time < this.$moment(this.steps[i + 1].tsk_timecreated))
+        ) {
+          // taj step treba da se selektuje
+          this.steps[i].selected = true;
+          var steps = this.steps;
+          this.steps = [];
+          this.steps = steps;
+          return;
+        }
+      }
+    },
+    deselectSteps() {
+      for (var i in this.steps) {
+        this.steps[i].selected = false;
       }
     },
     scrollTOTop() {
@@ -332,11 +369,25 @@ export default {
     readeSteps() {
       api.getTaskInfo(this.taskid).then(result => {
         if (result.data.status != "OK") {
-          alert("Error happen while trying to get steps info. Reload the page.");
+          alert(
+            "Error happen while trying to get steps info. Reload the page."
+          );
           return;
         }
         this.steps = result.data.data;
+        this.deselectSteps();
       });
+    },
+    isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      const windowHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+      var wrapperTop = document.getElementById("all2").offsetTop + 50;
+      const vertInView =
+        rect.top <= windowHeight &&
+        rect.top + rect.height >= 0 &&
+        rect.top >= wrapperTop;
+      return vertInView;
     }
   },
   mounted() {
