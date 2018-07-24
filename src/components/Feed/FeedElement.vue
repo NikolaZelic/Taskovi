@@ -20,17 +20,9 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global'>
-        <b-list-group-item>Cras justo odio</b-list-group-item>
-        <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
-        <b-list-group-item>Morbi leo risus</b-list-group-item>
-        <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
+        <b-list-group-item v-for='(step, index) in steps' :key='index' >
+          {{step.tsk_title}}
+        </b-list-group-item>
       </b-list-group>
 
       <div id="all-messages" @scroll="handleScroll" class="feed-back">
@@ -92,7 +84,8 @@ export default {
       haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
-      test: true
+      test: true,
+      steps: [],
     };
   },
   computed: {
@@ -129,6 +122,8 @@ export default {
       // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
     searchType() {
+      this.dataFromBegining = 1;
+      this.haveNewMessage = false;
       this.readeFeeds();
     },
     searchImportant() {
@@ -335,9 +330,22 @@ export default {
         });
         setTimeout( ()=> {this.scrollTOTop();}, 5 );
       });
-    }
+    },
+    readeSteps(){
+      api.getTaskInfo(this.taskid).then( result=>{
+        if(result.data.status!='OK'){
+          alert('Error happen while trying to get steps info');
+          return;
+        }
+        console.log('Zapisivanje');
+        this.steps = result.data.data;
+      } );
+    },
   },
   mounted() {
+    if(!this.global){
+      this.readeSteps();
+    }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {

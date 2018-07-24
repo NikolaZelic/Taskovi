@@ -72,7 +72,6 @@
             <div class="form-group button-wrapper">
               <button @click.once='resetProjectView' type="submit" class="btn btn-secondary mr-1">
                 Back
-
               </button>
               <button @click.once='createTask' type="submit" class="btn btn-primary" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
