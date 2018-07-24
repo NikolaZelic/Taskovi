@@ -256,7 +256,7 @@ export default {
 .flex-data-row {
   display: flex;
   height: 100%;
-  background: white;
+  background: var(--main-bg-color);
 }
 
 .toasted.primary .action {
@@ -329,9 +329,9 @@ export default {
   z-index: 1;
 }
 
-.darkMain .feed-wrap span {
-  /* color: #aaa; */
-}
+/* .darkMain .feed-wrap span {
+  color: #aaa;
+} */
 
 .darkMain .feed-wrap pre {
   color: whitesmoke;

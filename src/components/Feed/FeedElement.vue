@@ -442,9 +442,9 @@ export default {
   position: relative;
 }
 
-.input > * {
+/* .input > * {
   margin: 0 0 0 5px;
-}
+} */
 
 .input textarea {
   color: black;

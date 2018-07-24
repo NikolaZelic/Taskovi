@@ -45,7 +45,7 @@ module.exports = {
         options: {
           limit: 50000,
         },
-      }
+      },
     ]
   },
   resolve: {

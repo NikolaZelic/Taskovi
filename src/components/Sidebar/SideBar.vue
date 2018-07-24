@@ -18,6 +18,11 @@
       <div class="static-side">
 
         <div class="tabs">
+
+          <div class="tab-container">
+            <img id='enon-img' src='@/assets/img/E-enon.png'>
+          </div>
+
           <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifDisplay}}</span>
@@ -233,6 +238,10 @@ import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
+// const enon2 = require('@/assets/img/E-enon.png')
+// import EnonImg from '@/assets/img/E-enon.png'
+// var enon = document.getElementById('enon-img');
+// enon.src = enon2;
 export default {
   components: {
     UserPopup,
@@ -1089,8 +1098,8 @@ h2 {
   display: block;
 }
 
-/* .user-sidebar .user-placeholder {
-  position: relative;
+/* #enon-img{
+  background-image: url('@/assets/css/img/E-enon.png');
 } */
 
 label {
@@ -1131,6 +1140,10 @@ label {
   display: flex;
   align-items: center;
   width: 180px;
+}
+
+.tab-container img {
+  
 }
 
 .tab-container .count {
