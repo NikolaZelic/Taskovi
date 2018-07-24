@@ -128,7 +128,10 @@ export default {
     },
     searchImportant() {
       this.readeFeeds();
-    }
+    },
+    steps(){
+      console.log('Steps changed');
+    },
   },
   methods: {
     reload() {
@@ -302,6 +305,7 @@ export default {
       }
     },
     selectStep(time){
+      this.deselectSteps();
       time = this.$moment(time);
       // console.log(time);
       var length = this.steps.length;
@@ -309,8 +313,11 @@ export default {
         var stepTime = this.$moment(this.steps[i].tsk_timecreated);
         // console.log(stepTime);
         if( time >= stepTime && ( i+1>=length || time< this.$moment(this.steps[i+1].tsk_timecreated) ) ){  // taj step treba da se selektuje
-          console.log('Podesavanje na selected  '+ i);
+          // console.log('Podesavanje na selected  '+ i);
           this.steps[i].selected = true;
+          var steps = this.steps
+          this.steps = [];
+          this.steps = steps;
           return;
         }
       }
