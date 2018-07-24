@@ -33,7 +33,7 @@
         <b-list-group-item>Vestibulum at eros</b-list-group-item>
       </b-list-group>
 
-      <div id="all" @scroll="handleScroll" class="feed-back">
+      <div id="all-messages" @scroll="handleScroll" class="feed-back">
         <div id='all2' class="messages" >
           <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
           <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
@@ -92,7 +92,7 @@ export default {
       searchType: "all",
       searchText: "",
       searchImportant: false,
-      dataFromBegining: true,
+      dataFromBegining: 1,
       haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
@@ -143,8 +143,10 @@ export default {
     reload() {
       store.commit("clearFeed");
       this.refreshSearchParams();
-      this.dataFromBegining = true;
-      (this.haveNewMessage = false), this.readeFeeds();
+      this.dataFromBegining = 1;
+      this.haveNewMessage = false;
+      this.readeFeeds();
+      store.commit("setSearchFeedParams", null);
     },
     refreshSearchParams() {
       this.searchType = "all";
@@ -211,6 +213,9 @@ export default {
       });
     },
     addUp() {
+      console.log('addUp');
+      if(this.loadingData)
+        return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
       this.loadingData = true;
@@ -232,7 +237,33 @@ export default {
            this.loadingData = false;
         } );
     },
-    addDown() {
+    newMessages() {
+      console.log('newMessages');
+      if(this.loadingData)
+        return;
+      api.checkNewwMessages(this.taskid)
+        .then(result => {
+          this.loadingData = false;
+          if (result.data.status != "OK") {
+            return;
+          }
+          if (result.data.data > 0) {
+            var e = document.getElementById('all-messages');
+            if(parseInt(e.offsetHeight) + parseInt(e.scrollTop) == parseInt(e.scrollHeight)){
+              this.addDown();
+            }
+            else{
+              this.haveNewMessage = true;
+            }
+          }
+        }).catch( err => {
+           this.loadingData = false;
+        } );
+    },
+    addDown(){
+      console.log('addDown');
+      if(this.loadingData)
+        return;
       api.readeFeeds(
           this.taskid,
           this.messages[this.messages.length - 1].fed_id,
@@ -244,25 +275,34 @@ export default {
             return;
           }
           if (result.data.data.length > 0) {
-            this.haveNewMessage = true;
-            if (this.dataFromBegining) {
-              store.commit("addMessages", {
-                direction: "down",
-                data: result.data.data
-              });
-            }
+            store.commit("addMessages", {
+              direction: "down",
+              data: result.data.data
+            });
           }
-        }).scrollIntoView.catch( err => {
+        }).catch( err => {
            this.loadingData = false;
         } );
     },
     handleScroll(e) {
-      if(parseInt(e.target.offsetHeight) + parseInt(e.target.scrollTop) == parseInt(e.target.scrollHeight)){       
+      if(parseInt( !this.dataFromBegining && e.target.offsetHeight) + parseInt(e.target.scrollTop) == parseInt(e.target.scrollHeight) ){       
+        console.log('Scroll down');
         this.addDown();
+        return;
       }
       if (e.target.scrollTop === 0) {
+        console.log('Scroll top');
         this.addUp();
       }
+    },
+    scrollTOTop(){
+      var a = document.querySelectorAll(".selector");
+      if (a === undefined || a === null || a.length == 0) 
+        return;
+      // console.log(a);
+      a = a[0];
+      if (a !== undefined) 
+        a.scrollIntoView(true);
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
@@ -281,7 +321,7 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed() {
-      console.log('jumpToStepFeed');
+      // console.log('jumpToStepFeed');
       var tsk_id = this.searchFeedsParams.tsk_id;
       var stp_time_created = this.searchFeedsParams.stp_time_created;
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
@@ -294,6 +334,7 @@ export default {
           direction: "start",
           data: result.data.data
         });
+        setTimeout( ()=> {this.scrollTOTop();}, 5 );
       });
     }
   },
@@ -301,7 +342,7 @@ export default {
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
-      this.dataFromBegining = false;
+      this.dataFromBegining = 0;
       this.jumpToStepFeed();
     }
 
@@ -316,7 +357,7 @@ export default {
         !this.searchOn
       ) {
         if (this.messages.length > 0) {
-          // this.addDown();
+          this.newMessages();
         }
       }
       this.count++;
@@ -332,6 +373,8 @@ export default {
   destroyed() {
     clearInterval(this.fInterval);
     store.commit("clearFeed");
+    store.commit("setSearchFeedParams", null);
+    this.dataFromBegining = 1;
   }
 };
 </script>
