@@ -320,8 +320,8 @@ export default {
 .theme-changer {
   cursor: pointer;
   border-radius: 50%;
-  border: 1px solid #fff03799;
-  box-shadow: 0 0 2px #fff81d;
+  border: 2px solid #2b7bd899;
+  box-shadow: 0 0 2px #2b7bd899;
   background: var(--sec-bg-color);
   margin-right: 15px;
   width: 30px !important;

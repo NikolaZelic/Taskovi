@@ -265,6 +265,10 @@ export default {
   background: var(--main-bg-color);
 }
 
+.darkMain .flex-data-row {
+  background: var(--sec-bg-color);  
+}
+
 .toasted.primary .action {
   color: black;
 }

@@ -19,11 +19,11 @@
 
         <div class="tabs">
 
-          <div class="tab-container">
-            <transition name='switch' mode="out-in">
+          <div class="tab-container" style='position: relative;'>
+            <transition-group name='switch' mode="out-in">
               <img v-show='!sideHover' id='enon-img' src='@/assets/img/E-enon.png' key='1'>
               <img v-show='sideHover' id='enon-full-img' src="@/assets/img/Enon.png" key='2'>
-            </transition>
+            </transition-group>
           </div>
 
           <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
@@ -236,10 +236,6 @@ import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
-// const enon2 = require('@/assets/img/E-enon.png')
-// import EnonImg from '@/assets/img/E-enon.png'
-// var enon = document.getElementById('enon-img');
-// enon.src = enon2;
 export default {
   components: {
     UserPopup,
@@ -418,7 +414,7 @@ export default {
     currentTabIndex(val) {
       this.taskSearchText = "";
       if (val === 1) this.selectedFilter = [];
-      if (val === 0) store.state.sidebarItemSelection[1] = undefined;//this.selectedFilter = [];
+      if (val === 0) store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
       if (val < 0) return;
       this.removeActiveClass(null);
       if (this.tabs[val].itemIndex === undefined) {
@@ -1087,10 +1083,6 @@ h2 {
   display: block;
 }
 
-/* #enon-img{
-  background-image: url('@/assets/css/img/E-enon.png');
-} */
-
 label {
   margin: 0;
 }
@@ -1115,13 +1107,21 @@ label {
   margin: 5px 0;
 }
 
+.tab-container:first-child {
+  cursor: auto;
+}
+
 #enon-img {
+  position: absolute;
+  top: 10px;
   margin-left: 21px;
   height: 35px;
   width: 34px;
 }
 
 #enon-full-img {
+  position: absolute;
+  top: 10px;
   height: 35px;
   width: 140px;
   margin-left: 21px;
@@ -1149,10 +1149,10 @@ label {
   transition: all 1s;
 }
 
-.switch-enter, .switch-leave-active {
+.switch-enter,
+.switch-leave-active {
   opacity: 0;
 }
-
 
 /* .switch-enter,
 .switch-leave-to {

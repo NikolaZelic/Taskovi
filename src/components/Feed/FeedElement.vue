@@ -408,6 +408,7 @@ export default {
 
 .search-inputs input[type="text"] {
   width: 400px;
+  border-radius: 5px;
 }
 
 .darkTheme .search {
@@ -443,14 +444,6 @@ export default {
   height: 100%;
 }
 
-.flex-chat-body {
-  display: flex;
-  margin-bottom: 10px;
-  flex: 1;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 5px;
-  background: #fff;
-}
 
 .feed {
   flex: 1;
@@ -461,12 +454,26 @@ export default {
   justify-content: flex-start;
 }
 
+.flex-chat-body {
+  display: flex;
+  margin-bottom: 10px;
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+  background: #fff;
+}
+
 .feed-back {
   overflow-y: auto;
   word-wrap: break-word;
   flex: 1;
   display: flex;
   background: #fff;
+}
+
+.darkTheme .feed-back,
+.darkTheme .flex-chat-body {
+  background: var(--sec-bg-color)
 }
 
 .feed-back .load {

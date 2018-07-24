@@ -140,7 +140,7 @@ pre {
 .cont {
   padding: 5px 10px;
   margin: 0 7px;
-  border-top: 1px solid #1b62e72b;
+  border-bottom: 1px solid #1b62e72b;
 }
 
 .img-placeholder {
