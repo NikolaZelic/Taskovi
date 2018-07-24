@@ -1,5 +1,5 @@
 <template>
-  <div class="height100 mh-100"  v-if="!addStep"> <!--style="display: block"-->
+  <div class="height100 mh-100" style="display: block" v-if="!addStep">
 
     <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -67,9 +67,12 @@
               <td>Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
                 <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
-
-
-
+              </td>
+            </tr>
+            <tr>
+              <td>Deadline:</td>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
+                <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
               </td>
             </tr>
 
@@ -341,7 +344,7 @@
       </div>
 
       <!-- Showing edit fields about selected step -->
-      <!-- <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
+      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
 
         <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -412,9 +415,9 @@
           </div>
         </div>
 
-      </div> -->
+      </div>
 
-      <step-edit v-if='stepInfo.length > 0 && stepEditShow'/>
+      <!-- <step-edit /> -->
 
     </template>
 

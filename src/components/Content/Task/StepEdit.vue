@@ -13,16 +13,12 @@ export default {
       description: undefined,
       deadline: undefined,
       selectedPriorety: undefined,
-      selectedTags: [],
       selectedUSers: [],
-      task: true,
+      task: false,
       haveChange: false,
       edit: true,
       componentTitle: "Edit Step",
-      currentInfo: [],
-      title: undefined,
-      description: undefined,
-      deadline: undefined
+      currentInfo: []
     };
   },
   computed: {
@@ -42,15 +38,6 @@ export default {
       if(this.title !== undefined){
         return this.title.length === 0;
       }
-    },
-
-    tags() {
-      let nizTagova = [];
-
-      for (var i = 0; i < this.selectedTags.length; i++) {
-        nizTagova.push(this.selectedTags[i].text);
-      }
-      return nizTagova;
     }
   },
 
