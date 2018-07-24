@@ -7,11 +7,6 @@
 
     <template v-else>
 
-      <!-- <nav class="nav nav-pills nav-fill mb-3"> -->
-      <!-- <button type="button" class="btn btn-dark nav-item nav-link back-button" @click='resetTaskView'>
-          <span class='fas fa-arrow-left'></span> Back</button> -->
-
-
       <div class='task-tabs'>
         <b-tabs v-model='currentMiniTab'>
           <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
@@ -25,15 +20,6 @@
 
       <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
-
-        <!-- <div class="card-header" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-success" @click="editSteps">Edit task</button>
-
-          <button type="button" class="btn btn-success" @click="editSteps">Back</button>
-          <button type="button" class="btn btn-success" @click="editSteps">Save</button>
-
-          <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
-        </div> -->
 
         <div class="card-body">
           <table id="task-table">

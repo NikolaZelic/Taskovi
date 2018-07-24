@@ -41,11 +41,7 @@
         <div class="user-sidebar">
 
           <div class='tab-container' @click="userOptions">
-            <!-- <transition name='fade'>
-              <user-popup v-show='activePopup' :class='{show: activePopup}' />
-            </transition> -->
             <span class='fa fa-user'>
-              <!-- <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' /> -->
             </span>
             <span class='left-al'>Profile</span>
           </div>
@@ -227,14 +223,12 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
 import { instance as axios } from "@/api/config.js";
-import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
 export default {
   components: {
-    UserPopup,
     UserTasks,
     Multiselect,
     GlobalFeed
@@ -246,7 +240,6 @@ export default {
       taskSearchText: undefined,
       tagLoading: false,
       scrollPos: 0,
-      avatarUrl: "",
       currentTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
@@ -460,21 +453,6 @@ export default {
           let arr = r.data.data;
           this.tagsNet = arr !== undefined ? arr : []; // alt need-test: arr || []
           this.tagLoading = false;
-        });
-    },
-    getAvatar() {
-      let link = "auth/users/img";
-      let localImg = "static/img/user.png";
-      axios
-        .get(link, {
-          params: {
-            sid: localStorage.sid
-          }
-        })
-        .then(r => {
-          if (r.data["unset key"] === null) {
-            this.avatarUrl = localImg;
-          } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
         });
     },
     removeActiveClass(e, elParentID) {

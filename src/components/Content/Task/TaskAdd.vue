@@ -69,11 +69,11 @@
             </div>
 
             <!-- SUBMIT -->
-            <div class="form-group button-wrapper">
-              <button @click.once='resetProjectView' type="submit" class="btn btn-secondary mr-1">
-                Back
+            <div class="form-group button-wrapper float-right">
+              <button @click.once='resetProjectView' type="submit" class="btn btn-danger mr-1">
+              <span class="fas fa-ban"></span>  Cancel
               </button>
-              <button @click.once='createTask' type="submit" class="btn btn-primary" :disabled='blankTitle || waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
