@@ -40,11 +40,6 @@
 
         <div class="user-sidebar">
 
-          <!-- <div class="theme-placeholder" @click='changeTheme'>
-            <span class='theme-changer' :class='{darkTheme : darkTheme}'></span>
-            <span class='left-al'>Theme</span>
-          </div> -->
-
           <div class='tab-container' @click="userOptions">
             <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
@@ -622,10 +617,6 @@ export default {
     focusSearch() {
       this.$refs.search.$el.focus();
     },
-    changeTheme() {
-      localStorage.dark = !this.darkTheme;
-      store.commit("darkTheme", !this.darkTheme);
-    },
     userOptions() {
       this.$router.push("user");
     },
@@ -648,7 +639,7 @@ export default {
     notifDisplay() {
       return this.notifCount === 0
         ? ""
-        : this.notifCount > 99 ? "99+" : this.notif;
+        : this.notifCount > 99 ? "99+" : this.notifCount;
     },
     showArrow() {
       return (
@@ -779,8 +770,9 @@ export default {
 }
 
 .static-side .fas,
-.static-side .fa {
-  padding: 15px 0;
+.static-side .fa,
+.tab-container > img {
+  /* padding: 15px 0; */
   width: 70px;
   display: block;
   text-align: center;
@@ -788,14 +780,6 @@ export default {
   color: #9599a0;
   font-size: 160%;
 }
-
-/* .user-sidebar > * > span {
-  width: 70px;
-  display: block;
-  text-align: center;
-  cursor: pointer;
-  color: #fff;
-} */
 
 .static-side > * {
   padding: 5px 0 0 0;
@@ -1112,24 +1096,6 @@ label {
   margin: 0 auto;
 }
 
-.theme-changer.darkTheme {
-  background: var(--main-bg-color);
-}
-
-.theme-changer.darkTheme:hover {
-  background: rgba(228, 228, 228, 0.7);
-}
-
-.theme-changer {
-  border-radius: 50%;
-  border: 1px solid #fff03799;
-  box-shadow: 0 0 2px #fff81d;
-  background: var(--sec-bg-color);
-  margin: 16px 22px;
-  width: 30px !important;
-  height: 30px;
-}
-
 .left-al {
   text-align: left !important;
   margin-left: 5px;
@@ -1140,10 +1106,13 @@ label {
   display: flex;
   align-items: center;
   width: 180px;
+  height: 55px;
+  margin: 5px 0;
 }
 
 .tab-container img {
-  
+  height: 45px;
+  width: 50px;
 }
 
 .tab-container .count {

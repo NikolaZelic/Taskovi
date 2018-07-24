@@ -3,30 +3,37 @@
     <transition name='fade'>
       <div class="user-modal">
         <div class="header">
-            Change User Options
+          Change User Options
           <i class="fa fa-times" id='cm'></i>
         </div>
         <div class="body">
-
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
             <img :src="avatarUrl" class="picture" />
             <span class='fas fa-camera'></span>
-            <input ref='avatarUpload' type="file" style="display: none;" @change='changeFile'>
+            <input ref='avatarUpload' type="file" accept="image/*" style="display: none;" @change='changeFile'>
           </div>
-
           <div class="op-edit">
             <table>
-              <tr v-for='(t,index) in tableData' :key='index'>
-                <td>{{t.name}}:</td>
-                <td>
-                  <input :type='inputType(t)' v-model.trim="t.value" :disabled="toEdit" />
-                </td>
-              </tr>
-              <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
-              <tr><td colspan="2">
-          <button @click='edit' class="op-btn btn btn-primary" :disabled='passNotMatched'>
-            <i class="fas fa-pen"></i> {{toEdit?" Edit":" Save"}}</button></td></tr>
+              <tbody>
+                <tr v-for='(t,index) in tableData' :key='index'>
+                  <td>{{t.name}}:</td>
+                  <td>
+                    <input :type='inputType(t)' v-model.trim="t.value" :disabled="toEdit" />
+                  </td>
+                </tr>
+                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
+                <tr class='td-flex'>
+                  <td colspan="2">
+                  </td>
+                </tr>
+              </tbody>
             </table>
+
+            <span class='op-action'>
+              <span class='theme-changer' @click='changeTheme' :class='{darkTheme : darkTheme}'></span>
+              <button @click='edit' class="btn btn-primary" :disabled='passNotMatched'>
+                <i class="fas fa-pen"></i> {{toEdit?" Edit":" Save"}}</button>
+            </span>
           </div>
 
         </div>
@@ -113,7 +120,29 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      console.log(f.name);
+      this.avatarUpload(f);
+    },
+    avatarUpload(file) {
+      let fd = new FormData();
+      fd.append("img", file);
+      axios
+        .put("/auth/users/img?sid=" + window.localStorage.sid, fd, {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        })
+        .then(r => {
+          if (r.data.status === "OK") {
+            this.getAvatar();
+          } else {
+            alert("Avatar not uploaded properly");
+          }
+        })
+        .catch(e => {
+          store.commit("modalError", {
+            message: "" + e
+          });
+        });
     },
     closeModal(val) {
       if (val === "cm" || val.target.id === "cm") {
@@ -132,13 +161,26 @@ export default {
         .then(r => {
           if (r.data["unset key"] === null) {
             this.avatarUrl = localImg;
-          } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
+          } else {
+            this.avatarUrl =
+              baseURL +
+              link +
+              "?sid=" +
+              localStorage.sid +
+              "&crypt=" +
+              Date.now();
+          }
         });
+    },
+    changeTheme() {
+      localStorage.dark = !this.darkTheme;
+      store.commit("darkTheme", !this.darkTheme);
     }
   },
   computed: {
     ...mapState({
-      user: state => state.userStorage
+      darkTheme: "darkTheme",
+      userStorage: "userStorage"
     }),
     passNotMatched() {
       let a = this.tableData[3].value;
@@ -150,9 +192,9 @@ export default {
   },
   created() {
     this.getAvatar();
-    this.tableData[0].value = this.user.name;
-    this.tableData[1].value = this.user.surname;
-    this.tableData[2].value = this.user.email;
+    this.tableData[0].value = this.userStorage.name;
+    this.tableData[1].value = this.userStorage.surname;
+    this.tableData[2].value = this.userStorage.email;
   }
 };
 </script>
@@ -205,7 +247,7 @@ export default {
   width: 120px;
 }
 
-.op-avatar span {
+.op-avatar .fa-camera {
   position: absolute;
   opacity: 0;
   font-size: 35px;
@@ -238,14 +280,52 @@ export default {
   align-self: center;
 }
 
+.op-edit tr {
+  margin-bottom: 5px;
+}
+
+.op-edit td {
+  padding-bottom: 7px;
+}
+
+.td-flex {
+  display: flex;
+}
+
 .op-edit input {
-  border: 1px solid #7777;
+  border: none;
+  border-bottom: 1px solid #7777;
+  background: white;
   padding: 4px 10px;
 }
 
-.op-btn {
+.op-edit input:disabled {
+  user-select: none;
+}
+
+.op-action {
   display: flex;
-  margin: 10px 0 0 auto;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.theme-changer.darkTheme {
+  background: var(--main-bg-color);
+}
+
+.theme-changer.darkTheme:hover {
+  background: rgba(228, 228, 228, 0.7);
+}
+
+.theme-changer {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid #fff03799;
+  box-shadow: 0 0 2px #fff81d;
+  background: var(--sec-bg-color);
+  margin-right: 15px;
+  width: 30px !important;
+  height: 30px;
 }
 
 .fa-pen {

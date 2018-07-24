@@ -46,7 +46,7 @@
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
     <div v-if='!global' class="input">
-      <button class="btn attac" @click="uploadFile">
+      <button class="btn attac " @click="uploadFile">
         <span class="fas fa-paperclip"></span>
       </button>
       <input type="file" id="file" @change="changeFile" style="display:none;" />
@@ -71,7 +71,6 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {
-  
   components: {
     FeedMessage,
     GlobalFeedMessage
@@ -93,7 +92,7 @@ export default {
       haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
-      test: true,
+      test: true
     };
   },
   computed: {
@@ -137,7 +136,7 @@ export default {
     }
   },
   methods: {
-    visibilityChanged(isVisible, entity){
+    visibilityChanged(isVisible, entity) {
       console.log(isVisible);
     },
     reload() {
@@ -176,9 +175,10 @@ export default {
           this.scrollToBegining();
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
     writeMessageFeed() {
       if (this.taskid === -1) return;
@@ -231,12 +231,14 @@ export default {
             this.scrollAfterUp(response.data.data.length);
           }
           this.loadingData = false;
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
     addDown() {
-      api.readeFeeds(
+      api
+        .readeFeeds(
           this.taskid,
           this.messages[this.messages.length - 1].fed_id,
           "down"
@@ -255,9 +257,10 @@ export default {
               });
             }
           }
-        }).scrollIntoView.catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .scrollIntoView.catch(err => {
+          this.loadingData = false;
+        });
     },
     handleScroll(e) {
       // console.log(e.target.scrollTop);
@@ -467,6 +470,7 @@ export default {
 .input button:first-child {
   position: absolute;
   left: 15px;
+  background: #5da6f5f0;
 }
 
 .input button:last-child {

@@ -54,9 +54,6 @@ const actions = {
   resetTaskView() {
     store.commit('resetTaskView');
   },
-  // resetSidebarData() {
-  //   store.commit('resetSidebarData');
-  // }
 };
 const mutations = {
   setSidebarData: (state, params) => {
