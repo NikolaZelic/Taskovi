@@ -90,7 +90,7 @@ textarea.custom-modern::placeholder {
 
 .task-tabs .tabs {
   position: absolute;
-  top: -61px;
+  top: -58px;
 }
 
 .task-tabs .tabs .nav-tabs {
@@ -107,7 +107,8 @@ textarea.custom-modern::placeholder {
   background: none !important;
   color: var(--primary) !important;
   border: none;
-  border-bottom: 4px solid transparent;padding: 0.1rem 1.2rem;
+  border-bottom: 2px solid transparent;
+  padding: 0.1rem 1.2rem;
 }
 
 .task-tabs .tabs .nav-item .nav-link:hover {
@@ -115,10 +116,8 @@ textarea.custom-modern::placeholder {
 }
 
 .task-tabs .tabs .nav-item .active.nav-link {
-  /* background: none;
-  border: none;
-  color: var(--primary); */
   border-color: var(--primary);
+  color: var(--primary);
 }
 
 /* input[type="radio"]:checked+.label-text:before {
