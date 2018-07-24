@@ -167,7 +167,6 @@ export default {
       api
         .login(mail, pass)
         .then(r => {
-          console.log(r);
           if (r.data.login !== "failed") {
             let sid = r.data.sid;
             if (sid !== undefined || sid !== null) {
@@ -179,8 +178,6 @@ export default {
                 sid: sid
               });
               this.$router.push("/");
-            } else {
-              console.log("sd");
             }
           } else {
             alert("Login failed. Please fix your username or password.");

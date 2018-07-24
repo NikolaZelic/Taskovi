@@ -82,7 +82,7 @@
             </tr>
           </table>
 
-          <button type="button" class="btn btn-warning save" @click="editTaskBtn()">
+          <button type="button" class="btn btn-success save" @click="editTaskBtn()">
             <span class="fa fa-edit"></span> Edit</button>
         </div>
 
@@ -332,13 +332,10 @@
               </td>
             </tr>
 
-          </table>
-        </div>
-
-        <div class="card-footer" :class='{darkTheme: darkTheme}'>
+          </table>    
           <div class="float-right">
-            <button type="button" class="btn btn-warning" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null">Edit</button>
-            <button type="button" class="btn btn-primary" @click="tabs.steps = true; stepInfoShow = false">Back</button>
+            <button type="button" class="btn btn-primary" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null"><span class='fa fa-edit'></span> Edit</button>
+            <button type="button" class="btn btn-danger" @click="tabs.steps = true; stepInfoShow = false"><span class='fas fa-ban'></span> Cancel</button>
           </div>
         </div>
       </div>
@@ -405,13 +402,9 @@
             track-by="id" :options="optionsUser" :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
-
-        </div>
-
-        <div class="card-footer" :class='{darkTheme: darkTheme}'>
-          <div class="float-right">
-            <button type="button" class="btn btn-warning" @click="saveChanges(); stepInfoToggle();">Save</button>
-            <button type="button" class="btn btn-primary" @click="stepInfoToggle() ">Back</button>
+    <div class="float-right">
+            <button type="button" class="btn btn-success" @click="saveChanges(); stepInfoToggle();"><span class='fa fa-save'></span> Save</button>
+            <button type="button" class="btn btn-danger" @click="stepInfoToggle() "><span class='fas fa-ban'></span> Cancel</button>
           </div>
         </div>
 
@@ -522,19 +515,17 @@ export default {
   },
 
   methods: {
-
-    editTaskBtn(taskID){
+    editTaskBtn(taskID) {
       store.commit("itemEditClick", {
         id: this.selectedItemID
       });
     },
 
-    editStepBtn(stepID){
+    editStepBtn(stepID) {
       store.commit("itemEditClick", {
         id: this.selectedItemID
       });
     },
-
 
     jumpToFeed(task) {
       var stp_time_created = task.tsk_timecreated;
@@ -1009,7 +1000,7 @@ export default {
     },
 
     ...mapState({
-      itemEditClick : 'itemEditClick',
+      itemEditClick: "itemEditClick",
       addStep: state => state.itemAction.addStep,
       darkTheme: state => state.darkTheme
     })
@@ -1114,13 +1105,9 @@ h1 {
   border: 1px solid #c3c1c13d;
 }
 
-.card-header.darkTheme.bg-warning,
-.card-footer.darkTheme.bg-warning {
-  color: initial;
-}
-
 .card-header.darkTheme,
-.card-footer.darkTheme {
+/* .card-footer.darkTheme  */
+ {
   background: var(--dark);
   color: var(--sec-color);
 }

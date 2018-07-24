@@ -171,7 +171,6 @@ export default {
   },
 
   created: function() {
-    // console.log(this.$refs.projectref);
     interval = setInterval(() => {
       // Ovo bi trebalo stalno da poziva kompany ID
       // Pozivanje sugestija za tagove
@@ -345,8 +344,6 @@ export default {
       );
     },
     calendarIconClicked() {
-      // console.log(this.$refs.datepicker._data.fp.open);
-      // console.log( flatpickr("#flatPickrId", {}) );
       this.$refs.datepicker._data.fp.open();
     },
     getSuggestionValue(item) {
@@ -363,7 +360,6 @@ export default {
       return i.name;
     },
     suggestUsers() {
-      // console.log('SUggest users');
       store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
         pro_id: this.proId
@@ -378,7 +374,6 @@ export default {
 
     // Metode za MultySelekt komponentu
     searchTags(str) {
-      // console.log('Input change');
       this.inputTagHaveChange = 1;
       this.tagSearchStr = str;
     },
@@ -411,7 +406,6 @@ export default {
           this.selectedProjectID
         )
         .then(result => {
-          // console.log(result.data.data.tsk_id);
           store.commit("itemActionReset");
           store.commit("resetTaskView");
 

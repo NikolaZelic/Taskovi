@@ -19,9 +19,8 @@ const actions = {
   },
 
   postMessage(commit, params) {
-    api.postMessage(params.taskid, params.text).then(response => {
+    api.postMessage(params.taskid, params.text).then(r => {
       // KORISTI GETTER UMESTO DIREKTNO STORE
-      // console.log("Dolazi ovde");
       var msg = state.messages;
       if (msg.length === 0) {
         store.dispatch("readeFeeds", {
@@ -39,7 +38,7 @@ const actions = {
     });
   },
   sendAttach(commit, params) {
-    api.sendAttach(params.taskid, params.file).then(response => {
+    api.sendAttach(params.taskid, params.file).then(r => {
         //For refresh new messages
         var msg = state.messages;
         if (msg.length === 0) {

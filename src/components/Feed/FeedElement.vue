@@ -85,7 +85,7 @@ export default {
       numOfMessages: null,
       loadingData: false,
       test: true,
-      steps: [],
+      steps: []
     };
   },
   computed: {
@@ -118,8 +118,6 @@ export default {
     messages(newVal, oldVal) {
       this.countNumber = 1;
       this.count = 0;
-      // console.log('Poziv na sekundu');
-      // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
     searchType() {
       this.dataFromBegining = 1;
@@ -205,9 +203,7 @@ export default {
       });
     },
     addUp() {
-      console.log('addUp');
-      if(this.loadingData)
-        return;
+      if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
       this.loadingData = true;
@@ -234,33 +230,35 @@ export default {
         });
     },
     newMessages() {
-      console.log('newMessages');
-      if(this.loadingData)
-        return;
-      api.checkNewwMessages(this.taskid)
+      if (this.loadingData) return;
+      api
+        .checkNewwMessages(this.taskid)
         .then(result => {
           this.loadingData = false;
           if (result.data.status != "OK") {
             return;
           }
           if (result.data.data > 0) {
-            var e = document.getElementById('all-messages');
-            if(parseInt(e.offsetHeight) + parseInt(e.scrollTop) == parseInt(e.scrollHeight)){
+            var e = document.getElementById("all-messages");
+            if (
+              parseInt(e.offsetHeight) + parseInt(e.scrollTop) ==
+              parseInt(e.scrollHeight)
+            ) {
               this.addDown();
-            }
-            else{
+            } else {
               this.haveNewMessage = true;
             }
           }
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
-    addDown(){
-      console.log('addDown');
-      if(this.loadingData)
-        return;
-      api.readeFeeds(
+    addDown() {
+      console.log("addDown");
+      if (this.loadingData) return;
+      api
+        .readeFeeds(
           this.taskid,
           this.messages[this.messages.length - 1].fed_id,
           "down"
@@ -276,29 +274,29 @@ export default {
               data: result.data.data
             });
           }
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
     handleScroll(e) {
-      if(parseInt( !this.dataFromBegining && e.target.offsetHeight) + parseInt(e.target.scrollTop) == parseInt(e.target.scrollHeight) ){       
-        console.log('Scroll down');
+      if (
+        parseInt(!this.dataFromBegining && e.target.offsetHeight) +
+          parseInt(e.target.scrollTop) ==
+        parseInt(e.target.scrollHeight)
+      ) {
         this.addDown();
         return;
       }
       if (e.target.scrollTop === 0) {
-        console.log('Scroll top');
         this.addUp();
       }
     },
-    scrollTOTop(){
+    scrollTOTop() {
       var a = document.querySelectorAll(".selector");
-      if (a === undefined || a === null || a.length == 0) 
-        return;
-      // console.log(a);
+      if (a === undefined || a === null || a.length == 0) return;
       a = a[0];
-      if (a !== undefined) 
-        a.scrollIntoView(true);
+      if (a !== undefined) a.scrollIntoView(true);
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
@@ -315,11 +313,9 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed() {
-      // console.log('jumpToStepFeed');
       var tsk_id = this.searchFeedsParams.tsk_id;
       var stp_time_created = this.searchFeedsParams.stp_time_created;
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
-        // console.log(result);
         if (result.data.status != "OK") {
           alert("Faild to load data");
           return;
@@ -328,22 +324,23 @@ export default {
           direction: "start",
           data: result.data.data
         });
-        setTimeout( ()=> {this.scrollTOTop();}, 5 );
+        setTimeout(() => {
+          this.scrollTOTop();
+        }, 5);
       });
     },
-    readeSteps(){
-      api.getTaskInfo(this.taskid).then( result=>{
-        if(result.data.status!='OK'){
-          alert('Error happen while trying to get steps info');
+    readeSteps() {
+      api.getTaskInfo(this.taskid).then(result => {
+        if (result.data.status != "OK") {
+          alert("Error happen while trying to get steps info. Reload the page.");
           return;
         }
-        console.log('Zapisivanje');
         this.steps = result.data.data;
-      } );
-    },
+      });
+    }
   },
   mounted() {
-    if(!this.global){
+    if (!this.global) {
       this.readeSteps();
     }
     if (this.searchFeedsParams === null) {
@@ -370,10 +367,8 @@ export default {
       this.count++;
       if (this.count == 10) {
         this.countNumber = 5;
-        // console.log('Poziv na 5 sekundi');
       } else if (this.count == 60) {
         this.countNumber = 30;
-        // console.log('Poziv na 30 sekundi');
       }
     }, 1000);
   },
@@ -432,11 +427,11 @@ export default {
 .list-group {
   height: 100%;
   overflow-x: auto;
+  border-right: 1px solid #8a888866;
 }
 
 .list-group-item {
   border: none;
-  border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .darkTheme .list-group-item {
@@ -452,7 +447,6 @@ export default {
   height: 100%;
 }
 
-
 .feed {
   flex: 1;
   width: 100%;
@@ -466,7 +460,8 @@ export default {
   display: flex;
   margin-bottom: 10px;
   flex: 1;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  /* max-height: 50%; */
+  border: 1px solid #8a888866;
   border-radius: 5px;
   background: #fff;
 }
@@ -479,10 +474,10 @@ export default {
   background: #fff;
 }
 
-.darkTheme .feed-back,
+/* .darkTheme .feed-back,
 .darkTheme .flex-chat-body {
-  background: var(--sec-bg-color)
-}
+  background: var(--sec-bg-color);
+} */
 
 .feed-back .load {
   margin: auto;
@@ -506,7 +501,7 @@ export default {
   padding: 5px 65px 5px;
   flex: 1;
   background-color: #fff;
-  border-color: rgba(0, 0, 0, 0.125);
+  border-color: #8a888866;
   font-size: 16px;
   resize: none;
   border-radius: 5px;
@@ -561,6 +556,7 @@ export default {
 }
 
 .messages {
-  max-height: 350px;
+  /* max-height: 350px; */
+  width: 96%;
 }
 </style>
