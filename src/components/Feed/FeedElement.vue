@@ -133,6 +133,8 @@ export default {
       // setTimeout( ()=>{this.scrollToBegining();}, 50 );
     },
     searchType() {
+      this.dataFromBegining = 1;
+      this.haveNewMessage = false;
       this.readeFeeds();
     },
     searchImportant() {
