@@ -1,5 +1,5 @@
 <template>
-  <div class="height100 mh-100">
+  <div class="height100 mh-100" style="display: block" v-if="!addStep">
 
     <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -37,18 +37,20 @@
 
         <div class="card-body">
           <table id="task-table">
-         
+
             <tr>
               <td>Task Title:</td>
               <td>
-                <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title">
+                {{this.taskGeneralInfo.tsk_title}}
+                <!-- <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title"> -->
               </td>
             </tr>
 
             <tr>
               <td>Description:</td>
               <td>
-                <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description"></textarea>
+                {{this.taskGeneralInfo.description}}
+                <!-- <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description"></textarea> -->
               </td>
             </tr>
 
@@ -64,9 +66,8 @@
             <tr>
               <td>Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span v-if="!editFields">{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
-                <flat-pickr v-if="editFields" name="deadline" ref='deadline' :config="config" id='deadline' class="form-control mb-3" v-model="edit.deadline"
-                  :placeholder="$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')"></flat-pickr>
+                <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+
 
 
               </td>
@@ -78,8 +79,8 @@
             </tr>
           </table>
 
-          <button type="button" class="btn btn-success save" @click="editSteps">
-            <span class="fa fa-save"></span> Save</button>
+          <button type="button" class="btn btn-warning save" @click="editTaskBtn()">
+            <span class="fa fa-edit"></span> Edit</button>
         </div>
 
         <!-- <div class="card-body">
@@ -367,20 +368,6 @@
             <option value="6" v-if="stepInfo[0].you_are_creator === 1">Cancelled</option>
           </select>
 
-          <!-- <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="priority">Change priority:</label>
-            <select class="form-control" id="priority" v-model="edit.priority">
-              <option value="1">High</option>
-              <option value="2">Medium</option>
-              <option value="3">Low</option>
-            </select>
-          </div> -->
-
-          <!-- <label class="tag" for="tags">Tags</label>
-          <multiselect @search-change="loadTags" :preserveSearch="true" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag"
-            id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag"
-            :multiple="true" :taggable="true" @tag="addTag">
-          </multiselect> -->
 
           <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="deadline">Deadline:</label>
@@ -426,9 +413,6 @@
         </div>
 
       </div>
-
-
-
 
 
     </template>
@@ -531,9 +515,19 @@ export default {
   },
 
   methods: {
-    editSteps() {
-      this.editFields = !this.editFields;
+
+    editTaskBtn(taskID){
+      store.commit("itemEditClick", {
+        id: this.selectedItemID
+      });
     },
+
+    editStepBtn(stepID){
+      store.commit("itemEditClick", {
+        id: this.selectedItemID
+      });
+    },
+
 
     jumpToFeed(task) {
       var stp_time_created = task.tsk_timecreated;
@@ -613,6 +607,9 @@ export default {
     },
 
     itemAddStep() {
+      this.tabs.generalInfo = false;
+      this.tabs.steps = true;
+      this.tabs.messages = false;
       store.commit("itemAddStep");
       // console.log('itemAddStep metoda')
     },
@@ -1005,6 +1002,7 @@ export default {
     },
 
     ...mapState({
+      itemEditClick : 'itemEditClick',
       addStep: state => state.itemAction.addStep,
       darkTheme: state => state.darkTheme
     })

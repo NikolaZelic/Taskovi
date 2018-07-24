@@ -84,6 +84,8 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
   },
+
+
   itemAddClick: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = 1;

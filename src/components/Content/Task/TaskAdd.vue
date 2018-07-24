@@ -1,13 +1,11 @@
 <template>
-  <transition name="modal">
-    <div class="tmp-content-mask" @click="closeModal" id='cm'>
+  <!-- <transition name="modal"> -->
+    <div class="tmp-content-mask mx-auto"  id='cm'>
       <!-- <div class="tmp-content-wrapper" > -->
         <div class='tmp-content'>
           <div class="header">
             <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
-            <!-- <div class='exit-wrapper'> -->
-              <i class="exit-position far fa-times-circle" id='cm'></i>
-            <!-- </div> -->
+              <!-- <i class="exit-position far fa-times-circle" id='cm'></i> -->
           </div>
 
           <div class="content">
@@ -42,7 +40,7 @@
             <!-- ADDING WORKERS -->
             <div class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
+              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">
@@ -72,7 +70,11 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper">
-              <button @click.once='createTask' type="submit" class="btn btn-primary modal-btn" :disabled='blankTitle || waitNet'>
+              <button @click.once='resetProjectView' type="submit" class="btn btn-secondary mr-1">
+                Back
+
+              </button>
+              <button @click.once='createTask' type="submit" class="btn btn-primary" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
@@ -81,7 +83,7 @@
         </div>
       <!-- </div> -->
     </div>
-  </transition>
+  <!-- </transition> -->
 </template>
 
 <script>
@@ -160,7 +162,7 @@ export default {
     }),
 
     blankTitle() {
-      return this.title.length === 0;
+        return this.title.length === 0;
     },
     selectedProjectID() {
       var a = store.state.sidebarItemSelection[0];
@@ -205,6 +207,10 @@ export default {
   },
 
   methods: {
+    resetProjectView() {
+      store.commit("itemActionReset");
+    },
+
     usersOut() {},
     multiselectOut() {
       // Dodavanje novog taga
@@ -649,19 +655,19 @@ export default {
 }
 
 .tmp-content-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
-  transition: opacity 0.3s ease;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
+  /* position: fixed; */
+  /* z-index: 9998; */
+  /* top: 0; */
+  /* left: 0; */
+  /* width: 100%; */
+  /* height: 100%; */
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  /* display: table; */
+  /* transition: opacity 0.3s ease; */
+  /* display: flex; */
+  /* height: 100%; */
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 .task-add-section {
@@ -671,6 +677,7 @@ export default {
 .task-modal-input {
   width: 520px;
   margin-left: auto;
+  /* right: 0; */
 }
 
 .header {
@@ -678,7 +685,7 @@ export default {
   height: 100px;
   padding: 20px 0 0;
   border-radius: 5px;
-  background: var(--ac-color);
+  /* background: var(--ac-color); */
   color: black;
 }
 
@@ -703,11 +710,11 @@ export default {
 }
 
 .content {
-  position: relative;
-  padding: 20px;
-  background: #ccc;
-  border-radius: 5px;
-  padding: 15px;
+  /* position: relative; */
+  /* padding: 20px; */
+  /* background: #ccc; */
+  /* border-radius: 5px; */
+  /* padding: 15px; */
 }
 
 .calender-icon {

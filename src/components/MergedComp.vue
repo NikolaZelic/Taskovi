@@ -2,7 +2,7 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='app-header' v-if='tableShow'> 
+      <div class='app-header' v-if='tableShow'>
         <div v-if='currentTabIndex===1'>
         <span v-if='project.title === undefined'> Project Name <span class='fa fa-edit'></span></span>
         <span v-else>
@@ -27,14 +27,18 @@
             <!-- Step -->
             <task-view v-if='checkShow(1,false,false,false) && taskID !== undefined' />
 
+            <task-add v-if="checkShow(1,false,true)" />
+            <task-edit v-if="checkShow(1,true)" />
+            <step-add v-if="itemAddStepButton" />
+
+
           </div>
         </div>
 
 
       </div>
-      <step-add v-if="itemAddStepButton" />
-      <task-edit v-if="checkShow(1,true)" />
-      <task-add v-if="checkShow(1,false,true)" />
+
+
 
       <div class='feed-wrap' v-if='!tableShow'>
         <global-feed v-if='globalFeed'/>
@@ -171,7 +175,9 @@ export default {
           this.checkShow(1, false, false, false) && this.taskID !== undefined
         ) &&
         !this.checkShow(0, true) &&
-        !this.checkShow(0, false, true)
+        !this.checkShow(0, false, true) &&
+        !this.checkShow(1, false, true) &&
+        !this.checkShow(1, true)
       );
     },
     notifTitle() {
