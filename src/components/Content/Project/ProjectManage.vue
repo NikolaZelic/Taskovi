@@ -426,7 +426,7 @@ export default {
 
 .header {
   background: var(--success);
-  border-radius: 4px;
+  border-radius: 5px;
   display: flex;
   padding: 10px 20px;
   justify-content: space-between;

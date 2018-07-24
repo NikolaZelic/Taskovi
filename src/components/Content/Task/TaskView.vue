@@ -12,19 +12,16 @@
           <span class='fas fa-arrow-left'></span> Back</button> -->
 
 
-      <b-tabs v-model='currentMiniTab'>
-        <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
-        </b-tab>
-        <b-tab title="Steps" @click="changeTab('steps')">
-        </b-tab>
-        <b-tab title="Messages" @click="changeTab('messages')">
-        </b-tab>
-      </b-tabs>
-      <!-- <div>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button></div> -->
-      <!-- </nav> -->
+      <div class='task-tabs'>
+        <b-tabs v-model='currentMiniTab'>
+          <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
+          </b-tab>
+          <b-tab title="Steps" @click="changeTab('steps')">
+          </b-tab>
+          <b-tab title="Messages" @click="changeTab('messages')">
+          </b-tab>
+        </b-tabs>
+      </div>
 
       <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
@@ -39,23 +36,19 @@
         </div> -->
 
         <div class="card-body">
-          <table id="tabela">
+          <table id="task-table">
+         
             <tr>
               <td>Task Title:</td>
-              <td>{{this.taskGeneralInfo.tsk_title}}</td>
+              <td>
+                <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title">
+              </td>
             </tr>
-
-            <!-- <tr>
-            <td>Title:</td>
-            <td>
-              <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title" :disabled="!editFields">
-            </td>
-          </tr> -->
 
             <tr>
               <td>Description:</td>
               <td>
-                <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description" :disabled="!editFields"></textarea>
+                <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description"></textarea>
               </td>
             </tr>
 
@@ -86,7 +79,7 @@
           </table>
 
           <button type="button" class="btn btn-success save" @click="editSteps">
-            <span class='fas fa-save'></span> Save</button>
+            <span class="fa fa-save"></span> Save</button>
         </div>
 
         <!-- <div class="card-body">
@@ -102,7 +95,6 @@
       <!-- TAB Steps -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
         <!-- <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
           <h4 v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}</h4>
 
         </div> -->
@@ -159,8 +151,9 @@
             </tbody>
 
           </table>
-  <button type="button" class="btn btn-primary save" @click="itemAddStep" :disabled="inProgressExists"><span class='fas fa-save'></span> New Step...</button>
-        
+
+          <button type="button" class="btn btn-primary save" @click="itemAddStep" :disabled="inProgressExists">
+            <span class="fa fa-plus"></span> New Step...</button>
         </div>
 
       </div>
@@ -1093,17 +1086,17 @@ h1 {
 .tabs {
   display: flex;
   justify-content: center;
-  position: relative;
-  bottom: 70px;
+  left: 0;
+  right: 0;
 }
 
 .save {
-  margin-left: auto;
   display: block;
+  margin-left: auto;
 }
 
-.save span {
-  margin-right: 5px;
+.save .fa {
+  margin-right: 10px;
 }
 
 .card {
@@ -1200,6 +1193,7 @@ button.nav-item {
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
   /* margin-bottom: 20px; */
 }
 
@@ -1239,11 +1233,13 @@ textarea:disabled {
   font-weight: 400;
 }
 
-#tabela td {
-  padding: 5px 15px 5px 0;
+#task-table td {
+  padding: 5px 10px;
 }
 
 td .form-control {
+  border: none;
+  border-bottom: 1px solid #a09e9e57;
   padding-left: 0px;
 }
 </style>

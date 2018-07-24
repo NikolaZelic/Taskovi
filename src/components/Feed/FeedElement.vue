@@ -19,7 +19,7 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group v-if='!global' >
+      <b-list-group v-if='!global'>
         <b-list-group-item>Cras justo odio</b-list-group-item>
         <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
         <b-list-group-item>Morbi leo risus</b-list-group-item>
@@ -34,7 +34,7 @@
       </b-list-group>
 
       <div id="all" @scroll="handleScroll" class="feed-back">
-        <div id='all2' class="messages" >
+        <div id='all2' class="messages">
           <global-feed-message v-if='global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
           <feed-message v-if='!global' v-for="(mess,i) in messages" :key="i" :mess="mess" />
         </div>
@@ -46,21 +46,16 @@
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
     <div v-if='!global' class="input">
-      <button class="load btn btn-primary" style='display:none' @click="addUp">
-        <span class="fas fa-sync-alt"></span>
+      <button class="btn attac" @click="uploadFile">
+        <span class="fas fa-paperclip"></span>
       </button>
       <input type="file" id="file" @change="changeFile" style="display:none;" />
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
       <!-- <div class='message-input'> -->
-      <button class="btn attac" @click="uploadFile">
-        <span class="fas fa-paperclip"></span>
-      </button>
       <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp'></textarea>
-      <!-- <div class='chat-btn'> -->
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
-      <!-- </div> -->
       <!-- </div> -->
     </div>
     <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
@@ -370,7 +365,6 @@ export default {
 
 .search-inputs input[type="text"] {
   width: 400px;
-  border-radius: 5px;
 }
 
 .darkTheme .search {
@@ -384,8 +378,13 @@ export default {
 }
 
 .list-group {
-  height: 400px;
+  height: 100%;
   overflow-x: auto;
+}
+
+.list-group-item {
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .darkTheme .list-group-item {
@@ -405,6 +404,9 @@ export default {
   display: flex;
   margin-bottom: 10px;
   flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+  background: #fff;
 }
 
 .feed {
@@ -421,7 +423,7 @@ export default {
   word-wrap: break-word;
   flex: 1;
   display: flex;
-  background: white;
+  background: #fff;
 }
 
 .feed-back .load {
@@ -443,32 +445,28 @@ export default {
 
 .input textarea {
   color: black;
-  padding: 5px 60px 5px 80px;
+  padding: 5px 65px 5px;
   flex: 1;
   background-color: #fff;
-  border-radius: 5px;
+  border-color: rgba(0, 0, 0, 0.125);
   font-size: 16px;
   resize: none;
+  border-radius: 5px;
 }
 
 .input button {
   position: relative;
-  border-radius: 50%;
+  border-radius: 5px;
   width: 42px;
   height: 42px;
 }
 
-/* .chat-btn {
-  position: relative;
-     right: 100px;
-} */
-
-.input .attac {
+.input button:first-child {
   position: absolute;
   left: 15px;
 }
 
-.input .send {
+.input button:last-child {
   position: absolute;
   right: 15px;
 }
@@ -487,7 +485,7 @@ export default {
   width: 90%;
   height: 20px;
   border: 2px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .progress p {
@@ -504,8 +502,6 @@ export default {
 }
 
 .messages {
-  width: 100%;
   max-height: 350px;
-  background: white;
 }
 </style>

@@ -413,8 +413,6 @@ export default {
   width: 100%;
 }
 
-.darkMain 
-
 .emailDark {
   background: #2d3436;
   color: #fff;
@@ -422,7 +420,7 @@ export default {
 
 .header {
   background: var(--success);
-  border-radius: 4px;
+  border-radius: 5px;
   display: flex;
   padding: 10px 20px;
   justify-content: space-between;

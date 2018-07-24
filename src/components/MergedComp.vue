@@ -2,19 +2,14 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='app-header' v-if='tableShow'>
-        
-        <div class="pro-text">
-
-          <span v-if='currentTabIndex === 0'>Project List</span>
-       <div v-else>
-        <span v-if='project.title === undefined'> Ime Projekta</span>
+      <div class='app-header' v-if='tableShow'> 
+        <div v-if='currentTabIndex===1'>
+        <span v-if='project.title === undefined'> Project Name <span class='fa fa-edit'></span></span>
         <span v-else>
           <strong>{{ project.title }}</strong>
-        </span>
-        <span class='far fa-edit'></span></div>
+        </span></div>
+        <div v-if='currentTabIndex===0'>Project List</div>
         <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
-          </div> 
       </div>
       <div class='task-tabs'>
       </div>
@@ -261,6 +256,7 @@ export default {
 .flex-data-row {
   display: flex;
   height: 100%;
+  background: white;
 }
 
 .toasted.primary .action {
@@ -355,17 +351,16 @@ export default {
   z-index: 1;
   background: #fff;
   font-size: 120%;
-  padding-top: 20px;
+  padding: 20px 0 5px;
   color: var(--primary);
   /* border-bottom: 1px solid #c2d0de; */
 }
 
-.pro-text {
-  margin-left: 120px;
-  padding: 0 0 5px 0;
+.app-header > * {
+  margin-left: 115px;
 }
 
-.pro-text .far {
+.app-header .fa {
   color: var(--primary);
   margin-left: 30px;
   cursor: pointer;

@@ -180,6 +180,7 @@ export default {
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
+  border-radius: 5px 5px 0 0;
 }
 
 .user-modal .header i {
@@ -194,6 +195,7 @@ export default {
   display: flex;
   flex-direction: row;
   min-width: 500px;
+  border-radius: 0 0 5px 5px;
 }
 
 .op-avatar {
@@ -217,7 +219,7 @@ export default {
   height: 120px;
   display: block;
   margin: auto;
-  border-radius: 40px;
+  border-radius: 5px;
   transition: 0.5s ease;
   backface-visibility: hidden;
 }

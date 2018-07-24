@@ -18,7 +18,7 @@
       <div class="static-side">
 
         <div class="tabs">
-          <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
+          <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifDisplay}}</span>
             <!-- <transition name='slide'> -->
@@ -26,7 +26,7 @@
             <!-- </transition> -->
           </div>
 
-          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index && !notifSelected}"
+          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container" :class="{active:currentTabIndex === index && !notifSelected}"
             @click="getTabData(currentTabIndex = index), setSidebarBoolean(true), notifSelected=false" :disabled="tab.disabled">
             <span :class='tab.icon'></span>
             <span class='left-al'>{{tab.name}}</span>
@@ -40,17 +40,17 @@
             <span class='left-al'>Theme</span>
           </div> -->
 
-          <div class='user-placeholder' @click="userOptions">
+          <div class='tab-container' @click="userOptions">
             <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition> -->
-            <span class='fas fa-user'>
+            <span class='fa fa-user'>
               <!-- <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' /> -->
             </span>
             <span class='left-al'>Profile</span>
           </div>
 
-          <div class="logout-placeholder" @click="signOut">
+          <div class="tab-container" @click="signOut">
             <span class="fas fa-sign-out-alt"></span>
             <span class='left-al'>Sign Out</span>
           </div>
@@ -75,7 +75,7 @@
         <div class="flex-form-action">
 
           <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> New
+            <span class="fas fa-plus-circle"></span> Add New
             <span>{{tabs[currentTabIndex].single}}</span>
           </button>
 
@@ -743,7 +743,8 @@ export default {
 }
 
 .static-side .fas,
-.sidebar-header .fas {font-size: 170%;
+.sidebar-header .fas {
+  font-size: 140%;
 }
 
 /* SIDEBAR STATIC */
@@ -768,24 +769,24 @@ export default {
   width: 180px;
 }
 
-.tablinks > span,
-.user-sidebar > * > .left-al,
-.notif .fa-bell {
+.static-side .fas,
+.static-side .fa {
   padding: 15px 0;
   width: 70px;
   display: block;
   text-align: center;
   cursor: pointer;
   color: #9599a0;
+  font-size: 160%;
 }
 
-.user-sidebar > * > span {
+/* .user-sidebar > * > span {
   width: 70px;
   display: block;
   text-align: center;
   cursor: pointer;
-  color: #9599a0;
-}
+  color: #fff;
+} */
 
 .static-side > * {
   padding: 5px 0 0 0;
@@ -795,14 +796,13 @@ export default {
 /* TABS START */
 
 .tabs {
-  margin: 45px 0 auto;
+  margin: 0 0 auto;
 }
 
 .tabs > *,
 .user-sidebar > * {
   width: 70px;
   cursor: pointer;
-  padding-top: 5px;
   /* height: 70px; */
 }
 
@@ -812,9 +812,7 @@ export default {
   display: inline;
 } */
 
-.notif,
-.tablinks,
-.user-sidebar > * {
+.tab-container {
   width: 100%;
   line-height: 30px;
   display: block;
@@ -827,20 +825,14 @@ export default {
   background: #4c4c4c;
 }
 
-.tabs > .active {
-  /* background: #191919;
-  border-left: 3px solid #76b8ff; */
-}
-
 .tabs > .active span {
-  color: white;
+  color: #e2e5eb;
 }
 
-.notif:hover,
-.tablinks:hover,
-.user-sidebar > *:hover {
-  background: #03a9f42e;
-  color: var(--ac-color-light);
+.static-side .fa:hover,
+.static-side .fas:hover {
+  /* background: #03a9f42e; */
+  color: #e2e5eb;
 }
 
 .popup.show {
@@ -1093,13 +1085,13 @@ h2 {
 .user-sidebar img {
   height: 40px;
   margin: 10px auto;
-  border-radius: 15px;
+  border-radius: 5px;
   display: block;
 }
 
-.user-sidebar .user-placeholder {
+/* .user-sidebar .user-placeholder {
   position: relative;
-}
+} */
 
 label {
   margin: 0;
@@ -1134,18 +1126,14 @@ label {
   margin-left: 5px;
 }
 
-.notif,
-.tablinks,
-.theme-placeholder,
-.user-placeholder,
-.logout-placeholder {
+.tab-container {
   position: relative;
   display: flex;
   align-items: center;
   width: 180px;
 }
 
-.notif .count {
+.tab-container .count {
   position: absolute;
   top: 8px;
   left: 37px;

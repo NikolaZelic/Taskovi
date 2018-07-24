@@ -608,7 +608,7 @@ export default {
   background: var(--ac-bg-light-color);
   border: 3px solid var(--ac-bg-light-color);
   color: black;
-  border-radius: 15px;
+  border-radius: 5px;
   position: absolute;
   right: 3px;
   top: 6px;
@@ -677,7 +677,7 @@ export default {
   position: relative;
   height: 100px;
   padding: 20px 0 0;
-  border-radius: 15px 15px 0 0;
+  border-radius: 5px;
   background: var(--ac-color);
   color: black;
 }
@@ -706,7 +706,7 @@ export default {
   position: relative;
   padding: 20px;
   background: #ccc;
-  border-radius: 0 0 15px 15px;
+  border-radius: 5px;
   padding: 15px;
 }
 

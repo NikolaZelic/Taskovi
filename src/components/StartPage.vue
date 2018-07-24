@@ -275,7 +275,7 @@ h2 {
   height: 30px;
   width: 30px;
   opacity: 0.2;
-  border-radius: 50%;
+  border-radius: 5px;
   bottom: 5%;
   right: 5%;
 }
@@ -302,7 +302,7 @@ h2 {
   max-width: 550px;
   min-width: 430px;
   background-color: #f7f7f2e0;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .form-auth input {

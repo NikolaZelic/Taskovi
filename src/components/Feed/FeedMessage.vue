@@ -162,7 +162,7 @@ pre {
 
 .cont img {
   height: 40px;
-  border-radius: 15px;
+  border-radius: 5px;
 }
 
 .cont .name {
@@ -179,7 +179,7 @@ pre {
   height: initial;
   /* max-height: 250px; */
   max-width: 400px;
-  border-radius: 0;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -234,7 +234,7 @@ pre {
   width: 90%;
   height: 20px;
   border: 2px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .progress p {
