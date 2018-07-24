@@ -1,7 +1,7 @@
 <template>
   <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">    
+    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
       <div>
         <button class="btn pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
           <strong>
@@ -134,7 +134,7 @@
               <span v-if='data.item.can_edit === "true" && currentTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
                 title="Edit Item"></span>
             </template>
-            
+
             <!-- DUE DATE -->
             <template slot="due_date" slot-scope="data">
               <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('YYYY-MM-DD')}}</span>
@@ -181,7 +181,7 @@
             <template slot="users_count" slot-scope="data">
               <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
             </template>
-            
+
             <!-- FEEDS -->
             <template slot='HEAD_unseen_feed' slot-scope="data">
               <span class="fas fa-bell" title="Notifications"></span>
@@ -197,7 +197,7 @@
                   <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
             </template> -->
 
-            
+
             <!-- STATUS -->
             <template slot="HEAD_sta_text" slot-scope="data">
               <span class='fas fa-sync-alt' title="Status"></span>
@@ -418,6 +418,7 @@ export default {
     currentTabIndex(val) {
       this.taskSearchText = "";
       if (val === 1) this.selectedFilter = [];
+      if (val === 0) store.state.sidebarItemSelection[1] = undefined;//this.selectedFilter = [];
       if (val < 0) return;
       this.removeActiveClass(null);
       if (this.tabs[val].itemIndex === undefined) {
