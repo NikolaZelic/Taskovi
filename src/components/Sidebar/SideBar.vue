@@ -15,12 +15,15 @@
     </div> -->
 
 
-      <div class="static-side">
+      <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
 
         <div class="tabs">
 
           <div class="tab-container">
-            <img id='enon-img' src='@/assets/img/E-enon.png'>
+            <transition name='switch' mode="out-in">
+              <img v-show='!sideHover' id='enon-img' src='@/assets/img/E-enon.png' key='1'>
+              <img v-show='sideHover' id='enon-full-img' src="@/assets/img/Enon.png" key='2'>
+            </transition>
           </div>
 
           <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
@@ -128,8 +131,8 @@
 
             <template slot="title" slot-scope="data" >
               <span>{{data.item.title}} </span>
-              <!-- <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span> -->
+              <span v-if='data.item.can_edit === "true" && currentTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span>
             </template>
             
             <!-- DUE DATE -->
@@ -258,6 +261,7 @@ export default {
       intervalNotification: null,
       notifSelected: false,
       selectedFilter: [],
+      sideHover: false,
       project: {
         title: undefined,
         id: undefined
@@ -1110,9 +1114,16 @@ label {
   margin: 5px 0;
 }
 
-.tab-container img {
-  height: 45px;
-  width: 50px;
+#enon-img {
+  margin-left: 21px;
+  height: 35px;
+  width: 34px;
+}
+
+#enon-full-img {
+  height: 35px;
+  width: 140px;
+  margin-left: 21px;
 }
 
 .tab-container .count {
@@ -1130,6 +1141,26 @@ label {
 .fade-leave-to {
   opacity: 0;
 }
+
+.switch-enter-active,
+.switch-leave-active {
+  /* transition-delay: .5s; */
+  transition: all 1s;
+}
+
+.switch-enter, .switch-leave-active {
+  opacity: 0;
+}
+
+
+/* .switch-enter,
+.switch-leave-to {
+  opacity: 1;
+}
+.switch-leave,
+.switch-enter-to {
+  opacity: 1;
+} */
 
 .slide-enter-active,
 .slide-leave-active {

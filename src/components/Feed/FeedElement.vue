@@ -46,7 +46,7 @@
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
     <div v-if='!global' class="input">
-      <button class="btn attac " @click="uploadFile">
+      <button class="btn attach " @click="uploadFile">
         <span class="fas fa-paperclip"></span>
       </button>
       <input type="file" id="file" @change="changeFile" style="display:none;" />
