@@ -20,7 +20,7 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' >
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' >
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
@@ -281,6 +281,16 @@ export default {
         } );
     },
     handleScroll(e) {
+      var messages = document.querySelectorAll('.selector');
+      for(var i in messages){
+        var message = messages[i];
+        if( this.isInViewport(message) ){
+          var selectedMessage = this.messages[i];
+          var time = selectedMessage.fed_time;
+          this.selectStep(time);
+          break;
+        }
+      }
       if(parseInt( !this.dataFromBegining && e.target.offsetHeight) + parseInt(e.target.scrollTop) == parseInt(e.target.scrollHeight) ){       
         console.log('Scroll down');
         this.addDown();
@@ -289,6 +299,25 @@ export default {
       if (e.target.scrollTop === 0) {
         console.log('Scroll top');
         this.addUp();
+      }
+    },
+    selectStep(time){
+      time = this.$moment(time);
+      // console.log(time);
+      var length = this.steps.length;
+      for(var i = 0; i<length; i++){
+        var stepTime = this.$moment(this.steps[i].tsk_timecreated);
+        // console.log(stepTime);
+        if( time >= stepTime && ( i+1>=length || time< this.$moment(this.steps[i+1].tsk_timecreated) ) ){  // taj step treba da se selektuje
+          console.log('Podesavanje na selected  '+ i);
+          this.steps[i].selected = true;
+          return;
+        }
+      }
+    },
+    deselectSteps(){
+      for(var i in this.steps){
+        this.steps[i].selected = false;
       }
     },
     scrollTOTop(){
@@ -337,9 +366,17 @@ export default {
           alert('Error happen while trying to get steps info');
           return;
         }
-        console.log('Zapisivanje');
+        // console.log('Zapisivanje');
         this.steps = result.data.data;
+        this.deselectSteps();
       } );
+    },
+    isInViewport(el) {
+      const rect = el.getBoundingClientRect();      
+      const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+      var wrapperTop = document.getElementById('all2').offsetTop+50;
+      const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0) && (rect.top >= wrapperTop);
+      return (vertInView);
     },
   },
   mounted() {
