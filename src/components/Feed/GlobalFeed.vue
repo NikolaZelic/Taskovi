@@ -29,27 +29,22 @@ export default {
         })
         .then(response => {
           this.offset += response.data.data.length;
-          var time = 50;
-          if (response.data.type == "files") time = 500;
-          setTimeout(() => {
-            var a = document.querySelectorAll(".selector");
-            if (a === undefined || a === null || a.length == 0) return;
-            if (a.length == 0) a = a[0];
-            else {
-              a = a[a.length - 1];
-            }
-            if (a !== undefined) a.scrollIntoView(true);
-          }, time);
           store.commit("addMessages", {
             direction: "up",
             data: response.data.data
           });
+          var time = 50;
+          if (response.data.type == "files") 
+            time = 500;
+          setTimeout(() => {
+            this.scrollToBegining();
+          }, time);
         });
     },
     addUp() {
-      if (this.messages == null || this.messages.length == 0) return;
-      store
-        .dispatch("readeGloablFeeds", {
+      if (this.messages == null || this.messages.length == 0) 
+        return;
+      store.dispatch("readeGloablFeeds", {
           offset: this.offset,
           type: this.searchType,
           searchingstring: this.searchText,
@@ -58,14 +53,15 @@ export default {
         .then(response => {
           var length = response.data.data.length;
           this.offset += length;
-          if (length > 0)
-            setTimeout(() => {
-              this.scrollToBegining();
-            }, 50);
           store.commit("addMessages", {
             direction: "up",
             data: response.data.data
           });
+          if (length > 0){
+            setTimeout(() => {
+                this.scrollAfterUp(length);
+            }, 5);
+          }
         });
     },
     addDown() {
