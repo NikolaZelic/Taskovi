@@ -1,5 +1,5 @@
 <template>
-  <div class="height100 mh-100" style="display: block" v-if="!addStep">
+  <div class="height100 mh-100"  v-if="!addStep"> <!--style="display: block"-->
 
     <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -341,7 +341,7 @@
       </div>
 
       <!-- Showing edit fields about selected step -->
-      <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
+      <!-- <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if='stepInfo.length > 0 && stepEditShow'>
 
         <div class="card-header bg-warning" :class='{darkTheme: darkTheme}'>
           {{ stepInfo[0].tsk_title }}
@@ -412,8 +412,9 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
 
+      <step-edit v-if='stepInfo.length > 0 && stepEditShow'/>
 
     </template>
 
@@ -429,6 +430,8 @@ import { api } from "@/api/index";
 import { mapState } from "vuex";
 import FeedElement from "@/components/Feed/FeedElement";
 
+import StepEdit from "@/components/Content/Task/StepEdit";
+
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 const flatpickr = require("flatpickr");
@@ -438,7 +441,8 @@ export default {
   components: {
     flatPickr,
     Multiselect,
-    FeedElement
+    FeedElement,
+    StepEdit
   },
 
   data() {
