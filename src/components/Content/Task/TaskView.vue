@@ -1,5 +1,5 @@
 <template>
-  <div class="height100 mh-100">
+  <div class="height100 mh-100" style="display: block" v-if="!addStep">
 
     <template v-if="selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -12,38 +12,76 @@
           <span class='fas fa-arrow-left'></span> Back</button> -->
 
 
-      <b-tabs v-model='currentMiniTab'>
-        <b-tab title="Overview" @click="changeTab('generalInfo')" active>
-        </b-tab>
-        <b-tab title="Steps" @click="changeTab('steps')">
-        </b-tab>
-        <b-tab title="Messages" @click="changeTab('messages')">
-        </b-tab>
-      </b-tabs>
-      <!-- <div>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('generalInfo')" :class="{'active': tabs.generalInfo}">General</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('steps')" :class="{'active': tabs.steps}">Steps</button>
-        <button type="button" class="btn btn-warning nav-item nav-link" @click="changeTab('messages')" :class="{'active': tabs.messages}">Messages</button></div> -->
-      <!-- </nav> -->
+      <div class='task-tabs'>
+        <b-tabs v-model='currentMiniTab'>
+          <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
+          </b-tab>
+          <b-tab title="Steps" @click="changeTab('steps')">
+          </b-tab>
+          <b-tab title="Messages" @click="changeTab('messages')">
+          </b-tab>
+        </b-tabs>
+      </div>
 
       <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
-        <div class="card-header" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-success">Edit step (Broken)...</button>
-        
+        <!-- <div class="card-header" :class='{darkTheme: darkTheme}'>
+          <button type="button" class="btn btn-success" @click="editSteps">Edit task</button>
+
+          <button type="button" class="btn btn-success" @click="editSteps">Back</button>
+          <button type="button" class="btn btn-success" @click="editSteps">Save</button>
+
           <h4>{{this.taskGeneralInfo.tsk_title}}</h4>
-        </div>
+        </div> -->
 
         <div class="card-body">
-        <table>
-          <tr><td>Project:</td><td>{{this.taskGeneralInfo.pro_name}}</td></tr>
-          <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr>
-          <tr><td>Created by:</td><td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td></tr>
-          <tr><td>Time created:</td><td>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr><td>Deadline:</td><td>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</td></tr>
-          <tr><td>Status:</td><td>{{this.taskGeneralInfo.sta_text}}</td></tr>
-        </table></div>
+          <table id="task-table">
+
+            <tr>
+              <td>Task Title:</td>
+              <td>
+                {{this.taskGeneralInfo.tsk_title}}
+                <!-- <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title"> -->
+              </td>
+            </tr>
+
+            <tr>
+              <td>Description:</td>
+              <td>
+                {{this.taskGeneralInfo.description}}
+                <!-- <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description"></textarea> -->
+              </td>
+            </tr>
+
+            <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
+            <tr>
+              <td>Created by:</td>
+              <td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td>
+            </tr>
+            <tr>
+              <td>Time created:</td>
+              <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
+            </tr>
+            <tr>
+              <td>Deadline:</td>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
+                <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+
+
+
+              </td>
+            </tr>
+
+            <tr>
+              <td>Status:</td>
+              <td>{{this.taskGeneralInfo.sta_text}}</td>
+            </tr>
+          </table>
+
+          <button type="button" class="btn btn-warning save" @click="editTaskBtn()">
+            <span class="fa fa-edit"></span> Edit</button>
+        </div>
 
         <!-- <div class="card-body">
           <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
@@ -57,11 +95,10 @@
 
       <!-- TAB Steps -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-        <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
-          <button type="button" class="btn btn-primary" @click="itemAddStep" :disabled="inProgressExists">Add new step...</button>
+        <!-- <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
           <h4 v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}</h4>
 
-        </div>
+        </div> -->
 
         <div class="card-body">
           <table class="table table-borderless table-hover">
@@ -116,13 +153,15 @@
 
           </table>
 
+          <button type="button" class="btn btn-primary save" @click="itemAddStep" :disabled="inProgressExists">
+            <span class="fa fa-plus"></span> New Step...</button>
         </div>
 
       </div>
 
       <!-- TAB Feeds -->
       <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
-        <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
+      <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
       <!-- </div> -->
 
 
@@ -329,20 +368,6 @@
             <option value="6" v-if="stepInfo[0].you_are_creator === 1">Cancelled</option>
           </select>
 
-          <!-- <div v-if="stepInfo[0].you_are_creator === 1">
-            <label for="priority">Change priority:</label>
-            <select class="form-control" id="priority" v-model="edit.priority">
-              <option value="1">High</option>
-              <option value="2">Medium</option>
-              <option value="3">Low</option>
-            </select>
-          </div> -->
-
-          <!-- <label class="tag" for="tags">Tags</label>
-          <multiselect @search-change="loadTags" :preserveSearch="true" :closeOnSelect="false" ref="tagSearchString" v-model="valueTag"
-            id="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="text" track-by="id" :options="optionsTag"
-            :multiple="true" :taggable="true" @tag="addTag">
-          </multiselect> -->
 
           <div v-if="stepInfo[0].you_are_creator === 1">
             <label for="deadline">Deadline:</label>
@@ -390,9 +415,6 @@
       </div>
 
 
-
-
-
     </template>
 
   </div>
@@ -423,6 +445,7 @@ export default {
     return {
       // youWorkedFor: 0,
       // inProgress: false,
+      editFields: false,
 
       tabs: {
         generalInfo: true,
@@ -492,6 +515,20 @@ export default {
   },
 
   methods: {
+
+    editTaskBtn(taskID){
+      store.commit("itemEditClick", {
+        id: this.selectedItemID
+      });
+    },
+
+    editStepBtn(stepID){
+      store.commit("itemEditClick", {
+        id: this.selectedItemID
+      });
+    },
+
+
     jumpToFeed(task) {
       var stp_time_created = task.tsk_timecreated;
       var tsk_id = this.selectedItemID;
@@ -570,6 +607,9 @@ export default {
     },
 
     itemAddStep() {
+      this.tabs.generalInfo = false;
+      this.tabs.steps = true;
+      this.tabs.messages = false;
       store.commit("itemAddStep");
       // console.log('itemAddStep metoda')
     },
@@ -962,6 +1002,7 @@ export default {
     },
 
     ...mapState({
+      itemEditClick : 'itemEditClick',
       addStep: state => state.itemAction.addStep,
       darkTheme: state => state.darkTheme
     })
@@ -1043,6 +1084,17 @@ h1 {
 .tabs {
   display: flex;
   justify-content: center;
+  left: 0;
+  right: 0;
+}
+
+.save {
+  display: block;
+  margin-left: auto;
+}
+
+.save .fa {
+  margin-right: 10px;
 }
 
 .card {
@@ -1068,10 +1120,11 @@ h1 {
 
 .card-body {
   border: 1px solid #8e8e8e4d;
+  border-radius: 5px;
 }
 
 .card-body td:first-child {
-  color: #6f6f6f;
+  color: #adadad;
   padding-right: 30px;
 }
 
@@ -1138,6 +1191,7 @@ button.nav-item {
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
   /* margin-bottom: 20px; */
 }
 
@@ -1161,5 +1215,29 @@ td.align-top {
 nav .btn-warning.active {
   background-color: #ffe186 !important;
   border-color: #ffe186 !important;
+}
+
+input[type="text" i]:disabled {
+  background-color: #ffffff;
+  border: 0;
+  color: #000000;
+  font-weight: 400;
+}
+
+textarea:disabled {
+  background-color: #ffffff;
+  border: 0;
+  color: #000000;
+  font-weight: 400;
+}
+
+#task-table td {
+  padding: 5px 10px;
+}
+
+td .form-control {
+  border: none;
+  border-bottom: 1px solid #a09e9e57;
+  padding-left: 0px;
 }
 </style>

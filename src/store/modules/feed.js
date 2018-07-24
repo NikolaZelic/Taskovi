@@ -56,11 +56,13 @@ const actions = {
           });
         }
       })
-      .catch(err => {
-        console.log("Error kod slanja fajla");
+      .catch(e => {
+        store.commit("modalError", {
+          message: "Error while sending file: " + e
+        });
       });
   }
-}
+};
 
 const mutations = {
   setSearchFeedParams: (state, params) => {

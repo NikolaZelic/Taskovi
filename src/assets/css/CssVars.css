@@ -1,11 +1,11 @@
 :root {
-  --main-bg-color: #fafafa;
+  --main-bg-color: #fcfcff;
   --sec-bg-color: #191a1d;
   --ac-bg-light-color: linear-gradient(to right, #c99c32 0%, #bb8029 100%);
   --ac-bg-dark-color: linear-gradient(to right, #e4a91f 0%, #d68813 100%);
   --dark: #222327;
   --dark-super: #18181b;
-  --main-color: #222222;
+  --main-color: #111;
   --sec-color: #eeeeee;
   --ac-color: var(--primary);
   --ac-color-light: #6cbdff;

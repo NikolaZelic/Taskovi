@@ -1,7 +1,7 @@
 <template>
   <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">    
+    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
       <div>
         <button class="btn pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
           <strong>
@@ -15,18 +15,26 @@
     </div> -->
 
 
-      <div class="static-side">
+      <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
 
         <div class="tabs">
-          <div class="notif" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
-            <span class="fas fa-bell"></span>
-            <span class="badge badge-success count">{{notifDisplay}}</span>
-            <transition name='slide'>
-              <span class='left-al'>Notifications</span>
+
+          <div class="tab-container">
+            <transition name='switch' mode="out-in">
+              <img v-show='!sideHover' id='enon-img' src='@/assets/img/E-enon.png' key='1'>
+              <img v-show='sideHover' id='enon-full-img' src="@/assets/img/Enon.png" key='2'>
             </transition>
           </div>
 
-          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks" :class="{active:currentTabIndex === index && !notifSelected}"
+          <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
+            <span class="fas fa-bell"></span>
+            <span class="badge badge-success count">{{notifDisplay}}</span>
+            <!-- <transition name='slide'> -->
+              <span class='left-al'>Notifications</span>
+            <!-- </transition> -->
+          </div>
+
+          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container" :class="{active:currentTabIndex === index && !notifSelected}"
             @click="getTabData(currentTabIndex = index), setSidebarBoolean(true), notifSelected=false" :disabled="tab.disabled">
             <span :class='tab.icon'></span>
             <span class='left-al'>{{tab.name}}</span>
@@ -35,22 +43,17 @@
 
         <div class="user-sidebar">
 
-          <div class="theme-placeholder" @click='changeTheme'>
-            <span class='theme-changer' :class='{darkTheme : darkTheme}'></span>
-            <span class='left-al'>Theme</span>
-          </div>
-
-          <div class='user-placeholder' @click="userOptions">
+          <div class='tab-container' @click="userOptions">
             <!-- <transition name='fade'>
               <user-popup v-show='activePopup' :class='{show: activePopup}' />
             </transition> -->
-            <span>
-              <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' />
+            <span class='fa fa-user'>
+              <!-- <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' /> -->
             </span>
             <span class='left-al'>Profile</span>
           </div>
 
-          <div class="logout-placeholder" @click="signOut">
+          <div class="tab-container" @click="signOut">
             <span class="fas fa-sign-out-alt"></span>
             <span class='left-al'>Sign Out</span>
           </div>
@@ -70,7 +73,7 @@
       </span> -->
 
 
-      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed, darkTheme: darkTheme }">
+      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || currentTabIndex === 2, darkTheme: darkTheme }">
 
         <div class="flex-form-action">
 
@@ -128,10 +131,10 @@
 
             <template slot="title" slot-scope="data" >
               <span>{{data.item.title}} </span>
-              <!-- <span v-if='data.item.can_edit === "true"' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span> -->
+              <span v-if='data.item.can_edit === "true" && currentTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+                title="Edit Item"></span>
             </template>
-            
+
             <!-- DUE DATE -->
             <template slot="due_date" slot-scope="data">
               <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('YYYY-MM-DD')}}</span>
@@ -178,7 +181,7 @@
             <template slot="users_count" slot-scope="data">
               <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
             </template>
-            
+
             <!-- FEEDS -->
             <template slot='HEAD_unseen_feed' slot-scope="data">
               <span class="fas fa-bell" title="Notifications"></span>
@@ -194,7 +197,7 @@
                   <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
             </template> -->
 
-            
+
             <!-- STATUS -->
             <template slot="HEAD_sta_text" slot-scope="data">
               <span class='fas fa-sync-alt' title="Status"></span>
@@ -233,6 +236,10 @@ import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
+// const enon2 = require('@/assets/img/E-enon.png')
+// import EnonImg from '@/assets/img/E-enon.png'
+// var enon = document.getElementById('enon-img');
+// enon.src = enon2;
 export default {
   components: {
     UserPopup,
@@ -254,6 +261,7 @@ export default {
       intervalNotification: null,
       notifSelected: false,
       selectedFilter: [],
+      sideHover: false,
       project: {
         title: undefined,
         id: undefined
@@ -410,6 +418,7 @@ export default {
     currentTabIndex(val) {
       this.taskSearchText = "";
       if (val === 1) this.selectedFilter = [];
+      if (val === 0) store.state.sidebarItemSelection[1] = undefined;//this.selectedFilter = [];
       if (val < 0) return;
       this.removeActiveClass(null);
       if (this.tabs[val].itemIndex === undefined) {
@@ -613,10 +622,6 @@ export default {
     focusSearch() {
       this.$refs.search.$el.focus();
     },
-    changeTheme() {
-      localStorage.dark = !this.darkTheme;
-      store.commit("darkTheme", !this.darkTheme);
-    },
     userOptions() {
       this.$router.push("user");
     },
@@ -639,7 +644,7 @@ export default {
     notifDisplay() {
       return this.notifCount === 0
         ? ""
-        : this.notifCount > 99 ? "99+" : this.notif;
+        : this.notifCount > 99 ? "99+" : this.notifCount;
     },
     showArrow() {
       return (
@@ -750,7 +755,7 @@ export default {
 /* SIDEBAR STATIC */
 
 .static-side {
-  background: #222829f0;
+  background: #333842eb;
   color: #eee;
   width: 70px;
   min-width: 70px;
@@ -769,23 +774,16 @@ export default {
   width: 180px;
 }
 
-.tablinks > span,
-.user-sidebar > * > .left-al,
-.notif .fa-bell {
-  padding: 15px 0;
+.static-side .fas,
+.static-side .fa,
+.tab-container > img {
+  /* padding: 15px 0; */
   width: 70px;
   display: block;
   text-align: center;
   cursor: pointer;
-  color: #fff;
-}
-
-.user-sidebar > * > span {
-  width: 70px;
-  display: block;
-  text-align: center;
-  cursor: pointer;
-  color: #fff;
+  color: #9599a0;
+  font-size: 160%;
 }
 
 .static-side > * {
@@ -812,9 +810,7 @@ export default {
   display: inline;
 } */
 
-.notif,
-.tablinks,
-.user-sidebar > * {
+.tab-container {
   width: 100%;
   line-height: 30px;
   display: block;
@@ -827,20 +823,14 @@ export default {
   background: #4c4c4c;
 }
 
-.tabs > .active {
-  background: #191919;
-  border-left: 3px solid var(--ac-color);
-}
-
 .tabs > .active span {
-  color: var(--primary);
+  color: #e2e5eb;
 }
 
-.notif:hover,
-.tablinks:hover,
-.user-sidebar > *:hover {
-  background: #03a9f42e;
-  color: var(--ac-color-light);
+.static-side .fa:hover,
+.static-side .fas:hover {
+  /* background: #03a9f42e; */
+  color: #e2e5eb;
 }
 
 .popup.show {
@@ -1093,13 +1083,13 @@ h2 {
 .user-sidebar img {
   height: 40px;
   margin: 10px auto;
-  border-radius: 15px;
+  border-radius: 5px;
   display: block;
 }
 
-.user-sidebar .user-placeholder {
-  position: relative;
-}
+/* #enon-img{
+  background-image: url('@/assets/css/img/E-enon.png');
+} */
 
 label {
   margin: 0;
@@ -1111,41 +1101,33 @@ label {
   margin: 0 auto;
 }
 
-.theme-changer.darkTheme {
-  background: var(--main-bg-color);
-}
-
-.theme-changer.darkTheme:hover {
-  background: rgba(228, 228, 228, 0.7);
-}
-
-.theme-changer {
-  border-radius: 50%;
-  border: 1px solid #fff03799;
-  box-shadow: 0 0 2px #fff81d;
-  background: var(--sec-bg-color);
-  margin: 16px 22px;
-  width: 30px !important;
-  height: 30px;
-}
-
 .left-al {
   text-align: left !important;
   margin-left: 5px;
 }
 
-.notif,
-.tablinks,
-.theme-placeholder,
-.user-placeholder,
-.logout-placeholder {
+.tab-container {
   position: relative;
   display: flex;
   align-items: center;
   width: 180px;
+  height: 55px;
+  margin: 5px 0;
 }
 
-.notif .count {
+#enon-img {
+  margin-left: 21px;
+  height: 35px;
+  width: 34px;
+}
+
+#enon-full-img {
+  height: 35px;
+  width: 140px;
+  margin-left: 21px;
+}
+
+.tab-container .count {
   position: absolute;
   top: 8px;
   left: 37px;
@@ -1160,6 +1142,26 @@ label {
 .fade-leave-to {
   opacity: 0;
 }
+
+.switch-enter-active,
+.switch-leave-active {
+  /* transition-delay: .5s; */
+  transition: all 1s;
+}
+
+.switch-enter, .switch-leave-active {
+  opacity: 0;
+}
+
+
+/* .switch-enter,
+.switch-leave-to {
+  opacity: 1;
+}
+.switch-leave,
+.switch-enter-to {
+  opacity: 1;
+} */
 
 .slide-enter-active,
 .slide-leave-active {

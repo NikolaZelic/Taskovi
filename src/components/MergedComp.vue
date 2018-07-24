@@ -2,16 +2,16 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='pro-text' v-if='!globalFeed'> Project:
-        <span v-if='project.title === undefined'> None</span>
+      <div class='app-header' v-if='tableShow'>
+        <div v-if='currentTabIndex===1'>
+        <span v-if='project.title === undefined'> Project Name <span class='fa fa-edit'></span></span>
         <span v-else>
           <strong>{{ project.title }}</strong>
-        </span>
-        <span v-if='currentTabIndex !== 0'> / Tasks</span>
+        </span></div>
+        <div v-if='currentTabIndex===0'>Project List</div>
+        <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
       </div>
       <div class='task-tabs'>
-
-
       </div>
       </div>
       <div class='flex-data-row'>
@@ -27,17 +27,22 @@
             <!-- Step -->
             <task-view v-if='checkShow(1,false,false,false) && taskID !== undefined' />
 
+            <task-add v-if="checkShow(1,false,true)" />
+            <task-edit v-if="checkShow(1,true)" />
+            <step-add v-if="itemAddStepButton" />
+
+
           </div>
         </div>
 
 
       </div>
-      <step-add v-if="itemAddStepButton" />
-      <task-edit v-if="checkShow(1,true)" />
-      <task-add v-if="checkShow(1,false,true)" />
 
-      <div class='feed-wrap' v-if='globalFeed'>
-        <global-feed />
+
+
+      <div class='feed-wrap' v-if='!tableShow'>
+        <global-feed v-if='globalFeed'/>
+            <project-config v-if='checkShow(2) && !globalFeed' />
       </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
@@ -58,6 +63,7 @@ import TaskEdit from "@/components/Content/Task/TaskEdit";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import ProjectManage from "@/components/Content/Project/ProjectManage";
+import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
 // import FeedElement from "@/components/Feed/FeedElement";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
@@ -79,7 +85,8 @@ export default {
     TaskAdd,
     UserOptions,
     ModalError,
-    GlobalFeed
+    GlobalFeed,
+    ProjectConfig
   },
   data() {
     return {
@@ -151,6 +158,10 @@ export default {
       isFocus: "isFocus",
       taskID: "selectedItemID"
     }),
+    tableShow() {
+      return !(this.globalFeed || this.checkShow(2));
+    },
+
     prooo() {
       return store.state.sidebarItemSelection[0];
     },
@@ -164,7 +175,9 @@ export default {
           this.checkShow(1, false, false, false) && this.taskID !== undefined
         ) &&
         !this.checkShow(0, true) &&
-        !this.checkShow(0, false, true)
+        !this.checkShow(0, false, true) &&
+        !this.checkShow(1, false, true) &&
+        !this.checkShow(1, true)
       );
     },
     notifTitle() {
@@ -249,6 +262,7 @@ export default {
 .flex-data-row {
   display: flex;
   height: 100%;
+  background: var(--main-bg-color);
 }
 
 .toasted.primary .action {
@@ -318,33 +332,44 @@ export default {
   margin-left: 70px;
   height: 100vh;
   margin: 0 auto;
+  z-index: 1;
 }
 
-.darkMain .feed-wrap span {
-  /* color: #aaa; */
-}
+/* .darkMain .feed-wrap span {
+  color: #aaa;
+} */
 
 .darkMain .feed-wrap pre {
   color: whitesmoke;
 }
 
-.darkMain .pro-text {
+.darkMain .app-header {
   background: #191b1e;
 }
 
-.pro-text {
-  text-align: center;
+.app-header {
+  /* text-align: center; */
   border-bottom: 1px solid #827e7e59;
   /* position: fixed;
     left: 0;
     right: 0;
     top: 0; */
   z-index: 1;
-  background: var(--main-bg-color);
+  background: #fff;
   font-size: 120%;
-  padding-top: 20px;
+  padding: 20px 0 5px;
   color: var(--primary);
   /* border-bottom: 1px solid #c2d0de; */
+}
+
+.app-header > * {
+  margin-left: 115px;
+}
+
+.app-header .fa {
+  color: var(--primary);
+  margin-left: 30px;
+  cursor: pointer;
 }
 
 .static-side {

@@ -19,7 +19,7 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group v-if='!global' >
+      <b-list-group v-if='!global'>
         <b-list-group-item>Cras justo odio</b-list-group-item>
         <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
         <b-list-group-item>Morbi leo risus</b-list-group-item>
@@ -46,13 +46,10 @@
       <div class="in-progress" :style="'width:'+uploadProgress+'%'"></div>
     </div>
     <div v-if='!global' class="input">
-      <button class="load btn btn-primary" @click="addUp">
-        <span class="fas fa-sync-alt"></span>
-      </button>
-      <input type="file" id="file" @change="changeFile" style="display:none;" />
-      <button class="btn attac" @click="uploadFile">
+      <button class="btn attach " @click="uploadFile">
         <span class="fas fa-paperclip"></span>
       </button>
+      <input type="file" id="file" @change="changeFile" style="display:none;" />
       <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
       <!-- <div class='message-input'> -->
       <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp'></textarea>
@@ -74,7 +71,6 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 
 export default {
-  
   components: {
     FeedMessage,
     GlobalFeedMessage
@@ -96,7 +92,7 @@ export default {
       haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
-      test: true,
+      test: true
     };
   },
   computed: {
@@ -180,9 +176,10 @@ export default {
           this.scrollToBegining();
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
     writeMessageFeed() {
       if (this.taskid === -1) return;
@@ -231,13 +228,17 @@ export default {
           fed_important: this.searchImportant
         })
         .then(response => {
-          if (response.data.data !== undefined && response.data.data.length > 0){
+          if (
+            response.data.data !== undefined &&
+            response.data.data.length > 0
+          ) {
             this.scrollAfterUp(response.data.data.length);
-          }           
+          }
           this.loadingData = false;
-        }).catch( err => {
-           this.loadingData = false;
-        } );
+        })
+        .catch(err => {
+          this.loadingData = false;
+        });
     },
     newMessages() {
       console.log('newMessages');
@@ -308,17 +309,15 @@ export default {
     },
     scrollToBegining() {
       var a = document.querySelectorAll(".selector");
-      if (a === undefined || a === null || a.length == 0) 
-        return;
+      if (a === undefined || a === null || a.length == 0) return;
       if (a.length == 0) a = a[0];
       else {
-        a = a[a.length-1];
+        a = a[a.length - 1];
       }
-      if (a !== undefined) 
-        a.scrollIntoView(true);
+      if (a !== undefined) a.scrollIntoView(true);
     },
-    scrollAfterUp(responseLength){
-      var a = document.querySelectorAll('.selector');
+    scrollAfterUp(responseLength) {
+      var a = document.querySelectorAll(".selector");
       a = a[responseLength];
       a.scrollIntoView(true);
     },
@@ -424,8 +423,13 @@ export default {
 }
 
 .list-group {
-  height: 400px;
+  height: 100%;
   overflow-x: auto;
+}
+
+.list-group-item {
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .darkTheme .list-group-item {
@@ -445,6 +449,9 @@ export default {
   display: flex;
   margin-bottom: 10px;
   flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+  background: #fff;
 }
 
 .feed {
@@ -461,6 +468,7 @@ export default {
   word-wrap: break-word;
   flex: 1;
   display: flex;
+  background: #fff;
 }
 
 .feed-back .load {
@@ -473,31 +481,40 @@ export default {
   bottom: 0px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-.input > * {
+/* .input > * {
   margin: 0 0 0 5px;
-}
+} */
 
 .input textarea {
   color: black;
-  padding: 5px 60px 5px 10px;
+  padding: 5px 65px 5px;
   flex: 1;
-  background-color: #f8f8f8;
+  background-color: #fff;
+  border-color: rgba(0, 0, 0, 0.125);
   font-size: 16px;
   resize: none;
+  border-radius: 5px;
 }
 
 .input button {
   position: relative;
-  border-radius: 50%;
+  border-radius: 5px;
   width: 42px;
   height: 42px;
 }
 
+.input button:first-child {
+  position: absolute;
+  left: 15px;
+  background: #5da6f5f0;
+}
+
 .input button:last-child {
   position: absolute;
-  right: 45px;
+  right: 15px;
 }
 
 .input button > span {
@@ -514,7 +531,7 @@ export default {
   width: 90%;
   height: 20px;
   border: 2px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .progress p {

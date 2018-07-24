@@ -2,7 +2,7 @@
   <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
     <div class='img-placeholder'>
       <img :src="icon()" v-if='this.mess.fed_type!=="status"' />
-      <span class="fas fa-sync-alt" v-else></span>
+      <span class="fas fa-info-circle" v-else></span>
     </div>
 
     <div class="message-body">
@@ -122,11 +122,12 @@ pre {
   font-family: "TitilliumWeb";
 }
 
-.darkTheme pre{
-  color: var(--sec-color)
+.darkTheme pre {
+  color: var(--sec-color);
 }
 
-.important {    color: #199686 !important;
+.important {
+  color: #199686 !important;
 }
 
 .cont .fa-star {
@@ -161,7 +162,7 @@ pre {
 
 .cont img {
   height: 40px;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 
 .cont .name {
@@ -178,7 +179,7 @@ pre {
   height: initial;
   /* max-height: 250px; */
   max-width: 400px;
-  border-radius: 0;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -233,7 +234,7 @@ pre {
   width: 90%;
   height: 20px;
   border: 2px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .progress p {

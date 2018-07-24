@@ -129,7 +129,7 @@ export const api = {
     return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
   },
   sendAttach(tasid, file) {
-    var fd = new FormData();
+    let fd = new FormData();
     fd.append("type", "file");
     fd.append("file", file);
     return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd, {
@@ -140,6 +140,7 @@ export const api = {
   },
   //#endregion
   //#region Zex
+  
   // AUTH
   sessionActive() {
     let sid = window.localStorage.sid;

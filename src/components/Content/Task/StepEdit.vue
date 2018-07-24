@@ -1,6 +1,5 @@
 <script>
 import TaskAdd from "@/components/Content/Task/TaskAdd";
-import TaskView from "@/components/Content/Task/TaskView";
 import { api } from "@/api/index";
 import { store } from "@/store/index";
 import { mapState, mapGetters } from "vuex";
@@ -19,7 +18,7 @@ export default {
       task: true,
       haveChange: false,
       edit: true,
-      componentTitle: "Edit Task",
+      componentTitle: "Edit Step",
       currentInfo: [],
       title: undefined,
       description: undefined,
