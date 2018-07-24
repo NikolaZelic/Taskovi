@@ -74,7 +74,10 @@ const mutations = {
         state.messages = params.data;
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
-        params.data.forEach(e => state.messages.unshift(e)); 
+        // params.data.forEach(e => state.messages.unshift(e) ); 
+        for(var i = params.data.length-1; i>=0; i--){
+          state.messages.unshift(params.data[i]);
+        }
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
