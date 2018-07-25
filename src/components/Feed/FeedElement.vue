@@ -215,10 +215,11 @@ export default {
       });
       // }
     },
-    messages(newVal, oldVal) {
-      this.countNumber = 1;
-      this.count = 0;
-    },
+    // messages(newVal, oldVal) {
+    //   console.log('messages watcher');
+    //   this.countNumber = 1;
+    //   this.count = 0;
+    // },
     searchType() {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
@@ -393,6 +394,9 @@ export default {
             return;
           }
           if (result.data.data > 0) {
+            console.log('Ovde');
+            this.countNumber = 1;
+            this.count = 0;
             var e = document.getElementById("all-messages");
             if (
               parseInt(e.offsetHeight) + parseInt(e.scrollTop) ==
@@ -569,7 +573,7 @@ export default {
     }
   },
   mounted() {
-    console.log('Mounted is obicnog');
+    // console.log('Mounted is obicnog');
     // var time1 = this.$moment('2018-07-25 14:04:39');
     // var time2 = this.$moment('2018-07-25 14:04:45');
     // console.log( time2>time1 );
@@ -599,7 +603,7 @@ export default {
         !this.searchOn
       ) {
         if (this.messages.length > 0) {
-          // this.newMessages();
+          this.newMessages();
         }
       }
       this.count++;
