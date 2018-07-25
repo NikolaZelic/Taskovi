@@ -415,12 +415,14 @@ export default {
         });
     },
     handleScroll(e) {
-      this.processStepSelection();
+      if(!this.global)
+        this.processStepSelection();
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
+        // console.log('add down from scroll');
         this.addDown();
         return;
       }
