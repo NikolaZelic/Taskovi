@@ -429,10 +429,23 @@ export default {
       }
     },
     processStepSelection(){
+      // var messages = document.querySelectorAll(".selector");
+      // if(messages===undefined||messages===null||messages.length===0)
+      //   return;
+      // for (var i in messages) {
+      //   var message = messages[i];
+      //   if (this.isInViewport(message)) {
+      //     var selectedMessage = this.messages[i];
+      //     var time = selectedMessage.fed_time;
+      //     this.selectStep(time);
+      //     break;
+      //   }
       var messages = document.querySelectorAll(".selector");
       if(messages===undefined||messages===null||messages.length===0)
         return;
       for (var i in messages) {
+        if(this.messages[i].fed_type=='header')
+          continue;
         var message = messages[i];
         if (this.isInViewport(message)) {
           var selectedMessage = this.messages[i];
