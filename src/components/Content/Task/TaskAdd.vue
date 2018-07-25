@@ -23,12 +23,12 @@
 
             <!-- DEADLINE -->
             <div class="form-group" id='deadline' title='Deadline'>
-              <span class="calender-icon" @click='calendarIconClicked'>
-                <i class="far fa-calendar-alt"></i>
-              </span>
-              <span class="calender-wrapper" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
+              <!-- <span class="calender-icon" @click='calendarIconClicked'> -->
+                <i class="far fa-calendar-alt" @click='calendarIconClicked'></i>
+              <!-- </span> -->
+              <span class="calender-wrapper" >
                 <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
-                  name="date">
+                  name="date" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
                 </flat-pickr>
                 <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
                   @click='deadline=null'>
@@ -600,10 +600,12 @@ export default {
   position: absolute;
   user-select: none;
   position: relative;
+  width: 150px;
   bottom: 30px;
+  text-align: center;
   color: var(--ac-color);
   font-size: 1rem;
-  left: 193px;
+  margin: 0 auto;
 }
 
 .disable-selection {
@@ -701,17 +703,13 @@ export default {
   text-align: center;
 }
 
-.content {
-  /* position: relative; */
-  /* padding: 20px; */
-  /* background: #ccc; */
-  /* border-radius: 5px; */
-  /* padding: 15px; */
+.content input {
+  width: 300px;
 }
 
-.calender-icon {
+/* .calender-icon {
   width: 43px;
-}
+} */
 
 .autosuggest__results,
 .autosuggest__results_item.autosuggest__results_item-highlighted,
@@ -745,7 +743,7 @@ export default {
 
 .content .fas,
 .content .far {
-  /* color: #000; */
+  color: var(--ac-color);
   font-size: 25px;
   margin: 3px;
   padding: 3px;
@@ -765,7 +763,7 @@ div.form-group {
 
 #auto-suggestion,
 .calender-wrapper {
-  padding-left: 10px;
+  padding-left: 22px;
   width: 100%;
 }
 
@@ -825,6 +823,12 @@ div.form-group {
 .task-modal-input {
   width: 100%;
   padding-left: 10px;
+}
+
+.content select,
+.content .tmp-content .deadline,
+.content .multiselect {
+  width: 100%;
 }
 
 select.form-control:not([size]):not([multiple]) {

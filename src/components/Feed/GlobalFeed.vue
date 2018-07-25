@@ -11,7 +11,7 @@ export default {
     return {
       global: true,
       offset: 0,
-      dataFromBegining: 0,
+      dataFromBegining: 0
     };
   },
 
@@ -68,14 +68,14 @@ export default {
     addUp() {
       return;
     },
-    scrollAfterDown(responseLength){
+    scrollAfterDown(responseLength) {
       var a = document.querySelectorAll(".selector");
       a = a[this.messages.length - responseLength];
       a.scrollIntoView(true);
-    },
+    }
   },
-  mounted(){
-    console.log('readsss')
+  mounted() {
+    console.log("readsss");
     this.readeFeeds();
   },
   destroyed() {

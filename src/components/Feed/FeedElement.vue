@@ -757,7 +757,8 @@ export default {
 .input button:first-child {
   position: absolute;
   left: 15px;
-  background: #5da6f5f0;
+  background: var(--ac-color);
+  color: white;
 }
 
 .input button:last-child {
