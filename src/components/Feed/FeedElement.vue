@@ -101,6 +101,7 @@ export default {
       darkTheme: state => state.darkTheme,
       searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
+      pro_id: state => state.sidebarItemSelection[0],
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -151,6 +152,15 @@ export default {
         this.stepErr = true;
         return;
       }
+      var time = this.selectedStep.fed_time.replace('.0','');
+      api.createStepFromFeed(this.taskid, time, this.newStep, null)
+      .then( result => {
+        this.readeSteps();
+        this.reload();
+        store.commit('setSelectedStep', null);
+      } ).catch( ()=>{
+        this.reload();
+      } );
       this.$refs.stepModal.hide();
     },
     stepCicked(step){
@@ -323,6 +333,8 @@ export default {
     },
     processStepSelection(){
       var messages = document.querySelectorAll(".selector");
+      if(messages===undefined||messages===null||messages.length===0)
+        return;
       for (var i in messages) {
         var message = messages[i];
         if (this.isInViewport(message)) {
@@ -408,6 +420,8 @@ export default {
       });
     },
     isInViewport(el) {
+      if(el==null)
+        return;
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
