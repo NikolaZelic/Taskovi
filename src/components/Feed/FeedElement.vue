@@ -290,16 +290,7 @@ export default {
         });
     },
     handleScroll(e) {
-      var messages = document.querySelectorAll(".selector");
-      for (var i in messages) {
-        var message = messages[i];
-        if (this.isInViewport(message)) {
-          var selectedMessage = this.messages[i];
-          var time = selectedMessage.fed_time;
-          this.selectStep(time);
-          break;
-        }
-      }
+      this.processStepSelection();
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
@@ -310,6 +301,18 @@ export default {
       }
       if (e.target.scrollTop === 0) {
         this.addUp();
+      }
+    },
+    processStepSelection(){
+      var messages = document.querySelectorAll(".selector");
+      for (var i in messages) {
+        var message = messages[i];
+        if (this.isInViewport(message)) {
+          var selectedMessage = this.messages[i];
+          var time = selectedMessage.fed_time;
+          this.selectStep(time);
+          break;
+        }
       }
     },
     selectStep(time) {
@@ -369,6 +372,7 @@ export default {
         });
         setTimeout(() => {
           this.scrollTOTop();
+          this.processStepSelection();
         }, 5);
       });
     },
@@ -494,6 +498,7 @@ export default {
 
 .list-group-item {
   border: none;
+  cursor: pointer;
 }
 
 .darkTheme .list-group-item {
