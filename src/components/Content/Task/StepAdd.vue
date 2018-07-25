@@ -72,8 +72,8 @@ export default {
   }
 };
 </script>
-<style scoped>
-.multiselect__input {
+<style>
+/* .multiselect__input {
   color: black;
 }
 
@@ -89,5 +89,5 @@ export default {
 
 select.form-control:not([size]):not([multiple]){
   margin-left: 10px;
-}
+} */
 </style>

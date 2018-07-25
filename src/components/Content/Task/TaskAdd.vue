@@ -40,7 +40,7 @@
             <!-- ADDING WORKERS -->
             <div class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Enter Workers" open-direction="bottom" :options="suggestedWorker"
+              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Enter workers from project" open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">
@@ -71,11 +71,16 @@
             <!-- SUBMIT -->
             <div class="form-group button-wrapper float-right">
               <button @click.once='resetProjectView' type="submit" class="btn btn-danger mr-1">
-              <span class="fas fa-ban"></span>  Cancel
+              <!-- <span class="fas fa-ban icon-sizes"></span> -->
+              Cancel
               </button>
               <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
-                <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
-                <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
+                <span v-show='edit'>
+                  <!-- <span class='fa fa-edit'></span> -->
+                  Edit</span>
+                <span v-show='!edit'>
+                  <!-- <span class='fa fa-plus-square'></span> -->
+                  Create</span>
               </button>
             </div>
           </div>
@@ -744,11 +749,18 @@ export default {
 
 .fas,
 .far {
-  color: #000;
+  /* color: #000; */
   font-size: 25px;
   margin: 3px;
   padding: 3px;
   cursor: pointer;
+}
+
+.icon-sizes{
+  /* font-size: 10px; */
+  font-weight: 900;
+  margin: 0;
+  padding: 0;
 }
 
 div.form-group {
@@ -803,5 +815,23 @@ div.form-group {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.multiselect__input {
+  color: black;
+}
+
+.fas[data-v-1f68b3d0]{
+  width: 43px;
+  margin: 0;
+}
+
+.task-modal-input[data-v-1f68b3d0]{
+  width: 100%;
+  padding-left: 10px;
+}
+
+select.form-control:not([size]):not([multiple]){
+  margin-left: 10px;
 }
 </style>
