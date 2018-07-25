@@ -53,10 +53,10 @@
     <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
       You have a new message
     </div>
-    <b-modal id='creating-step' @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step' >
+    <b-modal ref='stepModal' id='creating-step' @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step' >
       <p v-if='selectedStep!=null' >Time:&nbsp;{{selectedStep.fed_time}}</p>
       <p>Title</p>
-      <input type='text' v-model='newStep' />
+      <input type='text' v-model='newStep' :class="{ 'step-err' : stepErr }"/>
     </b-modal>
   </div>
 </template>
@@ -92,6 +92,7 @@ export default {
       test: true,
       steps: [],
       newStep: '',
+      stepErr: false,
     };
   },
   computed: {
@@ -134,13 +135,23 @@ export default {
     searchImportant() {
       this.readeFeeds();
     },
+    newStep(newVal, old){
+      if(this.stepErr&&newVal.length>0)
+        this.stepErr = false;
+    },
   },
   methods: {
     clearStepCreateContent(){
       this.newStep = '';
+      this.stepErr = false;
     },
-    createNewStep(){
-      console.log('Creating new step')
+    createNewStep(evt){
+      evt.preventDefault();
+      if(this.newStep.length==0){
+        this.stepErr = true;
+        return;
+      }
+      this.$refs.stepModal.hide();
     },
     stepCicked(step){
       this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
@@ -452,6 +463,9 @@ export default {
 };
 </script>
 <style scoped>
+.step-err{
+  border: 2px solid red;
+}
 #all-messages{
   height: 500px;
 }
