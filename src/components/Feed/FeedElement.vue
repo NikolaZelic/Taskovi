@@ -215,10 +215,11 @@ export default {
       });
       // }
     },
-    messages(newVal, oldVal) {
-      this.countNumber = 1;
-      this.count = 0;
-    },
+    // messages(newVal, oldVal) {
+    //   console.log('messages watcher');
+    //   this.countNumber = 1;
+    //   this.count = 0;
+    // },
     searchType() {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
@@ -394,6 +395,9 @@ export default {
             return;
           }
           if (result.data.data > 0) {
+            console.log('Ovde');
+            this.countNumber = 1;
+            this.count = 0;
             var e = document.getElementById("all-messages");
             if (
               parseInt(e.offsetHeight) + parseInt(e.scrollTop) ==
@@ -542,6 +546,7 @@ export default {
       });
     },
     readeSteps() {
+      // console.log('readeSteps');
       api.getTaskInfo(this.taskid).then(result => {
         if (result.data.status != "OK") {
           alert(
@@ -567,14 +572,14 @@ export default {
     }
   },
   mounted() {
+    // console.log('Mounted is obicnog');
     // var time1 = this.$moment('2018-07-25 14:04:39');
     // var time2 = this.$moment('2018-07-25 14:04:45');
     // console.log( time2>time1 );
 
-    // if (!this.global) {
-    //   this.readeSteps();
-    // }
-    this.readeSteps();
+    if (!this.global) {
+      this.readeSteps();
+    }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
@@ -588,6 +593,8 @@ export default {
     // store.dispatch("getFeedCount");
 
     //poziva api svaki put kada je count deljiv sa countNumber
+    if (this.global) 
+      return;
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
@@ -595,7 +602,7 @@ export default {
         !this.searchOn
       ) {
         if (this.messages.length > 0) {
-          // this.newMessages();
+          this.newMessages();
         }
       }
       this.count++;

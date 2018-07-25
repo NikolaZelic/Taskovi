@@ -74,10 +74,6 @@ export default {
       a.scrollIntoView(true);
     }
   },
-  mounted() {
-    console.log("readsss");
-    this.readeFeeds();
-  },
   destroyed() {
     // store.commit("notificationCount", 0);
     store.dispatch("getFeedCount");

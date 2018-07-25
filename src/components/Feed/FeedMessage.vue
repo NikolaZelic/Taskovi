@@ -18,7 +18,7 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100">{{mess.fed_text}}</pre> <!-- Dodati klasu ukoliko je status -->
+      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}' >{{mess.fed_text}} </pre> 
       <div class="attachment"></div>
       <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
@@ -287,5 +287,9 @@ pre {
   height: 10px;
   border-radius: 50%;
   margin: 0 5px;
+}
+
+.status{
+  color: red;
 }
 </style>
