@@ -127,9 +127,6 @@ export default {
     searchImportant() {
       this.readeFeeds();
     },
-    steps() {
-      console.log("Steps changed");
-    }
   },
   methods: {
     stepCicked(step){
@@ -154,12 +151,8 @@ export default {
       this.searchImportant = false;
     },
     processKeyUp(event) {
-      if (event.key == "Enter") {
-        if (event.shiftKey) {
-          this.feed += "\n";
-        } else {
-          this.writeMessageFeed();
-        }
+      if (event.key == "Enter" && event.ctrlKey ) {
+        this.writeMessageFeed();
       }
     },
     readeFeeds() {
