@@ -20,7 +20,7 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&steps.length>0'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' >
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' :title='step.tsk_timecreated'  >
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
@@ -53,6 +53,11 @@
     <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
       You have a new message
     </div>
+    <b-modal id='creating-step' @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step' >
+      <p v-if='selectedStep!=null' >Time:&nbsp;{{selectedStep.fed_time}}</p>
+      <p>Title</p>
+      <input type='text' v-model='newStep' />
+    </b-modal>
   </div>
 </template>
 <script>
@@ -85,14 +90,16 @@ export default {
       numOfMessages: null,
       loadingData: false,
       test: true,
-      steps: []
+      steps: [],
+      newStep: '',
     };
   },
   computed: {
     ...mapState({
       messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
-      searchFeedsParams: state => state.modulefeed.searchFeedsParams
+      searchFeedsParams: state => state.modulefeed.searchFeedsParams,
+      selectedStep: state => state.modulefeed.selectedStep,
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -129,6 +136,12 @@ export default {
     },
   },
   methods: {
+    clearStepCreateContent(){
+      this.newStep = '';
+    },
+    createNewStep(){
+      console.log('Creating new step')
+    },
     stepCicked(step){
       this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
     },
@@ -207,6 +220,7 @@ export default {
       });
     },
     addUp() {
+      // console.log('Add up');
       if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
@@ -317,7 +331,7 @@ export default {
         if (
           time >= stepTime &&
           (i + 1 >= length ||
-            time < this.$moment(this.steps[i + 1].tsk_timecreated))
+            time <= this.$moment(this.steps[i + 1].tsk_timecreated))
         ) {
           // taj step treba da se selektuje
           this.steps[i].selected = true;
