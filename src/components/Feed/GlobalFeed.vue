@@ -11,7 +11,8 @@ export default {
     return {
       global: true,
       offset: 0,
-      dataFromBegining: 0
+      dataFromBegining: 0,
+      firstLoadData: true,
     };
   },
 
@@ -24,6 +25,7 @@ export default {
     refreshGlobalFeed(newVal, old){
       // console.log('watcher');
       if(newVal){
+        firstLoadData = true;
         this.readeFeeds();
         store.commit('setRefreshGlobalFeed', false );
       }
@@ -47,6 +49,10 @@ export default {
             direction: "down",
             data: response.data.data
           });
+          if(this.firstLoadData){
+            this.firstLoadData = true;
+            store.dispatch("getFeedCount");
+          }
           var time = 50;
           if (response.data.type == "files") time = 500;
           setTimeout(() => {
