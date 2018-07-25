@@ -114,7 +114,6 @@ const mutations = {
   //   store.state.sidebarTabData = [];
   // },
   showGlobalFeed: (state, params) => {
-    // console.log(params);
     store.state.globalFeed = params;
   },
   darkTheme: (state, params) => {

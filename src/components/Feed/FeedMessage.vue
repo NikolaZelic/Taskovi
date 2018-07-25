@@ -194,8 +194,7 @@ pre {
 }
 
 .right-con {
-  /* border-top: 1px solid #1b62e72b; */
-  margin-left: 20px;
+  margin: 0 10px;
   display: flex;
   flex-direction: row-reverse;
 }
@@ -205,8 +204,7 @@ pre {
 }
 
 .left-con {
-  /* font-size: 80%; */
-  margin-right: 20px;
+  margin: 0 10px;
   display: flex;
 }
 

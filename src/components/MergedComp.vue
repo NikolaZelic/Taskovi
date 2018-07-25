@@ -31,14 +31,9 @@
             <task-edit v-if="checkShow(1,true)" />
             <step-add v-if="itemAddStepButton" />
 
-
           </div>
         </div>
-
-
       </div>
-
-
 
       <div class='feed-wrap' v-if='!tableShow'>
         <global-feed v-if='globalFeed'/>

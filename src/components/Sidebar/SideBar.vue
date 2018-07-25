@@ -14,7 +14,6 @@
       <span></span>
     </div> -->
 
-
       <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
 
         <div class="tabs">
@@ -29,9 +28,7 @@
           <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
             <span class="fas fa-bell"></span>
             <span class="badge badge-success count">{{notifDisplay}}</span>
-            <!-- <transition name='slide'> -->
               <span class='left-al'>Notifications</span>
-            <!-- </transition> -->
           </div>
 
           <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container" :class="{active:currentTabIndex === index && !notifSelected}"
@@ -44,11 +41,7 @@
         <div class="user-sidebar">
 
           <div class='tab-container' @click="userOptions">
-            <!-- <transition name='fade'>
-              <user-popup v-show='activePopup' :class='{show: activePopup}' />
-            </transition> -->
             <span class='fa fa-user'>
-              <!-- <img :src="avatarUrl" @mouseover='mouseOverPopup(true)' @mouseleave='mouseOverPopup(false)' /> -->
             </span>
             <span class='left-al'>Profile</span>
           </div>
@@ -64,7 +57,6 @@
 
     <!-- <div class="sidebar-lower"> -->
 
-
 <!-- FIX THIS! -->
       <!-- <span class='leaveme'>
         <span v-if='showArrow' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn'
@@ -78,7 +70,7 @@
         <div class="flex-form-action">
 
           <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> Add New
+            <span class="fas fa-plus-circle"></span> New
             <span>{{tabs[currentTabIndex].single}}</span>
           </button>
 
@@ -231,14 +223,12 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
 import { instance as axios } from "@/api/config.js";
-import UserPopup from "./UserPopup";
 import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
 export default {
   components: {
-    UserPopup,
     UserTasks,
     Multiselect,
     GlobalFeed
@@ -250,7 +240,6 @@ export default {
       taskSearchText: undefined,
       tagLoading: false,
       scrollPos: 0,
-      avatarUrl: "",
       currentTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
@@ -289,11 +278,11 @@ export default {
           icon: "fas fa-tasks",
           search: ""
         },
-        {
-          name: "Configuration",
-          single: "Task",
-          icon: "fas fa-cog"
-        }
+        // {
+        //   name: "Configuration",
+        //   single: "Task",
+        //   icon: "fas fa-cog"
+        // }
         // {
         //   name: "Users",
         //   single: "Task",
@@ -314,14 +303,14 @@ export default {
           key: "due_date",
           label: "Due Date",
           // sortable: true,
-          class: "text-center",
+          class: "text-right",
           thClass: "td-blue"
         },
         {
           key: "due_time",
           label: "Due Time",
           // sortable: true,
-          class: "text-center",
+          class: "text-left",
           thClass: "td-blue"
         },
         {
@@ -391,11 +380,11 @@ export default {
           class: "text-center td-icon-width",
           thClass: "td-yellow"
         },
-        {
-          key: "users",
-          class: "text-center td-icon-width",
-          thClass: "td-purple"
-        }
+        // {
+        //   key: "users",
+        //   class: "text-center td-icon-width",
+        //   thClass: "td-purple"
+        // }
         // {
         //   key: "edit_item",
         //   label: "Edit",
@@ -405,12 +394,6 @@ export default {
     };
   },
   watch: {
-    globalFeed(val) {
-      // console.log(this.$refs.sidBody);
-      // this.$refs.sidBody.classList(
-      //   "sidebar-body"
-      // )[0].style.display = val ? "none" : "flex";
-    },
     currentTabIndex(val) {
       this.taskSearchText = "";
       if (val === 1) this.selectedFilter = [];
@@ -472,21 +455,6 @@ export default {
           this.tagLoading = false;
         });
     },
-    getAvatar() {
-      let link = "auth/users/img";
-      let localImg = "static/img/user.png";
-      axios
-        .get(link, {
-          params: {
-            sid: localStorage.sid
-          }
-        })
-        .then(r => {
-          if (r.data["unset key"] === null) {
-            this.avatarUrl = localImg;
-          } else this.avatarUrl = baseURL + link + "?sid=" + localStorage.sid;
-        });
-    },
     removeActiveClass(e, elParentID) {
       if (elParentID === undefined) {
         elParentID = document
@@ -521,6 +489,7 @@ export default {
       let index = this.currentTabIndex;
       this.currentTabIndex = -1;
       this.currentTabIndex = index;
+      store.commit('resetTaskView');
       store.commit("showGlobalFeed", false);
       // this.$refs.sidBody.style.display = "flex";
       switch (index) {
@@ -760,6 +729,7 @@ export default {
   overflow-x: hidden;
   flex-direction: column;
   transition: all 0.1s ease-in-out;
+  z-index: 10;
   /* overflow-x: hidden; */
   /* border-right: 1px solid #444; */
 }
@@ -1151,26 +1121,6 @@ label {
 
 .switch-enter,
 .switch-leave-active {
-  opacity: 0;
-}
-
-/* .switch-enter,
-.switch-leave-to {
-  opacity: 1;
-}
-.switch-leave,
-.switch-enter-to {
-  opacity: 1;
-} */
-
-.slide-enter-active,
-.slide-leave-active {
-  transition-delay: 3s;
-  transition: opacity 0.5s;
-}
-
-.slide-enter,
-.slide-leave-to {
   opacity: 0;
 }
 

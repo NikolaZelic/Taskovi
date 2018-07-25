@@ -69,11 +69,11 @@
             </div>
 
             <!-- SUBMIT -->
-            <div class="form-group button-wrapper">
-              <button @click.once='resetProjectView' type="submit" class="btn btn-secondary mr-1">
-                Back
+            <div class="form-group button-wrapper float-right">
+              <button @click.once='resetProjectView' type="submit" class="btn btn-danger mr-1">
+              <span class="fas fa-ban"></span>  Cancel
               </button>
-              <button @click.once='createTask' type="submit" class="btn btn-primary" :disabled='blankTitle || waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'><span class='fa fa-edit'></span> Edit</span>
                 <span v-show='!edit'><span class='fa fa-plus-square'></span> Create</span>
               </button>
@@ -171,7 +171,6 @@ export default {
   },
 
   created: function() {
-    // console.log(this.$refs.projectref);
     interval = setInterval(() => {
       // Ovo bi trebalo stalno da poziva kompany ID
       // Pozivanje sugestija za tagove
@@ -345,8 +344,6 @@ export default {
       );
     },
     calendarIconClicked() {
-      // console.log(this.$refs.datepicker._data.fp.open);
-      // console.log( flatpickr("#flatPickrId", {}) );
       this.$refs.datepicker._data.fp.open();
     },
     getSuggestionValue(item) {
@@ -363,7 +360,6 @@ export default {
       return i.name;
     },
     suggestUsers() {
-      // console.log('SUggest users');
       store.dispatch("refreshSuggestions", {
         searchText: this.inputWorker,
         pro_id: this.proId
@@ -378,7 +374,6 @@ export default {
 
     // Metode za MultySelekt komponentu
     searchTags(str) {
-      // console.log('Input change');
       this.inputTagHaveChange = 1;
       this.tagSearchStr = str;
     },
@@ -411,7 +406,6 @@ export default {
           this.selectedProjectID
         )
         .then(result => {
-          // console.log(result.data.data.tsk_id);
           store.commit("itemActionReset");
           store.commit("resetTaskView");
 
