@@ -30,6 +30,7 @@
     "vue-router": "^3.0.1",
     "vue-tabs-component": "^1.4.0",
     "vue-toasted": "^1.1.24",
+    "vue-upload-component": "^2.8.10",
     "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
     "weekstart": "^1.0.0"

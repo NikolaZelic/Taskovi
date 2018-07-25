@@ -1,214 +1,140 @@
 <template>
-<div class="container py-5">
+  <div class="example-drag">
+    <div class="upload">
+      <ul v-if="files.length">
+        <li v-for="(file, index) in files" :key="file.id">
+          <span>{{file.name}}</span> -
+          <!-- <span>{{file.size | formatSize}}</span> - -->
+          <span v-if="file.error">{{file.error}}</span>
+          <span v-else-if="file.success">success</span>
+          <span v-else-if="file.active">active</span>
+          <span v-else-if="file.active">active</span>
+          <span v-else></span>
+        </li>
+      </ul>
+      <ul v-else>
+        <td colspan="7">
+          <div class="text-center p-5">
+            <h4>Drop files anywhere to upload<br/>or</h4>
+            <label for="file" class="btn btn-lg btn-primary">Select Files</label>
+          </div>
+        </td>
+      </ul>
 
-  <vue-form :state="formstate" @submit.prevent="onSubmit">
+      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
+    		<h3>Drop files to upload</h3>
+      </div>
 
-    <validate auto-label class="form-group required-field" :class="fieldClassName(formstate.email)">
-      <label>Email</label>
-      <input type="email" name="email" class="form-control" required v-model.lazy="model.email">
-
-      <field-messages auto-label name="email" show="$touched || $submitted" class="form-control-feedback">
-        <div>Success!</div>
-        <div slot="required">Email is a required field</div>
-        <div slot="email">Email is invalid</div>
-      </field-messages>
-
-    </validate>
-
-    <div class="py-2">
-      <button class="btn btn-primary" type="submit">Submit</button>
+      <div class="example-btn">
+        <file-upload
+          class="btn btn-primary"
+          post-action="http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds"
+          :multiple="true"
+          :drop="true"
+          :drop-directory="true"
+          v-model="files"
+          ref="upload">
+          <i class="fa fa-plus"></i>
+          Select files
+        </file-upload>
+        <button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
+          <i class="fa fa-arrow-up" aria-hidden="true"></i>
+          Start Upload
+        </button>
+        <button type="button" class="btn btn-danger"  v-else @click.prevent="$refs.upload.active = false">
+          <i class="fa fa-stop" aria-hidden="true"></i>
+          Stop Upload
+        </button>
+      </div>
     </div>
-  </vue-form>
 
-</div>
+    <div class="pt-5">
+      Source code: <a href="https://github.com/lian-yue/vue-upload-component/blob/master/docs/views/examples/Drag.vue">/docs/views/examples/Drag.vue</a>
+    </div>
+  </div>
 </template>
-
-<script>
-import {
-  api
-} from "@/api/index.js";
-import {
-  store
-} from "@/store/index.js";
-import VueForm from "vue-form";
-export default {
-  mixins: [new VueForm({
-    inputClasses: {
-      dirty: 'vf-dirty',
-      pristine: 'vf-pristine',
-      valid: 'is-valid',
-      invalid: 'is-invalid',
-      touched: 'vf-touched',
-      untouched: 'vf-untouched',
-      focused: 'vf-focused',
-      submitted: 'vf-submitted',
-      pending: 'vf-pending'
-    }
-  })],
-  data() {
-    return {
-      formstate: {},
-      model: {
-        name: '',
-        email: '',
-        phone: '',
-        department: null,
-        comments: '',
-        notValidated: '',
-        agree: false
-      },
-      loginVisible: true,
-      presets: [{
-          email: "nzelic@ymail.com",
-          pass: "123"
-        },
-        {
-          email: "danilopusic@ymail.com",
-          pass: "123"
-        },
-        {
-          email: "dime@gmail.com",
-          pass: "123"
-        },
-        {
-          email: "zex@gmail.com",
-          pass: "123"
-        },
-        // {
-        //   email: "svetaprogramer@gmail.com",
-        //   pass: "praksa1234"
-        // },
-        {
-          email: "paun992@hotmail.com",
-          pass: "pass123"
-        }
-      ],
-      formstate: {},
-      user: {}
-    };
-  },
-  methods: {
-    fieldClassName: function(field) {
-      if (!field) {
-        return '';
-      }
-      if ((field.$touched || field.$submitted) && field.$valid) {
-        return 'has-success';
-      }
-      if ((field.$touched || field.$submitted) && field.$invalid) {
-        return 'has-danger';
-      }
-    },
-    onSubmit: function() {
-      console.log(this.formstate.$valid);
-    },
-
-    autologin(p) {
-      // REMOVE IN FINAL
-      this.user = p;
-      this.login();
-    },
-    login() {
-      let mail = this.user.email;
-      let pass = this.user.pass;
-      if (mail === undefined || mail.length < 4) {
-        alert("Email is not valid");
-        //document.getElementById("email").style.color = "red";
-        //this.user.email = "Email is not valid";
-        return;
-      }
-      if (pass === undefined || pass.length < 2) {
-        //document.getElementById("pass").style.color = "red";
-        //this.user.pass = "Password cannot be less then two characters";
-        alert("Password cannot be less then two characters");
-        return;
-      }
-      api
-        .login(mail, pass)
-        .then(r => {
-          if (r.data.login !== "failed") {
-            let sid = r.data.sid;
-            if (sid !== undefined || sid !== null) {
-              console.log("aad");
-              store.commit("localStorage", {
-                name: r.data.user.name,
-                surname: r.data.user.surname,
-                email: r.data.user.email,
-                sid: sid
-              });
-              this.$router.push("/");
-            }
-          } else {
-            //document.getElementById("email").style.color = "red";
-            //this.user.email = "Login failed. Please check your username or password.";
-            alert("Login failed. Please check your username or password.");
-          }
-        })
-        .catch(e => {
-          store.commit("modalError", {
-            message: "" + e
-          });
-        });
-    },
-    register() {
-      let valid = this.formstate.$valid;
-      if (valid) {
-        api
-          .register(this.user)
-          .then(r => {
-            if (r.data.registration === "Success") {
-              this.loginVisible = true;
-            }
-          })
-          .catch(e => {
-            store.commit("modalError", {
-              message: "" + e
-            });
-          });
-      }
-    },
-    onSubmit() {
-      // if (this.formstate.$invalid) {
-      //   alert("invalid");
-      //   // alert user and exit early
-      //   return;
-      // }
-      // alert("submit");
-      // // otherwise submit form
-    }
-  },
-  computed: {
-    passNotSame() {
-      var undef =
-        this.user.password === undefined || this.user.confirmpass === undefined;
-      if (undef) return -1;
-      var empty =
-        this.user.password.length === 0 || this.user.confirmpass.length === 0;
-      if (empty) return -1;
-      return this.user.password !== this.user.confirmpass;
-    },
-    registerDisabled() {
-      return this.passNotSame;
-    }
-  },
-  beforeCreate() {
-    // IF SID EXIST AND SEASON ACTIVE EXIST ROUTE TO MAINPAGE
-    let sid = localStorage.sid;
-    if (sid !== undefined && sid !== null) {
-      api.sessionActive();
-    }
-  }
-};
-</script>
-
-<style scoped>
-.required-field>label::after {
-  content: '*';
-  color: red;
-  margin-left: 0.25rem;
+<style>
+.example-drag label.btn {
+  margin-bottom: 0;
+  margin-right: 1rem;
 }
-
-.vf-untouched{
-  border: 1px solid #ced4da;
+.example-drag .drop-active {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: fixed;
+  z-index: 9999;
+  opacity: .6;
+  text-align: center;
+  background: #000;
+}
+.example-drag .drop-active h3 {
+  margin: -.5em 0 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: #fff;
+  padding: 0;
 }
 </style>
+
+<script>
+import FileUpload from 'vue-upload-component'
+export default {
+  components: {
+    FileUpload,
+  },
+  data() {
+    return {
+      files: [],
+    }
+  },
+
+  methods: {
+      /**
+       * Has changed
+       * @param  Object|undefined   newFile   Read only
+       * @param  Object|undefined   oldFile   Read only
+       * @return undefined
+       */
+      inputFile: function (newFile, oldFile) {
+        if (newFile && oldFile && !newFile.active && oldFile.active) {
+          // Get response data
+          console.log('response', newFile.response)
+          if (newFile.xhr) {
+            //  Get the response status code
+            console.log('status', newFile.xhr.status)
+          }
+        }
+      },
+      /**
+       * Pretreatment
+       * @param  Object|undefined   newFile   Read and write
+       * @param  Object|undefined   oldFile   Read only
+       * @param  Function           prevent   Prevent changing
+       * @return undefined
+       */
+      inputFilter: function (newFile, oldFile, prevent) {
+        if (newFile && !oldFile) {
+          // Filter non-image file
+          if (!/\.(jpeg|jpe|jpg|gif|png|webp)$/i.test(newFile.name)) {
+            return prevent()
+          }
+        }
+
+        // Create a blob field
+        newFile.blob = ''
+        let URL = window.URL || window.webkitURL
+        if (URL && URL.createObjectURL) {
+          newFile.blob = URL.createObjectURL(newFile.file)
+        }
+      }
+    }
+}
+</script>
