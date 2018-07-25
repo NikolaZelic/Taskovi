@@ -516,7 +516,8 @@ export default {
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
         altFormat: "F	j, Y H:i",
-        altInput: true
+        altInput: true,
+        minDate: "today"
       },
       estDate: {
         wrap: false, // set wrap to true only when using 'input-group'
@@ -524,7 +525,8 @@ export default {
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
         altFormat: "F	j, Y H:i",
-        altInput: true
+        altInput: true,
+        minDate: "today"
       }
     };
   },
@@ -1058,7 +1060,7 @@ export default {
       if (val !== 0) {
         // this.getTaskInfo(val);
         // this.getStepInfo(val);
-        this.getGeneralInfo(val);
+        //this.getGeneralInfo(val);
         this.changeTab("generalInfo");
 
         this.stepInfoShow = false;

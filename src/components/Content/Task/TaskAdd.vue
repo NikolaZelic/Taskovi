@@ -118,7 +118,8 @@ export default {
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
         altFormat: "M	j, Y H:i",
-        altInput: true
+        altInput: true,
+        minDate: "today"
       },
       teamSelect: 0,
       waitNet: false,
