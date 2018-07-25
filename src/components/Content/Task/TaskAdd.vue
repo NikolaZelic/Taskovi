@@ -408,6 +408,7 @@ export default {
         .then(result => {
           store.commit("itemActionReset");
           store.commit("resetTaskView");
+          // console.log("tasks/:tasid poziv iz taskadd");
 
           store.dispatch("getTasks", {
             index: 1,

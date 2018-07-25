@@ -83,7 +83,7 @@
                         <h5 class="mt-0 mb-1 inline-block">{{user.name}}
                           <small> -- {{user.usr_email}}</small>
                         </h5>
-                        <span>Worked on this step for {{user.timespent}} minutes</span>
+                        <!-- <span>Worked on this task for {{user.timespent}} minutes</span> -->
                       </div>
                     </div>
 
@@ -347,7 +347,7 @@
               </td>
             </tr>
 
-          </table>    
+          </table>
           <div class="float-right">
             <button type="button" class="btn btn-primary" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null"><span class='fa fa-edit'></span> Edit</button>
             <button type="button" class="btn btn-danger" @click="tabs.steps = true; stepInfoShow = false"><span class='fas fa-ban'></span> Cancel</button>
@@ -1248,5 +1248,9 @@ td .form-control {
   border: none;
   border-bottom: 1px solid #a09e9e57;
   padding-left: 0px;
+}
+
+.fa-hand-point-right{
+  cursor: pointer;
 }
 </style>
