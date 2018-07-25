@@ -147,7 +147,7 @@ export default {
         // console.log(stepTime);
         // console.log(messageTime);
         // console.log(messageTime.isAfter(stepTime));
-        if(messageTime <= stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
+        if(messageTime < stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
           // console.log('if');
           if(j==0){
             message.stp_id = null;  // Znaci da je od taska
@@ -424,12 +424,14 @@ export default {
         });
     },
     handleScroll(e) {
-      this.processStepSelection();
+      if(!this.global)
+        this.processStepSelection();
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
+        // console.log('add down from scroll');
         this.addDown();
         return;
       }
@@ -437,11 +439,24 @@ export default {
         this.addUp();
       }
     },
-    processStepSelection() {
+    processStepSelection(){
+      // var messages = document.querySelectorAll(".selector");
+      // if(messages===undefined||messages===null||messages.length===0)
+      //   return;
+      // for (var i in messages) {
+      //   var message = messages[i];
+      //   if (this.isInViewport(message)) {
+      //     var selectedMessage = this.messages[i];
+      //     var time = selectedMessage.fed_time;
+      //     this.selectStep(time);
+      //     break;
+      //   }
       var messages = document.querySelectorAll(".selector");
       if (messages === undefined || messages === null || messages.length === 0)
         return;
       for (var i in messages) {
+        if(this.messages[i].fed_type=='header')
+          continue;
         var message = messages[i];
         if (this.isInViewport(message)) {
           var selectedMessage = this.messages[i];
@@ -548,9 +563,9 @@ export default {
     // var time2 = this.$moment('2018-07-25 14:04:45');
     // console.log( time2>time1 );
 
-    if (!this.global) {
-      this.readeSteps();
-    }
+    // if (!this.global) {
+    //   this.readeSteps();
+    // }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {

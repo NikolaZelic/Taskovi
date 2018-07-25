@@ -10,7 +10,8 @@ export default {
   data() {
     return {
       global: true,
-      offset: 0
+      offset: 0,
+      dataFromBegining: 0,
     };
   },
 
@@ -30,17 +31,18 @@ export default {
         .then(response => {
           this.offset += response.data.data.length;
           store.commit("addMessages", {
-            direction: "up",
+            direction: "down",
             data: response.data.data
           });
           var time = 50;
           if (response.data.type == "files") time = 500;
           setTimeout(() => {
-            this.scrollToBegining();
+            this.scrollTOTop();
           }, time);
         });
     },
-    addUp() {
+    addDown() {
+      // console.log('add down');
       if (this.messages == null || this.messages.length == 0) return;
       store
         .dispatch("readeGloablFeeds", {
@@ -53,21 +55,28 @@ export default {
           var length = response.data.data.length;
           this.offset += length;
           store.commit("addMessages", {
-            direction: "up",
+            direction: "down",
             data: response.data.data
           });
           if (length > 0) {
             setTimeout(() => {
-              this.scrollAfterUp(length);
+              this.scrollAfterDown(length);
             }, 5);
           }
         });
     },
-    addDown() {
+    addUp() {
       return;
-    }
+    },
+    scrollAfterDown(responseLength){
+      var a = document.querySelectorAll(".selector");
+      a = a[this.messages.length - responseLength];
+      a.scrollIntoView(true);
+    },
   },
-
+  mounted(){
+    this.readeFeeds();
+  },
   destroyed() {
     // store.commit("notificationCount", 0);
     store.dispatch("getFeedCount");
