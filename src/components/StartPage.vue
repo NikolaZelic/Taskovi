@@ -15,13 +15,12 @@
               <form class="login-form" novalidate>
                 <div class="form-group">
                   <span class='fas fa-envelope'></span>
-                  <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3"
-                  />
+                  <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3" id="email"/>
                 </div>
+
                 <div class="form-group">
                   <span class='fas fa-lock'></span>
-                  <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
-                  />
+                  <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3" id="pass"/>
                 </div>
                 <button @click.prevent="login" class='btn btn-warning'>login</button>
                 <p class="message">Not registered?
@@ -158,9 +157,13 @@ export default {
       let pass = this.user.pass;
       if (mail === undefined || mail.length < 4) {
         alert("Email is not valid");
+        //document.getElementById("email").style.color = "red";
+        //this.user.email = "Email is not valid";
         return;
       }
       if (pass === undefined || pass.length < 2) {
+        //document.getElementById("pass").style.color = "red";
+        //this.user.pass = "Password cannot be less then two characters";
         alert("Password cannot be less then two characters");
         return;
       }
@@ -180,7 +183,9 @@ export default {
               this.$router.push("/");
             }
           } else {
-            alert("Login failed. Please fix your username or password.");
+            //document.getElementById("email").style.color = "red";
+            //this.user.email = "Login failed. Please check your username or password.";
+            alert("Login failed. Please check your username or password.");
           }
         })
         .catch(e => {

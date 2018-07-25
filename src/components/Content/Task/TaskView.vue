@@ -55,6 +55,12 @@
                 <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
               </td>
             </tr>
+
+            <tr>
+              <td>Status:</td>
+              <td>{{this.taskGeneralInfo.sta_text}}</td>
+            </tr>
+
             <tr>
               <td>Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
@@ -63,9 +69,32 @@
             </tr>
 
             <tr>
-              <td>Status:</td>
-              <td>{{this.taskGeneralInfo.sta_text}}</td>
+              <td class="align-top">Working:</td>
+              <td>
+                <ul class="list-unstyled">
+                  <li class="media mt-2" v-for="(user,index) in taskGeneralInfo.usrworking" :key='index'>
+
+                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
+                    />
+                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                    <div class="media-body">
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1 inline-block">{{user.name}}
+                          <small> -- {{user.usr_email}}</small>
+                        </h5>
+                        <span>Worked on this step for {{user.timespent}} minutes</span>
+                      </div>
+                    </div>
+
+                  </li>
+
+
+                </ul>
+              </td>
             </tr>
+
+
           </table>
 
           <button type="button" class="btn btn-success save" @click="editTaskBtn()">
