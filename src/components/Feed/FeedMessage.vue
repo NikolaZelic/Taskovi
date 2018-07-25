@@ -1,13 +1,13 @@
 <template>
 <!-- mojaPoruka()?'right-con': -->
-  <div class='cont selector' v-bind:class="'left-con'" :id="mess.fed_id">    
-    <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div>
+  <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">    
+    <!-- <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div> -->
     <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
       <img :src="icon()" v-if='this.mess.fed_type==="message"' />
-      <i class="fas fa-file" v-if='this.mess.fed_type==="attachment"'></i>
+      <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
@@ -158,7 +158,7 @@ pre {
 
 .cont {
   padding: 5px 10px;
-  margin: 0 7px;
+  /* margin: 0 7px; */
 }
 
 .cont:not(:last-child) {
@@ -187,7 +187,7 @@ pre {
   color: var(--ac-color);
 }
 
-.img-placeholder i.fa-file {
+.img-placeholder i.fa-paperclip {
   color: var(--danger);
 }
 
@@ -235,7 +235,7 @@ pre {
 }
 
 .left-con {
-  margin: 0 10px;
+  /* margin: 0 10px; */
   display: flex;
 }
 
@@ -279,17 +279,18 @@ pre {
   width: 0;
 }
 
-.unseen-feed {
-  background: #818411;
+.unseenFeed {
+  /* background: #dfcd1f;
   box-shadow: 6px 6px 33px -3px rgba(250, 230, 15, 1);
-  width: 10px;
   align-self: center;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  margin: 0 5px;
+  margin: 0 5px; */
+  border-left: 5px solid #dcdc16;
 }
 
-.status{
+.status {
   color: red;
 }
 </style>
