@@ -122,15 +122,15 @@ export default {
 </script>
 
 <style scoped>
-.header-type{
+.header-type {
   font-size: 200%;
   text-align: center;
 }
 .new-step {
   color: #007bff;
   cursor: pointer;
-  margin: 10px;
-  align-self: center;
+  margin: 15px;
+  align-self: flex-start;
 }
 pre {
   white-space: pre-wrap;
@@ -154,16 +154,18 @@ pre {
   cursor: pointer;
 }
 
-.cont {
+.cont:not(:last-child) {
   padding: 5px 10px;
   margin: 0 7px;
   border-bottom: 1px solid #1b62e72b;
 }
 
 .img-placeholder {
-  height: 40px;
   width: 40px;
-  margin: auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 5px 0 0 0;
 }
 
 .img-placeholder span {
@@ -184,7 +186,7 @@ pre {
 
 .cont .name {
   font-size: 12px;
-  font-style: oblique;
+  font-weight: bold;
   color: var(--ac-color-dark);
 }
 
@@ -213,7 +215,7 @@ pre {
 .right-con {
   margin: 0 10px;
   display: flex;
-  flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
 }
 
 .right-con .message-body-header {

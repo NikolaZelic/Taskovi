@@ -9,7 +9,7 @@ const actions = {
   getProjects(commit, params) {
     api.getProjects(params).then(r => {
       store.commit('setSidebarData', {
-        index: params.index,
+        tabIndex: params.index,
         data: r.data.data
       });
     }).catch(e => {
@@ -22,7 +22,7 @@ const actions = {
   getTasks(commit, params) {
     api.getTasks(params).then(r => {
       store.commit('setSidebarData', {
-        index: params.index,
+        tabIndex: params.index,
         data: r.data.data
       });
     }).catch(e => {
@@ -37,7 +37,7 @@ const actions = {
     store.commit('itemEditClick', {
       id: params,
     });
-  },  
+  },
   itemAddClick() {
     store.commit('itemAddClick');
   },
@@ -51,29 +51,22 @@ const actions = {
 const mutations = {
   setSidebarData: (state, params) => {
     if (params.data !== undefined) {
-      if (params.parentIndex !== undefined && params.parentIndex !== null) {
-        store.state.sidebarTabData[params.index][params.parentindex].tasks = params.data;
-      } else {
-        store.state.sidebarTabData[params.index] = params.data;
-      }
+      store.state.sidebarTabData[params.tabIndex] = params.data;
     }
+    let i = store.state.currentTabIndex;
     store.state.currentTabIndex = -1;
-    store.state.currentTabIndex = params.index;
-    store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined;
+    store.state.currentTabIndex = i;
   },
   setSidebarItemSelection: (state, params) => {
     store.state.sidebarItemSelection[params.tabIndex] = params.id;
     // DA LI MI TREBA BRISANJE STATUS DUGMICA - RESETUJE PREGLED?
-    store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined;
     let i = store.state.currentTabIndex;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = i;
     store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!! // RETEST
   },
 
-  setTabIndex: (state,params)=>{
+  setTabIndex: (state, params) => {
     store.state.currentTabIndex = -1; // MAYBE NOT NEEDED IF ALWAYS INVOKED FROM OTHER TAB ?
     store.state.currentTabIndex = params.tabIndex;
   },

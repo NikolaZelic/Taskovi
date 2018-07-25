@@ -23,7 +23,7 @@
 .multiselect__option--highlight,
 .multiselect__option--highlight::after {
   background: var(--ac-color) !important;
-  color: var(--sec-bg-color) !important;
+  /* color: var(--sec-bg-color) !important; */
 }
 
 .multiselect__tags {
@@ -36,14 +36,11 @@
 
 /* VUE-B MODALS */
 
-.modal-header {
-  border-bottom: 1px solid #565b61;
-  border-radius: 5px;
-}
-
+.modal-header,
 .modal-footer {
-  border-top: 1px solid #565b61;
-  border-radius: 5px;
+  border: 0;
+  /* border-bottom: 1px solid #565b61;
+  border-radius: 5px; */
 }
 
 .modal-content {
@@ -90,7 +87,7 @@ textarea.custom-modern::placeholder {
 
 .task-tabs .tabs {
   position: absolute;
-  top: -58px;
+  top: -49px;
 }
 
 .task-tabs .tabs .nav-tabs {
@@ -122,6 +119,10 @@ textarea.custom-modern::placeholder {
 .task-tabs .tabs .nav-item .active.nav-link {
   border-color: var(--primary);
   color: var(--primary);
+}
+
+.modal-footer> :not(:last-child) {
+  background: var(--danger)
 }
 
 /* input[type="radio"]:checked+.label-text:before {

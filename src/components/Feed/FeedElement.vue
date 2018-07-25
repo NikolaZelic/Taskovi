@@ -20,7 +20,7 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&steps.length>0'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' :title='step.tsk_timecreated'  >
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' :title='step.tsk_timecreated'>
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
@@ -48,15 +48,24 @@
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
-      <!-- </div> -->
     </div>
-    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
-      You have a new message
-    </div>
-    <b-modal ref='stepModal' id='creating-step' @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step' >
-      <p v-if='selectedStep!=null' >Time:&nbsp;{{selectedStep.fed_time}}</p>
-      <p>Title</p>
-      <input type='text' v-model='newStep' :class="{ 'step-err' : stepErr }"/>
+    <b-alert variant="success" :show="haveNewMessage" class='message-notificaton'>
+      <span @click='reload' style='display:flex'>You have a new message!</span>
+    </b-alert>
+    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step'>
+      <table class='modal-table'>
+        <tr v-if='selectedStep!=null'>
+          <td>Time:</td>
+          <td>
+            {{$moment(selectedStep.fed_time).format('YYYY-MM-DD HH:mm')}}</td>
+        </tr>
+        <tr>
+          <td>Title</td>
+          <td>
+            <input type='text' v-model='newStep' :class="{ 'step-err' : stepErr }" />
+          </td>
+        </tr>
+      </table>
     </b-modal>
   </div>
 </template>
@@ -86,14 +95,14 @@ export default {
       searchText: "",
       searchImportant: false,
       dataFromBegining: 1,
-      haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
       test: true,
       steps: [],
-      newStep: '',
+      newStep: "",
       stepErr: false,
-      firstLoad: true,
+      haveNewMessage: false,
+      firstLoad: true
     };
   },
   computed: {
@@ -102,7 +111,7 @@ export default {
       darkTheme: state => state.darkTheme,
       searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
-      pro_id: state => state.sidebarItemSelection[0],
+      pro_id: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
       taskid: "selectedItemID",
@@ -218,39 +227,39 @@ export default {
     searchImportant() {
       this.readeFeeds();
     },
-    newStep(newVal, old){
-      if(this.stepErr&&newVal.length>0)
-        this.stepErr = false;
-    },
+    newStep(newVal, old) {
+      if (this.stepErr && newVal.length > 0) this.stepErr = false;
+    }
   },
   methods: {
-    clearStepCreateContent(){
-      this.newStep = '';
+    clearStepCreateContent() {
+      this.newStep = "";
       this.stepErr = false;
     },
-    createNewStep(evt){
+    createNewStep(evt) {
       evt.preventDefault();
-      if(this.newStep.length==0){
+      if (this.newStep.length == 0) {
         this.stepErr = true;
         return;
       }
-      var time = this.selectedStep.fed_time.replace('.0','');
-      api.createStepFromFeed(this.taskid, time, this.newStep, null)
-      .then( result => {
-        this.readeSteps();
-        this.reload();
-        store.commit('setSelectedStep', null);
-      } ).catch( ()=>{
-        this.reload();
-      } );
+      var time = this.selectedStep.fed_time.replace(".0", "");
+      api
+        .createStepFromFeed(this.taskid, time, this.newStep, null)
+        .then(result => {
+          this.readeSteps();
+          this.reload();
+          store.commit("setSelectedStep", null);
+        })
+        .catch(() => {
+          this.reload();
+        });
       this.$refs.stepModal.hide();
     },
-    stepCicked(step){
+    stepCicked(step) {
       this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
     },
-    textInputBlur(){
-      if(this.searchText==null||this.searchText.length==0)
-        return;
+    textInputBlur() {
+      if (this.searchText == null || this.searchText.length == 0) return;
       this.readeFeeds();
     },
     reload() {
@@ -267,7 +276,7 @@ export default {
       this.searchImportant = false;
     },
     processKeyUp(event) {
-      if (event.key == "Enter" && event.ctrlKey ) {
+      if (event.key == "Enter" && event.ctrlKey) {
         this.writeMessageFeed();
       }
     },
@@ -287,7 +296,7 @@ export default {
           this.scrollToBegining();
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
-          if(this.firstLoad){
+          if (this.firstLoad) {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
             // console.log('Zeljkovi poziv');
@@ -443,7 +452,7 @@ export default {
       //     break;
       //   }
       var messages = document.querySelectorAll(".selector");
-      if(messages===undefined||messages===null||messages.length===0)
+      if (messages === undefined || messages === null || messages.length === 0)
         return;
       for (var i in messages) {
         if(this.messages[i].fed_type=='header')
@@ -512,7 +521,7 @@ export default {
           direction: "start",
           data: result.data.data
         });
-        if(this.firstLoad){
+        if (this.firstLoad) {
           this.firstLoad = false;
           store.dispatch("getFeedCount");
           // console.log('Zeljkovi poziv');
@@ -537,8 +546,7 @@ export default {
       });
     },
     isInViewport(el) {
-      if(el==null)
-        return;
+      if (el == null) return;
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
@@ -598,25 +606,24 @@ export default {
 };
 </script>
 <style scoped>
-.step-err{
+.step-err {
   border: 2px solid red;
 }
-#all-messages{
-  height: 500px;
+
+#all-messages {
+  /* height: 500px; */
 }
+
 .search-inputs {
   margin: 10px auto 0;
 }
 
 .message-notificaton {
+  cursor: pointer;
   background-color: green;
-  padding: 20px;
   position: fixed;
   right: 20px;
   bottom: 20px;
-  height: 100px;
-  width: 150px;
-  display: none;
 }
 
 .notification-on {
@@ -683,8 +690,8 @@ export default {
 .flex-chat-body {
   display: flex;
   margin-bottom: 10px;
+  height: 0;
   flex: 1;
-  /* max-height: 50%; */
   border: 1px solid #8a888866;
   border-radius: 5px;
   background: #fff;
@@ -780,8 +787,14 @@ export default {
 }
 
 .messages {
-  /* max-height: 350px; */
-    flex: 1;
-  /* width: 96%; */
+  flex: 1;
+}
+
+.modal-table td:first-child {
+  color: #adadad;
+}
+
+.modal-table td {
+  padding: 0 20px 10px 0;
 }
 </style>
