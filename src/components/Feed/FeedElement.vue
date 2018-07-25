@@ -543,6 +543,7 @@ export default {
       });
     },
     readeSteps() {
+      // console.log('readeSteps');
       api.getTaskInfo(this.taskid).then(result => {
         if (result.data.status != "OK") {
           alert(
@@ -568,14 +569,14 @@ export default {
     }
   },
   mounted() {
+    console.log('Mounted is obicnog');
     // var time1 = this.$moment('2018-07-25 14:04:39');
     // var time2 = this.$moment('2018-07-25 14:04:45');
     // console.log( time2>time1 );
 
-    // if (!this.global) {
-    //   this.readeSteps();
-    // }
-    this.readeSteps();
+    if (!this.global) {
+      this.readeSteps();
+    }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
@@ -589,6 +590,8 @@ export default {
     // store.dispatch("getFeedCount");
 
     //poziva api svaki put kada je count deljiv sa countNumber
+    if (this.global) 
+      return;
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
