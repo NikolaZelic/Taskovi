@@ -86,7 +86,7 @@ export default {
       global: false,
       showFeeds: true,
       count: 0,
-      countNumber: 10,
+      countNumber: 1,
       fInterval: null,
       feed: "",
       uploadProgress: 50,
@@ -386,6 +386,7 @@ export default {
         });
     },
     newMessages() {
+      console.log('newMessages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -395,7 +396,7 @@ export default {
             return;
           }
           if (result.data.data > 0) {
-            console.log("Ovde");
+            // console.log("Ovde");
             this.countNumber = 1;
             this.count = 0;
             var e = document.getElementById("all-messages");
@@ -414,6 +415,7 @@ export default {
         });
     },
     addDown() {
+      console.log('addDown');
       if (this.loadingData) return;
       api
         .readeFeeds(
@@ -595,10 +597,13 @@ export default {
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
     this.fInterval = setInterval(() => {
+      // console.log(this.count);
+      // console.log(this.countNumber);
+      // console.log(this.count % this.countNumber == 0);
       if (
         this.count % this.countNumber == 0 &&
-        this.taskid != -1 &&
-        !this.searchOn
+        this.taskid != -1 
+        // && !this.searchOn
       ) {
         if (this.messages.length > 0) {
           this.newMessages();
