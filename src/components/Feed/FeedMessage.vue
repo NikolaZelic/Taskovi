@@ -1,12 +1,13 @@
 <template>
-  <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">    
+  <div class='cont selector' v-bind:class="'left-con'" :id="mess.fed_id">    
     <!-- <div class='unseen-feed' v-if='mess.fed_type!="header"' ></div> -->
     <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
-      <img :src="icon()" v-if='this.mess.fed_type!=="status"' />
-      <span class="fas fa-info-circle" v-else></span>
+      <img :src="icon()" v-if='this.mess.fed_type==="message"' />
+      <i class="fas fa-file" v-if='this.mess.fed_type==="attachment"'></i>
+      <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
     <div class="message-body" :class='{"header-type": mess.fed_type=="header"}' >
@@ -90,8 +91,8 @@ export default {
     },
     icon() {
       switch (this.mess.fed_type) {
-        case "attachment":
-          return "static\\img\\file-icon.png";
+        // case "attachment":
+        //   return "static\\img\\file-icon.png";
         case "message":
           return "static/img/user.png";
         // case "status":
@@ -168,8 +169,7 @@ pre {
   margin: 5px 0 0 0;
 }
 
-.img-placeholder span {
-  color: var(--primary);
+.img-placeholder i {
   font-size: 150%;
   height: 100%;
   display: flex;
@@ -177,6 +177,14 @@ pre {
   align-items: center;
   margin: auto 0;
   padding: auto;
+}
+
+.img-placeholder i.fa-info-circle {
+  color: var(--ac-color);
+}
+
+.img-placeholder i.fa-file {
+  color: var(--danger);
 }
 
 .cont img {

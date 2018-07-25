@@ -114,7 +114,7 @@ export default {
       pro_id: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
-      taskid: "selectedItemID",
+      taskid: "selectedItemID"
     }),
     searchOn() {
       if (this.searchType !== "all") return true;
@@ -122,43 +122,44 @@ export default {
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
     },
-    messages(state){
+    messages(state) {
       // console.log('messages computed');
-      var messages = state.$store.state.modulefeed.messages
+      var messages = state.$store.state.modulefeed.messages;
       var newArray = [];
-      
-      if(this.steps==null||this.steps.length==0){
+
+      if (this.steps == null || this.steps.length == 0) {
         // console.log('Nema stepova');
         return messages;
       }
-        
-      
+
       // Set up steps
-      var j=0;
+      var j = 0;
       var step = this.steps[0];
       var stepTime = this.$moment(step.tsk_timecreated);
       var lastStep = null;
 
       var lastStepWritten = false;
 
-      for(var i in messages){
+      for (var i in messages) {
         var message = messages[i];
         var messageTime = this.$moment(message.fed_time);
         // console.log(stepTime);
         // console.log(messageTime);
         // console.log(messageTime.isAfter(stepTime));
-        if(messageTime < stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
+        if (messageTime < stepTime) {
+          // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
           // console.log('if');
-          if(j==0){
-            message.stp_id = null;  // Znaci da je od taska
-          }
-          else{ // Znaci da je od prethodnog stepa
+          if (j == 0) {
+            message.stp_id = null; // Znaci da je od taska
+          } else {
+            // Znaci da je od prethodnog stepa
             message.stp_id = lastStep.tsk_id;
           }
-        }
-        else{ // Znaci da treba da pomerim step unapred
+        } else {
+          // Znaci da treba da pomerim step unapred
           // console.log('else');
-          if( j<this.steps.length-1 ){  // Znaci nismo na poslednjem stepu
+          if (j < this.steps.length - 1) {
+            // Znaci nismo na poslednjem stepu
             // console.log('if');
             // Dodavanje hedera za step
             var heder = {
@@ -166,19 +167,19 @@ export default {
               fed_important: 0,
               fed_text: step.tsk_title,
               fed_time: step.tsk_timecreated,
-              fed_type: 'header',
+              fed_type: "header",
               taskID: null,
               usr_name: "",
-              usr_surname: "",
+              usr_surname: ""
             };
             newArray.push(heder);
             message.stp_id = step.tsk_id;
             lastStep = step;
             step = this.steps[++j];
-            stepTime = this.$moment(step.tsk_timecreated); 
-          }
-          else{ // Znaci da smo na poslednjem stepu
-            if(!lastStepWritten){
+            stepTime = this.$moment(step.tsk_timecreated);
+          } else {
+            // Znaci da smo na poslednjem stepu
+            if (!lastStepWritten) {
               lastStepWritten = true;
               // Dodavanje hedera za step
               var heder = {
@@ -186,17 +187,16 @@ export default {
                 fed_important: 0,
                 fed_text: step.tsk_title,
                 fed_time: step.tsk_timecreated,
-                fed_type: 'header',
+                fed_type: "header",
                 taskID: null,
                 usr_name: "",
-                usr_surname: "",
+                usr_surname: ""
               };
               newArray.push(heder);
             }
             // console.log('else');
             message.stp_id = step.tsk_id;
           }
-          
         }
         newArray.push(message);
       }
@@ -345,12 +345,13 @@ export default {
       // Dodato zbog hedera za stepove
       var message = this.messages[0];
       var i = 0;
-      while(message.fed_type=='header'){
+      while (message.fed_type == "header") {
         message = this.messages[i++];
-        if(message===undefined||message===null) // Znaci da su sve poruke do kraja zapravo hederi
+        if (message === undefined || message === null)
+          // Znaci da su sve poruke do kraja zapravo hederi
           return;
       }
-      
+
       this.loadingData = true;
       store
         .dispatch("readeFeeds", {
@@ -424,8 +425,7 @@ export default {
         });
     },
     handleScroll(e) {
-      if(!this.global)
-        this.processStepSelection();
+      if (!this.global) this.processStepSelection();
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
@@ -439,7 +439,7 @@ export default {
         this.addUp();
       }
     },
-    processStepSelection(){
+    processStepSelection() {
       // var messages = document.querySelectorAll(".selector");
       // if(messages===undefined||messages===null||messages.length===0)
       //   return;
@@ -455,8 +455,7 @@ export default {
       if (messages === undefined || messages === null || messages.length === 0)
         return;
       for (var i in messages) {
-        if(this.messages[i].fed_type=='header')
-          continue;
+        if (this.messages[i].fed_type == "header") continue;
         var message = messages[i];
         if (this.isInViewport(message)) {
           var selectedMessage = this.messages[i];
@@ -631,7 +630,7 @@ export default {
 }
 
 .search-inputs {
-  margin: 10px;
+  margin: 10px 0 0;
   text-align: center;
 }
 

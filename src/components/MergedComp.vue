@@ -371,7 +371,7 @@ export default {
   background: #fff;
   font-size: 120%;
   padding: 20px 0 5px;
-  color: var(--primary);
+  color: var(--ac-color);
   /* border-bottom: 1px solid #c2d0de; */
 }
 
@@ -385,7 +385,7 @@ export default {
 }
 
 .app-header .fa-edit {
-  color: var(--primary);
+  color: var(--ac-color);
   margin-left: 30px;
   cursor: pointer;
 }

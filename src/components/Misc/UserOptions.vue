@@ -218,7 +218,7 @@ export default {
 
 .user-modal .header {
   color: white;
-  background: var(--primary);
+  background: var(--ac-color);
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;

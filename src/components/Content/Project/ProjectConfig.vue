@@ -429,7 +429,7 @@ export default {
 }
 
 .header.back-primary {
-  background: var(--primary);
+  background: var(--ac-color);
 }
 
 .header * {

@@ -4,7 +4,7 @@
       <!-- <div class="tmp-content-wrapper" > -->
         <div class='tmp-content'>
           <div class="header">
-            <h1 class="display-4 disable-selection">{{componentTitle}}</h1>
+            <span class="disable-selection">{{componentTitle}}</span>
               <!-- <i class="exit-position far fa-times-circle" id='cm'></i> -->
           </div>
 
@@ -71,15 +71,15 @@
             <!-- SUBMIT -->
             <div class="form-group button-wrapper float-right">
               <button @click.once='resetProjectView' type="submit" class="btn btn-danger mr-1">
-              <!-- <span class="fas fa-ban icon-sizes"></span> -->
+              <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
               <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'>
-                  <!-- <span class='fa fa-edit'></span> -->
+                  <span class='fa fa-edit'></span>
                   Edit</span>
                 <span v-show='!edit'>
-                  <!-- <span class='fa fa-plus-square'></span> -->
+                  <span class='fa fa-plus-square'></span>
                   Create</span>
               </button>
             </div>
@@ -153,7 +153,7 @@ export default {
       mouseOverDeadline: 0,
       mouseOverAddWorker: 0,
       titleClass: "form-control",
-      componentTitle: "Creating Task",
+      componentTitle: "Create Task",
       selectedUSers: []
     };
   },
@@ -167,7 +167,7 @@ export default {
     }),
 
     blankTitle() {
-        return this.title.length === 0;
+      return this.title.length === 0;
     },
     selectedProjectID() {
       var a = store.state.sidebarItemSelection[0];
@@ -200,7 +200,6 @@ export default {
   },
 
   watch: {
-
     selectedTags: function() {
       store.dispatch("cleanSuggestedTags");
     },
@@ -398,8 +397,7 @@ export default {
       }
 
       var tagarray = this.selectedTags.map(e => e.text);
-      var userarray = this.selectedUSers.map( e => e.id );
-
+      var userarray = this.selectedUSers.map(e => e.id);
 
       api
         .createTask(
@@ -598,12 +596,19 @@ export default {
   border-bottom: 3px solid #ff0000;
 }
 
+.header {
+  position: absolute;
+  user-select: none;
+  position: relative;
+  bottom: 30px;
+  color: var(--ac-color);
+  font-size: 1rem;
+  left: 193px;
+}
+
 .disable-selection {
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
+  border-bottom: 2px solid;
+  padding: 0 10px 5px 10px;
 }
 
 #adding-worker {
@@ -650,24 +655,12 @@ export default {
 }
 
 .tmp-content {
-  width: 600px;
-  /* color: #eee; */
+  position: relative;
 }
 
 .tmp-content-mask {
-  /* position: fixed; */
-  /* z-index: 9998; */
-  /* top: 0; */
-  /* left: 0; */
-  /* width: 100%; */
-  /* height: 100%; */
-  /*background-color: rgba(0, 0, 0, 0.5);*/
-  /* display: table; */
-  /* transition: opacity 0.3s ease; */
-  /* display: flex; */
-  /* height: 100%; */
-  /* justify-content: center; */
-  /* align-items: center; */
+  width: 80%;
+  margin: 0 auto;
 }
 
 .task-add-section {
@@ -680,14 +673,13 @@ export default {
   /* right: 0; */
 }
 
-.header {
+/* .header {
   position: relative;
   height: 100px;
   padding: 20px 0 0;
   border-radius: 5px;
-  /* background: var(--ac-color); */
   color: black;
-}
+} */
 
 .exit-text {
   position: absolute;
@@ -747,8 +739,12 @@ export default {
   cursor: pointer;
 }
 
-.fas,
-.far {
+#tsk_desc {
+  height: 290px;
+}
+
+.content .fas,
+.content .far {
   /* color: #000; */
   font-size: 25px;
   margin: 3px;
@@ -756,7 +752,7 @@ export default {
   cursor: pointer;
 }
 
-.icon-sizes{
+.icon-sizes {
   /* font-size: 10px; */
   font-weight: 900;
   margin: 0;
@@ -821,17 +817,17 @@ div.form-group {
   color: black;
 }
 
-.fas[data-v-1f68b3d0]{
+.fas {
   width: 43px;
   margin: 0;
 }
 
-.task-modal-input[data-v-1f68b3d0]{
+.task-modal-input {
   width: 100%;
   padding-left: 10px;
 }
 
-select.form-control:not([size]):not([multiple]){
+select.form-control:not([size]):not([multiple]) {
   margin-left: 10px;
 }
 </style>
