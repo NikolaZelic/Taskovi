@@ -377,16 +377,17 @@ export default {
 
 .app-header > * {
   margin-left: 115px;
-  cursor: pointer;
 }
 
 .app-header .fa-chevron-left {
   margin-right: 5px;
+  cursor: pointer;
 }
 
 .app-header .fa-edit {
   color: var(--primary);
   margin-left: 30px;
+  cursor: pointer;
 }
 
 .static-side {
