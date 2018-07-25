@@ -395,7 +395,7 @@ export default {
             return;
           }
           if (result.data.data > 0) {
-            console.log('Ovde');
+            console.log("Ovde");
             this.countNumber = 1;
             this.count = 0;
             var e = document.getElementById("all-messages");
@@ -593,8 +593,7 @@ export default {
     // store.dispatch("getFeedCount");
 
     //poziva api svaki put kada je count deljiv sa countNumber
-    if (this.global) 
-      return;
+    if (this.global) return;
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
@@ -752,6 +751,10 @@ export default {
   font-size: 16px;
   resize: none;
   border-radius: 5px;
+}
+
+.input textarea:focus {
+  height: 140px;
 }
 
 .input button {
