@@ -553,9 +553,9 @@ export default {
     // var time2 = this.$moment('2018-07-25 14:04:45');
     // console.log( time2>time1 );
 
-    if (!this.global) {
-      this.readeSteps();
-    }
+    // if (!this.global) {
+    //   this.readeSteps();
+    // }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
