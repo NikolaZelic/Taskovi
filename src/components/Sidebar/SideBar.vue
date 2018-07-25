@@ -3,225 +3,226 @@
 
     <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
       <div>
-        <button class="btn pro-title" v-if='currentTabIndex !== 0' @click="getTabData(currentTabIndex = 0)">
+        <button class="btn pro-title" v-if='getTabIndex !== 0' @click="getTabData(getTabIndex = 0)">
           <strong>
             <span class='fa fa-arrow-left'></span>
           </strong>
         </button>
-        <span v-if='currentTabIndex !== 0 && project.title != undefined'> Project: {{ project.title }} /</span>
-        <span> {{ tabs[currentTabIndex].name }}</span>
+        <span v-if='getTabIndex !== 0 && project.title != undefined'> Project: {{ project.title }} /</span>
+        <span> {{ tabs[getTabIndex].name }}</span>
       </div>
       <span></span>
     </div> -->
 
-      <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
+    <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
 
-        <div class="tabs">
+      <div class="tabs">
 
-          <div class="tab-container" style='position: relative;'>
-            <transition-group name='switch' mode="out-in">
-              <img v-show='!sideHover' id='enon-img' src='@/assets/img/E-enon.png' key='1'>
-              <img v-show='sideHover' id='enon-full-img' src="@/assets/img/Enon.png" key='2'>
-            </transition-group>
-          </div>
-
-          <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
-            <span class="fas fa-bell"></span>
-            <span class="badge badge-success count">{{notifDisplay}}</span>
-              <span class='left-al'>Notifications</span>
-          </div>
-
-          <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container" :class="{active:currentTabIndex === index && !notifSelected}"
-            @click="getTabData(currentTabIndex = index), setSidebarBoolean(true), notifSelected=false" :disabled="tab.disabled">
-            <span :class='tab.icon'></span>
-            <span class='left-al'>{{tab.name}}</span>
-          </div>
+        <div class="tab-container" style='position: relative;'>
+          <transition-group name='switch' mode="out-in">
+            <img v-show='!sideHover' id='enon-img' src='@/assets/img/E-enon.png' key='1'>
+            <img v-show='sideHover' id='enon-full-img' src="@/assets/img/Enon.png" key='2'>
+          </transition-group>
         </div>
 
-        <div class="user-sidebar">
+        <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
+          <span class="fas fa-bell"></span>
+          <span class="badge badge-success count">{{notifDisplay}}</span>
+          <span class='left-al'>Notifications</span>
+        </div>
 
-          <div class='tab-container' @click="userOptions">
-            <span class='fa fa-user'>
-            </span>
-            <span class='left-al'>Profile</span>
-          </div>
+        <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container"
+          :class="{active:getTabIndex === index && !notifSelected}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true), notifSelected=false"
+          :disabled="tab.disabled">
+          <span :class='tab.icon'></span>
+          <span class='left-al'>{{tab.name}}</span>
+        </div>
+      </div>
 
-          <div class="tab-container" @click="signOut">
-            <span class="fas fa-sign-out-alt"></span>
-            <span class='left-al'>Sign Out</span>
-          </div>
+      <div class="user-sidebar">
 
+        <div class='tab-container' @click="userOptions">
+          <span class='fa fa-user'>
+          </span>
+          <span class='left-al'>Profile</span>
+        </div>
+
+        <div class="tab-container" @click="signOut">
+          <span class="fas fa-sign-out-alt"></span>
+          <span class='left-al'>Sign Out</span>
         </div>
 
       </div>
 
+    </div>
+
     <!-- <div class="sidebar-lower"> -->
 
-<!-- FIX THIS! -->
-      <!-- <span class='leaveme'>
+    <!-- FIX THIS! -->
+    <!-- <span class='leaveme'>
         <span v-if='showArrow' title="Collapse Sidebar" @click="setSidebarBoolean(!sidebarActive)" class='fas fa-angle-double-left collapse-btn'
           :class='{"collapsed":!sidebarActive}'>
         </span>
       </span> -->
 
 
-      <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || currentTabIndex === 2, darkTheme: darkTheme }">
+    <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || getTabIndex === 2, darkTheme: darkTheme }">
 
-        <div class="flex-form-action">
+      <div class="flex-form-action">
 
-          <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-            <span class="fas fa-plus-circle"></span> New
-            <span>{{tabs[currentTabIndex].single}}</span>
-          </button>
+        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
+          <span class="fas fa-plus-circle"></span> New
+          <span>{{tabs[getTabIndex].single}}</span>
+        </button>
 
-          <div class="form-filter">
+        <div class="form-filter">
 
-            <template v-if="!showSubFilter()">
-              <b-form-group>
-                <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-                  <b-input-group-text slot="prepend">
-                    <span class="fas fa-search" @click='focusSearch'></span>
-                  </b-input-group-text>
-                  <b-form-input ref='search' v-model.trim="tabs[currentTabIndex].search" placeholder="Filter items" />
-                  <b-input-group-append v-if='tabs[currentTabIndex].search'>
-                    <b-btn @click="tabs[currentTabIndex].search = ''">X</b-btn>
-                  </b-input-group-append>
-                </b-input-group>
+          <template v-if="!showSubFilter()">
+            <b-form-group>
+              <b-input-group :class='{darkTheme:darkTheme}' class='search'>
+                <b-input-group-text slot="prepend">
+                  <span class="fas fa-search" @click='focusSearch'></span>
+                </b-input-group-text>
+                <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
+                <b-input-group-append v-if='tabs[getTabIndex].search'>
+                  <b-btn @click="tabs[getTabIndex].search = ''">X</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </template>
+
+          <template v-if="showSubFilter()">
+            <div class='tag-filter'>
+
+              <b-input-group class='search'>
+
+                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
+                  :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
+                  :clear-on-select="false" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+
+              </b-input-group>
+            </div>
+          </template>
+
+          <template v-if="showSubFilter()">
+            <div class="item-filter">
+              <b-form-group role="group">
+                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+                </b-form-checkbox-group>
               </b-form-group>
-            </template>
-
-            <template v-if="showSubFilter()">
-              <div class='tag-filter'>
-
-                <b-input-group class='search'>
-
-                  <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet" :preserveSearch="true"
-                    :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false" :clear-on-select="false" :show-no-results='false'
-                    :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
-
-                </b-input-group>
-              </div>
-            </template>
-
-            <template v-if="showSubFilter()">
-              <div class="item-filter">
-                <b-form-group role="group">
-                  <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-                  </b-form-checkbox-group>
-                </b-form-group>
-              </div>
-            </template>
-
-          </div>
+            </div>
+          </template>
 
         </div>
 
-        <div class="item-list" ref='tabdata' @scroll='tableScroll'>
+      </div>
 
-          <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false'
-            :bordered='false' :outlined='false' :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
+      <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
-            <template slot="title" slot-scope="data" >
-              <span>{{data.item.title}} </span>
-              <span v-if='data.item.can_edit === "true" && currentTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
-                title="Edit Item"></span>
-            </template>
+        <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
+          :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
-
-            <!-- CREATED DATE -->
-            <template slot="created_date" slot-scope="data">
-              <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('YYYY-MM-DD')}}</span>
-            </template>
-
-            <!-- CREATED TIME -->
-            <template slot="created_time" slot-scope="data">
-              <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
-            </template>
-
-            <!-- DUE DATE -->
-            <template slot="due_date" slot-scope="data">
-              <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('YYYY-MM-DD')}}</span>
-            </template>
-
-            <!-- DUE TIME -->
-            <template slot="due_time" slot-scope="data">
-              <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
-            </template>
+          <template slot="title" slot-scope="data">
+            <span>{{data.item.title}} </span>
+            <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+              title="Edit Item"></span>
+          </template>
 
 
-            <!-- IN PROGRESS TASKS -->
-            <template slot="HEAD_inprogress_tasks" slot-scope="data">
-              <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
-            </template>
+          <!-- CREATED DATE -->
+          <template slot="created_date" slot-scope="data">
+            <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('YYYY-MM-DD')}}</span>
+          </template>
 
-            <template slot="inprogress_tasks" slot-scope="data">
-              <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
-            </template>
+          <!-- CREATED TIME -->
+          <template slot="created_time" slot-scope="data">
+            <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
+          </template>
 
-            <!-- FAILED TASKS -->
-            <template slot="HEAD_failed_tasks" slot-scope="data">
-              <span class='fas fa-times-circle' title="Failed Tasks"></span>
-            </template>
+          <!-- DUE DATE -->
+          <template slot="due_date" slot-scope="data">
+            <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('YYYY-MM-DD')}}</span>
+          </template>
 
-            <template slot="failed_tasks" slot-scope="data">
-              <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
-            </template>
-
-            <!-- COMPLETED TASKS -->
-            <template slot="HEAD_completed_tasks" slot-scope="data">
-              <span class='fas fa-check' title="Completed Tasks"></span>
-            </template>
-
-            <template slot="completed_tasks" slot-scope="data">
-              <span class='badge badge-success' v-if='data.item.completed_tasks !== 0'>{{data.item.completed_tasks}}</span>
-            </template>
-
-            <!-- USERS COUNT -->
-            <template slot="HEAD_users_count" slot-scope="data">
-              <span class='fas fa-users' title="Users on project"></span>
-            </template>
-
-            <template slot="users_count" slot-scope="data">
-              <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
-            </template>
-
-            <!-- FEEDS -->
-            <template slot='HEAD_unseen_feed' slot-scope="data">
-              <span class="fas fa-bell" title="Notifications"></span>
-            </template>
-
-            <template slot="unseen_feed" slot-scope="data">
-              <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
-            </template>
+          <!-- DUE TIME -->
+          <template slot="due_time" slot-scope="data">
+            <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
+          </template>
 
 
+          <!-- IN PROGRESS TASKS -->
+          <template slot="HEAD_inprogress_tasks" slot-scope="data">
+            <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
+          </template>
 
-            <!-- <template slot='HEAD_users' slot-scope="data">
+          <template slot="inprogress_tasks" slot-scope="data">
+            <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
+          </template>
+
+          <!-- FAILED TASKS -->
+          <template slot="HEAD_failed_tasks" slot-scope="data">
+            <span class='fas fa-times-circle' title="Failed Tasks"></span>
+          </template>
+
+          <template slot="failed_tasks" slot-scope="data">
+            <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
+          </template>
+
+          <!-- COMPLETED TASKS -->
+          <template slot="HEAD_completed_tasks" slot-scope="data">
+            <span class='fas fa-check' title="Completed Tasks"></span>
+          </template>
+
+          <template slot="completed_tasks" slot-scope="data">
+            <span class='badge badge-success' v-if='data.item.completed_tasks !== 0'>{{data.item.completed_tasks}}</span>
+          </template>
+
+          <!-- USERS COUNT -->
+          <template slot="HEAD_users_count" slot-scope="data">
+            <span class='fas fa-users' title="Users on project"></span>
+          </template>
+
+          <template slot="users_count" slot-scope="data">
+            <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
+          </template>
+
+          <!-- FEEDS -->
+          <template slot='HEAD_unseen_feed' slot-scope="data">
+            <span class="fas fa-bell" title="Notifications"></span>
+          </template>
+
+          <template slot="unseen_feed" slot-scope="data">
+            <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
+          </template>
+
+
+
+          <!-- <template slot='HEAD_users' slot-scope="data">
                   <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
             </template> -->
 
 
-            <!-- STATUS -->
-            <template slot="HEAD_sta_text" slot-scope="data">
-              <span class='fas fa-sync-alt' title="Status"></span>
-            </template>
+          <!-- STATUS -->
+          <template slot="HEAD_sta_text" slot-scope="data">
+            <span class='fas fa-sync-alt' title="Status"></span>
+          </template>
 
-            <!-- <template slot="sta_text" slot-scope="data">
+          <!-- <template slot="sta_text" slot-scope="data">
               <span class='badge badge-warning' v-if='data.item.sta_text !== 0'>{{data.item.sta_text}}</span>
             </template> -->
 
-            <!-- TASK USERS -->
-            <template slot="HEAD_users" slot-scope="data">
-              <span class='fas fa-users' title="View users on task"></span>
-            </template>
+          <!-- TASK USERS -->
+          <template slot="HEAD_users" slot-scope="data">
+            <span class='fas fa-users' title="View users on task"></span>
+          </template>
 
-            <template slot='users' slot-scope="data">
-              <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
-            </template>
+          <template slot='users' slot-scope="data">
+            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+          </template>
 
-          </b-table>
-        </div>
+        </b-table>
       </div>
+    </div>
     <!-- </div> -->
 
     <user-tasks v-if='showTaskPeople'></user-tasks>
@@ -250,8 +251,7 @@ export default {
       taskSearchTag: [],
       taskSearchText: undefined,
       tagLoading: false,
-      scrollPos: 0,
-      currentTabIndex: 0,
+      localTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
       intervalNotification: null,
@@ -363,8 +363,8 @@ export default {
         },
         {
           key: "unseen_feed",
-          label: "N",
-          // sortable: true,
+          // label: "N",
+          sortable: true,
           class: "text-center td-icon-width ",
           thClass: "td-yellow"
         }
@@ -408,7 +408,7 @@ export default {
         },
         {
           key: "unseen_feed",
-          // sortable: true,
+          sortable: true,
           class: "text-center td-icon-width",
           thClass: "td-yellow"
         }
@@ -426,37 +426,38 @@ export default {
     };
   },
   watch: {
-    currentTabIndex(val) {
-      this.taskSearchText = "";
-      if (val === 1) this.selectedFilter = [];
-      if (val === 0) store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
+    getTabIndex(val, oldVal) {
+      if (val === 0) {
+        this.taskSearchText = "";
+        this.selectedFilter = [];
+        store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
+      }
       if (val < 0) return;
-      this.removeActiveClass(null);
-      if (this.tabs[val].itemIndex === undefined) {
-        // IF ITEM INDEX IS UNDEFINED, COMMIT TO STORE
-        store.commit("setSidebarItemSelection", {
-          index: this.currentTabIndex,
-          id: undefined
-        });
+      if (val === 1) {
+        store.commit("resetTaskView");
+        this.removeActiveClass(null);
+        this.getTaskFilterData();
       }
     },
-    selectedFilter() {
+    selectedFilter(val) {
       // FIRES WHEN CHECKBOXES CHANGE
-      this.getTaskFilterData();
+      if (val !== undefined && this.getTabIndex === 1) {
+        this.getTaskFilterData();
+      }
     },
     taskSearchTag() {
-      this.getTaskFilterData();
+      if (this.getTabIndex === 1) this.getTaskFilterData();
     },
     taskSearchText(val) {
-      if (val !== undefined || val != "") this.getTaskFilterData();
-    },
-    scrollPos(val) {}
+      if (val !== undefined && this.getTabIndex === 1) {
+        // || val != ""
+        this.getTaskFilterData();
+      }
+    }
   },
   methods: {
     showGlobalFeed() {
-      // this.currentTabIndex = -1;
       store.commit("showGlobalFeed", true);
-      // this.$refs.sidBody.style.display = "none";
     },
     tableScroll(event) {
       let sp = event.target.scrollTop;
@@ -489,10 +490,13 @@ export default {
     },
     removeActiveClass(e, elParentID) {
       if (elParentID === undefined) {
-        elParentID = document
-          .getElementsByTagName("table")[0]
-          .getElementsByTagName("tbody")[0];
+        let tableEl = document.getElementsByTagName("table")[0];
+        if (tableEl !== undefined) {
+          let trEl = tableEl.getElementsByTagName("tbody")[0];
+          elParentID = trEl[0];
+        }
       }
+      if (elParentID === undefined) return;
       let chNodes = elParentID.childNodes;
       for (let index = 0; index < chNodes.length; index++) {
         if (chNodes[index].classList !== undefined)
@@ -508,22 +512,24 @@ export default {
       this.removeActiveClass(null, tableRow.parentElement);
 
       this.selectItem(item.id);
-      if (this.currentTabIndex === 0) {
+      if (this.getTabIndex === 0) {
         this.project = item;
-        this.currentTabIndex = 1;
+        store.commit("setTabIndex", {
+          tabIndex: 1
+        });
         // this.getTabData(); // WHAT IS THIS?
-      } else if (this.currentTabIndex === 1) {
+      } else if (this.getTabIndex === 1) {
         // ADD ACTIVE CLASS IF TASKS
         tableRow.classList.add("active");
       }
     },
     getTabData() {
-      let index = this.currentTabIndex;
-      this.currentTabIndex = -1;
-      this.currentTabIndex = index;
-      store.commit("resetTaskView");
+      let index = this.localTabIndex;
+        store.commit("setTabIndex", {
+          tabIndex: index
+        });
       store.commit("showGlobalFeed", false);
-      // this.$refs.sidBody.style.display = "flex";
+      this.removeActiveClass(null);
       switch (index) {
         case 0:
           // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
@@ -531,14 +537,15 @@ export default {
           this.actionTabDataProject();
           break;
         case 1:
+          store.commit("resetTaskView");
           this.getTaskFilterData();
           break;
       }
     },
     selectItem(itemID) {
-      this.tabs[this.currentTabIndex].itemIndex = itemID;
+      this.tabs[this.getTabIndex].itemIndex = itemID;
       store.commit("setSidebarItemSelection", {
-        index: this.currentTabIndex,
+        tabIndex: this.getTabIndex,
         id: itemID
       });
     },
@@ -550,10 +557,8 @@ export default {
     },
     actionTabDataTask(cr, as, ar) {
       clearInterval(this.intervalNotification);
-      // console.log("tasks/:tasid poziv iz sidebar");
-      // console.log("ispaljeno iz sidebara")
       store.dispatch("getTasks", {
-        index: this.currentTabIndex,
+        index: this.getTabIndex,
         pro_id: this.project.id,
         created: cr,
         assigned: as,
@@ -571,7 +576,7 @@ export default {
     actionTabDataProject() {
       clearInterval(this.intervalNotification);
       store.dispatch("getProjects", {
-        index: this.currentTabIndex
+        index: this.getTabIndex
       });
       this.intervalNotification = setInterval(
         function() {
@@ -585,15 +590,15 @@ export default {
       store.dispatch("getFeedCount");
       // REFRESH TAB DATA
       // BREAKS THE UX FLOW - RESETS VIEW
-      // if (this.currentTabIndex === 0) {
+      // if (this.getTabIndex === 0) {
       //   this.actionTabDataProject();
       // }
-      // else if (this.currentTabIndex === 1) {
+      // else if (this.getTabIndex === 1) {
       //   this.getTaskFilterData();
       // }
     },
     showSubFilter() {
-      let i = this.currentTabIndex;
+      let i = this.getTabIndex;
       return i === 1 || i === 2;
     },
     addItemButton() {
@@ -649,14 +654,14 @@ export default {
       return (
         this.itemAction.edit !== undefined ||
         this.itemAction.add !== undefined ||
-        (this.currentTabIndex === 1 && this.selectedItemID !== undefined)
+        (this.getTabIndex === 1 && this.selectedItemID !== undefined)
       );
     },
     activeArray() {
       return store.getters.currentTabData;
     },
     fieldsToShow() {
-      if (this.currentTabIndex === 0) {
+      if (this.getTabIndex === 0) {
         if (
           this.itemAction.edit !== undefined ||
           this.itemAction.add !== undefined
@@ -699,7 +704,7 @@ export default {
     document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB TO STORE
     store.commit("setSidebarData", {
-      index: this.currentTabIndex
+      index: this.getTabIndex
     });
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();

@@ -199,7 +199,7 @@ export default {
         if (this.itemEditButton === ctd.id) {
           // PASS BY VALUE, NOT BY REF - DON'T CHANGE
           this.project.title = ctd.title;
-          this.project.deadline = ctd.pro_deadline;
+          this.project.deadline = ctd.deadline;
           this.project.users_count = ctd.users_count;
         }
       }

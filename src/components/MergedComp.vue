@@ -2,17 +2,21 @@
   <div id="wrapper" :class='{darkMain: darkTheme}'>
     <div class='flex-head-data'>
       <div class='head-data'>
-      <div class='app-header' v-if='tableShow'>
-        <div v-if='currentTabIndex===1'>
-        <span v-if='project.title === undefined'> Project Name <span class='fa fa-edit'></span></span>
-        <span v-else>
-          <strong>{{ project.title }}</strong>
-        </span></div>
-        <div v-if='currentTabIndex===0'>Project List</div>
-        <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
-      </div>
-      <div class='task-tabs'>
-      </div>
+        <div class='app-header' v-if='tableShow'>
+          <div v-if='currentTabIndex===1'>
+
+            <span class='fa fa-arrow-left' @click='backToProjectList'></span>
+            <!-- <span v-if='projectInfo.title === undefined'> Project Name</span> -->
+            <span>
+              <strong>{{ projectInfo.title }}</strong>
+            </span>
+            <span class='fa fa-edit' @click='editProject'></span>
+          </div>
+          <div v-if='currentTabIndex===0'>Project List</div>
+          <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
+        </div>
+        <div class='task-tabs'>
+        </div>
       </div>
       <div class='flex-data-row'>
         <side-bar :class="{max: maxBool}" />
@@ -20,7 +24,6 @@
         <div class="rightside" v-if='!(globalFeed || maxBool)' :class="{focus: isFocus}">
           <div class="maincontent" :class='[{darkTheme: darkTheme}]'>
 
-            <!-- checkShow(currentTabIndex,itemEdit = false,itemAdd = false,itemAddTask = false) -->
             <!-- Project -->
             <project-manage v-if="checkShow(0,true) || checkShow(0,false,true)" />
 
@@ -36,8 +39,8 @@
       </div>
 
       <div class='feed-wrap' v-if='!tableShow'>
-        <global-feed v-if='globalFeed'/>
-            <project-config v-if='checkShow(2) && !globalFeed' />
+        <global-feed v-if='globalFeed' />
+        <project-config v-if='checkShow(2) && !globalFeed' />
       </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
@@ -60,7 +63,6 @@ import TaskAdd from "@/components/Content/Task/TaskAdd";
 import ProjectManage from "@/components/Content/Project/ProjectManage";
 import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
-// import FeedElement from "@/components/Feed/FeedElement";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 
 import ModalError from "@/components/Misc/ModalError";
@@ -87,7 +89,6 @@ export default {
     return {
       editBtn: false,
       addBtn: false,
-      addTaskBtn: false,
       intervalSession: null
     };
   },
@@ -126,9 +127,6 @@ export default {
     },
     itemAddButton(val) {
       this.addBtn = val !== undefined;
-    },
-    itemAddTaskButton(val) {
-      this.addTaskBtn = val !== undefined;
     }
   },
   computed: {
@@ -143,7 +141,6 @@ export default {
       modalStatusActive: state => state.modalStatus.active,
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
-      itemAddTaskButton: state => state.itemAction.addTask,
       itemAddStepButton: state => state.itemAction.addStep,
       // currentProjectId: state => state.sidebarItemSelection[0],
 
@@ -157,12 +154,21 @@ export default {
       return !(this.globalFeed || this.checkShow(2));
     },
 
-    prooo() {
-      return store.state.sidebarItemSelection[0];
-    },
-    project() {
-      // return []
-      return store.getters.projData(this.currentProjectId);
+    projectInfo() {
+      let onePro = [];
+      if (this.currentTabIndex !== 1) return onePro;
+      let storeProject = store.state.sidebarTabData[0];
+      if (storeProject === undefined || this.proId === undefined) return onePro;
+      for (let index = 0; index < storeProject.length; index++) {
+        const el = storeProject[index];
+        if (el.id === this.proId) {
+          onePro = el;
+          break;
+        }
+      }
+      return onePro;
+
+      // return store.state.sidebarTabData[0];
     },
     maxBool() {
       return (
@@ -180,18 +186,26 @@ export default {
     }
   },
   methods: {
-    checkShow(
-      currentTabIndex,
-      itemEdit = false,
-      itemAdd = false,
-      itemAddTask = false
-    ) {
+    checkShow(currentTabIndex, itemEdit = false, itemAdd = false) {
       return (
         currentTabIndex === this.currentTabIndex &&
         itemEdit === this.editBtn &&
-        itemAdd === this.addBtn &&
-        itemAddTask === this.addTaskBtn
+        itemAdd === this.addBtn
       );
+    },
+    backToProjectList() {
+      store.commit("setTabIndex", {
+        tabIndex: 0
+      });
+    },
+    editProject() {
+      let proID = this.projectInfo.id;
+      store.commit("setTabIndex", {
+        tabIndex: 0
+      });
+      store.commit("itemEditClick", {
+        id: proID
+      });
     },
     refreshSession() {
       // EVERY 15 MINUTES
@@ -261,7 +275,7 @@ export default {
 }
 
 .darkMain .flex-data-row {
-  background: var(--sec-bg-color);  
+  background: var(--sec-bg-color);
 }
 
 .toasted.primary .action {
@@ -363,12 +377,12 @@ export default {
 
 .app-header > * {
   margin-left: 115px;
+  cursor: pointer;
 }
 
-.app-header .fa {
+.app-header .fa-edit {
   color: var(--primary);
   margin-left: 30px;
-  cursor: pointer;
 }
 
 .static-side {
