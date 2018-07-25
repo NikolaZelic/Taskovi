@@ -107,20 +107,101 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.modulefeed.messages,
+      // messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
       searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
       pro_id: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
-      taskid: "selectedItemID"
+      taskid: "selectedItemID",
     }),
     searchOn() {
       if (this.searchType !== "all") return true;
       if (this.searchImportant) return true;
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
+    },
+    messages(state){
+      // console.log('messages computed');
+      var messages = state.$store.state.modulefeed.messages
+      var newArray = [];
+      
+      if(this.steps==null||this.steps.length==0){
+        // console.log('Nema stepova');
+        return messages;
+      }
+        
+      
+      // Set up steps
+      var j=0;
+      var step = this.steps[0];
+      var stepTime = this.$moment(step.tsk_timecreated);
+      var lastStep = null;
+
+      var lastStepWritten = false;
+
+      for(var i in messages){
+        var message = messages[i];
+        var messageTime = this.$moment(message.fed_time);
+        // console.log(stepTime);
+        // console.log(messageTime);
+        // console.log(messageTime.isAfter(stepTime));
+        if(messageTime <= stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
+          // console.log('if');
+          if(j==0){
+            message.stp_id = null;  // Znaci da je od taska
+          }
+          else{ // Znaci da je od prethodnog stepa
+            message.stp_id = lastStep.tsk_id;
+          }
+        }
+        else{ // Znaci da treba da pomerim step unapred
+          // console.log('else');
+          if( j<this.steps.length-1 ){  // Znaci nismo na poslednjem stepu
+            // console.log('if');
+            // Dodavanje hedera za step
+            var heder = {
+              fed_id: null,
+              fed_important: 0,
+              fed_text: step.tsk_title,
+              fed_time: step.tsk_timecreated,
+              fed_type: 'header',
+              taskID: null,
+              usr_name: "",
+              usr_surname: "",
+            };
+            newArray.push(heder);
+            message.stp_id = step.tsk_id;
+            lastStep = step;
+            step = this.steps[++j];
+            stepTime = this.$moment(step.tsk_timecreated); 
+          }
+          else{ // Znaci da smo na poslednjem stepu
+            if(!lastStepWritten){
+              lastStepWritten = true;
+              // Dodavanje hedera za step
+              var heder = {
+                fed_id: null,
+                fed_important: 0,
+                fed_text: step.tsk_title,
+                fed_time: step.tsk_timecreated,
+                fed_type: 'header',
+                taskID: null,
+                usr_name: "",
+                usr_surname: "",
+              };
+              newArray.push(heder);
+            }
+            // console.log('else');
+            message.stp_id = step.tsk_id;
+          }
+          
+        }
+        newArray.push(message);
+      }
+
+      return newArray;
     }
   },
   watch: {
@@ -260,11 +341,21 @@ export default {
       if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
+
+      // Dodato zbog hedera za stepove
+      var message = this.messages[0];
+      var i = 0;
+      while(message.fed_type=='header'){
+        message = this.messages[i++];
+        if(message===undefined||message===null) // Znaci da su sve poruke do kraja zapravo hederi
+          return;
+      }
+      
       this.loadingData = true;
       store
         .dispatch("readeFeeds", {
           taskid: this.taskid,
-          fedid: this.messages[0].fed_id,
+          fedid: message.fed_id,
           direction: "up",
           type: this.searchType,
           searchingstring: this.searchText,
@@ -453,6 +544,10 @@ export default {
     }
   },
   mounted() {
+    // var time1 = this.$moment('2018-07-25 14:04:39');
+    // var time2 = this.$moment('2018-07-25 14:04:45');
+    // console.log( time2>time1 );
+
     if (!this.global) {
       this.readeSteps();
     }
@@ -476,7 +571,7 @@ export default {
         !this.searchOn
       ) {
         if (this.messages.length > 0) {
-          this.newMessages();
+          // this.newMessages();
         }
       }
       this.count++;
