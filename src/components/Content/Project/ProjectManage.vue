@@ -462,4 +462,8 @@ export default {
 .btn-success {
   color: initial;
 }
+
+h4{
+  color: white;
+}
 </style>

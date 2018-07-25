@@ -188,7 +188,7 @@ pre {
 }
 
 .img-placeholder i.fa-paperclip {
-  color: var(--danger);
+  color: #6c7284;
 }
 
 .cont img {

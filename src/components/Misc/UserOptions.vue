@@ -264,6 +264,7 @@ export default {
   border-radius: 5px;
   transition: 0.5s ease;
   backface-visibility: hidden;
+  width: 120px;
 }
 
 .op-avatar:hover img {
