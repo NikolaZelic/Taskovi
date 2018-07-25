@@ -1,6 +1,7 @@
 <template>
+<!-- mojaPoruka()?'right-con': -->
   <div class='cont selector' v-bind:class="'left-con'" :id="mess.fed_id">    
-    <!-- <div class='unseen-feed' v-if='mess.fed_type!="header"' ></div> -->
+    <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div>
     <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
@@ -17,9 +18,9 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100">{{mess.fed_text}}</pre>
+      <pre class="message" width="100">{{mess.fed_text}}</pre> <!-- Dodati klasu ukoliko je status -->
       <div class="attachment"></div>
-      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
+      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_type!="header"' ></i>

@@ -180,7 +180,7 @@
 
       <!-- TAB Feeds -->
       <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
-      <feed-element :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
+      <feed-element ref='feed' :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
       <!-- </div> -->
 
 
@@ -552,7 +552,6 @@ export default {
       store.commit("setSearchFeedParams", {
         tsk_id: tsk_id,
         stp_time_created,
-        stp_time_created
       });
       this.changeTab("messages");
     },
@@ -1068,6 +1067,8 @@ export default {
         }else if(this.tabParam === "steps"){
           this.changeTab("steps");
         }else if(this.tabParam === "messages"){
+          // console.log(this.$refs.feed);
+          this.$refs.feed.changeSelectedTask();
           this.changeTab("messages");
         }
 
