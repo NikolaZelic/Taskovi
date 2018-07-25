@@ -93,6 +93,7 @@ export default {
       steps: [],
       newStep: '',
       stepErr: false,
+      firstLoad: true,
     };
   },
   computed: {
@@ -205,6 +206,11 @@ export default {
           this.scrollToBegining();
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
+          if(this.firstLoad){
+            this.firstLoad = false;
+            store.dispatch("getFeedCount");
+            // console.log('Zeljkovi poziv');
+          }
         })
         .catch(err => {
           this.loadingData = false;
@@ -400,6 +406,11 @@ export default {
           direction: "start",
           data: result.data.data
         });
+        if(this.firstLoad){
+          this.firstLoad = false;
+          store.dispatch("getFeedCount");
+          // console.log('Zeljkovi poziv');
+        }
         setTimeout(() => {
           this.scrollTOTop();
           this.processStepSelection();
@@ -447,7 +458,7 @@ export default {
     }
 
     // ZX - POZIVA REFRESH NOTIFA
-    store.dispatch("getFeedCount");
+    // store.dispatch("getFeedCount");
 
     //poziva api svaki put kada je count deljiv sa countNumber
     this.fInterval = setInterval(() => {
