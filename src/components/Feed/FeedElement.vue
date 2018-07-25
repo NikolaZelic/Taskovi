@@ -566,6 +566,7 @@ export default {
     // if (!this.global) {
     //   this.readeSteps();
     // }
+    this.readeSteps();
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
