@@ -1,6 +1,6 @@
 <template>
   <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">    
-    <!-- <div class='unseen-feed' v-if='mess.fed_type!="header"' ></div> -->
+    <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div>
     <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
