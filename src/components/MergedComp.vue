@@ -145,7 +145,7 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddStepButton: state => state.itemAction.addStep,
-      proId: state => state.sidebarItemSelection[0]
+      proID: state => state.sidebarItemSelection
     }),
     ...mapGetters({
       isFocus: "isFocus",
@@ -159,10 +159,10 @@ export default {
       let onePro = [];
       if (this.currentTabIndex !== 1) return onePro;
       let storeProject = store.state.sidebarTabData[0];
-      if (storeProject === undefined || this.proId === undefined) return onePro;
+      if (storeProject === undefined || this.proID === undefined) return onePro;
       for (let index = 0; index < storeProject.length; index++) {
         const el = storeProject[index];
-        if (el.id === this.proId) {
+        if (el.id === this.proID[0]) {
           onePro = el;
           break;
         }
@@ -244,7 +244,6 @@ export default {
     clearInterval(this.intervalSession);
   },
   destroyed() {
-    console.log("User " + localStorage.name + " signed out. Destroying data.");
     store.commit("resetState");
   }
 };
@@ -330,7 +329,7 @@ export default {
 }
 
 .maincontent > * {
-  margin: 30px 30px 10px;
+      margin: 20px 30px 10px;
 }
 
 .maincontent h1 {

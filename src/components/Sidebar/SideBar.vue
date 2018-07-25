@@ -1,18 +1,7 @@
 <template>
   <aside id="sidebar" :class="{ collapsed: !sidebarActive || globalFeed }">
 
-    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }">
-      <div>
-        <button class="btn pro-title" v-if='getTabIndex !== 0' @click="getTabData(getTabIndex = 0)">
-          <strong>
-            <span class='fa fa-arrow-left'></span>
-          </strong>
-        </button>
-        <span v-if='getTabIndex !== 0 && project.title != undefined'> Project: {{ project.title }} /</span>
-        <span> {{ tabs[getTabIndex].name }}</span>
-      </div>
-      <span></span>
-    </div> -->
+    <!-- <div class="sidebar-header" :class="{ collapsed: !sidebarActive || globalFeed, hideArrow: !showArrow }"></div> -->
 
     <div class="static-side" @mouseover='sideHover=true' @mouseleave='sideHover=false'>
 
@@ -31,7 +20,7 @@
           <span class='left-al'>Notifications</span>
         </div>
 
-        <div v-for="(tab, index) in tabs" v-if="index === 0 || project.id !== undefined" :key="index" class="tablinks tab-container"
+        <div v-for="(tab, index) in tabs" v-if="index === 0 || projectRefItem.id !== undefined" :key="index" class="tablinks tab-container"
           :class="{active:getTabIndex === index && !notifSelected}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true), notifSelected=false"
           :disabled="tab.disabled">
           <span :class='tab.icon'></span>
@@ -264,7 +253,7 @@ export default {
       notifSelected: false,
       selectedFilter: [],
       sideHover: false,
-      project: {
+      projectRefItem: {
         title: undefined,
         id: undefined
       },
@@ -440,6 +429,7 @@ export default {
         this.taskSearchText = "";
         this.selectedFilter = [];
         store.state.sidebarItemSelection[1] = undefined;
+        this.projectRefItem = {}; // SETS UNDEFINED PROJECT TO REF STORE TO REMOVE TASKS TAB
         store.commit("setSidebarItemSelection", {
           tabIndex: 1,
           id: undefined
@@ -488,7 +478,7 @@ export default {
       axios
         .get("projects/:proid/tags", {
           params: {
-            proid: this.project.id,
+            proid: this.projectRefItem.id,
             searchstring: query,
             type: "task",
             sid: localStorage.sid
@@ -526,7 +516,7 @@ export default {
 
       this.selectItem(item.id);
       if (this.getTabIndex === 0) {
-        this.project = item;
+        this.projectRefItem = item;
         store.commit("setTabIndex", {
           tabIndex: 1
         });
@@ -545,8 +535,6 @@ export default {
       this.removeActiveClass(null);
       switch (index) {
         case 0:
-          // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
-          this.project = {};
           this.actionTabDataProject();
           break;
         case 1:
@@ -572,7 +560,7 @@ export default {
       clearInterval(this.intervalNotification);
       store.dispatch("getTasks", {
         index: this.getTabIndex,
-        pro_id: this.project.id,
+        pro_id: this.projectRefItem.id,
         created: cr,
         assigned: as,
         archived: ar,
@@ -603,12 +591,11 @@ export default {
       store.dispatch("getFeedCount");
       // REFRESH TAB DATA
       // BREAKS THE UX FLOW - RESETS VIEW
-      // if (this.getTabIndex === 0) {
-      //   this.actionTabDataProject();
-      // }
-      // else if (this.getTabIndex === 1) {
-      //   this.getTaskFilterData();
-      // }
+      if (this.getTabIndex === 0) {
+        this.actionTabDataProject();
+      } else if (this.getTabIndex === 1) {
+        this.getTaskFilterData();
+      }
     },
     showSubFilter() {
       let i = this.getTabIndex;
@@ -710,14 +697,14 @@ export default {
     store.dispatch("getFeedCount");
     this.intervalNotification = setInterval(
       function() {
-        this.checkNotifications("INITIAL SETUP");
+        this.checkNotifications();
       }.bind(this),
       20000
     );
     document.addEventListener("scroll", this.handleScroll);
-    // WRITE CURRENT TAB TO STORE
+    // WRITE CURRENT TAB DATA TO STORE
     store.commit("setSidebarData", {
-      index: this.getTabIndex
+      tabIndex: this.getTabIndex
     });
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
@@ -1096,8 +1083,8 @@ h2 {
   color: #fff;
 }
 
-.table-time{
-  margin-left: 15px
+.table-time {
+  margin-left: 15px;
 }
 
 .user-sidebar img {
