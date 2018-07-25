@@ -30,9 +30,9 @@
                 </p>
               </form>
               <!-- REMOVE IN FINAL -->
-              <div class="preset">
+              <!-- <div class="preset">
                 <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
-              </div>
+              </div> -->
             </div>
 
           </div>

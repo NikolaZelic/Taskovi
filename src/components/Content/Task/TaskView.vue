@@ -418,9 +418,9 @@
             track-by="id" :options="optionsUser" :multiple="true">
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
-    <div class="float-right">
+          <div class="float-right">
             <button type="button" class="btn btn-success" @click="saveChanges(); stepInfoToggle();"><span class='fa fa-save'></span> Save</button>
-            <button type="button" class="btn btn-danger" @click="stepInfoToggle() "><span class='fas fa-ban'></span> Cancel</button>
+            <button type="button" class="btn btn-danger" @click="stepInfoToggle()"><span class='fas fa-ban'></span> Cancel</button>
           </div>
         </div>
 
@@ -736,6 +736,7 @@ export default {
     },
 
     stepInfoToggle() {
+      this.changeTab(this.tabParam);
       this.stepEditShow = false;
       this.stepInfoShow = true; //!this.stepInfoShow;
     },
