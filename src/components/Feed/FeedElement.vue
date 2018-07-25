@@ -48,11 +48,10 @@
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
       </button>
-      <!-- </div> -->
     </div>
-    <div class='message-notificaton' :class='{"notification-on": haveNewMessage }' @click='reload'>
-      You have a new message
-    </div>
+    <b-alert variant="success" :show="haveNewMessage" class='message-notificaton'>
+      <span @click='reload' style='display:flex'>You have a new message!</span>
+    </b-alert>
     <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step'>
       <table class='modal-table'>
         <tr v-if='selectedStep!=null'>
@@ -96,13 +95,14 @@ export default {
       searchText: "",
       searchImportant: false,
       dataFromBegining: 1,
-      haveNewMessage: false,
       numOfMessages: null,
       loadingData: false,
       test: true,
       steps: [],
       newStep: "",
-      stepErr: false
+      stepErr: false,
+      haveNewMessage: false
+      // showDismissibleAlert: false
     };
   },
   computed: {
@@ -491,7 +491,7 @@ export default {
 }
 
 #all-messages {
-  height: 500px;
+  /* height: 500px; */
 }
 
 .search-inputs {
@@ -499,14 +499,11 @@ export default {
 }
 
 .message-notificaton {
+  cursor: pointer;
   background-color: green;
-  padding: 20px;
   position: fixed;
   right: 20px;
   bottom: 20px;
-  height: 100px;
-  width: 150px;
-  display: none;
 }
 
 .notification-on {
@@ -573,8 +570,8 @@ export default {
 .flex-chat-body {
   display: flex;
   margin-bottom: 10px;
+  height: 0;
   flex: 1;
-  /* max-height: 50%; */
   border: 1px solid #8a888866;
   border-radius: 5px;
   background: #fff;

@@ -125,8 +125,8 @@ export default {
 .new-step {
   color: #007bff;
   cursor: pointer;
-  margin: 10px;
-  align-self: center;
+  margin: 15px;
+  align-self: flex-start;
 }
 pre {
   white-space: pre-wrap;
@@ -157,9 +157,10 @@ pre {
 }
 
 .img-placeholder {
-  height: 40px;
   width: 40px;
-  margin: auto 0;
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0 0 0;
 }
 
 .img-placeholder span {
@@ -180,7 +181,7 @@ pre {
 
 .cont .name {
   font-size: 12px;
-  font-style: oblique;
+  font-weight: bold;
   color: var(--ac-color-dark);
 }
 
