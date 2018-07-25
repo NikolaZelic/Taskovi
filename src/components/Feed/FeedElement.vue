@@ -138,7 +138,7 @@ export default {
         // console.log(stepTime);
         // console.log(messageTime);
         // console.log(messageTime.isAfter(stepTime));
-        if(messageTime <= stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
+        if(messageTime < stepTime){  // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
           // console.log('if');
           if(j==0){
             message.stp_id = null;  // Znaci da je od taska
