@@ -646,6 +646,7 @@ export default {
 
 .messages {
   /* max-height: 350px; */
-  width: 96%;
+    flex: 1;
+  /* width: 96%; */
 }
 </style>

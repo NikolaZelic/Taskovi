@@ -130,24 +130,30 @@
 
 
           <!-- CREATED DATE -->
-          <template slot="created_date" slot-scope="data">
-            <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('YYYY-MM-DD')}}</span>
+          <template slot="timecreated" slot-scope="data">
+            <span v-if='data.item.timecreated!==null'>
+              {{$moment(data.item.timecreated).format('YYYY-MM-DD')}}
+              <span class='table-time'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
+            </span>
           </template>
 
           <!-- CREATED TIME -->
-          <template slot="created_time" slot-scope="data">
+          <!-- <template slot="created_time" slot-scope="data">
             <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
-          </template>
+          </template> -->
 
           <!-- DUE DATE -->
-          <template slot="due_date" slot-scope="data">
-            <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('YYYY-MM-DD')}}</span>
+          <template slot="deadline" slot-scope="data">
+            <span v-if='data.item.deadline!==null'>
+              {{$moment(data.item.deadline).format('YYYY-MM-DD')}}              
+              <span class='table-time'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
+              </span>
           </template>
 
           <!-- DUE TIME -->
-          <template slot="due_time" slot-scope="data">
+          <!-- <template slot="due_time" slot-scope="data">
             <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
-          </template>
+          </template> -->
 
 
           <!-- IN PROGRESS TASKS -->
@@ -310,29 +316,31 @@ export default {
           thClass: "td-blue"
         },
         {
-          key: "created_date",
+          key: "timecreated",
           label: "Created Date",
-          class: "text-right",
+          sortable: true,
+          class: "text-center",
           thClass: "td-blue"
         },
+        // {
+        //   key: "created_time",
+        //   label: "Created Time",
+        //   class: "text-left",
+        //   thClass: "td-blue"
+        // },
         {
-          key: "created_time",
-          label: "Created Time",
-          class: "text-left",
-          thClass: "td-blue"
-        },
-        {
-          key: "due_date",
+          key: "deadline",
           label: "Due Date",
-          class: "text-right",
+          sortable: true,
+          class: "text-center",
           thClass: "td-blue"
         },
-        {
-          key: "due_time",
-          label: "Due Time",
-          class: "text-left",
-          thClass: "td-blue"
-        },
+        // {
+        //   key: "due_time",
+        //   label: "Due Time",
+        //   class: "text-left",
+        //   thClass: "td-blue"
+        // },
         {
           key: "users_count",
           label: "Users",
@@ -389,15 +397,16 @@ export default {
           thClass: "td-blue"
         },
         {
-          key: "created_date",
+          key: "timecreated",
           label: "Created Date",
-          class: "text-right",
+          class: "text-center",
           thClass: "td-blue"
         },
         {
-          key: "created_time",
-          label: "Created Time",
-          class: "text-left",
+          key: "deadline",
+          label: "Due Date",
+          sortable: true,
+          class: "text-center",
           thClass: "td-blue"
         },
         {
@@ -430,7 +439,11 @@ export default {
       if (val === 0) {
         this.taskSearchText = "";
         this.selectedFilter = [];
-        store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
+        store.state.sidebarItemSelection[1] = undefined;
+        store.commit("setSidebarItemSelection", {
+          tabIndex: 1,
+          id: undefined
+        });
       }
       if (val < 0) return;
       if (val === 1) {
@@ -493,7 +506,7 @@ export default {
         let tableEl = document.getElementsByTagName("table")[0];
         if (tableEl !== undefined) {
           let trEl = tableEl.getElementsByTagName("tbody")[0];
-          elParentID = trEl[0];
+          elParentID = trEl;
         }
       }
       if (elParentID === undefined) return;
@@ -525,9 +538,9 @@ export default {
     },
     getTabData() {
       let index = this.localTabIndex;
-        store.commit("setTabIndex", {
-          tabIndex: index
-        });
+      store.commit("setTabIndex", {
+        tabIndex: index
+      });
       store.commit("showGlobalFeed", false);
       this.removeActiveClass(null);
       switch (index) {
@@ -1083,6 +1096,10 @@ h2 {
   color: #fff;
 }
 
+.table-time{
+  margin-left: 15px
+}
+
 .user-sidebar img {
   height: 40px;
   margin: 10px auto;
@@ -1114,7 +1131,7 @@ label {
   margin: 5px 0;
 }
 
-.tab-container:first-child {
+.tabs .tab-container:first-child {
   cursor: auto;
 }
 

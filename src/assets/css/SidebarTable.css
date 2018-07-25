@@ -21,12 +21,12 @@
 
  .item-list thead th {
    border-bottom: none !important;
-   font-weight: normal;
+   /* font-weight: normal; */
  }
 
  .item-list thead tr {
    /* border-bottom: 2px solid #dee2e6a1; */
-   background: whitesmoke;
+   background: white;
    color: #222;
  }
 
@@ -90,7 +90,7 @@
  }
 
  .item-list tbody tr.active {
-   border-left: 5px solid var(--ac-color);
+   border-left: 6px solid var(--ac-color);
    color: var(--ac-color);
  }
 

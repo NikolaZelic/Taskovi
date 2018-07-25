@@ -34,17 +34,16 @@ export default {
             data: response.data.data
           });
           var time = 50;
-          if (response.data.type == "files") 
-            time = 500;
+          if (response.data.type == "files") time = 500;
           setTimeout(() => {
             this.scrollToBegining();
           }, time);
         });
     },
     addUp() {
-      if (this.messages == null || this.messages.length == 0) 
-        return;
-      store.dispatch("readeGloablFeeds", {
+      if (this.messages == null || this.messages.length == 0) return;
+      store
+        .dispatch("readeGloablFeeds", {
           offset: this.offset,
           type: this.searchType,
           searchingstring: this.searchText,
@@ -57,9 +56,9 @@ export default {
             direction: "up",
             data: response.data.data
           });
-          if (length > 0){
+          if (length > 0) {
             setTimeout(() => {
-                this.scrollAfterUp(length);
+              this.scrollAfterUp(length);
             }, 5);
           }
         });
@@ -70,7 +69,8 @@ export default {
   },
 
   destroyed() {
-    store.commit("notificationCount", 0);
+    // store.commit("notificationCount", 0);
+    store.dispatch("getFeedCount");
   }
 };
 </script>

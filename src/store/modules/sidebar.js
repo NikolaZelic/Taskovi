@@ -67,9 +67,10 @@ const mutations = {
     // DA LI MI TREBA BRISANJE STATUS DUGMICA - RESETUJE PREGLED?
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
+    let i = store.state.currentTabIndex;
     store.state.currentTabIndex = -1;
-    store.state.currentTabIndex = params.tabIndex;
-    store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!!
+    store.state.currentTabIndex = i;
+    store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!! // RETEST
   },
 
   setTabIndex: (state,params)=>{
@@ -83,7 +84,7 @@ const mutations = {
   },
   itemAddClick: () => {
     store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = 1;
+    store.state.itemAction.add = true;
   },
   itemActionReset: () => {
     store.state.itemAction.edit = undefined;
@@ -108,11 +109,7 @@ const mutations = {
     store.state.mainFocused = params;
   },
 };
-// const getters = {
-//
-// }
 export default {
   actions,
   mutations,
-  // getters,
 };

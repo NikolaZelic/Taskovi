@@ -3,7 +3,7 @@ import {store} from './index';
 const actions = {
   getFeedCount() {
     api.getFeedCount().then(r => {
-      store.commit('notificationCount',r.data.data);
+      // store.commit('notificationCount',r.data.data);
     });
   },
 };

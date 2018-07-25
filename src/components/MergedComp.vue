@@ -3,16 +3,19 @@
     <div class='flex-head-data'>
       <div class='head-data'>
         <div class='app-header' v-if='tableShow'>
-          <div v-if='currentTabIndex===1'>
 
-            <span class='fa fa-arrow-left' @click='backToProjectList'></span>
-            <!-- <span v-if='projectInfo.title === undefined'> Project Name</span> -->
-            <span>
-              <strong>{{ projectInfo.title }}</strong>
-            </span>
-            <span class='fa fa-edit' @click='editProject'></span>
+          <div v-if='currentTabIndex===1'>
+            <strong>
+              <span class='fa fa-chevron-left' @click='backToProjectList'></span>
+              <span>
+                {{ projectInfo.title }}
+              </span>
+              <span class='fa fa-edit' @click='editProject'></span>
+            </strong>
           </div>
-          <div v-if='currentTabIndex===0'>Project List</div>
+          <div v-if='currentTabIndex===0'>
+            <strong> Project List</strong>
+          </div>
           <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
         </div>
         <div class='task-tabs'>
@@ -142,8 +145,6 @@ export default {
       itemEditButton: state => state.itemAction.edit,
       itemAddButton: state => state.itemAction.add,
       itemAddStepButton: state => state.itemAction.addStep,
-      // currentProjectId: state => state.sidebarItemSelection[0],
-
       proId: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
@@ -378,6 +379,10 @@ export default {
 .app-header > * {
   margin-left: 115px;
   cursor: pointer;
+}
+
+.app-header .fa-chevron-left {
+  margin-right: 5px;
 }
 
 .app-header .fa-edit {

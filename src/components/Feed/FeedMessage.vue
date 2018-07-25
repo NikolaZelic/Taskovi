@@ -1,5 +1,6 @@
 <template>
-  <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
+  <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">    
+    <div class='unseen-feed'></div>
     <div class='new-step' v-if='!global' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
@@ -44,7 +45,7 @@ export default {
   computed: {
     ...mapState({
       scrollDownMess: state => state.modulefeed.scrollDownMess, //vraca true ili false u zavisnosit da li treba spustiti scroll
-      user: state => state.userStorage,
+      user: state => state.userStorage
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -60,8 +61,8 @@ export default {
     }
   },
   methods: {
-    selectStep(){
-      store.commit('setSelectedStep', this.mess);
+    selectStep() {
+      store.commit("setSelectedStep", this.mess);
     },
     importantFeed() {
       store.commit("changeImportant", {
@@ -121,10 +122,11 @@ export default {
 </script>
 
 <style scoped>
-.new-step{
+.new-step {
   color: #007bff;
   cursor: pointer;
   margin: 10px;
+  align-self: center;
 }
 pre {
   white-space: pre-wrap;
@@ -257,5 +259,15 @@ pre {
   background-color: #0a0;
   height: 100%;
   width: 0;
+}
+
+.unseen-feed {
+  background: #818411;
+  box-shadow: 6px 6px 33px -3px rgba(250, 230, 15, 1);
+  width: 10px;
+  align-self: center;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
 }
 </style>
