@@ -122,7 +122,7 @@ export default {
 </script>
 
 <style scoped>
-.header-type{
+.header-type {
   font-size: 200%;
   text-align: center;
 }
@@ -154,7 +154,7 @@ pre {
   cursor: pointer;
 }
 
-.cont {
+.cont:not(:last-child) {
   padding: 5px 10px;
   margin: 0 7px;
   border-bottom: 1px solid #1b62e72b;
@@ -163,6 +163,7 @@ pre {
 .img-placeholder {
   width: 40px;
   display: flex;
+  justify-content: center;
   align-items: flex-start;
   margin: 5px 0 0 0;
 }
@@ -214,7 +215,7 @@ pre {
 .right-con {
   margin: 0 10px;
   display: flex;
-  flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
 }
 
 .right-con .message-body-header {
