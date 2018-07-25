@@ -250,7 +250,6 @@ export default {
       taskSearchTag: [],
       taskSearchText: undefined,
       tagLoading: false,
-      scrollPos: 0,
       currentTabIndex: 0,
       showTaskPeople: true,
       activePopup: false,
@@ -363,8 +362,8 @@ export default {
         },
         {
           key: "unseen_feed",
-          label: "N",
-          // sortable: true,
+          // label: "N",
+          sortable: true,
           class: "text-center td-icon-width ",
           thClass: "td-yellow"
         }
@@ -408,7 +407,7 @@ export default {
         },
         {
           key: "unseen_feed",
-          // sortable: true,
+          sortable: true,
           class: "text-center td-icon-width",
           thClass: "td-yellow"
         }
@@ -427,36 +426,49 @@ export default {
   },
   watch: {
     currentTabIndex(val) {
-      this.taskSearchText = "";
-      if (val === 1) this.selectedFilter = [];
-      if (val === 0) store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
+      if (val === 0) {
+        this.taskSearchText = "";
+        this.selectedFilter = [];
+        store.state.sidebarItemSelection[1] = undefined; //this.selectedFilter = [];
+      }
       if (val < 0) return;
       this.removeActiveClass(null);
       if (this.tabs[val].itemIndex === undefined) {
         // IF ITEM INDEX IS UNDEFINED, COMMIT TO STORE
         store.commit("setSidebarItemSelection", {
-          index: this.currentTabIndex,
+          tabIndex: val,
           id: undefined
         });
+      } else {
+        store.commit("setSidebarItemSelection", {
+          tabIndex: val,
+          id: this.tabs[val].itemIndex
+        });
+      }
+      if (val === 1) {
+        store.commit("resetTaskView");
+        this.getTaskFilterData();
       }
     },
-    selectedFilter() {
+    selectedFilter(val) {
       // FIRES WHEN CHECKBOXES CHANGE
-      this.getTaskFilterData();
+      if (val !== undefined && this.currentTabIndex === 1) {
+        this.getTaskFilterData();
+      }
     },
     taskSearchTag() {
-      this.getTaskFilterData();
+      if (this.currentTabIndex === 1) this.getTaskFilterData();
     },
     taskSearchText(val) {
-      if (val !== undefined || val != "") this.getTaskFilterData();
-    },
-    scrollPos(val) {}
+      if (val !== undefined && this.currentTabIndex === 1) {
+        // || val != ""
+        this.getTaskFilterData();
+      }
+    }
   },
   methods: {
     showGlobalFeed() {
-      // this.currentTabIndex = -1;
       store.commit("showGlobalFeed", true);
-      // this.$refs.sidBody.style.display = "none";
     },
     tableScroll(event) {
       let sp = event.target.scrollTop;
@@ -521,9 +533,7 @@ export default {
       let index = this.currentTabIndex;
       this.currentTabIndex = -1;
       this.currentTabIndex = index;
-      store.commit("resetTaskView");
       store.commit("showGlobalFeed", false);
-      // this.$refs.sidBody.style.display = "flex";
       switch (index) {
         case 0:
           // SETS UNDEFINED PROJECT TO STORE TO REMOVE TASKS TAB
@@ -531,6 +541,7 @@ export default {
           this.actionTabDataProject();
           break;
         case 1:
+          store.commit("resetTaskView");
           this.getTaskFilterData();
           break;
       }
@@ -538,7 +549,7 @@ export default {
     selectItem(itemID) {
       this.tabs[this.currentTabIndex].itemIndex = itemID;
       store.commit("setSidebarItemSelection", {
-        index: this.currentTabIndex,
+        tabIndex: this.currentTabIndex,
         id: itemID
       });
     },
@@ -549,6 +560,7 @@ export default {
       this.actionTabDataTask(cr, as, ar);
     },
     actionTabDataTask(cr, as, ar) {
+      console.log("task");
       clearInterval(this.intervalNotification);
       store.dispatch("getTasks", {
         index: this.currentTabIndex,

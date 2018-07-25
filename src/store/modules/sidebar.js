@@ -37,20 +37,13 @@ const actions = {
     store.commit('itemEditClick', {
       id: params,
     });
-  },
+  },  
   itemAddClick() {
     store.commit('itemAddClick');
   },
-  itemAddTaskClick(commit, params) {
-    store.commit('itemAddTaskClick', {
-      id: params.id,
-    });
-  },
-
   itemActionReset() {
     store.commit('itemActionReset');
   },
-
   resetTaskView() {
     store.commit('resetTaskView');
   },
@@ -72,29 +65,24 @@ const mutations = {
   },
   setSidebarItemSelection: (state, params) => {
     store.state.sidebarItemSelection[params.index] = params.id;
+    // DA LI MI TREBA BRISANJE STATUS DUGMICA - RESETUJE PREGLED?
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
-    store.state.currentTabIndex = params.index;
+    store.state.currentTabIndex = params.tabIndex;
     store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!!
   },
+
   itemEditClick: (state, params) => {
     store.state.itemAction.edit = params.id;
     store.state.itemAction.add = undefined;
     store.state.itemAction.addTask = undefined;
   },
-
-
   itemAddClick: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = 1;
     store.state.itemAction.addTask = undefined;
-  },
-  itemAddTaskClick: (state, params) => {
-    store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined;
-    store.state.itemAction.addTask = params.id;
   },
   itemActionReset: () => {
     store.state.itemAction.edit = undefined;
