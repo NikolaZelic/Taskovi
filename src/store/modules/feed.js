@@ -99,6 +99,9 @@ const mutations = {
       }
     }
   },
+  setSelectedStep: (state, params) => {
+    state.selectedStep = params;
+  },
 }
 const getters = {
 
@@ -108,6 +111,7 @@ const state = {
   messages: [],
   scrollDownMess: true,
   searchFeedsParams: null,
+  selectedStep: null,
 }
 
 export default {

@@ -1,5 +1,8 @@
 <template>
   <div class='cont selector' v-bind:class="mojaPoruka()?'right-con':'left-con'" :id="mess.fed_id">
+    <div class='new-step' v-if='!global' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
+      <i class="fas fa-plus"></i>
+    </div>
     <div class='img-placeholder'>
       <img :src="icon()" v-if='this.mess.fed_type!=="status"' />
       <span class="fas fa-info-circle" v-else></span>
@@ -41,7 +44,7 @@ export default {
   computed: {
     ...mapState({
       scrollDownMess: state => state.modulefeed.scrollDownMess, //vraca true ili false u zavisnosit da li treba spustiti scroll
-      user: state => state.userStorage
+      user: state => state.userStorage,
     }),
     ...mapGetters({
       taskid: "selectedItemID"
@@ -57,6 +60,9 @@ export default {
     }
   },
   methods: {
+    selectStep(){
+      store.commit('setSelectedStep', this.mess);
+    },
     importantFeed() {
       store.commit("changeImportant", {
         mess: this.mess
@@ -115,6 +121,11 @@ export default {
 </script>
 
 <style scoped>
+.new-step{
+  color: #007bff;
+  cursor: pointer;
+  margin: 10px;
+}
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
