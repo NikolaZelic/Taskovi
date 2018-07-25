@@ -289,7 +289,7 @@ pre {
   margin: 0 5px;
 }
 
-.status{
-  color: red;
+.status {
+  font-size: 80%;
 }
 </style>
