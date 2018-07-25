@@ -72,8 +72,22 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .multiselect__input {
   color: black;
+}
+
+.fas[data-v-1f68b3d0]{
+  width: 43px;
+  margin: 0;
+}
+
+.task-modal-input[data-v-1f68b3d0]{
+  width: 100%;
+  padding-left: 10px;
+}
+
+select.form-control:not([size]):not([multiple]){
+  margin-left: 10px;
 }
 </style>
