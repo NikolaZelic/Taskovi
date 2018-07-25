@@ -232,6 +232,15 @@ export default {
     }
   },
   methods: {
+    changeSelectedTask(){
+      store.commit("clearFeed");
+      this.refreshSearchParams();
+      this.dataFromBegining = 1;
+      this.haveNewMessage = false;
+      this.readeSteps();
+      this.readeFeeds();
+      store.commit("setSearchFeedParams", null);
+    },
     clearStepCreateContent() {
       this.newStep = "";
       this.stepErr = false;
