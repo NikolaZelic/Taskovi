@@ -83,7 +83,7 @@
                         <h5 class="mt-0 mb-1 inline-block">{{user.name}}
                           <small> -- {{user.usr_email}}</small>
                         </h5>
-                        <span>Worked on this step for {{user.timespent}} minutes</span>
+                        <!-- <span>Worked on this task for {{user.timespent}} minutes</span> -->
                       </div>
                     </div>
 

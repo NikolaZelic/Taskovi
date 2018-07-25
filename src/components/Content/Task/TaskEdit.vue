@@ -73,6 +73,8 @@ export default {
         })
         .then(response => {
           if (response.data.status === "OK") {
+            // console.log("tasks/:tasid poziv iz taskEdita");
+
             store.dispatch("getTasks", {
               index: 1,
               pro_id: this.proId

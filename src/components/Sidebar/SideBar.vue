@@ -127,7 +127,7 @@
                 title="Edit Item"></span>
             </template>
 
-            
+
             <!-- CREATED DATE -->
             <template slot="created_date" slot-scope="data">
               <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('YYYY-MM-DD')}}</span>
@@ -550,6 +550,8 @@ export default {
     },
     actionTabDataTask(cr, as, ar) {
       clearInterval(this.intervalNotification);
+      // console.log("tasks/:tasid poziv iz sidebar");
+
       store.dispatch("getTasks", {
         index: this.currentTabIndex,
         pro_id: this.project.id,
