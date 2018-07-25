@@ -8,6 +8,8 @@ import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
 
+import TestForm from '@/components/TestForm';
+
 
 Vue.use(Router);
 Vue.use(Meta);
@@ -16,6 +18,7 @@ export default new Router({
       path: '/',
       name: 'MergedComp',
       component: MergedComp,
+
       children: [{
         path: 'user',
         name: 'UserOptions',
@@ -34,6 +37,9 @@ export default new Router({
     }, {
       path: '/stepadd',
       component: StepAdd
+    }, {
+      path: '/testform',
+      component: TestForm
     }
   ],
   mode: 'history',

@@ -551,7 +551,7 @@ export default {
     actionTabDataTask(cr, as, ar) {
       clearInterval(this.intervalNotification);
       // console.log("tasks/:tasid poziv iz sidebar");
-
+      // console.log("ispaljeno iz sidebara")
       store.dispatch("getTasks", {
         index: this.currentTabIndex,
         pro_id: this.project.id,

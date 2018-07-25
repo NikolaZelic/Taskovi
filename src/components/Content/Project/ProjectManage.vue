@@ -124,7 +124,8 @@ export default {
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
         altFormat: "j M, Y H:i",
-        altInput: true
+        altInput: true,
+        minDate: "today"
       },
       usersField: ["email", "name", "surname", "admin", "remove"],
       email: undefined,
