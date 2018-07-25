@@ -9,11 +9,11 @@
 
       <div class='task-tabs'>
         <b-tabs v-model='currentMiniTab'>
-          <b-tab title="Task Info" @click="changeTab('generalInfo')" active>
+          <b-tab title="Task Info" @click="changeTab('generalInfo'); tabParam = 'generalInfo'" active>
           </b-tab>
-          <b-tab title="Steps" @click="changeTab('steps')">
+          <b-tab title="Steps" @click="changeTab('steps'); tabParam = 'steps'">
           </b-tab>
-          <b-tab title="Messages" @click="changeTab('messages')">
+          <b-tab title="Messages" @click="changeTab('messages'); tabParam = 'messages'">
           </b-tab>
         </b-tabs>
       </div>
@@ -122,7 +122,7 @@
           <table class="table table-borderless table-hover">
             <thead>
               <tr>
-                <th scope="col">Link</th>
+                <th scope="col">Go to messages</th>
                 <th scope="col">Status</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
@@ -134,11 +134,12 @@
 
             <tbody>
               <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
-                <td @click.stop='jumpToFeed(task)'>
+                <td @click.stop='jumpToFeed(task)' title="Go to messages for this step">
                   <i class="far fa-hand-point-right link-feed"></i>
+                  <i class="far fa-envelope"></i>
                 </td>
 
-                <td>
+                <td :title="task.sta_text">
                   <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
                   <i class="far fa-hourglass text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
                   <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
@@ -460,6 +461,7 @@ export default {
     return {
       // youWorkedFor: 0,
       // inProgress: false,
+      tabParam: undefined,
       editFields: false,
 
       tabs: {
@@ -1061,7 +1063,13 @@ export default {
         // this.getTaskInfo(val);
         // this.getStepInfo(val);
         //this.getGeneralInfo(val);
-        this.changeTab("generalInfo");
+        if(this.tabParam === undefined || this.tabParam === "generalInfo"){
+          this.changeTab("generalInfo");
+        }else if(this.tabParam === "steps"){
+          this.changeTab("steps");
+        }else if(this.tabParam === "messages"){
+          this.changeTab("messages");
+        }
 
         this.stepInfoShow = false;
         this.stepEditShow = false;
