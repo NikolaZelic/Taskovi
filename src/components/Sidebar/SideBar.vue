@@ -127,14 +127,25 @@
                 title="Edit Item"></span>
             </template>
 
+            
+            <!-- CREATED DATE -->
+            <template slot="created_date" slot-scope="data">
+              <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('YYYY-MM-DD')}}</span>
+            </template>
+
+            <!-- CREATED TIME -->
+            <template slot="created_time" slot-scope="data">
+              <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
+            </template>
+
             <!-- DUE DATE -->
             <template slot="due_date" slot-scope="data">
-              <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('YYYY-MM-DD')}}</span>
+              <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('YYYY-MM-DD')}}</span>
             </template>
 
             <!-- DUE TIME -->
             <template slot="due_time" slot-scope="data">
-              <span v-if='data.item.pro_deadline!==null'>{{$moment(data.item.pro_deadline).format('HH:mm')}}</span>
+              <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
             </template>
 
 
@@ -277,7 +288,7 @@ export default {
           single: "Task",
           icon: "fas fa-tasks",
           search: ""
-        },
+        }
         // {
         //   name: "Configuration",
         //   single: "Task",
@@ -299,17 +310,26 @@ export default {
           thClass: "td-blue"
         },
         {
-          //key: 'pro_deadline',
+          key: "created_date",
+          label: "Created Date",
+          class: "text-right",
+          thClass: "td-blue"
+        },
+        {
+          key: "created_time",
+          label: "Created Time",
+          class: "text-left",
+          thClass: "td-blue"
+        },
+        {
           key: "due_date",
           label: "Due Date",
-          // sortable: true,
           class: "text-right",
           thClass: "td-blue"
         },
         {
           key: "due_time",
           label: "Due Time",
-          // sortable: true,
           class: "text-left",
           thClass: "td-blue"
         },
@@ -369,6 +389,18 @@ export default {
           thClass: "td-blue"
         },
         {
+          key: "created_date",
+          label: "Created Date",
+          class: "text-right",
+          thClass: "td-blue"
+        },
+        {
+          key: "created_time",
+          label: "Created Time",
+          class: "text-left",
+          thClass: "td-blue"
+        },
+        {
           key: "sta_text",
           label: "Status",
           sortable: true,
@@ -379,7 +411,7 @@ export default {
           // sortable: true,
           class: "text-center td-icon-width",
           thClass: "td-yellow"
-        },
+        }
         // {
         //   key: "users",
         //   class: "text-center td-icon-width",
@@ -489,7 +521,7 @@ export default {
       let index = this.currentTabIndex;
       this.currentTabIndex = -1;
       this.currentTabIndex = index;
-      store.commit('resetTaskView');
+      store.commit("resetTaskView");
       store.commit("showGlobalFeed", false);
       // this.$refs.sidBody.style.display = "flex";
       switch (index) {
@@ -654,8 +686,6 @@ export default {
     }
   },
   created() {
-    this.getAvatar();
-
     // GET FEED TIMER - HAS TO BE IN CREATED
     store.dispatch("getFeedCount");
     this.intervalNotification = setInterval(
@@ -965,7 +995,7 @@ h2 {
 /* ADD BUTTON */
 
 #addItem {
-  max-width: 210px;
+  max-width: 130px;
   align-self: center;
   margin: 0 auto 0.6rem 4px;
 }
