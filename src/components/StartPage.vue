@@ -30,9 +30,9 @@
                 </p>
               </form>
               <!-- REMOVE IN FINAL -->
-              <!-- <div class="preset">
+              <div class="preset" v-if="href">
                 <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
-              </div> -->
+              </div>
             </div>
 
           </div>
@@ -221,7 +221,20 @@ export default {
       // // otherwise submit form
     }
   },
+
+
   computed: {
+    href(){
+      var loc = window.location.href;
+      if(loc.startsWith("http://localhost:8080")){
+        return true;
+      }else{
+        return false;
+      }
+
+
+    },
+
     passNotSame() {
       var undef =
         this.user.password === undefined || this.user.confirmpass === undefined;
