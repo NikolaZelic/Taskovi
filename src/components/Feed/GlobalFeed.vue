@@ -75,6 +75,7 @@ export default {
     },
   },
   mounted(){
+    console.log('readsss')
     this.readeFeeds();
   },
   destroyed() {

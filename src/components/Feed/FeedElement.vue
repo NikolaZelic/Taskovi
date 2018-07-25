@@ -4,14 +4,14 @@
       <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
-          <input type="radio" id="all" value="all" checked v-model='searchType'>
-          <label for="all">All</label>
-          <input type="radio" id="messages" value="messages" v-model='searchType'>
+          <input type="radio" id="messages" value="messages" checked v-model='searchType'>
           <label for="messages">Messages</label>
           <input type="radio" id="statuses" value="statuses" v-model='searchType'>
           <label for="statuses">Statuses</label>
           <input type="radio" id="files" value="files" v-model='searchType'>
           <label for="files">Files</label>
+          <input type="radio" id="all" value="all" v-model='searchType'>
+          <label for="all">All</label>
         </span>
         <input type="checkbox" id='important' v-model='searchImportant'>
         <label for="important">Important</label>
@@ -91,7 +91,7 @@ export default {
       feed: "",
       uploadProgress: 50,
       inProgress: false,
-      searchType: "all",
+      searchType: "messages",
       searchText: "",
       searchImportant: false,
       dataFromBegining: 1,
@@ -232,7 +232,7 @@ export default {
     }
   },
   methods: {
-    changeSelectedTask(){
+    changeSelectedTask() {
       store.commit("clearFeed");
       this.refreshSearchParams();
       this.dataFromBegining = 1;

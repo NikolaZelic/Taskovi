@@ -53,10 +53,8 @@
 
 input.custom-modern,
 textarea.custom-modern {
-  border: 1px solid #636567bf;
-  /* border-radius: 0; */
+  border: 1px solid #ced4da;
   color: #fff;
-  /* background: #2d3436; */
 }
 
 input.custom-modern::placeholder,

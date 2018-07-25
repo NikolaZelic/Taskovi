@@ -17,10 +17,6 @@ export default {
     };
   },
 
-  computed: {
-      
-  },
-
   methods: {
     showFile() {
       return (

@@ -156,9 +156,12 @@ pre {
   cursor: pointer;
 }
 
-.cont:not(:last-child) {
+.cont {
   padding: 5px 10px;
   margin: 0 7px;
+}
+
+.cont:not(:last-child) {
   border-bottom: 1px solid #1b62e72b;
 }
 
