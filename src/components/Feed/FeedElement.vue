@@ -1,7 +1,7 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs">
-      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
+      <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
           <input type="radio" id="all" value="all" checked v-model='searchType'>
@@ -20,7 +20,7 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected'>
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' >
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
@@ -132,6 +132,14 @@ export default {
     }
   },
   methods: {
+    stepCicked(step){
+      this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
+    },
+    textInputBlur(){
+      if(this.searchText==null||this.searchText.length==0)
+        return;
+      this.readeFeeds();
+    },
     reload() {
       store.commit("clearFeed");
       this.refreshSearchParams();
@@ -282,16 +290,7 @@ export default {
         });
     },
     handleScroll(e) {
-      var messages = document.querySelectorAll(".selector");
-      for (var i in messages) {
-        var message = messages[i];
-        if (this.isInViewport(message)) {
-          var selectedMessage = this.messages[i];
-          var time = selectedMessage.fed_time;
-          this.selectStep(time);
-          break;
-        }
-      }
+      this.processStepSelection();
       if (
         parseInt(!this.dataFromBegining && e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
@@ -302,6 +301,18 @@ export default {
       }
       if (e.target.scrollTop === 0) {
         this.addUp();
+      }
+    },
+    processStepSelection(){
+      var messages = document.querySelectorAll(".selector");
+      for (var i in messages) {
+        var message = messages[i];
+        if (this.isInViewport(message)) {
+          var selectedMessage = this.messages[i];
+          var time = selectedMessage.fed_time;
+          this.selectStep(time);
+          break;
+        }
       }
     },
     selectStep(time) {
@@ -349,9 +360,7 @@ export default {
       a = a[responseLength];
       a.scrollIntoView(true);
     },
-    jumpToStepFeed() {
-      var tsk_id = this.searchFeedsParams.tsk_id;
-      var stp_time_created = this.searchFeedsParams.stp_time_created;
+    jumpToStepFeed(tsk_id, stp_time_created) {
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
         if (result.data.status != "OK") {
           alert("Faild to load data");
@@ -363,6 +372,7 @@ export default {
         });
         setTimeout(() => {
           this.scrollTOTop();
+          this.processStepSelection();
         }, 5);
       });
     },
@@ -398,7 +408,9 @@ export default {
       this.readeFeeds();
     } else {
       this.dataFromBegining = 0;
-      this.jumpToStepFeed();
+      var tsk_id = this.searchFeedsParams.tsk_id;
+      var stp_time_created = this.searchFeedsParams.stp_time_created;
+      this.jumpToStepFeed(tsk_id, stp_time_created);
     }
 
     // ZX - POZIVA REFRESH NOTIFA
@@ -432,6 +444,9 @@ export default {
 };
 </script>
 <style scoped>
+#all-messages{
+  height: 500px;
+}
 .search-inputs {
   margin: 10px auto 0;
 }
@@ -483,6 +498,7 @@ export default {
 
 .list-group-item {
   border: none;
+  cursor: pointer;
 }
 
 .darkTheme .list-group-item {
