@@ -29,6 +29,8 @@
               :disabled="$v.form.$invalid">
       Submit
     </b-button>
+    <pre>{{ $v }}</pre>
+
   </b-form>
 </template>
 
