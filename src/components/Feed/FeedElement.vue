@@ -1,7 +1,7 @@
 <template>
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs">
-      <input @blur="readeFeeds" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
+      <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
         <span class='radio-wrapper'>
           <input type="radio" id="all" value="all" checked v-model='searchType'>
@@ -132,6 +132,11 @@ export default {
     }
   },
   methods: {
+    textInputBlur(){
+      if(this.searchText==null||this.searchText.length==0)
+        return;
+      this.readeFeeds();
+    },
     reload() {
       store.commit("clearFeed");
       this.refreshSearchParams();
