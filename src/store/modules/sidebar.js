@@ -61,33 +61,33 @@ const mutations = {
     store.state.currentTabIndex = params.index;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.addTask = undefined;
   },
   setSidebarItemSelection: (state, params) => {
-    store.state.sidebarItemSelection[params.index] = params.id;
+    store.state.sidebarItemSelection[params.tabIndex] = params.id;
     // DA LI MI TREBA BRISANJE STATUS DUGMICA - RESETUJE PREGLED?
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.addTask = undefined;
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = params.tabIndex;
     store.state.sidebarItemSelection = store.state.sidebarItemSelection; // Ovo stvarno radi !!!
   },
 
+  setTabIndex: (state,params)=>{
+    store.state.currentTabIndex = -1; // MAYBE NOT NEEDED IF ALWAYS INVOKED FROM OTHER TAB ?
+    store.state.currentTabIndex = params.tabIndex;
+  },
+
   itemEditClick: (state, params) => {
     store.state.itemAction.edit = params.id;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.addTask = undefined;
   },
   itemAddClick: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = 1;
-    store.state.itemAction.addTask = undefined;
   },
   itemActionReset: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.addTask = undefined;
     store.state.itemAction.addStep = false;
     store.state.mainFocused = false;
   },
@@ -98,9 +98,6 @@ const mutations = {
     store.state.currentTabIndex = -1;
     store.state.currentTabIndex = ci;
   },
-  // resetSidebarData: () => {
-  //   store.state.sidebarTabData = [];
-  // },
   showGlobalFeed: (state, params) => {
     store.state.globalFeed = params;
   },

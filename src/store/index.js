@@ -33,7 +33,7 @@ export const store = new Vuex.Store({
       // sid: undefined
     },
     globalFeed: false,
-    currentTabIndex: undefined,
+    currentTabIndex: 0,
     mainFocused: false,
     sidebarTabData: [],
     sidebarItemSelection: [],
@@ -51,7 +51,6 @@ export const store = new Vuex.Store({
     itemAction: {
       edit: undefined,
       add: undefined,
-      addTask: undefined,
       addStep: false
     },
   },
