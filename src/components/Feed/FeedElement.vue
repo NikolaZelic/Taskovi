@@ -20,7 +20,7 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected'>
+        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' >
           {{step.tsk_title}}
         </b-list-group-item>
       </b-list-group>
@@ -132,6 +132,9 @@ export default {
     }
   },
   methods: {
+    stepCicked(step){
+      this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
+    },
     textInputBlur(){
       if(this.searchText==null||this.searchText.length==0)
         return;
@@ -354,9 +357,7 @@ export default {
       a = a[responseLength];
       a.scrollIntoView(true);
     },
-    jumpToStepFeed() {
-      var tsk_id = this.searchFeedsParams.tsk_id;
-      var stp_time_created = this.searchFeedsParams.stp_time_created;
+    jumpToStepFeed(tsk_id, stp_time_created) {
       api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
         if (result.data.status != "OK") {
           alert("Faild to load data");
@@ -403,7 +404,9 @@ export default {
       this.readeFeeds();
     } else {
       this.dataFromBegining = 0;
-      this.jumpToStepFeed();
+      var tsk_id = this.searchFeedsParams.tsk_id;
+      var stp_time_created = this.searchFeedsParams.stp_time_created;
+      this.jumpToStepFeed(tsk_id, stp_time_created);
     }
 
     // ZX - POZIVA REFRESH NOTIFA
@@ -437,6 +440,9 @@ export default {
 };
 </script>
 <style scoped>
+#all-messages{
+  height: 500px;
+}
 .search-inputs {
   margin: 10px auto 0;
 }
