@@ -49,6 +49,10 @@ const actions = {
   },
 };
 const mutations = {
+  setRefreshGlobalFeed: (state, params) => {
+    store.state.refreshGlobalFeed = params;
+  },
+
   setSidebarData: (state, params) => {
     if (params.data !== undefined) {
       store.state.sidebarTabData[params.tabIndex] = params.data;
