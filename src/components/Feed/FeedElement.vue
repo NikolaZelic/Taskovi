@@ -19,7 +19,7 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group v-if='!global'>
+      <b-list-group v-if='!global&&steps.length>0'>
         <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' >
           {{step.tsk_title}}
         </b-list-group-item>
@@ -373,6 +373,7 @@ export default {
         setTimeout(() => {
           this.scrollTOTop();
           this.processStepSelection();
+          this.addUp();
         }, 5);
       });
     },
