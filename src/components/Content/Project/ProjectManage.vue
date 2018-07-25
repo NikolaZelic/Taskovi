@@ -262,6 +262,9 @@ export default {
           sid: localStorage.sid
         })
         .then(r => {
+          // napraviti preko mutacija
+          store.commit("itemActionReset");
+
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
               ok: true,
