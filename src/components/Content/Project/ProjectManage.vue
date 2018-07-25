@@ -298,6 +298,8 @@ export default {
           sid: localStorage.sid
         })
         .then(r => {
+          store.commit("itemActionReset");
+          
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
               message:
