@@ -62,6 +62,15 @@ export const api = {
       priority: priorety,
     });
   },
+  createStepFromFeed(tsk_id, time_created, title, description){
+    return axios.post( 'steps', {
+      sid: window.localStorage.sid,
+      tasid: tsk_id,
+      timecreated: time_created,
+      title: title,
+      description: description,
+    });
+  },
   // koristi se u TaskAdd.vue, TaskAdd.vue
   suggestGroup(grpType, searchStr, comId) {
     return axios.get('groups', {
