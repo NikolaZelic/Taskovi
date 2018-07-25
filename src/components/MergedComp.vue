@@ -144,7 +144,7 @@ export default {
       itemAddStepButton: state => state.itemAction.addStep,
       // currentProjectId: state => state.sidebarItemSelection[0],
 
-      proId: state => state.sidebarItemSelection[0]
+      proId: state => state.sidebarItemSelection
     }),
     ...mapGetters({
       isFocus: "isFocus",
@@ -161,7 +161,7 @@ export default {
       if (storeProject === undefined || this.proId === undefined) return onePro;
       for (let index = 0; index < storeProject.length; index++) {
         const el = storeProject[index];
-        if (el.id === this.proId) {
+        if (el.id === this.proId[0]) {
           onePro = el;
           break;
         }
