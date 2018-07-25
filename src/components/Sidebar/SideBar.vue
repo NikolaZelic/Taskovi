@@ -460,7 +460,12 @@ export default {
   },
   methods: {
     showGlobalFeed() {
-      store.commit("showGlobalFeed", true);
+      if(this.globalFeed){
+        store.commit('setRefreshGlobalFeed', true );
+      }
+      else{
+        store.commit("showGlobalFeed", true);
+      }
     },
     tableScroll(event) {
       let sp = event.target.scrollTop;
@@ -640,7 +645,7 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       globalFeed: "globalFeed",
-      sidebarActive: state => !state.mainFocused
+      sidebarActive: state => !state.mainFocused,
     }),
     ...mapGetters({
       selectedItemID: "selectedItemID"

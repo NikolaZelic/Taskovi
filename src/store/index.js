@@ -53,5 +53,6 @@ export const store = new Vuex.Store({
       add: undefined,
       addStep: false
     },
+    refreshGlobalFeed: false,
   },
 });

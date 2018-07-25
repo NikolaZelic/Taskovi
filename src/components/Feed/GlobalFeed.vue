@@ -15,10 +15,23 @@ export default {
     };
   },
 
-  computed: {},
-
+  computed: {
+    ...mapState({
+      refreshGlobalFeed: state => state.refreshGlobalFeed,
+    }),
+  },
+  watch: {
+    refreshGlobalFeed(newVal, old){
+      // console.log('watcher');
+      if(newVal){
+        this.readeFeeds();
+        store.commit('setRefreshGlobalFeed', false );
+      }
+    },
+  },
   methods: {
     readeFeeds() {
+      // console.log('reade feeds');
       store.commit("clearFeed");
       this.offset = 0;
       store
