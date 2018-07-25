@@ -16,9 +16,9 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100">{{mess.fed_text}}</pre>
+      <pre class="message" width="100">{{mess.fed_text}}</pre> <!-- Dodati klasu ukoliko je status -->
       <div class="attachment"></div>
-      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment&&!isImage()'">Show file</a>
+      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_type!="header"' ></i>
