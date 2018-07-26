@@ -1,54 +1,53 @@
 <template>
   <!-- <div> -->
-    <div class='pro-edit'>
-      <div class='header' :class='{"back-primary":itemEditButton!==undefined}'>
-        <button class='btn btn-dark' @click='confirmation()'>
-          <span class='fas fa-arrow-left'></span> BACK</button>
-        <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
-        <h4 v-else>Adding project:</h4>
-      </div>
+  <div class='pro-edit'>
+    <div class='header' :class='{"back-primary":itemEditButton!==undefined}'>
+      <button class='btn btn-dark' @click='confirmation()'>
+        <span class='fas fa-arrow-left'></span> BACK</button>
+      <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
+      <h4 v-else>Adding project:</h4>
+    </div>
 
-      <label for="name" class="mt-3">Project name</label>
-      <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
+    <label for="name" class="mt-3">Project name</label>
+    <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
 
-      <label for="description">Description</label>
-      <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
-        class="form-control mb-3" spellcheck="false"></textarea>
+    <label for="description">Description</label>
+    <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
+      class="form-control mb-3" spellcheck="false"></textarea>
 
-      <label for="date">Deadline</label>
-      <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
-        placeholder="Pick a deadline (optional)">
-      </flat-pickr>
+    <label for="date">Deadline</label>
+    <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
+      placeholder="Pick a deadline (optional)">
+    </flat-pickr>
 
-        <div id="users">
-          <label for="users">Manage users on this project</label>
+    <div id="users">
+      <label for="users">Manage users on this project</label>
 
-        <b-input-group>
-          <b-form-input v-model="email" ref="focusThis" placeholder="Type email to add new user" />
-          <b-input-group-append>
-            <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
-          </b-input-group-append>
-        </b-input-group>
-
+      <b-input-group>
+        <b-form-input v-model="email" ref="focusThis" placeholder="Type email to add new user" />
+        <b-input-group-append>
+          <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
+        </b-input-group-append>
+      </b-input-group>
+      <div class='user-table'>
         <b-table :items='project.users' :fields='usersField' responsive v-if="this.project.users.length > 0">
 
-<template slot="email" slot-scope="row">
-  <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
-  {{project.users[row.index].email}}
+          <template slot="email" slot-scope="row">
+            <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
+            {{project.users[row.index].email}}
 
-</template>
+          </template>
 
 
 
           <template slot="admin" slot-scope="row">
             <!-- In some circumstances you may need to use @click.native.stop instead -->
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin"
-            :disabled="!project.users[row.index].disabled"></b-form-checkbox>
-              <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
+            <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin" :disabled="!project.users[row.index].disabled"></b-form-checkbox>
+            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
 
 
-          <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === 'true') -->
+            <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === 'true') -->
             <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') -->
             <!-- project.users[row.index].isyou === 'false' -->
           </template>
@@ -58,36 +57,37 @@
             <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
             <!-- <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox> -->
 
-            <button type="button" class="btn btn-danger btn-sm"  @click="changeDeleted(row.index)"
-            v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">Remove</button>
+            <button type="button" class="btn btn-danger btn-sm" @click="changeDeleted(row.index)" v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">Remove</button>
             <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
           </template>
 
           <!-- <template slot="new" slot-scope="row">
             <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span> -->
-            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
+          <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
           <!-- </template> -->
 
 
         </b-table>
-
       </div>
-      <!-- </b-modal> -->
+    </div>
+    <!-- </b-modal> -->
 
-      <div class='usersModal'>
+    <div class='usersModal'>
 
-      </div>
-      <!-- <multiselect id='users' v-model='project.users' :options="options" :preserveSearch="true" :multiple="true" :taggable="true"
+    </div>
+    <!-- <multiselect id='users' v-model='project.users' :options="options" :preserveSearch="true" :multiple="true" :taggable="true"
         track-by='email' @tag="addTag" :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" :custom-label='CustomPersonLabel'
         placeholder="Enter email of people"></multiselect> -->
 
 
-      <div v-if='itemEditButton!==undefined' class='d-block'>
-        <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
-        <button @click="projectEdit" class="btn btn-primary btn-block"><span class="fas fa-save"></span> Save changes</button>
-      </div>
-      <button v-else @click="projectCreate" class="btn btn-success"><span class="fas fa-plus-square"></span> Create project</button>
+    <div v-if='itemEditButton!==undefined' class='d-block'>
+      <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
+      <button @click="projectEdit" class="btn btn-primary btn-block">
+        <span class="fas fa-save"></span> Save changes</button>
     </div>
+    <button v-else @click="projectCreate" class="btn btn-success">
+      <span class="fas fa-plus-square"></span> Create project</button>
+  </div>
   <!-- </div> -->
 </template>
 
@@ -148,9 +148,9 @@ export default {
   methods: {
     confirmation() {
       // if(this.editProjectData.title !== this.project.title || this.editProjectData.description !== this.project.description || this.editProjectData.deadline !== this.project.deadline){
-        if (confirm("Are you sure? You might have unsaved changes!")) {
-          this.resetProjectView();
-        }
+      if (confirm("Are you sure? You might have unsaved changes!")) {
+        this.resetProjectView();
+      }
       // }else{
       //   this.resetProjectView();
       // }
@@ -299,7 +299,7 @@ export default {
         })
         .then(r => {
           store.commit("itemActionReset");
-          
+
           if (r.data.status === "OK") {
             store.commit("modalStatus", {
               message:
@@ -434,7 +434,7 @@ export default {
   background: var(--success);
   border-radius: 5px;
   display: flex;
-  padding: 10px 20px;
+  padding: 7px 20px;
   justify-content: space-between;
   color: initial;
 }
@@ -460,10 +460,10 @@ export default {
 }
 
 .btn-success {
-  color: initial;
+  color: white;
 }
 
-h4{
+h4 {
   color: white;
 }
 </style>

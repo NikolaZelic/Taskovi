@@ -386,7 +386,7 @@ export default {
         });
     },
     newMessages() {
-      console.log('newMessages');
+      // console.log("newMessages");
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -396,7 +396,6 @@ export default {
             return;
           }
           if (result.data.data > 0) {
-            // console.log("Ovde");
             this.countNumber = 1;
             this.count = 0;
             var e = document.getElementById("all-messages");
@@ -415,7 +414,7 @@ export default {
         });
     },
     addDown() {
-      console.log('addDown');
+      console.log("addDown");
       if (this.loadingData) return;
       api
         .readeFeeds(
@@ -602,7 +601,7 @@ export default {
       // console.log(this.count % this.countNumber == 0);
       if (
         this.count % this.countNumber == 0 &&
-        this.taskid != -1 
+        this.taskid != -1
         // && !this.searchOn
       ) {
         if (this.messages.length > 0) {
@@ -630,20 +629,15 @@ export default {
   border: 2px solid red;
 }
 
-#all-messages {
-  /* height: 500px; */
-}
-
 .search-inputs {
   margin: 10px auto 0;
 }
 
 .message-notificaton {
   cursor: pointer;
-  background-color: green;
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 30px;
+  bottom: 50px;
 }
 
 .notification-on {
@@ -739,7 +733,7 @@ export default {
 .input {
   bottom: 0px;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   position: relative;
 }
 
@@ -762,7 +756,7 @@ export default {
   height: 140px;
 }
 
-.input button {
+.input .input button {
   position: relative;
   border-radius: 5px;
   width: 42px;
@@ -771,6 +765,7 @@ export default {
 
 .input button:first-child {
   position: absolute;
+  bottom: 10px;
   left: 15px;
   background: var(--ac-color);
   color: white;
@@ -778,7 +773,8 @@ export default {
 
 .input button:last-child {
   position: absolute;
-  right: 15px;
+  bottom: 10px;
+  right: 20px;
 }
 
 .input button > span {

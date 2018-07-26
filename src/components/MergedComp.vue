@@ -284,8 +284,9 @@ export default {
 
 .alert-success {
   color: #11441d !important;
-  background-color: #79e292e8 !important;
-  border-color: #37e05e !important;
+  background: linear-gradient(to right, #79e292 0%, #a1de7e 100%) !important;
+  /* background-color: #79e292e8 !important; */
+  border-color: #32e65c !important;
 }
 
 .alert-danger {
@@ -329,7 +330,7 @@ export default {
 }
 
 .maincontent > * {
-      margin: 20px 30px 10px;
+  margin: 20px 30px 10px;
 }
 
 .maincontent h1 {
