@@ -98,7 +98,7 @@
           </table>
 
           <button type="button" class="btn btn-success save" @click="editTaskBtn()">
-            <span class="fa fa-edit"></span> Edit</button>
+            Edit <span class="fa fa-chevron-right"></span> </button>
         </div>
 
         <!-- <div class="card-body">
@@ -1112,7 +1112,7 @@ h1 {
 }
 
 .save .fa {
-  margin-right: 10px;
+  margin: 0 10px;
 }
 
 .card {

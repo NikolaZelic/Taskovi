@@ -707,7 +707,7 @@ export default {
 .input {
   bottom: 0px;
   display: flex;
-  /* align-items: center; */
+  margin-bottom: 10px;
   position: relative;
 }
 

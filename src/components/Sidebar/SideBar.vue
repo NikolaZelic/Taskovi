@@ -69,8 +69,8 @@
           <template v-if="!showSubFilter()">
             <b-form-group>
               <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-                <b-input-group-text slot="prepend">
-                  <span class="fas fa-search" @click='focusSearch'></span>
+                <b-input-group-text slot="prepend" @click='focusSearch'>
+                  <span class="fas fa-search" ></span>
                 </b-input-group-text>
                 <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
                 <b-input-group-append v-if='tabs[getTabIndex].search'>
@@ -112,7 +112,7 @@
           :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
-            <span>{{data.item.title}} </span>
+            <span class='td-bold'>{{data.item.title}} </span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
               title="Edit Item"></span>
           </template>
@@ -940,6 +940,10 @@ export default {
 
 .td-icon-width {
   width: 40px;
+}
+
+.td-bold {
+  font-weight: bold;
 }
 
 /* TASK LIST END */
