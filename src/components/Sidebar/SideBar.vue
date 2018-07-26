@@ -714,8 +714,8 @@ export default {
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
     // TEST VER
-    if (this.itemsFiltered !== undefined)
-      console.log("cr " + this.itemsFiltered.length);
+    // if (this.itemsFiltered !== undefined)
+      // console.log("cr " + this.itemsFiltered.length);
   },
   mounted() {
     // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
@@ -723,9 +723,9 @@ export default {
     //   console.log("mn" + this.itemsFiltered.length);
 
     if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
-      console.log(
-        "Ubacujem u jedini projekat = " + this.itemsFiltered[0].title
-      );
+      // console.log(
+      //   "Entering single project = " + this.itemsFiltered[0].title
+      // );
       this.selectAndSet(this.itemsFiltered[0]);
     }
   },

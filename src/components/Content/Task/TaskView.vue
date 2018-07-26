@@ -595,10 +595,7 @@ export default {
         this.tabs.messages = true;
         this.stepInfoShow = false;
         this.stepEditShow = false;
-        // console.log('Parametar messages')
       }
-
-      // console.log(parameter);
     },
 
     showInactiveUsers() {
@@ -654,13 +651,9 @@ export default {
         });
     },
 
-    saveDescription() {
-      // console.log('saved desc edit');
-    },
-
-    saveDescription() {
-      console.log("saved desc edit");
-    },
+    // saveDescription() {
+    //   console.log("saved desc edit");
+    // },
 
     saveChanges() {
       axios

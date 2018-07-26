@@ -288,7 +288,7 @@ pre {
   height: 15px;
   border-radius: 50%;
   margin: 0 5px; */
-  border-left: 5px solid #dcdc16;
+  border-left: 6px solid #eaea12;
 }
 
 .status {
