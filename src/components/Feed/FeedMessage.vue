@@ -1,6 +1,6 @@
 <template>
 <!-- mojaPoruka()?'right-con': -->
-  <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">    
+  <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">
     <!-- <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div> -->
     <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
@@ -18,7 +18,7 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}' >{{mess.fed_text}} </pre> 
+      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}' >{{mess.fed_text}} </pre>
       <div class="attachment"></div>
       <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
@@ -200,6 +200,7 @@ pre {
   font-size: 12px;
   font-weight: bold;
   color: var(--ac-color-dark);
+  flex: 1;
 }
 
 .cont .attach {
@@ -248,8 +249,8 @@ pre {
 .time-right {
   color: #8a8a8a;
   font-size: 12px;
-
-  text-align: right;
+  flex: 1;
+  text-align: left;
 }
 
 .left-con p {
@@ -291,6 +292,6 @@ pre {
 }
 
 .status {
-  font-size: 80%;
+  font-size: 70%;
 }
 </style>
