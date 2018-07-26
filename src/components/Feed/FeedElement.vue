@@ -205,16 +205,16 @@ export default {
     }
   },
   watch: {
-    taskid(val) {
-      if (val === "") return;
-      // if(this.taskid != -1){
-      store.dispatch("readeFeeds", {
-        taskid: this.taskid,
-        fedid: 0,
-        direction: "start"
-      });
+    // taskid(val) {
+    //   if (val === "") return;
+    //   // if(this.taskid != -1){
+    //   store.dispatch("readeFeeds", {
+    //     taskid: this.taskid,
+    //     fedid: 0,
+    //     direction: "start"
+    //   });
       // }
-    },
+    // },
     // messages(newVal, oldVal) {
     //   console.log('messages watcher');
     //   this.countNumber = 1;
@@ -234,6 +234,7 @@ export default {
   },
   methods: {
     changeSelectedTask() {
+      console.log('changeSelectedTask');
       store.commit("clearFeed");
       this.refreshSearchParams();
       this.dataFromBegining = 1;
@@ -281,7 +282,7 @@ export default {
       store.commit("setSearchFeedParams", null);
     },
     refreshSearchParams() {
-      this.searchType = "all";
+      this.searchType = "messages";
       this.searchText = "";
       this.searchImportant = false;
     },
@@ -291,6 +292,7 @@ export default {
       }
     },
     readeFeeds() {
+      console.log('Reade feeds');
       store.commit("clearFeed");
       this.loadingData = true;
       store
@@ -386,7 +388,7 @@ export default {
         });
     },
     newMessages() {
-      console.log('newMessages');
+      // console.log('newMessages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -404,7 +406,7 @@ export default {
               parseInt(e.offsetHeight) + parseInt(e.scrollTop) ==
               parseInt(e.scrollHeight)
             ) {
-              this.addDown();
+              this.addDown(true);
             } else {
               this.haveNewMessage = true;
             }
@@ -414,8 +416,9 @@ export default {
           this.loadingData = false;
         });
     },
-    addDown() {
-      console.log('addDown');
+    addDown(scrollDown) {
+      // console.log('addDown');
+      // console.log(scrollDown);
       if (this.loadingData) return;
       api
         .readeFeeds(
@@ -433,6 +436,10 @@ export default {
               direction: "down",
               data: result.data.data
             });
+            if(scrollDown===true){
+              // console.log('Scrool down');
+              setTimeout( ()=>{this.scrollToBegining();}, 50 );
+            }
           }
         })
         .catch(err => {
@@ -526,7 +533,8 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
-      api.searchStepFeeds(tsk_id, stp_time_created).then(result => {
+      console.log('jumpToStepFeed');
+      api.searchStepFeeds(tsk_id, stp_time_created, this.searchType).then(result => {
         if (result.data.status != "OK") {
           alert("Faild to load data");
           return;

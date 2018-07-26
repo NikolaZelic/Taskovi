@@ -19,11 +19,12 @@ export const api = {
     });
   },
 
-  searchStepFeeds(tsk_id, stp_time_created){
+  searchStepFeeds(tsk_id, stp_time_created, type){
     return axios.get('tasks/'+tsk_id+'/feeds',  {params: {
       sid: window.localStorage.sid,
       time: stp_time_created,
       pravac: "start",
+      type: type,
     }});
   },
 
