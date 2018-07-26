@@ -30,9 +30,9 @@
                 </p>
               </form>
               <!-- REMOVE IN FINAL -->
-              <!-- <div class="preset" v-if="href">
+              <div class="preset" v-if="href">
                 <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
-              </div> -->
+              </div>
             </div>
 
           </div>
@@ -128,7 +128,7 @@ export default {
         // },
         {
           email: "paun992@hotmail.com",
-          pass: "pass123"
+          pass: "123456"
         }
       ],
       formstate: {},
