@@ -173,7 +173,6 @@ export default {
           if (r.data.login !== "failed") {
             let sid = r.data.sid;
             if (sid !== undefined || sid !== null) {
-              console.log("aad");
               store.commit("localStorage", {
                 name: r.data.user.name,
                 surname: r.data.user.surname,

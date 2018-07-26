@@ -72,7 +72,7 @@ const actions = {
   },
 
   selectTask(commit, params){
-    console.log('Select task = ' + params.id);
+    // console.log('Select task = ' + params.id);
     api.selectTask(params.id);
   },
 }

@@ -106,10 +106,10 @@ export default {
       inputFile: function (newFile, oldFile) {
         if (newFile && oldFile && !newFile.active && oldFile.active) {
           // Get response data
-          console.log('response', newFile.response)
+          // console.log('response', newFile.response)
           if (newFile.xhr) {
             //  Get the response status code
-            console.log('status', newFile.xhr.status)
+            // console.log('status', newFile.xhr.status)
           }
         }
       },
