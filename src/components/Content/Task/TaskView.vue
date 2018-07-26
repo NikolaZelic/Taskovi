@@ -551,7 +551,7 @@ export default {
       var tsk_id = this.selectedItemID;
       store.commit("setSearchFeedParams", {
         tsk_id: tsk_id,
-        stp_time_created,
+        stp_time_created
       });
       this.changeTab("messages");
     },
@@ -1056,11 +1056,11 @@ export default {
         // this.getTaskInfo(val);
         // this.getStepInfo(val);
         //this.getGeneralInfo(val);
-        if(this.tabParam === undefined || this.tabParam === "generalInfo"){
+        if (this.tabParam === undefined || this.tabParam === "generalInfo") {
           this.changeTab("generalInfo");
-        }else if(this.tabParam === "steps"){
+        } else if (this.tabParam === "steps") {
           this.changeTab("steps");
-        }else if(this.tabParam === "messages"){
+        } else if (this.tabParam === "messages") {
           // console.log(this.$refs.feed);
           this.$refs.feed.changeSelectedTask();
           this.changeTab("messages");
@@ -1201,12 +1201,11 @@ button.nav-item {
 }
 
 .height100 {
-  /* height: 85%; */
+  margin-top: 21px;
   width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  /* margin-bottom: 20px; */
 }
 
 .chat-box {
@@ -1255,7 +1254,7 @@ td .form-control {
   padding-left: 0px;
 }
 
-.fa-hand-point-right{
+.fa-hand-point-right {
   cursor: pointer;
 }
 </style>

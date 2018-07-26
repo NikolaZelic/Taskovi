@@ -322,7 +322,7 @@ export default {
         });
     },
     projectCancel() {
-      // this.project = this.backupProject;
+      store.commit('resetProjectView');
     },
     resetProjectView() {
       store.commit("itemActionReset");

@@ -434,12 +434,13 @@ export default {
           tabIndex: 1,
           id: undefined
         });
+        store.commit("resetProjectView");
       }
       if (val < 0) return;
       if (val === 1) {
-        store.commit("resetTaskView");
         this.removeActiveClass(null);
         this.getTaskFilterData();
+        store.commit("resetTaskView");
       }
     },
     selectedFilter(val) {
@@ -460,10 +461,9 @@ export default {
   },
   methods: {
     showGlobalFeed() {
-      if(this.globalFeed){
-        store.commit('setRefreshGlobalFeed', true );
-      }
-      else{
+      if (this.globalFeed) {
+        store.commit("setRefreshGlobalFeed", true);
+      } else {
         store.commit("showGlobalFeed", true);
       }
     },
@@ -540,6 +540,8 @@ export default {
       this.removeActiveClass(null);
       switch (index) {
         case 0:
+          store.commit("resetGlobalView");
+          // store.commit("resetProjectView"); // RETEST
           this.actionTabDataProject();
           break;
         case 1:
@@ -645,7 +647,7 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       globalFeed: "globalFeed",
-      sidebarActive: state => !state.mainFocused,
+      sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
       selectedItemID: "selectedItemID"
@@ -715,7 +717,7 @@ export default {
     this.getTabData();
     // TEST VER
     // if (this.itemsFiltered !== undefined)
-      // console.log("cr " + this.itemsFiltered.length);
+    // console.log("cr " + this.itemsFiltered.length);
   },
   mounted() {
     // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT

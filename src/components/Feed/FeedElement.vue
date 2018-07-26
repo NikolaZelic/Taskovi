@@ -404,8 +404,10 @@ export default {
               direction: "down",
               data: result.data.data
             });
-            if(scrollDown===true){
-              setTimeout( ()=>{this.scrollToBegining();}, 50 );
+            if (scrollDown === true) {
+              setTimeout(() => {
+                this.scrollToBegining();
+              }, 50);
             }
           }
         })
@@ -499,25 +501,27 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
-      api.searchStepFeeds(tsk_id, stp_time_created, this.searchType).then(result => {
-        if (result.data.status != "OK") {
-          alert("Faild to load data");
-          return;
-        }
-        store.commit("addMessages", {
-          direction: "start",
-          data: result.data.data
+      api
+        .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
+        .then(result => {
+          if (result.data.status != "OK") {
+            alert("Faild to load data");
+            return;
+          }
+          store.commit("addMessages", {
+            direction: "start",
+            data: result.data.data
+          });
+          if (this.firstLoad) {
+            this.firstLoad = false;
+            store.dispatch("getFeedCount");
+          }
+          setTimeout(() => {
+            this.scrollTOTop();
+            this.processStepSelection();
+            this.addUp();
+          }, 5);
         });
-        if (this.firstLoad) {
-          this.firstLoad = false;
-          store.dispatch("getFeedCount");
-        }
-        setTimeout(() => {
-          this.scrollTOTop();
-          this.processStepSelection();
-          this.addUp();
-        }, 5);
-      });
     },
     readeSteps() {
       api.getTaskInfo(this.taskid).then(result => {
@@ -625,6 +629,7 @@ export default {
 .darkTheme .search {
   background-color: #232323 !important;
   border: 1px solid #d2d2d236;
+  color: #eee;
 }
 
 .search {
@@ -641,10 +646,15 @@ export default {
 .list-group-item {
   border: none;
   cursor: pointer;
+  padding: 7px 15px;
 }
 
-.darkTheme .list-group-item {
-  background: var(--dark);
+.list-group-item:last-child {
+  border: none;
+}
+
+.list-group-item:hover {
+  background: #7777775c;
 }
 
 .trans {
