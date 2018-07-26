@@ -89,7 +89,7 @@
         </transition>
       </template>
 
-      <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
+      <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Milos Paunovic'></div>
 
     </div>
   </div>
@@ -122,10 +122,6 @@ export default {
           email: "zex@gmail.com",
           pass: "123"
         },
-        // {
-        //   email: "svetaprogramer@gmail.com",
-        //   pass: "praksa1234"
-        // },
         {
           email: "paun992@hotmail.com",
           pass: "123456"

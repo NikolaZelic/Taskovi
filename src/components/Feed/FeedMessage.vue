@@ -151,7 +151,7 @@ pre {
 
 .cont .fa-star {
   color: lightgray;
-  font-size: 130%;
+  font-size: 110%;
   padding: 5px;
   cursor: pointer;
 }

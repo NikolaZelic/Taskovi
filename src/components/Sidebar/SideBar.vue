@@ -60,7 +60,7 @@
       <div class="flex-form-action">
 
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> New
+          <span class="fas fa-plus-circle"></span> Add
           <span>{{tabs[getTabIndex].single}}</span>
         </button>
 
@@ -212,7 +212,7 @@
           </template>
 
           <template slot='users' slot-scope="data">
-            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Manage people"></span>
           </template>
 
         </b-table>
@@ -267,7 +267,7 @@ export default {
           value: "as"
         },
         {
-          text: "Finished",
+          text: "Completed",
           value: "ar"
         }
       ],

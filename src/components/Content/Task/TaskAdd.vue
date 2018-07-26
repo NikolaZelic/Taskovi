@@ -1,11 +1,10 @@
 <template>
   <!-- <transition name="modal"> -->
-    <div class="tmp-content-mask mx-auto"  id='cm'>
+    <div class="tmp-content-mask mx-auto">
       <!-- <div class="tmp-content-wrapper" > -->
         <div class='tmp-content'>
           <div class="header">
-            <span class="disable-selection">{{componentTitle}}</span>
-              <!-- <i class="exit-position far fa-times-circle" id='cm'></i> -->
+            <span class="header-title">{{componentTitle}}</span>
           </div>
 
           <div class="content">
@@ -420,7 +419,6 @@ export default {
           });
 
           this.reportWritingToDB(result);
-          this.closeModal("cm");
           this.waitNet = false;
         })
         .catch(e => {
@@ -478,11 +476,6 @@ export default {
     },
     onProjectSelected() {
       store.dispatch("clleaneSuggestedProjects");
-    },
-    closeModal(val) {
-      if (val === "cm" || val.target.id === "cm") {
-        store.commit("itemActionReset");
-      }
     },
     searchUsers(str) {
       if (str == undefined || str == null) return;
@@ -608,7 +601,7 @@ export default {
   margin: 0 auto;
 }
 
-.disable-selection {
+.header-title {
   border-bottom: 2px solid;
   padding: 0 10px 5px 10px;
 }
@@ -703,12 +696,8 @@ export default {
   text-align: center;
 }
 
-.content input {
+/* .content input {
   width: 300px;
-}
-
-/* .calender-icon {
-  width: 43px;
 } */
 
 .autosuggest__results,

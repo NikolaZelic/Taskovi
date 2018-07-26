@@ -2,17 +2,16 @@
   <!-- <div> -->
   <div class='pro-edit'>
     <div class='header' :class='{"back-primary":itemEditButton!==undefined}'>
-      <button class='btn btn-dark' @click='confirmation()'>
-        <span class='fas fa-arrow-left'></span> BACK</button>
-      <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
-      <h4 v-else>Adding project:</h4>
+      <!-- <button class='btn btn-dark' @click='confirmation()'>
+        <span class='fas fa-arrow-left'></span> BACK</button> -->
+      <span class="header-title">{{ itemEditButton===undefined ? "Add" : "Edit" }} project</span>
     </div>
 
     <label for="name" class="mt-3">Project name</label>
-    <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
+    <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter project name" class="form-control mb-3">
 
     <label for="description">Description</label>
-    <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
+    <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter project description..."
       class="form-control mb-3" spellcheck="false"></textarea>
 
     <label for="date">Deadline</label>
@@ -80,13 +79,13 @@
         placeholder="Enter email of people"></multiselect> -->
 
 
-    <div v-if='itemEditButton!==undefined' class='d-block'>
-      <!-- <button @click="projectCancel" class="btn btn-danger">Cancel changes</button> -->
-      <button @click="projectEdit" class="btn btn-primary btn-block">
-        <span class="fas fa-save"></span> Save changes</button>
-    </div>
+    <div class='project-action'>
+      <button @click="projectCancel" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+      <button v-if='itemEditButton!==undefined' @click="projectEdit" class="btn btn-primary">
+        <span class="fa fa-save"></span> Save changes</button>
+ 
     <button v-else @click="projectCreate" class="btn btn-success">
-      <span class="fas fa-plus-square"></span> Create project</button>
+      <span class="fa fa-plus-square"></span> Create project</button>   </div>
   </div>
   <!-- </div> -->
 </template>
@@ -431,20 +430,31 @@ export default {
 }
 
 .header {
-  background: var(--success);
-  border-radius: 5px;
+  /* background: var(--success); */
+  /* border-radius: 5px;
   display: flex;
   padding: 7px 20px;
   justify-content: space-between;
-  color: initial;
-}
+  color: initial; */
 
-.header.back-primary {
-  background: var(--ac-color);
+  position: absolute;
+  user-select: none;
+  position: relative;
+  width: 150px;
+  bottom: 30px;
+  text-align: center;
+  color: var(--ac-color);
+  font-size: 1rem;
+  margin: 0 auto;
 }
 
 .header * {
   margin: 0;
+}
+
+.header-title {
+  border-bottom: 2px solid;
+  padding: 0 10px 5px 10px;
 }
 
 #users {
@@ -465,5 +475,17 @@ export default {
 
 h4 {
   color: white;
+}
+
+.project-action{
+  margin-left: auto;
+}
+
+.project-action .fa{
+  margin-right: 10px;
+}
+
+.project-action button {
+  margin-left: 10px;
 }
 </style>

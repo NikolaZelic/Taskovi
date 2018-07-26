@@ -330,7 +330,7 @@ export default {
 }
 
 .maincontent > * {
-  margin: 20px 30px 10px;
+  margin: 0 30px;
 }
 
 .maincontent h1 {
