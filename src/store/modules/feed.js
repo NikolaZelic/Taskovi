@@ -18,25 +18,25 @@ const actions = {
     return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important );
   },
 
-  postMessage(commit, params) {
-    api.postMessage(params.taskid, params.text).then(r => {
-      // KORISTI GETTER UMESTO DIREKTNO STORE
-      var msg = state.messages;
-      if (msg.length === 0) {
-        store.dispatch("readeFeeds", {
-          taskid: params.taskid,
-          fedid: 0,
-          direction: "start"
-        });
-      } else {
-        store.dispatch("readeFeeds", {
-          taskid: params.taskid,
-          fedid: msg[msg.length - 1].fed_id,
-          direction: "down"
-        });
-      }
-    });
-  },
+  // postMessage(commit, params) {
+  //   api.postMessage(params.taskid, params.text).then(r => {
+  //     // KORISTI GETTER UMESTO DIREKTNO STORE
+  //     var msg = state.messages;
+  //     if (msg.length === 0) {
+  //       store.dispatch("readeFeeds", {
+  //         taskid: params.taskid,
+  //         fedid: 0,
+  //         direction: "start"
+  //       });
+  //     } else {
+  //       store.dispatch("readeFeeds", {
+  //         taskid: params.taskid,
+  //         fedid: msg[msg.length - 1].fed_id,
+  //         direction: "down"
+  //       });
+  //     }
+  //   });
+  // },
   sendAttach(commit, params) {
     api.sendAttach(params.taskid, params.file).then(r => {
         //For refresh new messages

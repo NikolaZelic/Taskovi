@@ -258,15 +258,18 @@ export default {
         this.feed = "";
         return;
       }
-      store.dispatch("postMessage", {
-        taskid: this.taskid,
-        text: text
-      });
-      setTimeout(() => {
-        var a = document.querySelectorAll(".selector");
-        a = a[a.length - 1];
-        a.scrollIntoView(true);
-      }, 500);
+      api.postMessage(this.taskid, text).then( result=>{
+        if(result.data.status!='OK'){
+          alert('Problem durning sending the message');
+          return;
+        }
+        this.addDown(true);
+      })
+      // setTimeout(() => {
+      //   var a = document.querySelectorAll(".selector");
+      //   a = a[a.length - 1];
+      //   a.scrollIntoView(true);
+      // }, 500);
       this.feed = "";
     },
     uploadFile() {
@@ -349,16 +352,19 @@ export default {
         });
     },
     addDown(scrollDown) {
+      // console.log('AddDown');
       if (this.loadingData) return;
+      var message = this.messages[this.messages.length - 1];
+      // console.log(message);
       api
         .readeFeeds(
           this.taskid,
-          this.messages[this.messages.length - 1].fed_id,
+          message.fed_id,
           "down",
           undefined,
           undefined,
           undefined,
-          this.messages[this.messages.length - 1].fed_time
+          message.fed_time
         )
         .then(result => {
           this.loadingData = false;
