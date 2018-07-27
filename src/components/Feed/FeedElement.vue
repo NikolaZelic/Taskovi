@@ -266,6 +266,7 @@ export default {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
           }
+          this.processStepSelection();
         })
         .catch(err => {
           this.loadingData = false;
@@ -433,11 +434,13 @@ export default {
         var message = messages[i];
         if (this.isInViewport(message)) {
           this.selectTimestemp( this.messages[i].fed_time );
-          break;
+          return;
         }
       }
+      console.log('Nista nije selektovano');
     },
     selectTimestemp(time) {
+      console.log('selectTimestemp');
       this.deselectTimestemps();
       time = this.$moment(time);
       var length = this.timestamps.length;
