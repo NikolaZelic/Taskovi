@@ -11,8 +11,8 @@
         <b-tabs v-model='currentMiniTab'>
           <b-tab title="Task Info" @click="changeTab('generalInfo'); tabParam = 'generalInfo'" active>
           </b-tab>
-          <b-tab title="Task Flow" @click="changeTab('steps'); tabParam = 'steps'">
-          </b-tab>
+          <!-- <b-tab title="Task Flow" @click="changeTab('steps'); tabParam = 'steps'">
+          </b-tab> -->
           <b-tab title="Messages" @click="changeTab('messages'); tabParam = 'messages'">
           </b-tab>
         </b-tabs>
@@ -61,12 +61,7 @@
               <td>{{this.taskGeneralInfo.sta_text}}</td>
             </tr>
 
-            <tr>
-              <td>Deadline:</td>
-              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
-              </td>
-            </tr>
+
 
             <tr>
               <td class="align-top">Working:</td>
@@ -97,8 +92,28 @@
 
           </table>
 
+          <div class="text-right">
+
+            <div class="dropdown save">
+              <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                Mark this task as...
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" @click.prevent="taskStatus(3)">Completed</a>
+                <a class="dropdown-item" @click.prevent="taskStatus(4)">Failed</a>
+                <a class="dropdown-item" v-if="taskGeneralInfo.can_edit === 1" @click.prevent="taskStatus(6)">Canceled</a>
+              </div>
+            </div>
+
           <button type="button" class="btn btn-success save" @click="editTaskBtn()">
-            Edit <span class="fa fa-chevron-right"></span> </button>
+            Edit <span class="fa fa-chevron-right"></span>
+          </button>
+
+
+
+          </div>
+
+
         </div>
 
         <!-- <div class="card-body">
@@ -112,11 +127,8 @@
       </div>
 
       <!-- TAB Steps -->
-      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-        <!-- <div class="card-header task-header" :class='{darkTheme: darkTheme}'>
-          <h4 v-if="taskInfo[0] !== undefined">{{ taskInfo[0].taskname }}</h4>
+      <!--<div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
 
-        </div> -->
 
         <div class="card-body">
           <table class="table table-borderless table-hover">
@@ -126,8 +138,7 @@
                 <th scope="col">Task Events</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
-                <!-- <th scope="col">Tags</th> -->
-                <!-- <th scope="col">Priority</th> -->
+
                 <th scope="col">Working</th>
               </tr>
             </thead>
@@ -153,14 +164,6 @@
                   {{ task.tsk_deadline }}
                 </td>
 
-                <!-- <td>
-                  <span class="badge badge-success" v-for="(tag,index) in task.tags.slice(0, 3)" :key='index'>{{ tag.tag_text }}</span>
-                  <span v-if="task.tags.length > 3">+ {{task.tags.length - 3}}</span>
-                </td>
-
-                <td>
-                  <span class="badge" :class="task.pri_badge">{{task.pri_text}}</span>
-                </td> -->
 
                 <td>
                   <span v-if="task.you_are_worker === 1">
@@ -176,7 +179,7 @@
             <span class="fa fa-plus"></span> New Step...</button>
         </div>
 
-      </div>
+      </div>-->
 
       <!-- TAB Feeds -->
       <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
@@ -534,6 +537,16 @@ export default {
   },
 
   methods: {
+    taskStatus(parameter){
+      axios.put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/status", {
+          sid: localStorage.sid,
+          status: parameter,
+          tasid: this.selectedItemID
+      }).then(response => {
+          this.resetTaskView();
+      })
+    },
+
     editTaskBtn(taskID) {
       store.commit("itemEditClick", {
         id: this.selectedItemID
@@ -557,13 +570,7 @@ export default {
     },
 
     getGeneralInfo(taskID) {
-      axios
-        .get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-          params: {
-            tasid: taskID,
-            sid: localStorage.sid
-          }
-        })
+        api.loadTaskInfo(localStorage.sid, taskID)
         .then(response => {
           this.taskGeneralInfo = response.data.data[0];
           // console.log(response.data.data[0]);
@@ -629,19 +636,7 @@ export default {
 
     loadTags() {
       // console.log(this.$refs.tagSearchString.search)
-
-      axios
-        .get(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid/tags",
-          {
-            params: {
-              proid: this.selectedProjectID,
-              type: "task",
-              searchstring: this.$refs.tagSearchString.search,
-              sid: localStorage.sid
-            }
-          }
-        )
+        api.loadTags(this.selectedProjectID, this.$refs.tagSearchString.search, localStorage.sid)
         .then(response => {
           // console.log(response.data.data);
           // this.optionsTag = response.data.data;
@@ -655,43 +650,43 @@ export default {
     //   console.log("saved desc edit");
     // },
 
-    saveChanges() {
-      axios
-        .put(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
-          {
-            tasid: this.selectedItemID,
-            stepid: this.stepInfo[0].tsk_id,
-            sid: localStorage.sid,
-
-            title: this.edit.name,
-            description: this.edit.description,
-            deadline: this.edit.deadline,
-            // priority: this.edit.priority,
-            status: this.edit.status,
-            progress: this.edit.progress,
-            timespent: this.edit.timespent,
-            estimateddate: this.edit.estTime,
-            usersarray: this.userStringArray
-            // tagarray: this.tagStringArray
-          }
-        )
-        .then(response => {
-          this.getTaskInfo(this.selectedItemID);
-          this.getStepInfo(this.stepInfo[0].tsk_id);
-
-          (this.edit.name = undefined),
-            (this.edit.description = undefined),
-            (this.edit.deadline = undefined),
-            // (this.edit.priority = undefined),
-            (this.edit.status = undefined),
-            (this.edit.progress = undefined),
-            (this.edit.timespent = undefined),
-            (this.edit.estTime = undefined);
-
-          this.reportWritingToDB(response);
-        });
-    },
+    // saveChanges() {
+    //   axios
+    //     .put(
+    //       "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+    //       {
+    //         tasid: this.selectedItemID,
+    //         stepid: this.stepInfo[0].tsk_id,
+    //         sid: localStorage.sid,
+    //
+    //         title: this.edit.name,
+    //         description: this.edit.description,
+    //         deadline: this.edit.deadline,
+    //         // priority: this.edit.priority,
+    //         status: this.edit.status,
+    //         progress: this.edit.progress,
+    //         timespent: this.edit.timespent,
+    //         estimateddate: this.edit.estTime,
+    //         usersarray: this.userStringArray
+    //         // tagarray: this.tagStringArray
+    //       }
+    //     )
+    //     .then(response => {
+    //       this.getTaskInfo(this.selectedItemID);
+    //       this.getStepInfo(this.stepInfo[0].tsk_id);
+    //
+    //       (this.edit.name = undefined),
+    //         (this.edit.description = undefined),
+    //         (this.edit.deadline = undefined),
+    //         // (this.edit.priority = undefined),
+    //         (this.edit.status = undefined),
+    //         (this.edit.progress = undefined),
+    //         (this.edit.timespent = undefined),
+    //         (this.edit.estTime = undefined);
+    //
+    //       this.reportWritingToDB(response);
+    //     });
+    // },
 
     reportWritingToDB(result) {
       if (result.data.status === "OK") {
@@ -707,14 +702,7 @@ export default {
     },
 
     loadAllProjectUsers(projectID) {
-      axios
-        .get("http://695u121.mars-t.mars-hosting.com/mngapi/projects/:proid", {
-          params: {
-            proid: projectID,
-            sid: localStorage.sid
-          }
-        })
-        .then(response => {
+        api.loadAllProjectUsers(localStorage.sid, projectID).then(response => {
           if (response.data.data !== undefined)
             this.optionsUser = response.data.data.users;
         });
@@ -738,149 +726,148 @@ export default {
       this.stepEditShow = true; //!this.stepEditShow;
     },
 
-    getStepInfo(stepID) {
-      // console.log('taskID' + taskID + ', stepID' + stepID);
-      axios
-        .get(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
-
-          {
-            params: {
-              tasid: this.selectedItemID,
-              stepid: stepID,
-              sid: localStorage.sid
-            }
-          }
-        )
-        .then(response => {
-          if (response.data.data !== undefined) {
-            // console.log(response.data.data);
-            this.stepInfo = response.data.data;
-
-            // this.edit.name = response.data.data[0].tsk_title;
-            // this.edit.description = response.data.data[0].description;
-            // this.edit.status = response.data.data[0].sta_id;
-            // this.edit.deadline = response.data.data[0].tsk_deadline;
-            // this.edit.estTime = response.data.data[0].tsk_estimated_completion_date;
-            // this.edit.timespent = response.data.data[0].tsk_timespent;
-            // this.edit.progress = response.data.data[0].tsk_progress;
-            // this.valueUser = response.data.data[0].usrworking;
-
-            for (var i = 0; i < response.data.data.length; i++) {
-              // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
-
-              if (this.stepInfo[i].tsk_timespent !== null) {
-                if (this.stepInfo[i].tsk_timespent <= 59) {
-                  this.stepInfo[i].tsk_timespent =
-                    this.stepInfo[i].tsk_timespent + " minutes";
-                } else {
-                  let minutes = this.stepInfo[i].tsk_timespent % 60;
-                  let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
-
-                  this.stepInfo[i].tsk_timespent =
-                    hours + " hour(s), " + minutes + " minute(s)";
-                }
-              }
-
-              if (this.stepInfo[i].sta_text !== null) {
-                if (
-                  this.stepInfo[i].sta_text === "Assigned" ||
-                  this.stepInfo[i].sta_text === "In Progress"
-                ) {
-                  this.stepInfo[i].background = "bg-info";
-                } else if (
-                  this.stepInfo[i].sta_text === "Failed" ||
-                  this.stepInfo[i].sta_text === "Rejected" ||
-                  this.stepInfo[i].sta_text === "Cancelled"
-                ) {
-                  this.stepInfo[i].background = "bg-danger";
-                } else if (this.stepInfo[i].sta_text === "Completed") {
-                  this.stepInfo[i].background = "bg-success";
-                } else {
-                  this.stepInfo[i].background = "bg-secondary";
-                }
-              } else {
-                this.stepInfo[i].background = "bg-secondary";
-              }
-
-              if (this.stepInfo[i].tsk_deadline === null) {
-                this.stepInfo[i].tsk_deadline = "";
-              } else {
-                this.stepInfo[i].tsk_deadline = this.$moment(
-                  response.data.data[i].tsk_deadline
-                ).format("MMMM Do YYYY, h:mm a");
-              }
-
-              if (this.stepInfo[i].tsk_estimated_completion_date === null) {
-                this.stepInfo[i].tsk_estimated_completion_date = "";
-              } else {
-                this.stepInfo[i].tsk_estimated_completion_date = this.$moment(
-                  response.data.data[i].tsk_estimated_completion_date
-                ).format("MMMM Do YYYY, h:mm a");
-              }
-
-              if (this.stepInfo[i].tsk_timecreated === null) {
-                this.stepInfo[i].tsk_timecreated = "";
-              } else {
-                this.stepInfo[i].tsk_timecreated = this.$moment(
-                  response.data.data[i].tsk_timecreated
-                ).format("MMMM Do YYYY, h:mm a");
-              }
-
-              if (this.stepInfo[i].pri_text === "High") {
-                this.stepInfo[i].pri_badge = "badge-danger";
-              } else if (this.stepInfo[i].pri_text === "Medium") {
-                this.stepInfo[i].pri_badge = "badge-warning";
-              } else if (this.stepInfo[i].pri_text === "Low") {
-                this.stepInfo[i].pri_badge = "badge-info";
-              }
-            }
-          }
-
-          this.stepModal = true;
-        })
-        .then(response => {
-          this.valueTag = [];
-          if (this.stepInfo[0] !== undefined) {
-            for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
-              const tag = {
-                id: this.stepInfo[0].tags[i].id,
-                text: this.stepInfo[0].tags[i].text
-              };
-              this.valueTag.push(tag);
-            }
-          }
-        })
-        .then(response => {
-          this.valueUser = [];
-          if (this.stepInfo[0] !== undefined) {
-            for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
-              const user = {
-                id: this.stepInfo[0].usrworking[i].usr_id,
-                name: this.stepInfo[0].usrworking[i].usr_name,
-                email: this.stepInfo[0].usrworking[i].usr_email
-              };
-              this.valueUser.push(user);
-            }
-          }
-        })
-        .then(response => {
-          axios
-            .get(
-              "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid/inactiveusers",
-              {
-                params: {
-                  tasid: this.selectedItemID,
-                  stepid: stepID,
-                  sid: localStorage.sid
-                }
-              }
-            )
-            .then(response => {
-              this.stepInfo[0].usrinactive = response.data.data;
-            });
-        });
-    },
+    // getStepInfo(stepID) {
+    //   axios
+    //     .get(
+    //       "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
+    //
+    //       {
+    //         params: {
+    //           tasid: this.selectedItemID,
+    //           stepid: stepID,
+    //           sid: localStorage.sid
+    //         }
+    //       }
+    //     )
+    //     .then(response => {
+    //       if (response.data.data !== undefined) {
+    //         // console.log(response.data.data);
+    //         this.stepInfo = response.data.data;
+    //
+    //         // this.edit.name = response.data.data[0].tsk_title;
+    //         // this.edit.description = response.data.data[0].description;
+    //         // this.edit.status = response.data.data[0].sta_id;
+    //         // this.edit.deadline = response.data.data[0].tsk_deadline;
+    //         // this.edit.estTime = response.data.data[0].tsk_estimated_completion_date;
+    //         // this.edit.timespent = response.data.data[0].tsk_timespent;
+    //         // this.edit.progress = response.data.data[0].tsk_progress;
+    //         // this.valueUser = response.data.data[0].usrworking;
+    //
+    //         for (var i = 0; i < response.data.data.length; i++) {
+    //           // console.log(response.data.data[i].pri_text === 'MAX' ? true : false);
+    //
+    //           if (this.stepInfo[i].tsk_timespent !== null) {
+    //             if (this.stepInfo[i].tsk_timespent <= 59) {
+    //               this.stepInfo[i].tsk_timespent =
+    //                 this.stepInfo[i].tsk_timespent + " minutes";
+    //             } else {
+    //               let minutes = this.stepInfo[i].tsk_timespent % 60;
+    //               let hours = parseInt(this.stepInfo[i].tsk_timespent / 60);
+    //
+    //               this.stepInfo[i].tsk_timespent =
+    //                 hours + " hour(s), " + minutes + " minute(s)";
+    //             }
+    //           }
+    //
+    //           if (this.stepInfo[i].sta_text !== null) {
+    //             if (
+    //               this.stepInfo[i].sta_text === "Assigned" ||
+    //               this.stepInfo[i].sta_text === "In Progress"
+    //             ) {
+    //               this.stepInfo[i].background = "bg-info";
+    //             } else if (
+    //               this.stepInfo[i].sta_text === "Failed" ||
+    //               this.stepInfo[i].sta_text === "Rejected" ||
+    //               this.stepInfo[i].sta_text === "Cancelled"
+    //             ) {
+    //               this.stepInfo[i].background = "bg-danger";
+    //             } else if (this.stepInfo[i].sta_text === "Completed") {
+    //               this.stepInfo[i].background = "bg-success";
+    //             } else {
+    //               this.stepInfo[i].background = "bg-secondary";
+    //             }
+    //           } else {
+    //             this.stepInfo[i].background = "bg-secondary";
+    //           }
+    //
+    //           if (this.stepInfo[i].tsk_deadline === null) {
+    //             this.stepInfo[i].tsk_deadline = "";
+    //           } else {
+    //             this.stepInfo[i].tsk_deadline = this.$moment(
+    //               response.data.data[i].tsk_deadline
+    //             ).format("MMMM Do YYYY, h:mm a");
+    //           }
+    //
+    //           if (this.stepInfo[i].tsk_estimated_completion_date === null) {
+    //             this.stepInfo[i].tsk_estimated_completion_date = "";
+    //           } else {
+    //             this.stepInfo[i].tsk_estimated_completion_date = this.$moment(
+    //               response.data.data[i].tsk_estimated_completion_date
+    //             ).format("MMMM Do YYYY, h:mm a");
+    //           }
+    //
+    //           if (this.stepInfo[i].tsk_timecreated === null) {
+    //             this.stepInfo[i].tsk_timecreated = "";
+    //           } else {
+    //             this.stepInfo[i].tsk_timecreated = this.$moment(
+    //               response.data.data[i].tsk_timecreated
+    //             ).format("MMMM Do YYYY, h:mm a");
+    //           }
+    //
+    //           if (this.stepInfo[i].pri_text === "High") {
+    //             this.stepInfo[i].pri_badge = "badge-danger";
+    //           } else if (this.stepInfo[i].pri_text === "Medium") {
+    //             this.stepInfo[i].pri_badge = "badge-warning";
+    //           } else if (this.stepInfo[i].pri_text === "Low") {
+    //             this.stepInfo[i].pri_badge = "badge-info";
+    //           }
+    //         }
+    //       }
+    //
+    //       this.stepModal = true;
+    //     })
+    //     .then(response => {
+    //       this.valueTag = [];
+    //       if (this.stepInfo[0] !== undefined) {
+    //         for (var i = 0; i < this.stepInfo[0].tags.length; i++) {
+    //           const tag = {
+    //             id: this.stepInfo[0].tags[i].id,
+    //             text: this.stepInfo[0].tags[i].text
+    //           };
+    //           this.valueTag.push(tag);
+    //         }
+    //       }
+    //     })
+    //     .then(response => {
+    //       this.valueUser = [];
+    //       if (this.stepInfo[0] !== undefined) {
+    //         for (var i = 0; i < this.stepInfo[0].usrworking.length; i++) {
+    //           const user = {
+    //             id: this.stepInfo[0].usrworking[i].usr_id,
+    //             name: this.stepInfo[0].usrworking[i].usr_name,
+    //             email: this.stepInfo[0].usrworking[i].usr_email
+    //           };
+    //           this.valueUser.push(user);
+    //         }
+    //       }
+    //     })
+    //     .then(response => {
+    //       axios
+    //         .get(
+    //           "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid/inactiveusers",
+    //           {
+    //             params: {
+    //               tasid: this.selectedItemID,
+    //               stepid: stepID,
+    //               sid: localStorage.sid
+    //             }
+    //           }
+    //         )
+    //         .then(response => {
+    //           this.stepInfo[0].usrinactive = response.data.data;
+    //         });
+    //     });
+    // },
 
     getTaskInfo(taskID) {
       api.getTaskInfo(taskID).then(response => {
@@ -1107,7 +1094,7 @@ h1 {
 }
 
 .save {
-  display: block;
+  display: inline-block;
   margin-left: auto;
 }
 
