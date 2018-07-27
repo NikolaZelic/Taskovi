@@ -7,11 +7,32 @@
           <i class="fa fa-times" id='cm'></i>
         </div>
         <div class="body">
+<!-- @click='changeAvatar' -->
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
+
             <img :src="avatarUrl" class="picture" />
             <span class='fas fa-camera'></span>
             <input ref='avatarUpload' type="file" accept="image/*" style="display: none;" @change='changeFile'>
+
+
+<!-- <vue-core-image-upload
+    :crop="false"
+    :headers ='avatarHeader'
+    :data = 'dataObject'
+    extensions = "png,jpg,gif"
+    @imagechanged = 'imagechanged'
+    @imageuploaded="imageUploaded" 
+    :maxWidth=200 
+    :maxheight=200
+    :url="avatarUploadUrl" 
+    :isXhr=false>   
+            <img :src="avatarUploadUrl" class="picture" />
+            <span class='fas fa-camera'></span>
+  </vue-core-image-upload> -->
+
+
           </div>
+
           <div class="op-edit">
             <table>
               <tbody>
@@ -47,8 +68,12 @@ import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
 import { mapState } from "vuex";
 import { baseURL } from "@/api/config.js";
+import VueCoreImageUpload from "vue-core-image-upload";
 
 export default {
+  components: {
+    VueCoreImageUpload
+  },
   data() {
     return {
       avatarUrl: "",
@@ -74,7 +99,11 @@ export default {
           value: ""
         }
       ],
-      toEdit: true
+      toEdit: true,
+      avatarData: undefined,
+      avatarHeader: {
+        "content-type": "multipart/form-data"
+      }
     };
   },
   methods: {
@@ -126,7 +155,7 @@ export default {
       let fd = new FormData();
       fd.append("img", file);
       axios
-        .put("/auth/users/img?sid=" + window.localStorage.sid, fd, {
+        .put("auth/users/img?sid=" + window.localStorage.sid, fd, {
           headers: {
             "content-type": "multipart/form-data"
           }
@@ -182,6 +211,17 @@ export default {
       darkTheme: "darkTheme",
       userStorage: "userStorage"
     }),
+    avatarUploadUrl() {
+      return baseURL + "auth/users/img?sid=" + window.localStorage.sid;
+    },
+    dataObject() {
+      // let fd = new FormData();
+      // fd.append("img", file);
+      // return {
+      //   img: fd,
+      // }
+      return {};
+    },
     passNotMatched() {
       let a = this.tableData[3].value;
       let b = this.tableData[4].value;

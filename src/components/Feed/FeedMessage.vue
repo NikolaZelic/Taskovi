@@ -279,14 +279,7 @@ pre {
 }
 
 .unseenFeed {
-  /* background: #dfcd1f;
-  box-shadow: 6px 6px 33px -3px rgba(250, 230, 15, 1);
-  align-self: center;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  margin: 0 5px; */
-  border-left: 6px solid #eaea12;
+  border-left: 6px solid #ecec14;
 }
 
 .status {

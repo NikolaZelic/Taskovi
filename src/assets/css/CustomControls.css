@@ -26,9 +26,24 @@
 
 /* VUE-B MODALS */
 
-.modal-header,
+.modal-header {
+  border: 0;
+  background: var(--ac-color);
+  color: white;
+  padding: 10px 20px;
+}
+
+.modal-title {
+  font-size: 1rem;
+}
+
+.modal-header .close {
+  color: white;
+}
+
 .modal-footer {
   border: 0;
+  padding: 10px 20px;
   /* border-bottom: 1px solid #565b61;
   border-radius: 5px; */
 }

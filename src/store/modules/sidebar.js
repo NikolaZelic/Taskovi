@@ -94,6 +94,9 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.mainFocused = false;
   },
+  resetActionAdd: () => {
+    store.state.itemAction.add = undefined;
+  },
 
   resetTaskView: () => {
     store.state.sidebarItemSelection[1] = undefined;

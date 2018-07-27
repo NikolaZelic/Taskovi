@@ -633,7 +633,8 @@ export default {
 }
 
 .search-inputs input[type="text"] {
-  width: 400px;
+  max-width: 400px;
+  width: 100%;
   border-radius: 5px;
 }
 
@@ -684,6 +685,31 @@ export default {
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
+  background-color: var(--main-bg-color);
+  color: var(--main-color);
+}
+
+.feed.darkTheme {
+  background-color: var(--sec-bg-color);
+  color: var(--sec-color);
+}
+
+.modal-body,
+.modal-footer {
+  background: #f4f4f4;
+}
+
+.modal-table {
+  /* background-color: var(--main-bg-color); */
+  color: var(--main-color);
+}
+
+.modal-table input {
+  border: none;
+  border-bottom: 1px solid #7777;
+  background: white !important;
+  color: var(--main-color) !important;
+  padding: 4px 10px;
 }
 
 .flex-chat-body {

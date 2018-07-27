@@ -66,41 +66,41 @@
 
         <!-- <div class="form-filter"> -->
 
-          <template v-if="!showSubFilter()">
-            <b-form-group>
-              <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-                <b-input-group-text slot="prepend" @click='focusSearch'>
-                  <span class="fas fa-search" ></span>
-                </b-input-group-text>
-                <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
-                <b-input-group-append v-if='tabs[getTabIndex].search'>
-                  <b-btn @click="tabs[getTabIndex].search = ''">X</b-btn>
-                </b-input-group-append>
-              </b-input-group>
+        <template v-if="!showSubFilter()">
+          <b-form-group>
+            <b-input-group :class='{darkTheme:darkTheme}' class='search'>
+              <b-input-group-text slot="prepend" @click='focusSearch'>
+                <span class="fas fa-search"></span>
+              </b-input-group-text>
+              <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
+              <b-input-group-append v-if='tabs[getTabIndex].search'>
+                <b-btn @click="tabs[getTabIndex].search = ''">X</b-btn>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </template>
+
+        <template v-if="showSubFilter()">
+          <div class='tag-filter'>
+
+            <b-input-group class='search'>
+
+              <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
+                :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+
+            </b-input-group>
+          </div>
+        </template>
+
+        <template v-if="showSubFilter()">
+          <div class="item-filter">
+            <b-form-group role="group">
+              <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
+              </b-form-checkbox-group>
             </b-form-group>
-          </template>
-
-          <template v-if="showSubFilter()">
-            <div class='tag-filter'>
-
-              <b-input-group class='search'>
-
-                <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
-                  :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                  :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
-
-              </b-input-group>
-            </div>
-          </template>
-
-          <template v-if="showSubFilter()">
-            <div class="item-filter">
-              <b-form-group role="group">
-                <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
-                </b-form-checkbox-group>
-              </b-form-group>
-            </div>
-          </template>
+          </div>
+        </template>
 
         <!-- </div> -->
 
@@ -136,7 +136,7 @@
             <span v-if='data.item.deadline!==null'>
               {{$moment(data.item.deadline).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
-              </span>
+            </span>
           </template>
 
           <!-- DUE TIME -->
@@ -179,6 +179,18 @@
 
           <template slot="users_count" slot-scope="data">
             <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
+          </template>
+
+          <!-- PRIORITY -->
+          <template slot="HEAD_priority" slot-scope="data">
+            <span class='fas fa-signal' title="Priority"></span>
+          </template>
+
+          <template slot="priority" slot-scope="data">
+            <span class='badge' :class='{"badge-danger": data.item.priority===1,
+            "badge-warning": data.item.priority===2,
+            "badge-success": data.item.priority===3}'
+              v-if='data.item.priority !== 0'>{{convertPriority(data.item.priority)}}</span>
           </template>
 
           <!-- FEEDS -->
@@ -253,10 +265,7 @@ export default {
       notifSelected: false,
       selectedFilter: [],
       sideHover: false,
-      projectRefItem: {
-        title: undefined,
-        id: undefined
-      },
+      projectRefItem: {},
       radioFilter: [
         {
           text: "Created by me",
@@ -284,19 +293,14 @@ export default {
           icon: "fas fa-tasks",
           search: ""
         }
-        // {
-        //   name: "Configuration",
-        //   single: "Task",
-        //   icon: "fas fa-cog"
-        // }
-        // {
-        //   name: "Users",
-        //   single: "Task",
-        //   icon: "fas fa-users",
-        //   search: ""
-        // }
       ],
       projectFields: [
+        {
+          key: "id",
+          label: "ID",
+          sortable: true,
+          thClass: "td-blue"
+        },
         {
           key: "title",
           label: "Projects",
@@ -403,6 +407,12 @@ export default {
           label: "Status",
           sortable: true,
           thClass: "td-orange"
+        },
+        {
+          key: "priority",
+          sortable: true,
+          tdClass: "text-center td-icon-width",
+          thClass: "td-blue"
         },
         {
           key: "unseen_feed",
@@ -529,6 +539,7 @@ export default {
       } else if (this.getTabIndex === 1) {
         // ADD ACTIVE CLASS IF TASKS
         tableRow.classList.add("active");
+        store.commit("resetActionAdd");
       }
     },
     getTabData() {
@@ -611,6 +622,7 @@ export default {
       return i === 1 || i === 2;
     },
     addItemButton() {
+      this.removeActiveClass();
       store.dispatch("itemAddClick");
     },
     editPeopleButton(item) {
@@ -640,6 +652,17 @@ export default {
     },
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);
+    },
+    convertPriority(priNum) {
+      switch (priNum) {
+        case 1:
+          return "High";
+        case 2:
+          return "Med";
+        case 3:
+          return "Low";
+      }
+      return "";
     }
   },
   computed: {
@@ -837,14 +860,13 @@ export default {
 }
 
 .tabs .tab-container:not(:first-child):hover,
-.user-sidebar .tab-container:hover{
+.user-sidebar .tab-container:hover {
   background: #686f7b82;
 }
 
 .tabs .tab-container:first-child {
   cursor: auto;
 }
-
 
 .tablinks[disabled] {
   color: #0a0a0a;
@@ -898,7 +920,8 @@ export default {
 
 #sidebar.collapsed {
   transition: all 0.5s ease;
-  width: unset;
+  width: 0;
+  height: 0;
 }
 
 .hideArrow.collapsed {
@@ -1051,6 +1074,7 @@ h2 {
   max-width: 100%;
   transition: all 0.5s ease;
   width: 0px;
+  margin-left: 70px; /* FOR USE WHEN STATIC SIDE IS POSITION FIXED */
   background: var(--main-bg-color);
   flex: 1;
   height: 93vh;
@@ -1082,7 +1106,8 @@ h2 {
 
 .flex-form-action fieldset {
   /* display: block; */
-  width: 100%;
+  /* width: 100%; */
+    align-self: center;
 }
 
 .form-filter > * {
@@ -1100,6 +1125,7 @@ h2 {
 .tag-filter {
   flex: 1;
   margin-bottom: 10px;
+  max-width: 200px;
 }
 
 .item-filter {

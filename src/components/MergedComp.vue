@@ -85,7 +85,7 @@ export default {
     TaskAdd,
     UserOptions,
     ModalError,
-    GlobalFeed,
+    GlobalFeed
     // ProjectConfig
   },
   data() {
@@ -301,16 +301,6 @@ export default {
   flex-direction: column;
 }
 
-.feed {
-  background-color: var(--main-bg-color);
-  color: var(--main-color);
-}
-
-.feed.darkTheme {
-  background-color: var(--sec-bg-color);
-  color: var(--sec-color);
-}
-
 .item-filter {
   justify-content: unset;
 }
@@ -337,21 +327,13 @@ export default {
   text-align: center;
 }
 
-/* .static-side {
-  position: static;
-} */
-
 .feed-wrap {
   width: 60%;
   margin-left: 70px;
   height: 100vh;
-  margin: 0 auto;
+  align-self: center;
   z-index: 1;
 }
-
-/* .darkMain .feed-wrap span {
-  color: #aaa;
-} */
 
 .darkMain .feed-wrap pre {
   color: whitesmoke;
@@ -362,18 +344,12 @@ export default {
 }
 
 .app-header {
-  /* text-align: center; */
   border-bottom: 1px solid #827e7e59;
-  /* position: fixed;
-    left: 0;
-    right: 0;
-    top: 0; */
   z-index: 1;
   background: #fff;
   font-size: 120%;
   padding: 20px 0 5px;
   color: var(--ac-color);
-  /* border-bottom: 1px solid #c2d0de; */
 }
 
 .app-header > * {
@@ -397,16 +373,9 @@ export default {
   left: 0;
   top: 0;
 }
-
-/* .feed {
-  margin: 10px auto;
-  max-width: 70%;
-  height: 95%;
+#wrapper aside.max {
+  width: 100%;
 }
-
-.feed.darkTheme pre{
-  color: #eee;
-} */
 
 @media only screen and (min-width: 1350px) {
   .rightside {
@@ -417,10 +386,10 @@ export default {
   }
 }
 
-@media only screen and (min-width: 992px) {
-  .sidebar-body {
-    margin-left: 70px;
-  }
+@media only screen and (min-width: 960px) {
+  /* .sidebar-body {
+      margin-left: 70px;
+  } */
 
   #wrapper {
     flex-direction: row;
@@ -431,8 +400,8 @@ export default {
     position: fixed;
     height: 100vh;
     width: 37%;
-  }
-  #wrapper aside.max {
+  } 
+   #wrapper aside.max {
     width: 100%;
   }
 
