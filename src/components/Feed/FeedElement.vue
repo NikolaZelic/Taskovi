@@ -234,7 +234,7 @@ export default {
   },
   methods: {
     changeSelectedTask() {
-      console.log('changeSelectedTask');
+      // console.log('changeSelectedTask');
       store.commit("clearFeed");
       this.refreshSearchParams();
       this.dataFromBegining = 1;
@@ -292,7 +292,7 @@ export default {
       }
     },
     readeFeeds() {
-      console.log('Reade feeds');
+      // console.log('Reade feeds');
       store.commit("clearFeed");
       this.loadingData = true;
       store
@@ -533,7 +533,7 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
-      console.log('jumpToStepFeed');
+      // console.log('jumpToStepFeed');
       api.searchStepFeeds(tsk_id, stp_time_created, this.searchType).then(result => {
         if (result.data.status != "OK") {
           alert("Faild to load data");
@@ -570,6 +570,11 @@ export default {
     },
     isInViewport(el) {
       if (el == null) return;
+      // if( !el.hasOwnProperty('getBoundingClientRect') ){
+      //   console.log('Nema funkciju');
+      //   return;
+      // }
+        
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
