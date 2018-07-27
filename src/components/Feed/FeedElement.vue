@@ -16,7 +16,7 @@
           <input type="radio" id="messages" value="messages" checked v-model='searchType'>
           <label for="messages">Messages</label>
           <input type="radio" id="statuses" value="statuses" v-model='searchType'>
-          <label for="statuses">Statuses</label>
+          <label for="statuses">Task Events</label>
           <input type="radio" id="files" value="files" v-model='searchType'>
           <label for="files">Files</label>
           <input type="radio" id="all" value="all" v-model='searchType'>

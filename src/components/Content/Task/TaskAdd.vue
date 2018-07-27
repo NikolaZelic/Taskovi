@@ -39,7 +39,7 @@
             <!-- ADDING WORKERS -->
             <div class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Enter workers from project" open-direction="bottom" :options="suggestedWorker"
+              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">

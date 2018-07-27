@@ -87,7 +87,7 @@
 
                 <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                   :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                  :clear-on-select="false" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+                  :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
 
               </b-input-group>
             </div>
@@ -134,7 +134,7 @@
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
             <span v-if='data.item.deadline!==null'>
-              {{$moment(data.item.deadline).format('YYYY-MM-DD')}}              
+              {{$moment(data.item.deadline).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
               </span>
           </template>
@@ -259,11 +259,11 @@ export default {
       },
       radioFilter: [
         {
-          text: "Created",
+          text: "Created by me",
           value: "cr"
         },
         {
-          text: "Assigned",
+          text: "Assigned to me",
           value: "as"
         },
         {
