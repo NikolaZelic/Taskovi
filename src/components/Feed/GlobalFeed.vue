@@ -13,6 +13,7 @@ export default {
       offset: 0,
       dataFromBegining: 0,
       firstLoadData: true,
+      searchType: 'all',
     };
   },
 
