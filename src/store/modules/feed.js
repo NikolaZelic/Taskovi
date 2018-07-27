@@ -64,9 +64,9 @@ const actions = {
 };
 
 const mutations = {
-  setSearchFeedParams: (state, params) => {
-    state.searchFeedsParams = params;
-  },
+  // setSearchFeedParams: (state, params) => {
+  //   state.searchFeedsParams = params;
+  // },
 
   addMessages: (state, params) => {
     if (params.data) {
@@ -110,7 +110,7 @@ const getters = {
 const state = {
   messages: [],
   scrollDownMess: true,
-  searchFeedsParams: null,
+  // searchFeedsParams: null,
   selectedStep: null,
 }
 

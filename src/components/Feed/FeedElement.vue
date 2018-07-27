@@ -137,7 +137,7 @@ export default {
     ...mapState({
       messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
-      searchFeedsParams: state => state.modulefeed.searchFeedsParams,
+      // searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
       pro_id: state => state.sidebarItemSelection[0]
     }),
@@ -177,7 +177,7 @@ export default {
       // this.readeSteps();
       this.readeTimestemps();
       this.readeFeeds();
-      store.commit("setSearchFeedParams", null);
+      // store.commit("setSearchFeedParams", null);
     },
     clearStepCreateContent() {
       this.newStep = "";
@@ -189,9 +189,11 @@ export default {
         this.stepErr = true;
         return;
       }
-      var time = this.selectedStep.fed_time.replace(".0", "");
+      var time = this.selectedStep.fed_time;
+      time = this.$moment(time).subtract(-1, 'secounds');
+      time.seconds( time.seconds()-1 )
       api
-        .createTimestamps(this.taskid, time, this.newStep)
+        .createTimestamps(this.taskid, time.format("YYYY-MM-DD HH:mm:ss") , this.newStep)
         .then(result => {
           // this.readeSteps();
           this.readeTimestemps();
@@ -204,7 +206,9 @@ export default {
       this.$refs.stepModal.hide();
     },
     stepCicked(step) {
-      this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
+      var time = step.fed_time;
+      time = this.$moment(time);
+      this.jumpToStepFeed(this.taskid, time.format("YYYY-MM-DD HH:mm:ss") );
     },
     textInputBlur() {
       if (this.searchText == null || this.searchText.length == 0) return;
@@ -216,7 +220,7 @@ export default {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
       this.readeFeeds();
-      store.commit("setSearchFeedParams", null);
+      // store.commit("setSearchFeedParams", null);
     },
     refreshSearchParams() {
       this.searchType = "messages";
@@ -427,19 +431,19 @@ export default {
       //     this.selectStep(time);
       //     break;
       //   }
-      var messages = document.querySelectorAll(".selector");
-      if (messages === undefined || messages === null || messages.length === 0)
-        return;
-      for (var i in messages) {
-        if (this.messages[i].fed_type == "header") continue;
-        var message = messages[i];
-        if (this.isInViewport(message)) {
-          var selectedMessage = this.messages[i];
-          var time = selectedMessage.fed_time;
-          this.selectStep(time);
-          break;
-        }
-      }
+      // var messages = document.querySelectorAll(".selector");
+      // if (messages === undefined || messages === null || messages.length === 0)
+      //   return;
+      // for (var i in messages) {
+      //   if (this.messages[i].fed_type == "header") continue;
+      //   var message = messages[i];
+      //   if (this.isInViewport(message)) {
+      //     var selectedMessage = this.messages[i];
+      //     var time = selectedMessage.fed_time;
+      //     this.selectStep(time);
+      //     break;
+      //   }
+      // }
     },
     selectStep(time) {
       this.deselectSteps();
@@ -487,7 +491,6 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
-      // console.log('jumpToStepFeed');
       api.searchStepFeeds(tsk_id, stp_time_created, this.searchType).then(result => {
         if (result.data.status != "OK") {
           alert("Faild to load data");
@@ -497,20 +500,9 @@ export default {
           direction: "start",
           data: result.data.data
         });
+        this.scrollTOTop();
       });
     },
-    // readeSteps() {
-    //   api.getTaskInfo(this.taskid).then(result => {
-    //     if (result.data.status != "OK") {
-    //       alert(
-    //         "Error happen while trying to get steps info. Reload the page."
-    //       );
-    //       return;
-    //     }
-    //     this.steps = result.data.data;
-    //     this.deselectSteps();
-    //   });
-    // },
     isInViewport(el) {
       if (el == null) return;
       // if( !el.hasOwnProperty('getBoundingClientRect') ){
@@ -533,14 +525,17 @@ export default {
     if (!this.global) {
       this.readeTimestemps();
     }
-    if (this.searchFeedsParams === null) {
-      this.readeFeeds();
-    } else {
-      this.dataFromBegining = 0;
-      var tsk_id = this.searchFeedsParams.tsk_id;
-      var stp_time_created = this.searchFeedsParams.stp_time_created;
-      this.jumpToStepFeed(tsk_id, stp_time_created);
-    }
+    this.readeFeeds();
+
+    // if (this.searchFeedsParams === null) {
+    //   this.readeFeeds();
+    // } 
+    // else {
+    //   this.dataFromBegining = 0;
+    //   var tsk_id = this.searchFeedsParams.tsk_id;
+    //   var stp_time_created = this.searchFeedsParams.stp_time_created;
+    //   this.jumpToStepFeed(tsk_id, stp_time_created);
+    // }
 
     // ZX - POZIVA REFRESH NOTIFA
     // store.dispatch("getFeedCount");
@@ -568,7 +563,7 @@ export default {
   destroyed() {
     clearInterval(this.fInterval);
     store.commit("clearFeed");
-    store.commit("setSearchFeedParams", null);
+    // store.commit("setSearchFeedParams", null);
     this.dataFromBegining = 1;
   }
 };
