@@ -63,13 +63,13 @@ export const api = {
       priority: priorety,
     });
   },
-  createStepFromFeed(tsk_id, time_created, title, description){
-    return axios.post( 'steps', {
+  createTimestamps(tsk_id, time_created, title ){
+    return axios.post( 'tasks/'+tsk_id+'/feeds', {
       sid: window.localStorage.sid,
-      tasid: tsk_id,
       timecreated: time_created,
-      title: title,
-      description: description,
+      text: title,
+      type: "text",
+      islabel: 1,
     });
   },
   // koristi se u TaskAdd.vue, TaskAdd.vue
@@ -109,7 +109,7 @@ export const api = {
   //#endregion
   //#region Feeds
 
-  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important) {
+  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {
         fedid: fedid,
@@ -117,6 +117,7 @@ export const api = {
         type: type,
         searchstring: searchingstring,
         fed_important: fed_important,
+        fedtime: fed_time,
         sid: window.localStorage.sid,
       }
     });

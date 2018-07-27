@@ -2,7 +2,7 @@
 <!-- mojaPoruka()?'right-con': -->
   <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">
     <!-- <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div> -->
-    <div class='new-step' v-if='!global&&mess.fed_type!="header"' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
+    <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
@@ -11,7 +11,7 @@
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
-    <div class="message-body" :class='{"header-type": mess.fed_type=="header"}' >
+    <div class="message-body" :class='{"header-type": mess.fed_islabel==1}' >
       <div class="message-body-header">
         <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
         <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
@@ -23,7 +23,7 @@
       <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
-    <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_type!="header"' ></i>
+    <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1' ></i>
   </div>
 </template>
 

@@ -28,9 +28,9 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group v-if='!global&&steps.length>0'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' :title='step.tsk_timecreated'>
-          {{step.tsk_title}}
+      <b-list-group v-if='!global&&timestamps.length>0'>
+        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' @click='stepCicked(timestamp)' :title='timestamp.fed_time'>
+          {{timestamp.fed_text}}
         </b-list-group-item>
       </b-list-group>
 
@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     ...mapState({
-      // messages: state => state.modulefeed.messages,
+      messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
       searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
@@ -149,78 +149,9 @@ export default {
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
     },
-    messages(state) {
-      var messages = state.$store.state.modulefeed.messages;
-      var newArray = [];
-
-      if (this.steps == null || this.steps.length == 0) {
-        return messages;
-      }
-
-      // Set up steps
-      var j = 0;
-      var step = this.steps[0];
-      var stepTime = this.$moment(step.tsk_timecreated);
-      var lastStep = null;
-
-      var lastStepWritten = false;
-
-      for (var i in messages) {
-        var message = messages[i];
-        var messageTime = this.$moment(message.fed_time);
-        if (messageTime < stepTime) {
-          // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
-          if (j == 0) {
-            message.stp_id = null; // Znaci da je od taska
-          } else {
-            // Znaci da je od prethodnog stepa
-            message.stp_id = lastStep.tsk_id;
-          }
-        } else {
-          // Znaci da treba da pomerim step unapred
-          if (j < this.steps.length - 1) {
-            // Znaci nismo na poslednjem stepu
-            // Dodavanje hedera za step
-            var heder = {
-              fed_id: null,
-              fed_important: 0,
-              fed_text: step.tsk_title,
-              fed_time: step.tsk_timecreated,
-              fed_type: "header",
-              taskID: null,
-              usr_name: "",
-              usr_surname: ""
-            };
-            newArray.push(heder);
-            message.stp_id = step.tsk_id;
-            lastStep = step;
-            step = this.steps[++j];
-            stepTime = this.$moment(step.tsk_timecreated);
-          } else {
-            // Znaci da smo na poslednjem stepu
-            if (!lastStepWritten) {
-              lastStepWritten = true;
-              // Dodavanje hedera za step
-              var heder = {
-                fed_id: null,
-                fed_important: 0,
-                fed_text: step.tsk_title,
-                fed_time: step.tsk_timecreated,
-                fed_type: "header",
-                taskID: null,
-                usr_name: "",
-                usr_surname: ""
-              };
-              newArray.push(heder);
-            }
-            message.stp_id = step.tsk_id;
-          }
-        }
-        newArray.push(message);
-      }
-
-      return newArray;
-    }
+    timestamps(){
+      return this.messages.filter( el => el.fed_islabel==1 );
+    },
   },
   watch: {
     searchType() {
@@ -242,7 +173,7 @@ export default {
       this.refreshSearchParams();
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
-      this.readeSteps();
+      // this.readeSteps();
       this.readeFeeds();
       store.commit("setSearchFeedParams", null);
     },
@@ -258,9 +189,9 @@ export default {
       }
       var time = this.selectedStep.fed_time.replace(".0", "");
       api
-        .createStepFromFeed(this.taskid, time, this.newStep, null)
+        .createTimestamps(this.taskid, time, this.newStep)
         .then(result => {
-          this.readeSteps();
+          // this.readeSteps();
           this.reload();
           store.commit("setSelectedStep", null);
         })
@@ -356,14 +287,15 @@ export default {
       if (this.messages == null || this.messages.length == 0) return;
 
       // Dodato zbog hedera za stepove
+      // var message = this.messages[0];
+      // var i = 0;
+      // while (message.fed_type == "header") {
+      //   message = this.messages[i++];
+      //   if (message === undefined || message === null)
+      //     // Znaci da su sve poruke do kraja zapravo hederi
+      //     return;
+      // }
       var message = this.messages[0];
-      var i = 0;
-      while (message.fed_type == "header") {
-        message = this.messages[i++];
-        if (message === undefined || message === null)
-          // Znaci da su sve poruke do kraja zapravo hederi
-          return;
-      }
 
       this.loadingData = true;
       store
@@ -373,7 +305,8 @@ export default {
           direction: "up",
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
+          fed_important: this.searchImportant,
+          fedtime: message.fed_time,
         })
         .then(response => {
           if (
@@ -421,7 +354,11 @@ export default {
         .readeFeeds(
           this.taskid,
           this.messages[this.messages.length - 1].fed_id,
-          "down"
+          "down",
+          undefined,
+          undefined,
+          undefined,
+          this.messages[this.messages.length - 1].fed_time
         )
         .then(result => {
           this.loadingData = false;
@@ -542,18 +479,18 @@ export default {
         });
       });
     },
-    readeSteps() {
-      api.getTaskInfo(this.taskid).then(result => {
-        if (result.data.status != "OK") {
-          alert(
-            "Error happen while trying to get steps info. Reload the page."
-          );
-          return;
-        }
-        this.steps = result.data.data;
-        this.deselectSteps();
-      });
-    },
+    // readeSteps() {
+    //   api.getTaskInfo(this.taskid).then(result => {
+    //     if (result.data.status != "OK") {
+    //       alert(
+    //         "Error happen while trying to get steps info. Reload the page."
+    //       );
+    //       return;
+    //     }
+    //     this.steps = result.data.data;
+    //     this.deselectSteps();
+    //   });
+    // },
     isInViewport(el) {
       if (el == null) return;
       // if( !el.hasOwnProperty('getBoundingClientRect') ){
@@ -573,9 +510,9 @@ export default {
     }
   },
   mounted() {
-    if (!this.global) {
-      this.readeSteps();
-    }
+    // if (!this.global) {
+    //   this.readeSteps();
+    // }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
