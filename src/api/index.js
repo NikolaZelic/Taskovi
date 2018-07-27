@@ -109,6 +109,11 @@ export const api = {
   //#endregion
   //#region Feeds
 
+  readeTimestemps(tsk_id){
+    return axios.get('tasks/'+tsk_id+"/labels", {params: {
+      sid: window.localStorage.sid,
+    }});
+  },
   readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {

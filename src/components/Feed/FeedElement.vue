@@ -129,7 +129,8 @@ export default {
           text: "All",
           value: "all"
         }
-      ]
+      ],
+      timestamps: [],
     };
   },
   computed: {
@@ -149,9 +150,9 @@ export default {
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
     },
-    timestamps(){
-      return this.messages.filter( el => el.fed_islabel==1 );
-    },
+    // timestamps(){
+    //   return this.messages.filter( el => el.fed_islabel==1 );
+    // },
   },
   watch: {
     searchType() {
@@ -174,6 +175,7 @@ export default {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
       // this.readeSteps();
+      this.readeTimestemps();
       this.readeFeeds();
       store.commit("setSearchFeedParams", null);
     },
@@ -192,6 +194,7 @@ export default {
         .createTimestamps(this.taskid, time, this.newStep)
         .then(result => {
           // this.readeSteps();
+          this.readeTimestemps();
           this.reload();
           store.commit("setSelectedStep", null);
         })
@@ -224,6 +227,17 @@ export default {
       if (event.key == "Enter" && event.ctrlKey) {
         this.writeMessageFeed();
       }
+    },
+    readeTimestemps(){
+      api.readeTimestemps(this.taskid).then(result=>{
+        if(result.data.status!='OK'){
+          alert('Eror happen while trying to get timestemps');
+          return;
+        }
+        if(result.data.data!==undefined&&result.data.data.length>0){
+          this.timestamps = result.data.data
+        }
+      })
     },
     readeFeeds() {
       // console.log('Reade feeds');
@@ -516,9 +530,9 @@ export default {
     }
   },
   mounted() {
-    // if (!this.global) {
-    //   this.readeSteps();
-    // }
+    if (!this.global) {
+      this.readeTimestemps();
+    }
     if (this.searchFeedsParams === null) {
       this.readeFeeds();
     } else {
