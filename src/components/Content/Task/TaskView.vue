@@ -11,7 +11,7 @@
         <b-tabs v-model='currentMiniTab'>
           <b-tab title="Task Info" @click="changeTab('generalInfo'); tabParam = 'generalInfo'" active>
           </b-tab>
-          <b-tab title="Steps" @click="changeTab('steps'); tabParam = 'steps'">
+          <b-tab title="Task Flow" @click="changeTab('steps'); tabParam = 'steps'">
           </b-tab>
           <b-tab title="Messages" @click="changeTab('messages'); tabParam = 'messages'">
           </b-tab>
@@ -57,7 +57,7 @@
             </tr>
 
             <tr>
-              <td>Status:</td>
+              <td>Task Events:</td>
               <td>{{this.taskGeneralInfo.sta_text}}</td>
             </tr>
 
@@ -123,7 +123,7 @@
             <thead>
               <tr>
                 <th scope="col">Go to messages</th>
-                <th scope="col">Status</th>
+                <th scope="col">Task Events</th>
                 <th scope="col">Title</th>
                 <th scope="col">Deadline</th>
                 <!-- <th scope="col">Tags</th> -->
@@ -218,7 +218,7 @@
             </tr>
 
             <tr>
-              <td class="align-top">Status:</td>
+              <td class="align-top">Task Events:</td>
               <td>
                 <h5>{{stepInfo[0].sta_text}}
                   <i class="fas fa-check-circle text-success" v-if="stepInfo[0].sta_text === 'Completed'"></i>
@@ -375,7 +375,7 @@
             <textarea class="form-control" id="desc" rows="3" v-model="edit.description"></textarea>
           </div>
 
-          <label for="status">Change status:</label>
+          <label for="status">Change task event:</label>
           <select class="form-control" id="status" v-model="edit.status">
             <option value="2" v-if="stepInfo[0].you_are_creator === 1">In Progress</option>
             <option value="3" v-if="stepInfo[0].you_are_worker === 1">Completed</option>
