@@ -6,7 +6,7 @@
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
-      <img :src="icon()" v-if='this.mess.fed_type==="message"' />
+      <img :src="getAvatar" v-if='this.mess.fed_type==="message"' />
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
@@ -31,6 +31,7 @@
 import { mapState, mapGetters } from "vuex";
 import { baseURL } from "@/api/config.js";
 import { store } from "@/store/index.js";
+import { instance as axios } from "@/api/config.js";
 
 export default {
   props: {
@@ -60,6 +61,13 @@ export default {
     },
     isImportant() {
       return this.mess.fed_important;
+    },
+    getAvatar() {
+      if (this.mess.usrimg !== undefined && this.mess.usrimg !== null) {
+        let netIcon = baseURL + this.mess.usrimg + "?sid=" + localStorage.sid;
+        return netIcon;
+      }
+      return "static/img/user.png";
     }
   },
   methods: {
@@ -90,18 +98,6 @@ export default {
         return true;
       else return false;
     },
-    icon() {
-      switch (this.mess.fed_type) {
-        // case "attachment":
-        //   return "static\\img\\file-icon.png";
-        case "message":
-          return "static/img/user.png";
-        // case "status":
-        //   return "static/img/status.png";
-        default:
-          return "";
-      }
-    },
     showFile() {
       return (
         baseURL +
@@ -115,10 +111,12 @@ export default {
     }
   },
   mounted() {
-    if (this.scrollDownMess)
-      document.getElementById("all").scrollTop = document.getElementById(
-        "all"
-      ).scrollHeight;
+    if (this.scrollDownMess) {
+      var id = document.getElementById("all");
+      if (id !== undefined && id !== null) id.scrollTop = id.scrollHeight;
+    }
+    // this.getAvatar();
+    // console.log('WHEN')
   }
 };
 </script>

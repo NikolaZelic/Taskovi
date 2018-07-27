@@ -127,6 +127,24 @@ textarea.custom-modern::placeholder {
   padding: 2px !important;
 }
 
+/* SCROLLBAR WEBKIT */
+ ::-webkit-scrollbar-thumb {
+  background: var(--ac-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5e9fa8;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+
 /* input[type="radio"]:checked+.label-text:before {
   content: "\f192";
   animation: effect 250ms ease-in;

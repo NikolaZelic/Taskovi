@@ -3,7 +3,16 @@
     <div class="search-inputs">
       <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form>
-        <span class='radio-wrapper'>
+
+
+        <b-form-radio-group v-model="searchType" :options="radioFilter"></b-form-radio-group>
+
+        <b-form-checkbox v-model="searchImportant">
+          Important
+        </b-form-checkbox>
+
+
+        <!-- <span class='radio-wrapper'>
           <input type="radio" id="messages" value="messages" checked v-model='searchType'>
           <label for="messages">Messages</label>
           <input type="radio" id="statuses" value="statuses" v-model='searchType'>
@@ -12,9 +21,9 @@
           <label for="files">Files</label>
           <input type="radio" id="all" value="all" v-model='searchType'>
           <label for="all">All</label>
-        </span>
-        <input type="checkbox" id='important' v-model='searchImportant'>
-        <label for="important">Important</label>
+        </span> -->
+        <!-- <input type="checkbox" id='important' v-model='searchImportant'>
+        <label for="important">Important</label> -->
       </form>
     </div>
 
@@ -91,7 +100,6 @@ export default {
       feed: "",
       uploadProgress: 50,
       inProgress: false,
-      searchType: "messages",
       searchText: "",
       searchImportant: false,
       dataFromBegining: 1,
@@ -102,7 +110,26 @@ export default {
       newStep: "",
       stepErr: false,
       haveNewMessage: false,
-      firstLoad: true
+      firstLoad: true,
+      searchType: "messages",
+      radioFilter: [
+        {
+          text: "Messages",
+          value: "messages"
+        },
+        {
+          text: "Statuses",
+          value: "statuses"
+        },
+        {
+          text: "Files",
+          value: "files"
+        },
+        {
+          text: "All",
+          value: "all"
+        }
+      ]
     };
   },
   computed: {
@@ -724,11 +751,33 @@ export default {
   font-size: 16px;
   resize: none;
   border-radius: 5px;
+  box-shadow: inset 0 3px 10px 0 #00000026;
+  height: 60px;
+  transition: height 0.2s;
+  transition-timing-function: ease;
 }
 
 .input textarea:focus {
   height: 140px;
 }
+
+/* .attach:after {
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: -10px;
+  bottom: -10px;
+  width: 1px;
+  opacity: 0.5;
+  background-color: rgba(212, 212, 212, 0);
+  background-image: linear-gradient(
+    to top,
+    rgba(212, 212, 212, 0) 0,
+    #d4d4d4 30%,
+    #d4d4d4 70%,
+    rgba(212, 212, 212, 0) 100%
+  );
+} */
 
 .input .input button {
   position: relative;

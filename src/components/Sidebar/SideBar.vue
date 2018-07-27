@@ -434,7 +434,7 @@ export default {
           tabIndex: 1,
           id: undefined
         });
-        store.commit("resetProjectView");
+        // store.commit("resetProjectView");
       }
       if (val < 0) return;
       if (val === 1) {
@@ -826,7 +826,23 @@ export default {
   display: block;
   color: #dacbcb;
   cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 180px;
+  height: 55px;
+  margin: 5px 0;
 }
+
+.tabs .tab-container:not(:first-child):hover,
+.user-sidebar .tab-container:hover{
+  background: #686f7b82;
+}
+
+.tabs .tab-container:first-child {
+  cursor: auto;
+}
+
 
 .tablinks[disabled] {
   color: #0a0a0a;
@@ -1118,19 +1134,6 @@ label {
 .left-al {
   text-align: left !important;
   margin-left: 5px;
-}
-
-.tab-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 180px;
-  height: 55px;
-  margin: 5px 0;
-}
-
-.tabs .tab-container:first-child {
-  cursor: auto;
 }
 
 #enon-img {
