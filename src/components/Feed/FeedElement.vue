@@ -233,6 +233,7 @@ export default {
       }
     },
     readeTimestemps(){
+      this.timestamps = [];
       api.readeTimestemps(this.taskid).then(result=>{
         if(result.data.status!='OK'){
           alert('Eror happen while trying to get timestemps');
@@ -373,6 +374,8 @@ export default {
       // console.log('AddDown');
       if (this.loadingData) return;
       var message = this.messages[this.messages.length - 1];
+      if(message===undefined||message===null)
+        return;
       // console.log(message);
       api
         .readeFeeds(
