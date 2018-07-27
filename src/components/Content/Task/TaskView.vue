@@ -559,15 +559,15 @@ export default {
       });
     },
 
-    jumpToFeed(task) {
-      var stp_time_created = task.tsk_timecreated;
-      var tsk_id = this.selectedItemID;
-      store.commit("setSearchFeedParams", {
-        tsk_id: tsk_id,
-        stp_time_created
-      });
-      this.changeTab("messages");
-    },
+    // jumpToFeed(task) {
+    //   var stp_time_created = task.tsk_timecreated;
+    //   var tsk_id = this.selectedItemID;
+    //   store.commit("setSearchFeedParams", {
+    //     tsk_id: tsk_id,
+    //     stp_time_created
+    //   });
+    //   this.changeTab("messages");
+    // },
 
     getGeneralInfo(taskID) {
         api.loadTaskInfo(localStorage.sid, taskID)

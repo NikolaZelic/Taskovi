@@ -9,9 +9,10 @@
     </div>
 
     <div class='flex-chat-body'>
-      <b-list-group v-if='!global&&steps.length>0'>
-        <b-list-group-item v-for='(step, index) in steps' :key='index' :active='step.selected' @click='stepCicked(step)' :title='step.tsk_timecreated'>
-          {{step.tsk_title}}
+      <b-list-group v-if='!global&&timestamps.length>0'>
+        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' @click='stepCicked(timestamp)'
+          :title='timestamp.fed_time'>
+          {{timestamp.fed_text}}
         </b-list-group-item>
       </b-list-group>
 
@@ -110,14 +111,15 @@ export default {
           text: "All",
           value: "all"
         }
-      ]
+      ],
+      timestamps: []
     };
   },
   computed: {
     ...mapState({
-      // messages: state => state.modulefeed.messages,
+      messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
-      searchFeedsParams: state => state.modulefeed.searchFeedsParams,
+      // searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
       pro_id: state => state.sidebarItemSelection[0]
     }),
@@ -129,79 +131,10 @@ export default {
       if (this.searchImportant) return true;
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
-    },
-    messages(state) {
-      var messages = state.$store.state.modulefeed.messages;
-      var newArray = [];
-
-      if (this.steps == null || this.steps.length == 0) {
-        return messages;
-      }
-
-      // Set up steps
-      var j = 0;
-      var step = this.steps[0];
-      var stepTime = this.$moment(step.tsk_timecreated);
-      var lastStep = null;
-
-      var lastStepWritten = false;
-
-      for (var i in messages) {
-        var message = messages[i];
-        var messageTime = this.$moment(message.fed_time);
-        if (messageTime < stepTime) {
-          // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
-          if (j == 0) {
-            message.stp_id = null; // Znaci da je od taska
-          } else {
-            // Znaci da je od prethodnog stepa
-            message.stp_id = lastStep.tsk_id;
-          }
-        } else {
-          // Znaci da treba da pomerim step unapred
-          if (j < this.steps.length - 1) {
-            // Znaci nismo na poslednjem stepu
-            // Dodavanje hedera za step
-            var heder = {
-              fed_id: null,
-              fed_important: 0,
-              fed_text: step.tsk_title,
-              fed_time: step.tsk_timecreated,
-              fed_type: "header",
-              taskID: null,
-              usr_name: "",
-              usr_surname: ""
-            };
-            newArray.push(heder);
-            message.stp_id = step.tsk_id;
-            lastStep = step;
-            step = this.steps[++j];
-            stepTime = this.$moment(step.tsk_timecreated);
-          } else {
-            // Znaci da smo na poslednjem stepu
-            if (!lastStepWritten) {
-              lastStepWritten = true;
-              // Dodavanje hedera za step
-              var heder = {
-                fed_id: null,
-                fed_important: 0,
-                fed_text: step.tsk_title,
-                fed_time: step.tsk_timecreated,
-                fed_type: "header",
-                taskID: null,
-                usr_name: "",
-                usr_surname: ""
-              };
-              newArray.push(heder);
-            }
-            message.stp_id = step.tsk_id;
-          }
-        }
-        newArray.push(message);
-      }
-
-      return newArray;
     }
+    // timestamps(){
+    //   return this.messages.filter( el => el.fed_islabel==1 );
+    // },
   },
   watch: {
     searchType() {
@@ -223,9 +156,10 @@ export default {
       this.refreshSearchParams();
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
-      this.readeSteps();
+      // this.readeSteps();
+      this.readeTimestemps();
       this.readeFeeds();
-      store.commit("setSearchFeedParams", null);
+      // store.commit("setSearchFeedParams", null);
     },
     clearStepCreateContent() {
       this.newStep = "";
@@ -237,11 +171,18 @@ export default {
         this.stepErr = true;
         return;
       }
-      var time = this.selectedStep.fed_time.replace(".0", "");
+      var time = this.selectedStep.fed_time;
+      time = this.$moment(time).subtract(-1, "secounds");
+      time.seconds(time.seconds() - 1);
       api
-        .createStepFromFeed(this.taskid, time, this.newStep, null)
+        .createTimestamps(
+          this.taskid,
+          time.format("YYYY-MM-DD HH:mm:ss"),
+          this.newStep
+        )
         .then(result => {
-          this.readeSteps();
+          // this.readeSteps();
+          this.readeTimestemps();
           this.reload();
           store.commit("setSelectedStep", null);
         })
@@ -251,7 +192,9 @@ export default {
       this.$refs.stepModal.hide();
     },
     stepCicked(step) {
-      this.jumpToStepFeed(this.taskid, step.tsk_timecreated);
+      var time = step.fed_time;
+      time = this.$moment(time);
+      this.jumpToStepFeed(this.taskid, time.format("YYYY-MM-DD HH:mm:ss"));
     },
     textInputBlur() {
       if (this.searchText == null || this.searchText.length == 0) return;
@@ -263,7 +206,7 @@ export default {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
       this.readeFeeds();
-      store.commit("setSearchFeedParams", null);
+      // store.commit("setSearchFeedParams", null);
     },
     refreshSearchParams() {
       this.searchType = "messages";
@@ -274,6 +217,19 @@ export default {
       if (event.key == "Enter" && event.ctrlKey) {
         this.writeMessageFeed();
       }
+    },
+    readeTimestemps() {
+      this.timestamps = [];
+      api.readeTimestemps(this.taskid).then(result => {
+        if (result.data.status != "OK") {
+          alert("Eror happen while trying to get timestemps");
+          return;
+        }
+        if (result.data.data !== undefined && result.data.data.length > 0) {
+          this.timestamps = result.data.data;
+          this.deselectTimestemps();
+        }
+      });
     },
     readeFeeds() {
       // console.log('Reade feeds');
@@ -296,6 +252,7 @@ export default {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
           }
+          this.processStepSelection();
         })
         .catch(err => {
           this.loadingData = false;
@@ -308,15 +265,18 @@ export default {
         this.feed = "";
         return;
       }
-      store.dispatch("postMessage", {
-        taskid: this.taskid,
-        text: text
+      api.postMessage(this.taskid, text).then(result => {
+        if (result.data.status != "OK") {
+          alert("Problem durning sending the message");
+          return;
+        }
+        this.addDown(true);
       });
-      setTimeout(() => {
-        var a = document.querySelectorAll(".selector");
-        a = a[a.length - 1];
-        a.scrollIntoView(true);
-      }, 500);
+      // setTimeout(() => {
+      //   var a = document.querySelectorAll(".selector");
+      //   a = a[a.length - 1];
+      //   a.scrollIntoView(true);
+      // }, 500);
       this.feed = "";
     },
     uploadFile() {
@@ -337,14 +297,15 @@ export default {
       if (this.messages == null || this.messages.length == 0) return;
 
       // Dodato zbog hedera za stepove
+      // var message = this.messages[0];
+      // var i = 0;
+      // while (message.fed_type == "header") {
+      //   message = this.messages[i++];
+      //   if (message === undefined || message === null)
+      //     // Znaci da su sve poruke do kraja zapravo hederi
+      //     return;
+      // }
       var message = this.messages[0];
-      var i = 0;
-      while (message.fed_type == "header") {
-        message = this.messages[i++];
-        if (message === undefined || message === null)
-          // Znaci da su sve poruke do kraja zapravo hederi
-          return;
-      }
 
       this.loadingData = true;
       store
@@ -354,7 +315,8 @@ export default {
           direction: "up",
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
+          fed_important: this.searchImportant,
+          fedtime: message.fed_time
         })
         .then(response => {
           if (
@@ -397,12 +359,20 @@ export default {
         });
     },
     addDown(scrollDown) {
+      // console.log('AddDown');
       if (this.loadingData) return;
+      var message = this.messages[this.messages.length - 1];
+      if (message === undefined || message === null) return;
+      // console.log(message);
       api
         .readeFeeds(
           this.taskid,
-          this.messages[this.messages.length - 1].fed_id,
-          "down"
+          message.fed_id,
+          "down",
+          undefined,
+          undefined,
+          undefined,
+          message.fed_time
         )
         .then(result => {
           this.loadingData = false;
@@ -440,54 +410,43 @@ export default {
       }
     },
     processStepSelection() {
-      // var messages = document.querySelectorAll(".selector");
-      // if(messages===undefined||messages===null||messages.length===0)
-      //   return;
-      // for (var i in messages) {
-      //   var message = messages[i];
-      //   if (this.isInViewport(message)) {
-      //     var selectedMessage = this.messages[i];
-      //     var time = selectedMessage.fed_time;
-      //     this.selectStep(time);
-      //     break;
-      //   }
+      if (this.timestamps == null || this.timestamps.length === 0) return;
       var messages = document.querySelectorAll(".selector");
       if (messages === undefined || messages === null || messages.length === 0)
         return;
       for (var i in messages) {
-        if (this.messages[i].fed_type == "header") continue;
         var message = messages[i];
         if (this.isInViewport(message)) {
-          var selectedMessage = this.messages[i];
-          var time = selectedMessage.fed_time;
-          this.selectStep(time);
-          break;
+          this.selectTimestemp(this.messages[i].fed_time);
+          return;
         }
       }
+      console.log("Nista nije selektovano");
     },
-    selectStep(time) {
-      this.deselectSteps();
+    selectTimestemp(time) {
+      console.log("selectTimestemp");
+      this.deselectTimestemps();
       time = this.$moment(time);
-      var length = this.steps.length;
+      var length = this.timestamps.length;
       for (var i = 0; i < length; i++) {
-        var stepTime = this.$moment(this.steps[i].tsk_timecreated);
+        var timestempTime = this.$moment(this.timestamps[i].fed_time);
         if (
-          time >= stepTime &&
+          time >= timestempTime &&
           (i + 1 >= length ||
-            time <= this.$moment(this.steps[i + 1].tsk_timecreated))
+            time <= this.$moment(this.timestamps[i + 1].fed_time))
         ) {
           // taj step treba da se selektuje
-          this.steps[i].selected = true;
-          var steps = this.steps;
-          this.steps = [];
-          this.steps = steps;
+          this.timestamps[i].selected = true;
+          var timestamps = this.timestamps;
+          this.timestamps = [];
+          this.timestamps = timestamps;
           return;
         }
       }
     },
-    deselectSteps() {
-      for (var i in this.steps) {
-        this.steps[i].selected = false;
+    deselectTimestemps() {
+      for (var i in this.timestamps) {
+        this.timestamps[i].selected = false;
       }
     },
     scrollTOTop() {
@@ -511,31 +470,19 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
-      // console.log('jumpToStepFeed');
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
         .then(result => {
           if (result.data.status != "OK") {
-            alert("Faild to load data");
+            alert("Failed to load data");
             return;
           }
           store.commit("addMessages", {
             direction: "start",
             data: result.data.data
           });
+          this.scrollTOTop();
         });
-    },
-    readeSteps() {
-      api.getTaskInfo(this.taskid).then(result => {
-        if (result.data.status != "OK") {
-          alert(
-            "Error happen while trying to get steps info. Reload the page."
-          );
-          return;
-        }
-        this.steps = result.data.data;
-        this.deselectSteps();
-      });
     },
     isInViewport(el) {
       if (el == null) return;
@@ -557,16 +504,19 @@ export default {
   },
   mounted() {
     if (!this.global) {
-      this.readeSteps();
+      this.readeTimestemps();
     }
-    if (this.searchFeedsParams === null) {
-      this.readeFeeds();
-    } else {
-      this.dataFromBegining = 0;
-      var tsk_id = this.searchFeedsParams.tsk_id;
-      var stp_time_created = this.searchFeedsParams.stp_time_created;
-      this.jumpToStepFeed(tsk_id, stp_time_created);
-    }
+    this.readeFeeds();
+
+    // if (this.searchFeedsParams === null) {
+    //   this.readeFeeds();
+    // }
+    // else {
+    //   this.dataFromBegining = 0;
+    //   var tsk_id = this.searchFeedsParams.tsk_id;
+    //   var stp_time_created = this.searchFeedsParams.stp_time_created;
+    //   this.jumpToStepFeed(tsk_id, stp_time_created);
+    // }
 
     // ZX - POZIVA REFRESH NOTIFA
     // store.dispatch("getFeedCount");
@@ -594,7 +544,7 @@ export default {
   destroyed() {
     clearInterval(this.fInterval);
     store.commit("clearFeed");
-    store.commit("setSearchFeedParams", null);
+    // store.commit("setSearchFeedParams", null);
     this.dataFromBegining = 1;
   }
 };

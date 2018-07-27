@@ -6,7 +6,7 @@ import {
 } from '../index';
 const actions = {
   readeFeeds(commit, params) {
-    return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important ).then(response => {
+    return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important, params.fedtime ).then(response => {
       store.commit('addMessages', {
         'direction': params.direction,
         'data': response.data.data
@@ -18,25 +18,25 @@ const actions = {
     return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important );
   },
 
-  postMessage(commit, params) {
-    api.postMessage(params.taskid, params.text).then(r => {
-      // KORISTI GETTER UMESTO DIREKTNO STORE
-      var msg = state.messages;
-      if (msg.length === 0) {
-        store.dispatch("readeFeeds", {
-          taskid: params.taskid,
-          fedid: 0,
-          direction: "start"
-        });
-      } else {
-        store.dispatch("readeFeeds", {
-          taskid: params.taskid,
-          fedid: msg[msg.length - 1].fed_id,
-          direction: "down"
-        });
-      }
-    });
-  },
+  // postMessage(commit, params) {
+  //   api.postMessage(params.taskid, params.text).then(r => {
+  //     // KORISTI GETTER UMESTO DIREKTNO STORE
+  //     var msg = state.messages;
+  //     if (msg.length === 0) {
+  //       store.dispatch("readeFeeds", {
+  //         taskid: params.taskid,
+  //         fedid: 0,
+  //         direction: "start"
+  //       });
+  //     } else {
+  //       store.dispatch("readeFeeds", {
+  //         taskid: params.taskid,
+  //         fedid: msg[msg.length - 1].fed_id,
+  //         direction: "down"
+  //       });
+  //     }
+  //   });
+  // },
   sendAttach(commit, params) {
     api.sendAttach(params.taskid, params.file).then(r => {
         //For refresh new messages
@@ -64,9 +64,9 @@ const actions = {
 };
 
 const mutations = {
-  setSearchFeedParams: (state, params) => {
-    state.searchFeedsParams = params;
-  },
+  // setSearchFeedParams: (state, params) => {
+  //   state.searchFeedsParams = params;
+  // },
 
   addMessages: (state, params) => {
     if (params.data) {
@@ -110,7 +110,7 @@ const getters = {
 const state = {
   messages: [],
   scrollDownMess: true,
-  searchFeedsParams: null,
+  // searchFeedsParams: null,
   selectedStep: null,
 }
 
