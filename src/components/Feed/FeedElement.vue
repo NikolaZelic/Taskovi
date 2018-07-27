@@ -240,7 +240,8 @@ export default {
           return;
         }
         if(result.data.data!==undefined&&result.data.data.length>0){
-          this.timestamps = result.data.data
+          this.timestamps = result.data.data;
+          this.deselectTimestemps();
         }
       })
     },
@@ -423,54 +424,42 @@ export default {
       }
     },
     processStepSelection() {
-      // var messages = document.querySelectorAll(".selector");
-      // if(messages===undefined||messages===null||messages.length===0)
-      //   return;
-      // for (var i in messages) {
-      //   var message = messages[i];
-      //   if (this.isInViewport(message)) {
-      //     var selectedMessage = this.messages[i];
-      //     var time = selectedMessage.fed_time;
-      //     this.selectStep(time);
-      //     break;
-      //   }
-      // var messages = document.querySelectorAll(".selector");
-      // if (messages === undefined || messages === null || messages.length === 0)
-      //   return;
-      // for (var i in messages) {
-      //   if (this.messages[i].fed_type == "header") continue;
-      //   var message = messages[i];
-      //   if (this.isInViewport(message)) {
-      //     var selectedMessage = this.messages[i];
-      //     var time = selectedMessage.fed_time;
-      //     this.selectStep(time);
-      //     break;
-      //   }
-      // }
+      if(this.timestamps==null||this.timestamps.length===0)
+        return;
+      var messages = document.querySelectorAll(".selector");
+      if(messages===undefined||messages===null||messages.length===0)
+        return;
+      for (var i in messages) {
+        var message = messages[i];
+        if (this.isInViewport(message)) {
+          this.selectTimestemp( this.messages[i].fed_time );
+          break;
+        }
+      }
     },
-    selectStep(time) {
-      this.deselectSteps();
+    selectTimestemp(time) {
+      this.deselectTimestemps();
       time = this.$moment(time);
-      var length = this.steps.length;
+      var length = this.timestamps.length;
       for (var i = 0; i < length; i++) {
-        var stepTime = this.$moment(this.steps[i].tsk_timecreated);
+        var timestempTime = this.$moment(this.timestamps[i].fed_time);
         if (
-          time >= stepTime &&
+          time >= timestempTime &&
           (i + 1 >= length ||
-            time <= this.$moment(this.steps[i + 1].tsk_timecreated))
+            time <= this.$moment(this.timestamps[i+1].fed_time))
         ) {
           // taj step treba da se selektuje
-          this.steps[i].selected = true;
-          var steps = this.steps;
-          this.steps = [];
-          this.steps = steps;
+          this.timestamps[i].selected = true;
+          var timestamps = this.timestamps;
+          this.timestamps = [];
+          this.timestamps = timestamps;
           return;
         }
       }
     },
-    deselectSteps() {
-      for (var i in this.steps) {
-        this.steps[i].selected = false;
+    deselectTimestemps() {
+      for (var i in this.timestamps) {
+        this.timestamps[i].selected = false;
       }
     },
     scrollTOTop() {
