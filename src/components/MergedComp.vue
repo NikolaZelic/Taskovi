@@ -43,7 +43,7 @@
 
       <div class='feed-wrap' v-if='!tableShow'>
         <global-feed v-if='globalFeed' />
-        <project-config v-if='checkShow(2) && !globalFeed' />
+        <!-- <project-config v-if='checkShow(2) && !globalFeed' /> -->
       </div>
     </div>
     <!-- <router-link to="/user"></router-link> -->
@@ -64,7 +64,7 @@ import TaskEdit from "@/components/Content/Task/TaskEdit";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import ProjectManage from "@/components/Content/Project/ProjectManage";
-import ProjectConfig from "@/components/Content/Project/ProjectConfig";
+// import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 
@@ -86,7 +86,7 @@ export default {
     UserOptions,
     ModalError,
     GlobalFeed,
-    ProjectConfig
+    // ProjectConfig
   },
   data() {
     return {

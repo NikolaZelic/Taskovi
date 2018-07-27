@@ -2,28 +2,9 @@
   <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <div class="search-inputs">
       <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
-      <form>
-
-
-        <b-form-radio-group v-model="searchType" :options="radioFilter"></b-form-radio-group>
-
-        <b-form-checkbox v-model="searchImportant">
-          Important
-        </b-form-checkbox>
-
-
-        <!-- <span class='radio-wrapper'>
-          <input type="radio" id="messages" value="messages" checked v-model='searchType'>
-          <label for="messages">Messages</label>
-          <input type="radio" id="statuses" value="statuses" v-model='searchType'>
-          <label for="statuses">Task Events</label>
-          <input type="radio" id="files" value="files" v-model='searchType'>
-          <label for="files">Files</label>
-          <input type="radio" id="all" value="all" v-model='searchType'>
-          <label for="all">All</label>
-        </span> -->
-        <!-- <input type="checkbox" id='important' v-model='searchImportant'>
-        <label for="important">Important</label> -->
+      <form class='form-search'>
+        <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
+        <b-form-checkbox v-model="searchImportant">Important</b-form-checkbox>
       </form>
     </div>
 
@@ -531,16 +512,18 @@ export default {
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
       // console.log('jumpToStepFeed');
-      api.searchStepFeeds(tsk_id, stp_time_created, this.searchType).then(result => {
-        if (result.data.status != "OK") {
-          alert("Faild to load data");
-          return;
-        }
-        store.commit("addMessages", {
-          direction: "start",
-          data: result.data.data
+      api
+        .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
+        .then(result => {
+          if (result.data.status != "OK") {
+            alert("Faild to load data");
+            return;
+          }
+          store.commit("addMessages", {
+            direction: "start",
+            data: result.data.data
+          });
         });
-      });
     },
     readeSteps() {
       api.getTaskInfo(this.taskid).then(result => {
@@ -560,7 +543,7 @@ export default {
       //   console.log('Nema funkciju');
       //   return;
       // }
-        
+
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
@@ -643,6 +626,10 @@ export default {
 
 .search-inputs * {
   padding: 5px;
+}
+
+.form-search {
+  transform: scale(0.9);
 }
 
 .search-inputs input[type="text"] {
@@ -797,6 +784,14 @@ export default {
   right: 20px;
 }
 
+.input button:first-child:hover {
+  box-shadow: 0 0 20px 1px rgba(19, 138, 255, 0.2);
+}
+
+.input button:last-child:hover {
+  box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
+}
+
 .input button > span {
   font-size: 16px;
 }
@@ -837,5 +832,9 @@ export default {
 
 .modal-table td {
   padding: 0 20px 10px 0;
+}
+
+.radio-group {
+  display: inline;
 }
 </style>

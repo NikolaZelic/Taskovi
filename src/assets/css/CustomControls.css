@@ -1,16 +1,6 @@
-/* .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
-  background-color: #ffd827 !important;
-  border: 0;
-} */
-
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-  /* filter: invert(100%); */
   transform: scale(1.4);
 }
-
-/* .custom-control-label {
-  color: white;
-} */
 
 #sidebar .multiselect__single {
   display: none !important;
@@ -85,7 +75,7 @@ textarea.custom-modern::placeholder {
 
 .task-tabs .tabs {
   position: absolute;
-  top: -49px;
+  top: -48px;
 }
 
 .task-tabs .tabs .nav-tabs {
@@ -102,7 +92,7 @@ textarea.custom-modern::placeholder {
   background: none !important;
   color: #111;
   border: none;
-  border-bottom: 2px solid transparent;
+  /* border-bottom: 2px solid transparent; */
   padding: 0.1rem 1.2rem;
 }
 
@@ -110,25 +100,44 @@ textarea.custom-modern::placeholder {
   color: #eee;
 }
 
-.task-tabs .tabs .nav-item .nav-link:hover {
-  border-color: #4c9af3 !important;
+.task-tabs .tabs .nav-item .active.nav-link {
+  color: var(--ac-color);
 }
 
-.task-tabs .tabs .nav-item .active.nav-link {
-  border-color: var(--ac-color);
-  color: var(--ac-color);
+.task-tabs .tabs .nav-item .active.nav-link:after {
+  border-bottom: solid 2px var(--ac-color);
+  transform: scaleX(1.6);
+}
+
+.task-tabs .tabs .nav-item .nav-link:after {
+  display: block;
+  content: '';
+  border-bottom: solid 2px #4c9af3;
+  transform: scaleX(0);
+  transition: transform 250ms ease-in-out;
+}
+
+.task-tabs .tabs .nav-item .active.nav-link:hover:after {
+  border-bottom: solid 2px #4c9af3;
+  transform: scaleX(1.4);
+}
+
+.task-tabs .tabs .nav-item .nav-link:hover:after {
+  transform: scaleX(1.6);
 }
 
 .modal-footer> :not(:last-child) {
   background: var(--danger)
 }
 
-.user-table .table th, .user-table .table td {
+.user-table .table th,
+.user-table .table td {
   padding: 2px !important;
 }
 
 /* SCROLLBAR WEBKIT */
- ::-webkit-scrollbar-thumb {
+
+::-webkit-scrollbar-thumb {
   background: var(--ac-color);
 }
 
@@ -143,7 +152,6 @@ textarea.custom-modern::placeholder {
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-
 
 /* input[type="radio"]:checked+.label-text:before {
   content: "\f192";

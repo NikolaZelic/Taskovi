@@ -16,7 +16,7 @@
 
         <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
           <span class="fas fa-bell"></span>
-          <span class="badge badge-success count">{{notifDisplay}}</span>
+          <span class="badge badge-warning count">{{notifDisplay}}</span>
           <span class='left-al'>Notifications</span>
         </div>
 
@@ -64,7 +64,7 @@
           <span>{{tabs[getTabIndex].single}}</span>
         </button>
 
-        <div class="form-filter">
+        <!-- <div class="form-filter"> -->
 
           <template v-if="!showSubFilter()">
             <b-form-group>
@@ -102,7 +102,7 @@
             </div>
           </template>
 
-        </div>
+        <!-- </div> -->
 
       </div>
 
@@ -187,7 +187,7 @@
           </template>
 
           <template slot="unseen_feed" slot-scope="data">
-            <span class='badge badge-success' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
+            <span class='badge badge-warning' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
           </template>
 
 
@@ -574,6 +574,7 @@ export default {
         searchstr: this.taskSearchText,
         tagarray: this.tagIds
       });
+      store.dispatch("getFeedCount");
       this.intervalNotification = setInterval(
         function() {
           this.checkNotifications();
@@ -586,6 +587,7 @@ export default {
       store.dispatch("getProjects", {
         index: this.getTabIndex
       });
+      store.dispatch("getFeedCount");
       this.intervalNotification = setInterval(
         function() {
           this.checkNotifications();
@@ -1078,7 +1080,7 @@ h2 {
   /* width: 30rem; */
 }
 
-.form-filter fieldset {
+.flex-form-action fieldset {
   /* display: block; */
   width: 100%;
 }
@@ -1087,7 +1089,7 @@ h2 {
   margin: auto 5px;
 }
 
-.form-filter > form {
+.flex-form-action > form {
   margin-bottom: 10px;
 }
 
