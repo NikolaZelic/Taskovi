@@ -89,7 +89,7 @@
         </transition>
       </template>
 
-      <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Svetozar Davidovic, Milos Paunovic'></div>
+      <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Milos Paunovic'></div>
 
     </div>
   </div>
@@ -122,13 +122,9 @@ export default {
           email: "zex@gmail.com",
           pass: "123"
         },
-        // {
-        //   email: "svetaprogramer@gmail.com",
-        //   pass: "praksa1234"
-        // },
         {
           email: "paun992@hotmail.com",
-          pass: "pass123"
+          pass: "123456"
         }
       ],
       formstate: {},
@@ -173,7 +169,6 @@ export default {
           if (r.data.login !== "failed") {
             let sid = r.data.sid;
             if (sid !== undefined || sid !== null) {
-              console.log("aad");
               store.commit("localStorage", {
                 name: r.data.user.name,
                 surname: r.data.user.surname,

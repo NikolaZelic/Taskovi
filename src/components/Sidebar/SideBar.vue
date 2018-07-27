@@ -60,7 +60,7 @@
       <div class="flex-form-action">
 
         <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> New
+          <span class="fas fa-plus-circle"></span> Add
           <span>{{tabs[getTabIndex].single}}</span>
         </button>
 
@@ -69,8 +69,8 @@
           <template v-if="!showSubFilter()">
             <b-form-group>
               <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-                <b-input-group-text slot="prepend">
-                  <span class="fas fa-search" @click='focusSearch'></span>
+                <b-input-group-text slot="prepend" @click='focusSearch'>
+                  <span class="fas fa-search" ></span>
                 </b-input-group-text>
                 <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
                 <b-input-group-append v-if='tabs[getTabIndex].search'>
@@ -112,7 +112,7 @@
           :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
-            <span>{{data.item.title}} </span>
+            <span class='td-bold'>{{data.item.title}} </span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
               title="Edit Item"></span>
           </template>
@@ -212,7 +212,7 @@
           </template>
 
           <template slot='users' slot-scope="data">
-            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
+            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Manage people"></span>
           </template>
 
         </b-table>
@@ -267,7 +267,7 @@ export default {
           value: "as"
         },
         {
-          text: "Finished",
+          text: "Completed",
           value: "ar"
         }
       ],
@@ -434,12 +434,13 @@ export default {
           tabIndex: 1,
           id: undefined
         });
+        store.commit("resetProjectView");
       }
       if (val < 0) return;
       if (val === 1) {
-        store.commit("resetTaskView");
         this.removeActiveClass(null);
         this.getTaskFilterData();
+        store.commit("resetTaskView");
       }
     },
     selectedFilter(val) {
@@ -460,10 +461,9 @@ export default {
   },
   methods: {
     showGlobalFeed() {
-      if(this.globalFeed){
-        store.commit('setRefreshGlobalFeed', true );
-      }
-      else{
+      if (this.globalFeed) {
+        store.commit("setRefreshGlobalFeed", true);
+      } else {
         store.commit("showGlobalFeed", true);
       }
     },
@@ -540,6 +540,8 @@ export default {
       this.removeActiveClass(null);
       switch (index) {
         case 0:
+          store.commit("resetGlobalView");
+          // store.commit("resetProjectView"); // RETEST
           this.actionTabDataProject();
           break;
         case 1:
@@ -645,7 +647,7 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       globalFeed: "globalFeed",
-      sidebarActive: state => !state.mainFocused,
+      sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
       selectedItemID: "selectedItemID"
@@ -714,8 +716,8 @@ export default {
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
     // TEST VER
-    if (this.itemsFiltered !== undefined)
-      console.log("cr " + this.itemsFiltered.length);
+    // if (this.itemsFiltered !== undefined)
+    // console.log("cr " + this.itemsFiltered.length);
   },
   mounted() {
     // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
@@ -723,9 +725,9 @@ export default {
     //   console.log("mn" + this.itemsFiltered.length);
 
     if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
-      console.log(
-        "Ubacujem u jedini projekat = " + this.itemsFiltered[0].title
-      );
+      // console.log(
+      //   "Entering single project = " + this.itemsFiltered[0].title
+      // );
       this.selectAndSet(this.itemsFiltered[0]);
     }
   },
@@ -938,6 +940,10 @@ export default {
 
 .td-icon-width {
   width: 40px;
+}
+
+.td-bold {
+  font-weight: bold;
 }
 
 /* TASK LIST END */

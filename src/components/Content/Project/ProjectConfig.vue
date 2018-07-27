@@ -5,14 +5,14 @@
         <button class='btn btn-dark' @click='confirmation()'>
           <span class='fas fa-arrow-left'></span> BACK</button>
         <h4 v-if='itemEditButton!==undefined'>Edit project:</h4>
-        <h4 v-else>Adding project:</h4>
+        <h4 v-else>Add project:</h4>
       </div>
 
       <label for="name" class="mt-3">Project name</label>
-      <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter new project name" class="form-control mb-3">
+      <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter project name" class="form-control mb-3">
 
       <label for="description">Description</label>
-      <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter new project description..."
+      <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter project description..."
         class="form-control mb-3" spellcheck="false"></textarea>
 
       <label for="date">Deadline</label>

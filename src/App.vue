@@ -20,6 +20,7 @@ export default {
 @import "./assets/css/SidebarTable.css";
 @import "./assets/css/DarkTheme.css";
 @import "./assets/css/CssVars.css";
+@import "./assets/css/Scrollbar.css";
 
 @font-face {
   font-family: TitilliumWeb;

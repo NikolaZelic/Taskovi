@@ -2,7 +2,7 @@
   <div class="example-drag">
     <div class="upload">
       <ul v-if="files.length">
-        <li v-for="(file, index) in files" :key="file.id">
+        <li v-for="file in files" :key="file.id">
           <span>{{file.name}}</span> -
           <!-- <span>{{file.size | formatSize}}</span> - -->
           <span v-if="file.error">{{file.error}}</span>
@@ -106,10 +106,10 @@ export default {
       inputFile: function (newFile, oldFile) {
         if (newFile && oldFile && !newFile.active && oldFile.active) {
           // Get response data
-          console.log('response', newFile.response)
+          // console.log('response', newFile.response)
           if (newFile.xhr) {
             //  Get the response status code
-            console.log('status', newFile.xhr.status)
+            // console.log('status', newFile.xhr.status)
           }
         }
       },

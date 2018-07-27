@@ -123,12 +123,10 @@ export default {
       return false;
     },
     messages(state) {
-      // console.log('messages computed');
       var messages = state.$store.state.modulefeed.messages;
       var newArray = [];
 
       if (this.steps == null || this.steps.length == 0) {
-        // console.log('Nema stepova');
         return messages;
       }
 
@@ -143,12 +141,8 @@ export default {
       for (var i in messages) {
         var message = messages[i];
         var messageTime = this.$moment(message.fed_time);
-        // console.log(stepTime);
-        // console.log(messageTime);
-        // console.log(messageTime.isAfter(stepTime));
         if (messageTime < stepTime) {
           // Znaci da je poruka od prethodnog stepa ili od taska ukoliko je prvi step
-          // console.log('if');
           if (j == 0) {
             message.stp_id = null; // Znaci da je od taska
           } else {
@@ -157,10 +151,8 @@ export default {
           }
         } else {
           // Znaci da treba da pomerim step unapred
-          // console.log('else');
           if (j < this.steps.length - 1) {
             // Znaci nismo na poslednjem stepu
-            // console.log('if');
             // Dodavanje hedera za step
             var heder = {
               fed_id: null,
@@ -194,7 +186,6 @@ export default {
               };
               newArray.push(heder);
             }
-            // console.log('else');
             message.stp_id = step.tsk_id;
           }
         }
@@ -205,21 +196,6 @@ export default {
     }
   },
   watch: {
-    // taskid(val) {
-    //   if (val === "") return;
-    //   // if(this.taskid != -1){
-    //   store.dispatch("readeFeeds", {
-    //     taskid: this.taskid,
-    //     fedid: 0,
-    //     direction: "start"
-    //   });
-      // }
-    // },
-    // messages(newVal, oldVal) {
-    //   console.log('messages watcher');
-    //   this.countNumber = 1;
-    //   this.count = 0;
-    // },
     searchType() {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
@@ -311,7 +287,6 @@ export default {
           if (this.firstLoad) {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
-            // console.log('Zeljkovi poziv');
           }
         })
         .catch(err => {
@@ -349,7 +324,6 @@ export default {
       });
     },
     addUp() {
-      // console.log('Add up');
       if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
@@ -388,7 +362,6 @@ export default {
         });
     },
     newMessages() {
-      // console.log('newMessages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -398,7 +371,6 @@ export default {
             return;
           }
           if (result.data.data > 0) {
-            // console.log("Ovde");
             this.countNumber = 1;
             this.count = 0;
             var e = document.getElementById("all-messages");
@@ -417,8 +389,6 @@ export default {
         });
     },
     addDown(scrollDown) {
-      // console.log('addDown');
-      // console.log(scrollDown);
       if (this.loadingData) return;
       api
         .readeFeeds(
@@ -436,9 +406,10 @@ export default {
               direction: "down",
               data: result.data.data
             });
-            if(scrollDown===true){
-              // console.log('Scrool down');
-              setTimeout( ()=>{this.scrollToBegining();}, 50 );
+            if (scrollDown === true) {
+              setTimeout(() => {
+                this.scrollToBegining();
+              }, 50);
             }
           }
         })
@@ -453,7 +424,6 @@ export default {
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
-        // console.log('add down from scroll');
         this.addDown();
         return;
       }
@@ -543,20 +513,9 @@ export default {
           direction: "start",
           data: result.data.data
         });
-        if (this.firstLoad) {
-          this.firstLoad = false;
-          store.dispatch("getFeedCount");
-          // console.log('Zeljkovi poziv');
-        }
-        setTimeout(() => {
-          this.scrollTOTop();
-          this.processStepSelection();
-          this.addUp();
-        }, 5);
       });
     },
     readeSteps() {
-      // console.log('readeSteps');
       api.getTaskInfo(this.taskid).then(result => {
         if (result.data.status != "OK") {
           alert(
@@ -587,11 +546,6 @@ export default {
     }
   },
   mounted() {
-    // console.log('Mounted is obicnog');
-    // var time1 = this.$moment('2018-07-25 14:04:39');
-    // var time2 = this.$moment('2018-07-25 14:04:45');
-    // console.log( time2>time1 );
-
     if (!this.global) {
       this.readeSteps();
     }
@@ -610,12 +564,9 @@ export default {
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
     this.fInterval = setInterval(() => {
-      // console.log(this.count);
-      // console.log(this.countNumber);
-      // console.log(this.count % this.countNumber == 0);
       if (
         this.count % this.countNumber == 0 &&
-        this.taskid != -1 
+        this.taskid != -1
         // && !this.searchOn
       ) {
         if (this.messages.length > 0) {
@@ -643,20 +594,15 @@ export default {
   border: 2px solid red;
 }
 
-#all-messages {
-  /* height: 500px; */
-}
-
 .search-inputs {
   margin: 10px auto 0;
 }
 
 .message-notificaton {
   cursor: pointer;
-  background-color: green;
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 30px;
+  bottom: 50px;
 }
 
 .notification-on {
@@ -680,6 +626,7 @@ export default {
 .darkTheme .search {
   background-color: #232323 !important;
   border: 1px solid #d2d2d236;
+  color: #eee;
 }
 
 .search {
@@ -696,10 +643,15 @@ export default {
 .list-group-item {
   border: none;
   cursor: pointer;
+  padding: 7px 15px;
 }
 
-.darkTheme .list-group-item {
-  background: var(--dark);
+.list-group-item:last-child {
+  border: none;
+}
+
+.list-group-item:hover {
+  background: #7777775c;
 }
 
 .trans {
@@ -752,7 +704,7 @@ export default {
 .input {
   bottom: 0px;
   display: flex;
-  align-items: center;
+  margin-bottom: 10px;
   position: relative;
 }
 
@@ -775,7 +727,7 @@ export default {
   height: 140px;
 }
 
-.input button {
+.input .input button {
   position: relative;
   border-radius: 5px;
   width: 42px;
@@ -784,6 +736,7 @@ export default {
 
 .input button:first-child {
   position: absolute;
+  bottom: 10px;
   left: 15px;
   background: var(--ac-color);
   color: white;
@@ -791,7 +744,8 @@ export default {
 
 .input button:last-child {
   position: absolute;
-  right: 15px;
+  bottom: 10px;
+  right: 20px;
 }
 
 .input button > span {

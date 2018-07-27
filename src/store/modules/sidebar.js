@@ -44,9 +44,15 @@ const actions = {
   itemActionReset() {
     store.commit('itemActionReset');
   },
+  resetProjectView() {
+    store.commit('resetProjectView');
+  },
   resetTaskView() {
     store.commit('resetTaskView');
   },
+  resetGlobalView() {
+    store.commit('resetGlobalView');
+  }
 };
 const mutations = {
   setRefreshGlobalFeed: (state, params) => {
@@ -86,15 +92,32 @@ const mutations = {
   itemActionReset: () => {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
-    store.state.itemAction.addStep = false;
     store.state.mainFocused = false;
   },
 
   resetTaskView: () => {
     store.state.sidebarItemSelection[1] = undefined;
-    let ci = store.state.currentTabIndex;
-    store.state.currentTabIndex = -1;
-    store.state.currentTabIndex = ci;
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined;
+    store.state.mainFocused = false;
+    // let ci = store.state.currentTabIndex;
+    // store.state.currentTabIndex = -1;
+    // store.state.currentTabIndex = ci;
+  },
+  resetProjectView: () => {
+    store.state.sidebarItemSelection[0] = undefined;
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined;
+    store.state.mainFocused = false;
+  },
+  resetGlobalView: () => {
+    store.state.sidebarItemSelection = [];
+    store.state.itemAction.edit = undefined;
+    store.state.itemAction.add = undefined;
+    store.state.mainFocused = false;
+    // let ci = store.state.currentTabIndex;
+    // store.state.currentTabIndex = -1;
+    // store.state.currentTabIndex = ci;
   },
   showGlobalFeed: (state, params) => {
     store.state.globalFeed = params;

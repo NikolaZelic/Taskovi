@@ -107,7 +107,7 @@ export const api = {
     return axios.get('tasks/' + id);
   },
   //#endregion
-  //#region Sveta
+  //#region Feeds
 
   readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important) {
     return axios.get('/tasks/' + tasid + '/feeds', {

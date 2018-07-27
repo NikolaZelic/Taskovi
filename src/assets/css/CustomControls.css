@@ -123,6 +123,10 @@ textarea.custom-modern::placeholder {
   background: var(--danger)
 }
 
+.user-table .table th, .user-table .table td {
+  padding: 2px !important;
+}
+
 /* input[type="radio"]:checked+.label-text:before {
   content: "\f192";
   animation: effect 250ms ease-in;
