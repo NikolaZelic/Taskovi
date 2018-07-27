@@ -11,13 +11,13 @@
 
             <!-- TITLE -->
             <div class="form-group">
-              <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError'>
+              <input v-model='title' type="text" class="custom-modern" :class="titleClass" id="tsk_title" placeholder="Title" @click='refreshTitleError' @change="somethingChanged = true">
             </div>
 
             <!-- DESCRIPTION -->
             <div class="form-group">
               <!-- <label for="tsk_desc">Task description</label> -->
-              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task (optional)"></textarea>
+              <textarea v-model='description' class="form-control" id="tsk_desc" rows="3" placeholder="Describe the Task (optional)" @change="somethingChanged = true"></textarea>
             </div>
 
             <!-- DEADLINE -->
@@ -26,7 +26,7 @@
                 <i class="far fa-calendar-alt" @click='calendarIconClicked'></i>
               <!-- </span> -->
               <span class="calender-wrapper" >
-                <flat-pickr ref='datepicker' v-model="deadline" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
+                <flat-pickr ref='datepicker' v-model="deadline" :onChange="somethingChanged = true" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
                   name="date" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
                 </flat-pickr>
                 <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
@@ -39,7 +39,7 @@
             <!-- ADDING WORKERS -->
             <div class="form-group" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" class="task-modal-input" label="name" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
+              <multiselect v-model="selectedUSers" onchange="somethingChanged = true" class="task-modal-input" label="name" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
                 @search-change="searchUsers" @close="usersOut">
@@ -50,7 +50,7 @@
             <div class="form-group" v-if="task">
               <span class='fas fa-tags' title='Tags'></span>
               <multiselect v-model="selectedTags" id="tags-component" class='task-modal-input' label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
-                :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
+                @change="somethingChanged = true" :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
                 :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
                 :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
               </multiselect>
@@ -59,7 +59,7 @@
             <!-- PRIORITY -->
             <div v-show='task' class="form-group">
               <span class='fas fa-exclamation-circle' title='Priority'></span>
-              <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' class='task-modal-input'>
+              <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' class='task-modal-input' @change="somethingChanged = true">
                 <option value=null>Priority: None</option>
                 <option value='3'>Low</option>
                 <option value='2'>Medium</option>
@@ -69,7 +69,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper float-right">
-              <button @click.once='resetProjectView' type="submit" class="btn btn-danger mr-1">
+              <button @click.once='taskCancel' type="submit" class="btn btn-danger mr-1">
               <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
@@ -112,6 +112,7 @@ export default {
 
   data() {
     return {
+      somethingChanged: false,
       title: "",
       description: "",
       deadline: null,
@@ -209,6 +210,15 @@ export default {
   },
 
   methods: {
+
+    taskCancel() {
+      if(this.somethingChanged === true){
+        if(confirm("Are you sure? You might have unsaved changes!"))
+          store.commit('resetProjectView');
+      }else
+        store.commit('resetProjectView');
+    },
+
     resetProjectView() {
       store.commit("itemActionReset");
     },
@@ -478,7 +488,7 @@ export default {
       store.dispatch("clleaneSuggestedProjects");
     },
     searchUsers(str) {
-      if (str == undefined || str == null) return;
+      if (str === undefined || str === null) return;
       if (str.length == 0) {
         store.dispatch("cleanSuggestions");
         return;

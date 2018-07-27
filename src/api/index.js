@@ -150,7 +150,7 @@ export const api = {
   },
   //#endregion
   //#region Zex
-  
+
   // AUTH
   sessionActive() {
     let sid = window.localStorage.sid;
@@ -225,6 +225,52 @@ export const api = {
         sid: window.localStorage.sid
       }
     });
+  },
+
+
+  //Pocetak Milosevih API-ja
+  editTask(sid, tasid, title, description, deadline, tagarray, userarray, priority){
+    return axios.put("tasks/:tasid", {
+      sid: sid,
+      tasid: tasid,
+      title: title,
+      description: description,
+      deadline: deadline,
+      tagarray: tagarray,
+      usersarray: userarray,
+      priority: priority
+    });
+  },
+
+  loadTaskInfo(sid, tasid){
+    return axios.get("tasks/:tasid", {
+      params: {
+        sid: sid,
+        tasid: tasid
+      }
+    })
+  },
+
+  loadAllProjectUsers(sid, projectID){
+    return axios.get("projects/:proid", {
+        params: {
+          proid: projectID,
+          sid: sid
+        }
+      })
+  },
+
+  loadTags(proid, searchstring, sid){
+    return axios.get("projects/:proid/tags", {
+      params: {
+        proid: proid,
+        type: "task",
+        searchstring: searchstring,
+        sid: sid
+      }
+    });
   }
+
+  //Kraj Milosevih API-ja
 
 };

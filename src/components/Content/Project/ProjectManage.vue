@@ -8,14 +8,14 @@
     </div>
 
     <label for="name" class="mt-3">Project name</label>
-    <input type="text" id="name" name="projectname" v-model="project.title" placeholder="Enter project name" class="form-control mb-3">
+    <input type="text" id="name" name="projectname" v-model.lazy="project.title" @change="somethingChanged = true" placeholder="Enter project name" class="form-control mb-3">
 
     <label for="description">Description</label>
-    <textarea id="description" rows="3" name="description" v-model='project.description' placeholder="Enter project description..."
+    <textarea id="description" rows="3" name="description" v-model.lazy='project.description' @change="somethingChanged = true" placeholder="Enter project description..."
       class="form-control mb-3" spellcheck="false"></textarea>
 
     <label for="date">Deadline</label>
-    <flat-pickr ref='datepicker' name="date" v-model="project.deadline" :config="config" id='flatPickrId' class="deadline form-control mb-3"
+    <flat-pickr ref='datepicker' name="date" v-model.lazy="project.deadline" :config="config" @change="somethingChanged = true" id='flatPickrId' class="deadline form-control mb-3"
       placeholder="Pick a deadline (optional)">
     </flat-pickr>
 
@@ -25,7 +25,7 @@
       <b-input-group>
         <b-form-input v-model="email" ref="focusThis" placeholder="Type email to add new user" />
         <b-input-group-append>
-          <b-btn :disabled="isValidEmail" @click="submitEmail">Submit</b-btn>
+          <b-btn :disabled="isValidEmail" @click="submitEmail(); somethingChanged = true">Submit</b-btn>
         </b-input-group-append>
       </b-input-group>
       <div class='user-table'>
@@ -83,7 +83,7 @@
       <button @click="projectCancel" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
       <button v-if='itemEditButton!==undefined' @click="projectEdit" class="btn btn-primary">
         <span class="fa fa-save"></span> Save changes</button>
- 
+
     <button v-else @click="projectCreate" class="btn btn-success">
       <span class="fa fa-plus-square"></span> Create project</button>   </div>
   </div>
@@ -109,6 +109,7 @@ export default {
       // nesto: false,
       UserID: undefined,
       editProjectData: [],
+      somethingChanged: false,
 
       project: {
         title: undefined,
@@ -240,7 +241,7 @@ export default {
 
             if (moreInfo.length !== 0) {
               this.project = moreInfo;
-              this.editProjectData = moreInfo;
+              this.editProjectData = this.project;
             }
             this.setupInfo();
           } else {
@@ -321,9 +322,15 @@ export default {
           console.log(e);
         });
     },
+
     projectCancel() {
-      store.commit('resetProjectView');
+      if(this.somethingChanged === true){
+        if(confirm("Are you sure? You might have unsaved changes!"))
+          store.commit('resetProjectView');
+      }else
+        store.commit('resetProjectView');      
     },
+
     resetProjectView() {
       store.commit("itemActionReset");
     },

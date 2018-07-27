@@ -60,17 +60,7 @@ export default {
       this.waitNet = true;
       var userarray = this.selectedUSers.map( e => e.id );
 
-      axios
-        .put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-          sid: localStorage.sid,
-          tasid: this.taskID,
-          title: this.title,
-          description: this.description,
-          deadline: this.deadline,
-          tagarray: JSON.stringify(this.tags),
-          usersarray: JSON.stringify(userarray),
-          priority: this.selectedPriorety
-        })
+        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), SON.stringify(userarray), this.selectedPriorety)
         .then(response => {
           if (response.data.status === "OK") {
             // console.log("tasks/:tasid poziv iz taskEdita");
@@ -97,14 +87,7 @@ export default {
     },
 
     loadInfo() {
-      axios
-        .get("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid", {
-          params: {
-            sid: localStorage.sid,
-            tasid: store.state.itemAction.edit
-          }
-        })
-        .then(response => {
+        api.loadTaskInfo(localStorage.sid, store.state.itemAction.edit).then(response => {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
           this.deadline = response.data.data[0].tsk_deadline;
