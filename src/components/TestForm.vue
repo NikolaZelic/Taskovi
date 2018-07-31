@@ -1,140 +1,196 @@
 <template>
-  <div class="example-drag">
-    <div class="upload">
-      <ul v-if="files.length">
-        <li v-for="file in files" :key="file.id">
-          <span>{{file.name}}</span> -
-          <!-- <span>{{file.size | formatSize}}</span> - -->
-          <span v-if="file.error">{{file.error}}</span>
-          <span v-else-if="file.success">success</span>
-          <span v-else-if="file.active">active</span>
-          <span v-else-if="file.active">active</span>
-          <span v-else></span>
-        </li>
-      </ul>
-      <ul v-else>
-        <td colspan="7">
-          <div class="text-center p-5">
-            <h4>Drop files anywhere to upload<br/>or</h4>
-            <label for="file" class="btn btn-lg btn-primary">Select Files</label>
-          </div>
-        </td>
-      </ul>
-
-      <div v-show="$refs.upload && $refs.upload.dropActive" class="drop-active">
-    		<h3>Drop files to upload</h3>
-      </div>
-
-      <div class="example-btn">
-        <file-upload
-          class="btn btn-primary"
-          post-action="http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/feeds"
-          :multiple="true"
-          :drop="true"
-          :drop-directory="true"
-          v-model="files"
-          ref="upload">
-          <i class="fa fa-plus"></i>
-          Select files
-        </file-upload>
-        <button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="$refs.upload.active = true">
-          <i class="fa fa-arrow-up" aria-hidden="true"></i>
-          Start Upload
-        </button>
-        <button type="button" class="btn btn-danger"  v-else @click.prevent="$refs.upload.active = false">
-          <i class="fa fa-stop" aria-hidden="true"></i>
-          Stop Upload
-        </button>
-      </div>
-    </div>
-
-    <div class="pt-5">
-      Source code: <a href="https://github.com/lian-yue/vue-upload-component/blob/master/docs/views/examples/Drag.vue">/docs/views/examples/Drag.vue</a>
-    </div>
-  </div>
+<div id="drop-area">
+  <!-- <form class="my-form"> -->
+    <!-- <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p> -->
+    <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)" />
+    <!-- <label class="button" for="fileElem">Select some files</label> -->
+  <!-- </form> -->
+  <!-- <progress id="progress-bar" max=100 value=0></progress> -->
+  <!-- <div id="gallery"></div> -->
+</div>
 </template>
-<style>
-.example-drag label.btn {
-  margin-bottom: 0;
-  margin-right: 1rem;
-}
-.example-drag .drop-active {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  position: fixed;
-  z-index: 9999;
-  opacity: .6;
-  text-align: center;
-  background: #000;
-}
-.example-drag .drop-active h3 {
-  margin: -.5em 0 0;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  font-size: 40px;
-  color: #fff;
-  padding: 0;
-}
-</style>
 
 <script>
-import FileUpload from 'vue-upload-component'
+
+
 export default {
-  components: {
-    FileUpload,
-  },
-  data() {
-    return {
-      files: [],
-    }
-  },
-
   methods: {
-      /**
-       * Has changed
-       * @param  Object|undefined   newFile   Read only
-       * @param  Object|undefined   oldFile   Read only
-       * @return undefined
-       */
-      inputFile: function (newFile, oldFile) {
-        if (newFile && oldFile && !newFile.active && oldFile.active) {
-          // Get response data
-          // console.log('response', newFile.response)
-          if (newFile.xhr) {
-            //  Get the response status code
-            // console.log('status', newFile.xhr.status)
-          }
-        }
-      },
-      /**
-       * Pretreatment
-       * @param  Object|undefined   newFile   Read and write
-       * @param  Object|undefined   oldFile   Read only
-       * @param  Function           prevent   Prevent changing
-       * @return undefined
-       */
-      inputFilter: function (newFile, oldFile, prevent) {
-        if (newFile && !oldFile) {
-          // Filter non-image file
-          if (!/\.(jpeg|jpe|jpg|gif|png|webp)$/i.test(newFile.name)) {
-            return prevent()
-          }
-        }
+    nesto(){
+      // ************************ Drag and drop ***************** //
+      let dropArea = document.getElementById("drop-area")
 
-        // Create a blob field
-        newFile.blob = ''
-        let URL = window.URL || window.webkitURL
-        if (URL && URL.createObjectURL) {
-          newFile.blob = URL.createObjectURL(newFile.file)
-        }
+      // Prevent default drag behaviors
+      ;
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false)
+        document.body.addEventListener(eventName, preventDefaults, false)
+      })
+
+      // Highlight drop area when item is dragged over it
+      ;
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false)
+      })
+
+      ;
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false)
+      })
+
+      // Handle dropped files
+      dropArea.addEventListener('drop', handleDrop, false)
+
+      function preventDefaults(e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+
+      function highlight(e) {
+        dropArea.classList.add('highlight')
+      }
+
+      function unhighlight(e) {
+        dropArea.classList.remove('highlight')
+      }
+
+      function handleDrop(e) {
+        var dt = e.dataTransfer
+        var files = dt.files
+
+        handleFiles(files)
+      }
+
+      let uploadProgress = []
+      let progressBar = document.getElementById('progress-bar')
+
+      // function initializeProgress(numFiles) {
+      //   progressBar.value = 0
+      //   uploadProgress = []
+      //
+      //   for (let i = numFiles; i > 0; i--) {
+      //     uploadProgress.push(0)
+      //   }
+      // }
+
+      // function updateProgress(fileNumber, percent) {
+      //   uploadProgress[fileNumber] = percent
+      //   let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
+      //   console.debug('update', fileNumber, percent, total)
+      //   progressBar.value = total
+      // }
+
+      function handleFiles(files) {
+        files = [...files]
+        // initializeProgress(files.length)
+        files.forEach(uploadFile)
+        // files.forEach(previewFile)
+      }
+
+      // function previewFile(file) {
+      //   let reader = new FileReader()
+      //   reader.readAsDataURL(file)
+      //   reader.onloadend = function() {
+      //     let img = document.createElement('img')
+      //     img.src = reader.result
+      //     document.getElementById('gallery').appendChild(img)
+      //   }
+      // }
+
+      function uploadFile(file, i) {
+        var url = 'http://695u121.mars-t.mars-hosting.com/mngapi/tasks/274/feeds'
+        var xhr = new XMLHttpRequest()
+        var formData = new FormData()
+        xhr.open('POST', url, true)
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        // Update progress (can be used to show progress indicator)
+        // xhr.upload.addEventListener("progress", function(e) {
+        //   updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+        // })
+
+        xhr.addEventListener('readystatechange', function(e) {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            // updateProgress(i, 100) // <- Add this
+          } else if (xhr.readyState == 4 && xhr.status != 200) {
+            // Error. Inform the user
+          }
+        })
+
+        // formData.append('upload_preset', 'YOU')
+        formData.append('file', file)
+        formData.append('sid', 'gUoMtBuHyjqJGeo997X8zrNEPv7DZ3Mu')
+        formData.append('type', 'file')
+
+        xhr.send(formData)
       }
     }
+  },
+
+  mounted(){
+    this.nesto();
+  }
 }
 </script>
+
+<style scoped>
+a {
+  color: #369;
+}
+
+.note {
+  width: 50%;
+  margin: 50px auto;
+  font-size: 1.25em;
+  color: #333;
+  text-align: justify;
+  font-family: sans-serif;
+}
+
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 480px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+#drop-area.highlight {
+  border-color: purple;
+}
+
+p {
+  margin-top: 0;
+}
+
+.my-form {
+  margin-bottom: 10px;
+}
+
+#gallery {
+  margin-top: 10px;
+}
+
+#gallery img {
+  width: 150px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.button:hover {
+  background: #ddd;
+}
+
+#fileElem {
+  display: none;
+}
+</style>

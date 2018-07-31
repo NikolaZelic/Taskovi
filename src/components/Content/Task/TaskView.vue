@@ -95,7 +95,7 @@
           <div class="text-right">
 
             <div class="dropdown save">
-              <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+              <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" v-if="taskStatusBtn">
                 Mark this task as...
               </button>
               <div class="dropdown-menu">
@@ -543,6 +543,7 @@ export default {
           status: parameter,
           tasid: this.selectedItemID
       }).then(response => {
+          // console.log('ovde')
           this.resetTaskView();
       })
     },
@@ -898,6 +899,10 @@ export default {
   },
 
   computed: {
+    taskStatusBtn(){
+      return this.taskGeneralInfo.sta_text === "In Progress";
+    },
+
     currentMiniTab: {
       get() {
         if (this.tabs.generalInfo) return 0;
