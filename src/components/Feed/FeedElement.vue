@@ -1,5 +1,9 @@
 <template>
-  <div class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
+  <div id="drop-area" class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
+    <input type="file" id="fileElem" onchange="handleFiles(this.files)" />
+
+    <div id="text" class="displayNone">Drop to upload</div>
+
     <div class="search-inputs">
       <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form class='form-search'>
@@ -58,6 +62,7 @@
         </tr>
       </table>
     </b-modal>
+
   </div>
 </template>
 <script>
@@ -74,6 +79,7 @@ export default {
   },
   data() {
     return {
+
       global: false,
       showFeeds: true,
       count: 0,
@@ -150,6 +156,137 @@ export default {
     }
   },
   methods: {
+    dragAndDrop(){
+      var self = this;
+
+      // ************************ Drag and drop ***************** //
+      let dropArea = document.getElementById("drop-area")
+
+      // Prevent default drag behaviors
+      ;
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false)
+        document.body.addEventListener(eventName, preventDefaults, false)
+      })
+
+      // Highlight drop area when item is dragged over it
+      ;
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false)
+      })
+
+      ;
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false)
+      })
+
+      // Handle dropped files
+      dropArea.addEventListener('drop', handleDrop, false)
+
+      function preventDefaults(e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+
+      function highlight(e) {
+        dropArea.classList.add('highlight');
+        document.getElementById("text").classList.add('displayBlock');
+        document.getElementById("text").classList.remove('displayNone');
+      }
+
+      function unhighlight(e) {
+        dropArea.classList.remove('highlight')
+        document.getElementById("text").classList.remove('displayBlock');
+        document.getElementById("text").classList.add('displayNone');
+      }
+
+      function handleDrop(e) {
+        var dt = e.dataTransfer
+        var files = dt.files
+
+        handleFiles(files)
+      }
+
+      // let uploadProgress = []
+      // let progressBar = document.getElementById('progress-bar')
+
+      // function initializeProgress(numFiles) {
+      //   progressBar.value = 0
+      //   uploadProgress = []
+      //
+      //   for (let i = numFiles; i > 0; i--) {
+      //     uploadProgress.push(0)
+      //   }
+      // }
+
+      // function updateProgress(fileNumber, percent) {
+      //   uploadProgress[fileNumber] = percent
+      //   let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
+      //   console.debug('update', fileNumber, percent, total)
+      //   progressBar.value = total
+      // }
+
+      function handleFiles(files) {
+        files = [...files]
+        // initializeProgress(files.length)
+        files.forEach(uploadFile)
+        // files.forEach(previewFile)
+      }
+
+      // function previewFile(file) {
+      //   let reader = new FileReader()
+      //   reader.readAsDataURL(file)
+      //   reader.onloadend = function() {
+      //     let img = document.createElement('img')
+      //     img.src = reader.result
+      //     document.getElementById('gallery').appendChild(img)
+      //   }
+      // }
+
+      function uploadFile(file, i) {
+        var task = store.state.sidebarItemSelection[1];
+        // console.log('task je' + store.state.sidebarItemSelection[1]);
+        var url = 'http://695u121.mars-t.mars-hosting.com/mngapi/tasks/' + task + '/feeds';
+        var xhr = new XMLHttpRequest()
+        var formData = new FormData()
+        xhr.open('POST', url, true)
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        // Update progress (can be used to show progress indicator)
+        // xhr.upload.addEventListener("progress", function(e) {
+        //   updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+        // })
+
+        xhr.addEventListener('readystatechange', function(e) {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            store.commit("modalStatus", {
+              ok: true,
+              message: "Successfully sent attachment."
+            });
+
+            self.readeFeeds();
+            // console.log('uspesno');
+            // alert("uspesno");
+            // updateProgress(i, 100) // <- Add this
+          } else if (xhr.readyState == 4 && xhr.status != 200) {
+            // Error. Inform the user
+            // console.log('nesto nije dobro');
+            store.commit("modalStatus", {
+              ok: false,
+              message: "Something went wrong. Try again."
+            });
+          }
+        })
+
+        // formData.append('upload_preset', 'YOU')
+        formData.append('file', file)
+        formData.append('sid', localStorage.sid)
+        formData.append('type', 'file')
+
+        xhr.send(formData)
+      }
+    },
+
     changeSelectedTask() {
       // console.log('changeSelectedTask');
       store.commit("clearFeed");
@@ -503,6 +640,8 @@ export default {
     }
   },
   mounted() {
+    this.dragAndDrop();
+
     if (!this.global) {
       this.readeTimestemps();
     }
@@ -813,4 +952,35 @@ export default {
 .radio-group {
   display: inline;
 }
+
+/* Za drag&drop */
+#drop-area.highlight {
+  filter: brightness(20%);
+  -moz-transition: all 1s;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+}
+
+#fileElem {
+  display: none;
+}
+
+#text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: red;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+.displayBlock{
+  display: block;
+}
+
+.displayNone{
+  display: none;
+}
+
 </style>

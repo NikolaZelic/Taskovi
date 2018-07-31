@@ -7,6 +7,7 @@ import StartPage from '@/components/StartPage';
 import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
+import TaskView from '@/components/Content/Task/TaskView';
 
 import TestForm from '@/components/TestForm';
 
@@ -40,6 +41,10 @@ export default new Router({
     }, {
       path: '/testform',
       component: TestForm
+    },
+    {
+      path: '/tasks/:id',
+      component: TaskView
     }
   ],
   mode: 'history',
