@@ -357,6 +357,7 @@ export default {
 }
 
 .app-header .fa-chevron-left {
+  font-size: 105%;
   margin-right: 5px;
   cursor: pointer;
 }

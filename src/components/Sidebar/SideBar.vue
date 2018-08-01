@@ -26,6 +26,11 @@
           <span :class='tab.icon'></span>
           <span class='left-al'>{{tab.name}}</span>
         </div>
+
+        <!-- HIDDEN EASTER EGG FOR STRAHINJA -->
+        <!-- <div>
+          <img src="static/371.gif" width="70px">
+        </div> -->
       </div>
 
       <div class="user-sidebar">
@@ -109,14 +114,13 @@
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
         <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
-          :fields="fieldsToShow" :filter="tabs[0].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
+          :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
             <span class='td-bold'>{{data.item.title}} </span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
               title="Edit Item"></span>
           </template>
-
 
           <!-- CREATED DATE -->
           <template slot="timecreated" slot-scope="data">
@@ -126,11 +130,6 @@
             </span>
           </template>
 
-          <!-- CREATED TIME -->
-          <!-- <template slot="created_time" slot-scope="data">
-            <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
-          </template> -->
-
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
             <span v-if='data.item.deadline!==null'>
@@ -139,13 +138,7 @@
             </span>
           </template>
 
-          <!-- DUE TIME -->
-          <!-- <template slot="due_time" slot-scope="data">
-            <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
-          </template> -->
-
-
-          <!-- IN PROGRESS TASKS -->
+          <!-- IN PROGRESS TASKS | FOR PROJECTS -->
           <template slot="HEAD_inprogress_tasks" slot-scope="data">
             <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
           </template>
@@ -154,7 +147,7 @@
             <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
           </template>
 
-          <!-- FAILED TASKS -->
+          <!-- FAILED TASKS | FOR PROJECTS -->
           <template slot="HEAD_failed_tasks" slot-scope="data">
             <span class='fas fa-times-circle' title="Failed Tasks"></span>
           </template>
@@ -163,7 +156,7 @@
             <span class='badge badge-danger' v-if='data.item.failed_tasks !== 0'>{{data.item.failed_tasks}}</span>
           </template>
 
-          <!-- COMPLETED TASKS -->
+          <!-- COMPLETED TASKS | FOR PROJECTS -->
           <template slot="HEAD_completed_tasks" slot-scope="data">
             <span class='fas fa-check' title="Completed Tasks"></span>
           </template>
@@ -181,6 +174,16 @@
             <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
           </template>
 
+          <!-- TASK STATUS -->
+          <template slot="HEAD_sta_text" slot-scope="data">
+            <span class='fas fa-sync-alt' title="Status"></span>
+          </template>
+
+          <template slot="sta_text" slot-scope="data">
+            <!-- <span><span class='fa fa-hourglass'></span> </span> -->
+            <span :class="convertStatus(data.item.sta_text)"></span>
+          </template>
+
           <!-- PRIORITY -->
           <template slot="HEAD_priority" slot-scope="data">
             <span class='fas fa-signal' title="Priority"></span>
@@ -189,8 +192,7 @@
           <template slot="priority" slot-scope="data">
             <span class='badge' :class='{"badge-danger": data.item.priority===1,
             "badge-warning": data.item.priority===2,
-            "badge-success": data.item.priority===3}'
-              v-if='data.item.priority !== 0'>{{convertPriority(data.item.priority)}}</span>
+            "badge-success": data.item.priority===3}' v-if='data.item.priority !== 0'>{{convertPriority(data.item.priority)}}</span>
           </template>
 
           <!-- FEEDS -->
@@ -201,22 +203,6 @@
           <template slot="unseen_feed" slot-scope="data">
             <span class='badge badge-warning' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
           </template>
-
-
-
-          <!-- <template slot='HEAD_users' slot-scope="data">
-                  <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
-            </template> -->
-
-
-          <!-- STATUS -->
-          <template slot="HEAD_sta_text" slot-scope="data">
-            <span class='fas fa-sync-alt' title="Status"></span>
-          </template>
-
-          <!-- <template slot="sta_text" slot-scope="data">
-              <span class='badge badge-warning' v-if='data.item.sta_text !== 0'>{{data.item.sta_text}}</span>
-            </template> -->
 
           <!-- TASK USERS -->
           <template slot="HEAD_users" slot-scope="data">
@@ -276,7 +262,7 @@ export default {
           value: "as"
         },
         {
-          text: "Completed",
+          text: "Finished",
           value: "ar"
         }
       ],
@@ -392,6 +378,7 @@ export default {
         {
           key: "timecreated",
           label: "Created Date",
+          sortable: true,
           class: "text-center",
           thClass: "td-blue"
         },
@@ -406,13 +393,13 @@ export default {
           key: "sta_text",
           label: "Status",
           sortable: true,
-          thClass: "td-orange"
+          thClass: "td-blue"
         },
         {
           key: "priority",
           sortable: true,
           tdClass: "text-center td-icon-width",
-          thClass: "td-blue"
+          thClass: "td-blue text-center"
         },
         {
           key: "unseen_feed",
@@ -574,6 +561,19 @@ export default {
       let ar = this.selectedFilter.includes("ar");
       this.actionTabDataTask(cr, as, ar);
     },
+    actionTabDataProject() {
+      clearInterval(this.intervalNotification);
+      store.dispatch("getProjects", {
+        index: this.getTabIndex
+      });
+      store.dispatch("getFeedCount");
+      this.intervalNotification = setInterval(
+        function() {
+          this.checkNotifications();
+        }.bind(this),
+        20000
+      );
+    },
     actionTabDataTask(cr, as, ar) {
       clearInterval(this.intervalNotification);
       store.dispatch("getTasks", {
@@ -593,28 +593,16 @@ export default {
         20000
       );
     },
-    actionTabDataProject() {
-      clearInterval(this.intervalNotification);
-      store.dispatch("getProjects", {
-        index: this.getTabIndex
-      });
-      store.dispatch("getFeedCount");
-      this.intervalNotification = setInterval(
-        function() {
-          this.checkNotifications();
-        }.bind(this),
-        20000
-      );
-    },
     checkNotifications() {
       // EVERY 20 SECONDS
-      store.dispatch("getFeedCount");
       // REFRESH TAB DATA
       // BREAKS THE UX FLOW - RESETS VIEW
       if (this.getTabIndex === 0) {
         this.actionTabDataProject();
       } else if (this.getTabIndex === 1) {
         this.getTaskFilterData();
+      } else {
+        store.dispatch("getFeedCount");
       }
     },
     showSubFilter() {
@@ -663,6 +651,20 @@ export default {
           return "Low";
       }
       return "";
+    },
+    convertStatus(sta_text) {
+      switch (sta_text) {
+        case "In Progress":
+          return "td-blue fa fa-hourglass";
+        case "Completed":
+          return "td-green fa fa-check";
+        case "Failed":
+          return "td-red fa fa-times";
+        case "Cancelled":
+          return "td-yellow fa fa-ban";
+        default:
+          return "NO IMPLEMENT";
+      }
     }
   },
   computed: {
@@ -709,9 +711,13 @@ export default {
         this.itemAction.add !== undefined ||
         this.selectedItemID !== undefined
       ) {
-        let shortTask = ["ID", "Tasks", "Users", "Edit"];
+        let shortTask = ["ID", "Tasks"];
         return this.taskFields.filter(item => {
           return shortTask.includes(item.label);
+        });
+      } else if (!this.selectedFilter.includes("ar")) {
+        return this.taskFields.filter(item => {
+          return item.label !== "Status";
         });
       }
       return this.taskFields;
@@ -984,7 +990,7 @@ export default {
 }
 
 .td-bold {
-  font-weight: bold;
+  font-weight: bolder;
 }
 
 /* TASK LIST END */
@@ -1074,7 +1080,8 @@ h2 {
   max-width: 100%;
   transition: all 0.5s ease;
   width: 0px;
-  margin-left: 70px; /* FOR USE WHEN STATIC SIDE IS POSITION FIXED */
+  margin-left: 70px;
+  /* FOR USE WHEN STATIC SIDE IS POSITION FIXED */
   background: var(--main-bg-color);
   flex: 1;
   height: 93vh;
@@ -1100,14 +1107,10 @@ h2 {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  /* margin: auto; */
-  /* width: 30rem; */
 }
 
 .flex-form-action fieldset {
-  /* display: block; */
-  /* width: 100%; */
-    align-self: center;
+  align-self: center;
 }
 
 .form-filter > * {
@@ -1207,9 +1210,19 @@ label {
   opacity: 0;
 }
 
+@media screen and (max-width: 1200px) {
+  .sidebar-body {
+    padding: 25px 15px 10px 15px;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .sidebar-lower {
     height: 50vh;
+  }
+  .sidebar-body {
+    /* visibility: hidden; */
+    /* padding: 0; */
   }
   #sidebar.max {
     height: 100vh;

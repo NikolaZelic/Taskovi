@@ -7,30 +7,10 @@
           <i class="fa fa-times" id='cm'></i>
         </div>
         <div class="body">
-<!-- @click='changeAvatar' -->
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
-
-            <img :src="avatarUrl" class="picture" />
+            <avatar :username="username" :src="avatarUrl" :rounded="false" :size="120" class="picture"></avatar>
             <span class='fas fa-camera'></span>
             <input ref='avatarUpload' type="file" accept="image/*" style="display: none;" @change='changeFile'>
-
-
-<!-- <vue-core-image-upload
-    :crop="false"
-    :headers ='avatarHeader'
-    :data = 'dataObject'
-    extensions = "png,jpg,gif"
-    @imagechanged = 'imagechanged'
-    @imageuploaded="imageUploaded" 
-    :maxWidth=200 
-    :maxheight=200
-    :url="avatarUploadUrl" 
-    :isXhr=false>   
-            <img :src="avatarUploadUrl" class="picture" />
-            <span class='fas fa-camera'></span>
-  </vue-core-image-upload> -->
-
-
           </div>
 
           <div class="op-edit">
@@ -39,7 +19,7 @@
                 <tr v-for='(t,index) in tableData' :key='index'>
                   <td>{{t.name}}:</td>
                   <td>
-                    <input :type='inputType(t)' v-model.trim="t.value" :disabled="toEdit" />
+                    <input :type='inputType(t)' v-model.trim="t.value" />
                   </td>
                 </tr>
                 <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
@@ -68,11 +48,14 @@ import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
 import { mapState } from "vuex";
 import { baseURL } from "@/api/config.js";
-import VueCoreImageUpload from "vue-core-image-upload";
+import Avatar from "vue-avatar";
+
+// import VueCoreImageUpload from "vue-core-image-upload";
 
 export default {
   components: {
-    VueCoreImageUpload
+    // VueCoreImageUpload,
+    Avatar
   },
   data() {
     return {
@@ -99,7 +82,6 @@ export default {
           value: ""
         }
       ],
-      toEdit: true,
       avatarData: undefined,
       avatarHeader: {
         "content-type": "multipart/form-data"
@@ -111,38 +93,35 @@ export default {
       return t.name.includes("Password") ? "password" : "text";
     },
     edit() {
-      this.toEdit = !this.toEdit;
-      if (this.toEdit === true) {
-        axios
-          .put("auth/users", {
-            name: this.tableData[0].value,
-            surname: this.tableData[1].value,
-            email: this.tableData[2].value,
-            pass: this.tableData[3].value,
-            sid: localStorage.sid
-          })
-          .then(r => {
-            if (r.data.status === "OK") {
-              store.commit("modalStatus", {
-                message: "Success"
-              });
-              store.commit("localStorage", {
-                name: this.tableData[0].value,
-                surname: this.tableData[1].value,
-                email: this.tableData[2].value
-              });
-            } else {
-              store.commit("modalStatus", {
-                ok: false,
-                message: "Error"
-              });
-            }
-          })
-          .catch(e => {
-            console.log("e: " + e);
-          });
-        this.closeModal("cm");
-      }
+      axios
+        .put("auth/users", {
+          name: this.tableData[0].value,
+          surname: this.tableData[1].value,
+          email: this.tableData[2].value,
+          pass: this.tableData[3].value,
+          sid: localStorage.sid
+        })
+        .then(r => {
+          if (r.data.status === "OK") {
+            store.commit("modalStatus", {
+              message: "Success"
+            });
+            store.commit("localStorage", {
+              name: this.tableData[0].value,
+              surname: this.tableData[1].value,
+              email: this.tableData[2].value
+            });
+          } else {
+            store.commit("modalStatus", {
+              ok: false,
+              message: "Error"
+            });
+          }
+        })
+        .catch(e => {
+          console.log("e: " + e);
+        });
+      this.closeModal("cm");
     },
     changeAvatar() {
       this.$refs.avatarUpload.click();
@@ -180,7 +159,7 @@ export default {
     },
     getAvatar() {
       let link = "auth/users/img";
-      let localImg = "static/img/user.png";
+      // let localImg = "static/img/user.png";
       axios
         .get(link, {
           params: {
@@ -189,7 +168,7 @@ export default {
         })
         .then(r => {
           if (r.data["unset key"] === null) {
-            this.avatarUrl = localImg;
+            this.avatarUrl = "";
           } else {
             this.avatarUrl =
               baseURL +
@@ -214,20 +193,15 @@ export default {
     avatarUploadUrl() {
       return baseURL + "auth/users/img?sid=" + window.localStorage.sid;
     },
-    dataObject() {
-      // let fd = new FormData();
-      // fd.append("img", file);
-      // return {
-      //   img: fd,
-      // }
-      return {};
-    },
     passNotMatched() {
       let a = this.tableData[3].value;
       let b = this.tableData[4].value;
       let empty = a.length === 0 || b.length === 0;
       let match = a === b;
       return !empty && !match;
+    },
+    username() {
+      return this.userStorage.name + " " + this.userStorage.surname;
     }
   },
   created() {
@@ -297,17 +271,17 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-.op-avatar img {
+.op-avatar .picture {
   height: 120px;
-  display: block;
+  display: flex;
   margin: auto;
-  border-radius: 5px;
+  border-radius: 5px !important;
   transition: 0.5s ease;
   backface-visibility: hidden;
   width: 120px;
 }
 
-.op-avatar:hover img {
+.op-avatar:hover .picture {
   opacity: 0.3;
 }
 

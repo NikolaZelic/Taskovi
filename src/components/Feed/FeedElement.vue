@@ -81,7 +81,6 @@ export default {
   },
   data() {
     return {
-
       global: false,
       showFeeds: true,
       count: 0,
@@ -158,55 +157,51 @@ export default {
     }
   },
   methods: {
-    dragAndDrop(){
+    dragAndDrop() {
       var self = this;
 
       // ************************ Drag and drop ***************** //
-      let dropArea = document.getElementById("drop-area")
+      let dropArea = document.getElementById("drop-area");
 
       // Prevent default drag behaviors
-      ;
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false)
-        document.body.addEventListener(eventName, preventDefaults, false)
-      })
+      ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+      });
 
       // Highlight drop area when item is dragged over it
-      ;
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false)
-      })
-
-      ;
-      ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false)
-      })
+      ["dragenter", "dragover"].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      ["dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
 
       // Handle dropped files
-      dropArea.addEventListener('drop', handleDrop, false)
+      dropArea.addEventListener("drop", handleDrop, false);
 
       function preventDefaults(e) {
-        e.preventDefault()
-        e.stopPropagation()
+        e.preventDefault();
+        e.stopPropagation();
       }
 
       function highlight(e) {
-        dropArea.classList.add('highlight');
-        document.getElementById("text").classList.add('displayBlock');
-        document.getElementById("text").classList.remove('displayNone');
+        dropArea.classList.add("highlight");
+        document.getElementById("text").classList.add("displayBlock");
+        document.getElementById("text").classList.remove("displayNone");
       }
 
       function unhighlight(e) {
-        dropArea.classList.remove('highlight')
-        document.getElementById("text").classList.remove('displayBlock');
-        document.getElementById("text").classList.add('displayNone');
+        dropArea.classList.remove("highlight");
+        document.getElementById("text").classList.remove("displayBlock");
+        document.getElementById("text").classList.add("displayNone");
       }
 
       function handleDrop(e) {
-        var dt = e.dataTransfer
-        var files = dt.files
+        var dt = e.dataTransfer;
+        var files = dt.files;
 
-        handleFiles(files)
+        handleFiles(files);
       }
 
       // let uploadProgress = []
@@ -229,9 +224,9 @@ export default {
       // }
 
       function handleFiles(files) {
-        files = [...files]
+        files = [...files];
         // initializeProgress(files.length)
-        files.forEach(uploadFile)
+        files.forEach(uploadFile);
         // files.forEach(previewFile)
       }
 
@@ -270,9 +265,8 @@ export default {
             });
           }
         })
-    }
-  },
-
+      }
+    },
     changeSelectedTask() {
       // console.log('changeSelectedTask');
       store.commit("clearFeed");
@@ -389,11 +383,16 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
+        // console.log(result);
         if (result.data.status != "OK") {
           alert("Problem durning sending the message");
           return;
         }
-        this.addDown(true);
+        // console.log(this.messages.length);
+        if(this.messages.length>0)
+          this.addDown(true);
+        else
+          this.readeFeeds();
       });
       // setTimeout(() => {
       //   var a = document.querySelectorAll(".selector");
@@ -455,6 +454,7 @@ export default {
         });
     },
     newMessages() {
+      // console.log('new messages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -626,6 +626,7 @@ export default {
     }
   },
   mounted() {
+    // console.log('mounted');
     this.dragAndDrop();
 
     if (!this.global) {
@@ -843,7 +844,8 @@ export default {
 }
 
 .input textarea:focus {
-  height: 140px;
+  height: 20vh;
+  /* height: 140px; */
 }
 
 /* .attach:after {
@@ -951,22 +953,21 @@ export default {
   display: none;
 }
 
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: red;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+#text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: red;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 }
 
-.displayBlock{
+.displayBlock {
   display: block;
 }
 
-.displayNone{
+.displayNone {
   display: none;
 }
-
 </style>

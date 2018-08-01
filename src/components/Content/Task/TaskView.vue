@@ -52,7 +52,7 @@
             <tr>
               <td>Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span >{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+                <span>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
               </td>
             </tr>
 
@@ -74,15 +74,17 @@
               <td class="align-top">Working:</td>
               <td>
                 <ul class="list-unstyled">
-                  <li class="media mt-2" v-for="(user,index) in taskGeneralInfo.usrworking" :key='index'>
+                  <li class="media mt-2" style="align-items: center;" v-for="(user,index) in taskGeneralInfo.usrworking" :key='index'>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                    <avatar v-if='user.usr_picture === null' :username="user.name" :rounded="true" :size="50">
+                    </avatar>
+                    <avatar v-else :src="'data:image/jpeg;base64,' + user.usr_picture" :rounded="true" :size="50">
+                    </avatar>
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 inline-block">{{user.name}}
+                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.name}}
                           <small> -- {{user.usr_email}}</small>
                         </h5>
                         <!-- <span>Worked on this task for {{user.timespent}} minutes</span> -->
@@ -102,19 +104,20 @@
           <div class="text-right">
 
             <div class="dropdown save">
-              <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" v-if="taskStatusBtn">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" v-if="taskStatusBtn">
                 Mark this task as...
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" @click.prevent="taskStatus(3)">Completed</a>
                 <a class="dropdown-item" @click.prevent="taskStatus(4)">Failed</a>
-                <a class="dropdown-item" v-if="taskGeneralInfo.can_edit === 1" @click.prevent="taskStatus(6)">Canceled</a>
+                <a class="dropdown-item" v-if="taskGeneralInfo.can_edit === 1" @click.prevent="taskStatus(6)">Cancelled</a>
               </div>
             </div>
 
-          <button type="button" class="btn btn-success save" @click="editTaskBtn()">
-            Edit <span class="fa fa-chevron-right"></span>
-          </button>
+            <button type="button" class="btn btn-success save" @click="editTaskBtn()">
+              Edit
+              <span class="fa fa-chevron-right"></span>
+            </button>
 
 
 
@@ -279,16 +282,18 @@
               <td class="align-top">Created by:</td>
               <td>
                 <ul class="list-unstyled">
-                  <li class="media mt-2">
+                  <li class="media mt-2" style="align-items: center;">
 
-                    <img v-if='stepInfo[0].usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture"
-                    />
+
+                    <avatar v-if='stepInfo[0].usr_picture === null' :username="stepInfo[0].usr_creator_name +' ' +stepInfo[0].usr_creator_surname"
+                      :rounded="true" :size="50">
+                    </avatar>
+                    <avatar v-else :src="'data:image/jpeg;base64,' + stepInfo[0].usr_picture" :rounded="true" :size="50">
+                    </avatar>
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
+                        <h5 class="mt-0 mb-1 ml-2">{{stepInfo[0].usr_creator_name}} {{stepInfo[0].usr_creator_surname}}</h5>
                         <span>{{stepInfo[0].usr_email}}</span>
                       </div>
                     </div>
@@ -316,15 +321,17 @@
               <td class="align-top">Working:</td>
               <td>
                 <ul class="list-unstyled">
-                  <li class="media mt-2" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
+                  <li class="media mt-2" style="align-items: center;" v-for="(user,index) in stepInfo[0].usrworking" :key='index'>
 
-                    <img v-if='user.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + user.usr_picture" />
+
+                    <avatar v-if='user.usr_picture === null' :username="user.name" :rounded="true" :size="50">
+                    </avatar>
+                    <avatar v-else :src="'data:image/jpeg;base64,' + user.usr_picture" :rounded="true" :size="50">
+                    </avatar>
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 inline-block">{{user.usr_name}}
+                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.usr_name}}
                           <small> -- {{user.usr_email}}</small>
                         </h5>
                         <span>Worked on this step for {{user.timespent}} minutes</span>
@@ -336,16 +343,17 @@
                   <li class="mt-3 mb-3 text-primary link" @click="showInactiveUsers; showInactive = !showInactive" v-if="!showInactive">Show inactive workers...</li>
                   <li class="mt-3 mb-3 text-primary link" @click="showInactive = !showInactive" v-if="showInactive">Hide inactive workers...</li>
 
-                  <li class="media mt-2 text-muted" v-for="(inactive,index) in stepInfo[0].usrinactive" :key='index' v-if="showInactive">
+                  <li class="media mt-2 text-muted" style="align-items: center;" v-for="(inactive,index) in stepInfo[0].usrinactive" :key='index' v-if="showInactive">
 
-                    <img v-if='inactive.usr_picture === null' class="rounded-circle mr-3" height="50px" width="50px" src="@/assets/img/avatar.png"
-                    />
-                    <img v-else class="rounded-circle mr-3" height="50px" width="50px" :src="'data:image/jpeg;base64,' + inactive.usr_picture"
-                    />
+
+                    <avatar v-if='inactive.usr_picture === null' :username="inactive.name" :rounded="true" :size="50">
+                    </avatar>
+                    <avatar v-else :src="'data:image/jpeg;base64,' + inactive.usr_picture" :rounded="true" :size="50">
+                    </avatar>
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 inline-block">{{inactive.usr_name}}
+                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{inactive.usr_name}}
                           <small> -- {{inactive.usr_email}}</small>
                         </h5>
                         <span>Worked on this step for {{inactive.timespent}} minutes</span>
@@ -360,8 +368,10 @@
 
           </table>
           <div class="float-right">
-            <button type="button" class="btn btn-primary" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null"><span class='fa fa-edit'></span> Edit</button>
-            <button type="button" class="btn btn-danger" @click="tabs.steps = true; stepInfoShow = false"><span class='fas fa-ban'></span> Cancel</button>
+            <button type="button" class="btn btn-primary" @click="stepEditToggle()" v-if="stepInfo[0].you_are_creator !== null || stepInfo[0].you_are_worker !== null">
+              <span class='fa fa-edit'></span> Edit</button>
+            <button type="button" class="btn btn-danger" @click="tabs.steps = true; stepInfoShow = false">
+              <span class='fas fa-ban'></span> Cancel</button>
           </div>
         </div>
       </div>
@@ -429,8 +439,10 @@
             <span slot="noResult">There's no users with searched name in this project.</span>
           </multiselect>
           <div class="float-right">
-            <button type="button" class="btn btn-success" @click="saveChanges(); stepInfoToggle();"><span class='fa fa-save'></span> Save</button>
-            <button type="button" class="btn btn-danger" @click="stepInfoToggle()"><span class='fas fa-ban'></span> Cancel</button>
+            <button type="button" class="btn btn-success" @click="saveChanges(); stepInfoToggle();">
+              <span class='fa fa-save'></span> Save</button>
+            <button type="button" class="btn btn-danger" @click="stepInfoToggle()">
+              <span class='fas fa-ban'></span> Cancel</button>
           </div>
         </div>
 
@@ -451,6 +463,7 @@ import Multiselect from "vue-multiselect";
 import { api } from "@/api/index";
 import { mapState } from "vuex";
 import FeedElement from "@/components/Feed/FeedElement";
+import Avatar from "vue-avatar";
 
 import StepEdit from "@/components/Content/Task/StepEdit";
 
@@ -464,7 +477,8 @@ export default {
     flatPickr,
     Multiselect,
     FeedElement,
-    StepEdit
+    StepEdit,
+    Avatar
   },
 
   data() {
@@ -544,15 +558,20 @@ export default {
   },
 
   methods: {
-    taskStatus(parameter){
-      axios.put("http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/status", {
-          sid: localStorage.sid,
-          status: parameter,
-          tasid: this.selectedItemID
-      }).then(response => {
+    taskStatus(parameter) {
+      axios
+        .put(
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/status",
+          {
+            sid: localStorage.sid,
+            status: parameter,
+            tasid: this.selectedItemID
+          }
+        )
+        .then(response => {
           // console.log('ovde')
           this.resetTaskView();
-      })
+        });
     },
 
     editTaskBtn(taskID) {
@@ -578,11 +597,10 @@ export default {
     // },
 
     getGeneralInfo(taskID) {
-        api.loadTaskInfo(localStorage.sid, taskID)
-        .then(response => {
-          this.taskGeneralInfo = response.data.data[0];
-          // console.log(response.data.data[0]);
-        });
+      api.loadTaskInfo(localStorage.sid, taskID).then(response => {
+        this.taskGeneralInfo = response.data.data[0];
+        // console.log(response.data.data[0]);
+      });
     },
 
     changeTab(parameter) {
@@ -644,7 +662,12 @@ export default {
 
     loadTags() {
       // console.log(this.$refs.tagSearchString.search)
-        api.loadTags(this.selectedProjectID, this.$refs.tagSearchString.search, localStorage.sid)
+      api
+        .loadTags(
+          this.selectedProjectID,
+          this.$refs.tagSearchString.search,
+          localStorage.sid
+        )
         .then(response => {
           // console.log(response.data.data);
           // this.optionsTag = response.data.data;
@@ -710,10 +733,10 @@ export default {
     },
 
     loadAllProjectUsers(projectID) {
-        api.loadAllProjectUsers(localStorage.sid, projectID).then(response => {
-          if (response.data.data !== undefined)
-            this.optionsUser = response.data.data.users;
-        });
+      api.loadAllProjectUsers(localStorage.sid, projectID).then(response => {
+        if (response.data.data !== undefined)
+          this.optionsUser = response.data.data.users;
+      });
     },
 
     addTag(newTag) {
@@ -906,7 +929,7 @@ export default {
   },
 
   computed: {
-    taskStatusBtn(){
+    taskStatusBtn() {
       return this.taskGeneralInfo.sta_text === "In Progress";
     },
 
@@ -1019,9 +1042,9 @@ export default {
 
   mounted() {
     // if (this.selectedItemID !== 0) {
-      // this.getTaskInfo(this.selectedItemID);
-      this.getGeneralInfo(this.selectedItemID);
-      // this.getTaskInfo(this.selectedItemID);
+    // this.getTaskInfo(this.selectedItemID);
+    this.getGeneralInfo(this.selectedItemID);
+    // this.getTaskInfo(this.selectedItemID);
     // }
 
     this.loadAllProjectUsers(this.selectedProjectID);
@@ -1125,7 +1148,8 @@ h1 {
 }
 
 .card-header.darkTheme,
-/* .card-footer.darkTheme  */
+  /* .card-footer.darkTheme  */
+
  {
   background: var(--dark);
   color: var(--sec-color);
