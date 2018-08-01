@@ -60,7 +60,7 @@ export default {
       this.waitNet = true;
       var userarray = this.selectedUSers.map( e => e.id );
 
-        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriorety)
+        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.localToUTC(this.deadline), JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriorety)
         .then(response => {
           if (response.data.status === "OK") {
             // console.log("tasks/:tasid poziv iz taskEdita");
@@ -90,7 +90,7 @@ export default {
         api.loadTaskInfo(localStorage.sid, store.state.itemAction.edit).then(response => {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
-          this.deadline = response.data.data[0].tsk_deadline;
+          this.deadline = this.utcToLocal(response.data.data[0].tsk_deadline);
           this.selectedPriorety = response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
