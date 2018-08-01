@@ -51,8 +51,8 @@
             </tr>
             <tr>
               <td>Deadline:</td>
-              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>                
+                <span>{{ this.utcToLocal(this.taskGeneralInfo.tsk_deadline) }}</span>
               </td>
             </tr>
 
@@ -1041,7 +1041,6 @@ export default {
   },
 
   mounted() {
-    date(this.deadline);
     // if (this.selectedItemID !== 0) {
     // this.getTaskInfo(this.selectedItemID);
     this.getGeneralInfo(this.selectedItemID);
