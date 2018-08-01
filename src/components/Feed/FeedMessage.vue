@@ -1,29 +1,31 @@
 <template>
-<!-- mojaPoruka()?'right-con': -->
+  <!-- mojaPoruka()?'right-con': -->
   <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">
     <!-- <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div> -->
-    <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep' >
+    <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
-      <img :src="getAvatar" v-if='this.mess.fed_type==="message"' />
+
+      <avatar v-if='this.mess.fed_type==="message"' :username="name+ ' '+surname" :src="getAvatar" :rounded="false" :size="40" class='picture'></avatar>
+      <!-- <img :src="getAvatar" v-if='this.mess.fed_type==="message"' /> -->
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
-    <div class="message-body" :class='{"header-type": mess.fed_islabel==1}' >
+    <div class="message-body" :class='{"header-type": mess.fed_islabel==1}'>
       <div class="message-body-header">
         <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
         <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}' >{{mess.fed_text}} </pre>
+      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}'>{{mess.fed_text}} </pre>
       <div class="attachment"></div>
       <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
-    <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1' ></i>
+    <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1'></i>
   </div>
 </template>
 
@@ -32,8 +34,12 @@ import { mapState, mapGetters } from "vuex";
 import { baseURL } from "@/api/config.js";
 import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
+import Avatar from "vue-avatar";
 
 export default {
+  components: {
+    Avatar
+  },
   props: {
     mess: {
       type: Object
@@ -65,9 +71,15 @@ export default {
     getAvatar() {
       if (this.mess.usrimg !== undefined && this.mess.usrimg !== null) {
         let netIcon = baseURL + this.mess.usrimg + "?sid=" + localStorage.sid;
-        return netIcon;
+        axios.get(netIcon).then(r => {
+          if (r.data["unset key"] === null) {
+            return "";
+          } else {
+            return netIcon;
+          }
+        });
       }
-      return "static/img/user.png";
+      return "";
     }
   },
   methods: {
@@ -126,12 +138,14 @@ export default {
   font-size: 200%;
   text-align: center;
 }
+
 .new-step {
   color: #007bff;
   cursor: pointer;
   margin: 15px;
   align-self: flex-start;
 }
+
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -285,5 +299,9 @@ pre {
 
 .status {
   font-size: 70%;
+}
+
+.picture {
+  border-radius: 5px !important;
 }
 </style>

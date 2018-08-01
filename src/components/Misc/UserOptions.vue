@@ -8,8 +8,7 @@
         </div>
         <div class="body">
           <div class='op-avatar' title='Click to change Avatar' @click='changeAvatar'>
-
-            <img :src="avatarUrl" class="picture" />
+            <avatar :username="username" :src="avatarUrl" :rounded="false" :size="120" class="picture"></avatar>
             <span class='fas fa-camera'></span>
             <input ref='avatarUpload' type="file" accept="image/*" style="display: none;" @change='changeFile'>
           </div>
@@ -49,11 +48,14 @@ import { store } from "@/store/index.js";
 import { instance as axios } from "@/api/config.js";
 import { mapState } from "vuex";
 import { baseURL } from "@/api/config.js";
-import VueCoreImageUpload from "vue-core-image-upload";
+import Avatar from "vue-avatar";
+
+// import VueCoreImageUpload from "vue-core-image-upload";
 
 export default {
   components: {
-    VueCoreImageUpload
+    // VueCoreImageUpload,
+    Avatar
   },
   data() {
     return {
@@ -157,7 +159,7 @@ export default {
     },
     getAvatar() {
       let link = "auth/users/img";
-      let localImg = "static/img/user.png";
+      // let localImg = "static/img/user.png";
       axios
         .get(link, {
           params: {
@@ -166,7 +168,7 @@ export default {
         })
         .then(r => {
           if (r.data["unset key"] === null) {
-            this.avatarUrl = localImg;
+            this.avatarUrl = "";
           } else {
             this.avatarUrl =
               baseURL +
@@ -197,6 +199,9 @@ export default {
       let empty = a.length === 0 || b.length === 0;
       let match = a === b;
       return !empty && !match;
+    },
+    username() {
+      return this.userStorage.name + " " + this.userStorage.surname;
     }
   },
   created() {
@@ -266,17 +271,17 @@ export default {
   transform: translate(-50%, -50%);
 }
 
-.op-avatar img {
+.op-avatar .picture {
   height: 120px;
-  display: block;
+  display: flex;
   margin: auto;
-  border-radius: 5px;
+  border-radius: 5px !important;
   transition: 0.5s ease;
   backface-visibility: hidden;
   width: 120px;
 }
 
-.op-avatar:hover img {
+.op-avatar:hover .picture {
   opacity: 0.3;
 }
 

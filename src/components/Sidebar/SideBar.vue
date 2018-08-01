@@ -122,7 +122,6 @@
               title="Edit Item"></span>
           </template>
 
-
           <!-- CREATED DATE -->
           <template slot="timecreated" slot-scope="data">
             <span v-if='data.item.timecreated!==null'>
@@ -131,11 +130,6 @@
             </span>
           </template>
 
-          <!-- CREATED TIME -->
-          <!-- <template slot="created_time" slot-scope="data">
-            <span v-if='data.item.timecreated!==null'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
-          </template> -->
-
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
             <span v-if='data.item.deadline!==null'>
@@ -143,12 +137,6 @@
               <span class='table-time'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
             </span>
           </template>
-
-          <!-- DUE TIME -->
-          <!-- <template slot="due_time" slot-scope="data">
-            <span v-if='data.item.deadline!==null'>{{$moment(data.item.deadline).format('HH:mm')}}</span>
-          </template> -->
-
 
           <!-- IN PROGRESS TASKS | FOR PROJECTS -->
           <template slot="HEAD_inprogress_tasks" slot-scope="data">
@@ -187,6 +175,10 @@
           </template>
 
           <!-- TASK STATUS -->
+          <template slot="HEAD_sta_text" slot-scope="data">
+            <span class='fas fa-sync-alt' title="Status"></span>
+          </template>
+
           <template slot="sta_text" slot-scope="data">
             <!-- <span><span class='fa fa-hourglass'></span> </span> -->
             <span :class="convertStatus(data.item.sta_text)"></span>
@@ -211,22 +203,6 @@
           <template slot="unseen_feed" slot-scope="data">
             <span class='badge badge-warning' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
           </template>
-
-
-
-          <!-- <template slot='HEAD_users' slot-scope="data">
-                  <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Edit People"></span>
-            </template> -->
-
-
-          <!-- STATUS -->
-          <template slot="HEAD_sta_text" slot-scope="data">
-            <span class='fas fa-sync-alt' title="Status"></span>
-          </template>
-
-          <!-- <template slot="sta_text" slot-scope="data">
-              <span class='badge badge-warning' v-if='data.item.sta_text !== 0'>{{data.item.sta_text}}</span>
-            </template> -->
 
           <!-- TASK USERS -->
           <template slot="HEAD_users" slot-scope="data">
@@ -286,7 +262,7 @@ export default {
           value: "as"
         },
         {
-          text: "Completed",
+          text: "Finished",
           value: "ar"
         }
       ],
@@ -417,7 +393,7 @@ export default {
           key: "sta_text",
           label: "Status",
           sortable: true,
-          thClass: "td-orange"
+          thClass: "td-blue"
         },
         {
           key: "priority",
@@ -684,8 +660,8 @@ export default {
           return "td-green fa fa-check";
         case "Failed":
           return "td-red fa fa-times";
-        case "Canceled":
-          return "td-warning fa fa-ban";
+        case "Cancelled":
+          return "td-yellow fa fa-ban";
         default:
           return "NO IMPLEMENT";
       }
@@ -735,9 +711,13 @@ export default {
         this.itemAction.add !== undefined ||
         this.selectedItemID !== undefined
       ) {
-        let shortTask = ["ID", "Tasks", "Users", "Edit"];
+        let shortTask = ["ID", "Tasks"];
         return this.taskFields.filter(item => {
           return shortTask.includes(item.label);
+        });
+      } else if (!this.selectedFilter.includes("ar")) {
+        return this.taskFields.filter(item => {
+          return item.label !== "Status";
         });
       }
       return this.taskFields;
