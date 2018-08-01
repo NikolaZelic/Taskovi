@@ -53,7 +53,7 @@
             <span class='op-action'>
               <span class='theme-changer' @click='changeTheme' :class='{darkTheme : darkTheme}'></span>
               <button @click='edit' class="btn btn-primary" :disabled='passNotMatched'>
-                <i class="fas fa-pen"></i> {{toEdit?" Edit":" Save"}}</button>
+                <i class="fas fa-pen"></i> Save</button>
             </span>
           </div>
 

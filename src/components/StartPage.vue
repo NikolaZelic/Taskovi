@@ -217,17 +217,14 @@ export default {
     }
   },
 
-
   computed: {
-    href(){
+    href() {
       var loc = window.location.href;
-      if(loc.startsWith("http://localhost:8080")){
+      if (loc.startsWith("http://localhost:8080")) {
         return true;
-      }else{
+      } else {
         return false;
       }
-
-
     },
 
     passNotSame() {
@@ -258,7 +255,7 @@ export default {
   text-align: center;
   justify-content: center;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(to top, #f46b45, #eea849);
 }
 
@@ -310,7 +307,7 @@ h2 {
   width: 90%;
   padding: 30px;
   max-width: 550px;
-  min-width: 430px;
+  /* min-width: 430px; */
   background-color: #f7f7f2e0;
   border-radius: 5px;
 }
@@ -380,6 +377,10 @@ h2 {
     #d4d4d4 70%,
     rgba(212, 212, 212, 0) 100%
   );
+}
+
+.btn-warning {
+  background: linear-gradient(to left, #ffb610 0%, #eab337 99%);
 }
 
 /* Transition */
