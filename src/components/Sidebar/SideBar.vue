@@ -1231,10 +1231,10 @@ label {
   .sidebar-lower {
     height: 50vh;
   }
-  .sidebar-body {
-    /* visibility: hidden; */
-    /* padding: 0; */
-  }
+  /* .sidebar-body {
+    visibility: hidden;
+    padding: 0;
+  } */
   #sidebar.max {
     height: 100vh;
   }
