@@ -1018,7 +1018,6 @@ export default {
   },
 
   mounted() {
-    date(this.deadline);
     // if (this.selectedItemID !== 0) {
       // this.getTaskInfo(this.selectedItemID);
       this.getGeneralInfo(this.selectedItemID);
