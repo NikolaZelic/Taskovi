@@ -56,6 +56,13 @@
               </td>
             </tr>
 
+            <tr v-if="this.taskGeneralInfo.tags !== null">
+              <td class="align-top">Tags:</td>
+              <td>
+                <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span>
+              </td>
+            </tr>
+
             <tr>
               <td>Task Events:</td>
               <td>{{this.taskGeneralInfo.sta_text}}</td>
@@ -1034,6 +1041,7 @@ export default {
   },
 
   mounted() {
+    date(this.deadline);
     // if (this.selectedItemID !== 0) {
     // this.getTaskInfo(this.selectedItemID);
     this.getGeneralInfo(this.selectedItemID);

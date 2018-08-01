@@ -264,7 +264,6 @@ export default {
               message: "Something went wrong. Try again."
             });
           }
-          // console.log(response);
         })
       }
     },
