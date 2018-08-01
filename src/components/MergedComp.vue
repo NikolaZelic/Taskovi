@@ -400,7 +400,7 @@ export default {
     position: fixed;
     height: 100vh;
     width: 37%;
-  } 
+  }
    #wrapper aside.max {
     width: 100%;
   }

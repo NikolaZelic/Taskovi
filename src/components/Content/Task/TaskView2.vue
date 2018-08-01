@@ -1,7 +1,7 @@
 <template>
   <div class="height100 mh-100" style="display: block" v-if="!addStep">
 
-    <template v-if="this.selectedItemID <= 0">
+    <template v-if="this.$route.params.id === null">
       <h1>Select task first...</h1>
     </template>
 
@@ -1013,7 +1013,7 @@ export default {
   mounted() {
     // if (this.selectedItemID !== 0) {
       // this.getTaskInfo(this.selectedItemID);
-      this.getGeneralInfo(this.selectedItemID);
+      this.getGeneralInfo(this.$route.params.id);
       // this.getTaskInfo(this.selectedItemID);
     // }
 
