@@ -77,13 +77,21 @@ textarea.custom-modern::placeholder {
   background: #fff;
 }
 
-.form-control:hover {
-  border-color: var(--ac-color-light);
-}
-
+.form-control:hover,
 .form-control:focus {
   border-color: var(--ac-color);
   box-shadow: unset;
+}
+
+/* BADGE COLORS */
+.badge-purple {
+  background: #bf6cd6;
+  color: #fff;
+}
+
+.badge-orange {
+  background: #f9983c;
+  color: #000;
 }
 
 /* TASK TABS */

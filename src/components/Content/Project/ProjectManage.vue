@@ -8,15 +8,16 @@
     </div>
 
     <label for="name" class="mt-3">Project name</label>
-    <input type="text" id="name" name="projectname" v-model.lazy="project.title" @change="somethingChanged = true" placeholder="Enter project name" class="form-control mb-3">
+    <input type="text" id="name" name="projectname" v-model.lazy="project.title" @change="somethingChanged = true" placeholder="Enter project name"
+      class="form-control mb-3">
 
     <label for="description">Description</label>
-    <textarea id="description" rows="3" name="description" v-model.lazy='project.description' @change="somethingChanged = true" placeholder="Enter project description..."
-      class="form-control mb-3" spellcheck="false"></textarea>
+    <textarea id="description" rows="3" name="description" v-model.lazy='project.description' @change="somethingChanged = true"
+      placeholder="Enter project description..." class="form-control mb-3" spellcheck="false"></textarea>
 
     <label for="date">Deadline</label>
-    <flat-pickr ref='datepicker' name="date" v-model.lazy="project.deadline" :config="config" @change="somethingChanged = true" id='flatPickrId' class="deadline form-control mb-3"
-      placeholder="Pick a deadline (optional)">
+    <flat-pickr ref='datepicker' name="date" v-model.lazy="project.deadline" :config="config" @change="somethingChanged = true"
+      id='flatPickrId' class="deadline form-control mb-3" placeholder="Pick a deadline (optional)">
     </flat-pickr>
 
     <div id="users">
@@ -29,7 +30,7 @@
         </b-input-group-append>
       </b-input-group>
       <div class='user-table'>
-        <b-table :items='project.users' :fields='usersField' responsive v-if="this.project.users.length > 0">
+        <b-table :items='project.users' :fields='usersField' responsive hover :dark='darkTheme' v-if="this.project.users.length > 0">
 
           <template slot="email" slot-scope="row">
             <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span>
@@ -40,32 +41,15 @@
 
 
           <template slot="admin" slot-scope="row">
-            <!-- In some circumstances you may need to use @click.native.stop instead -->
-            <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
             <b-form-checkbox @click.native.stop @change="changeAdmin(row.index)" :checked="project.users[row.index].admin" :disabled="!project.users[row.index].disabled"></b-form-checkbox>
-            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
-
-
-            <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === 'true') -->
-            <!-- (project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') -->
-            <!-- project.users[row.index].isyou === 'false' -->
           </template>
 
           <template slot="remove" slot-scope="row">
-            <!-- In some circumstances you may need to use @click.native.stop instead -->
-            <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
-            <!-- <b-form-checkbox @click.native.stop @change="changeDeleted(row.index)"></b-form-checkbox> -->
 
-            <button type="button" class="btn btn-danger btn-sm" @click="changeDeleted(row.index)" v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">Remove</button>
-            <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
+            <button type="button" class="btn btn-danger btn-sm" @click="changeDeleted(row.index)" v-if="project.users[row.index].isyou === 'false' && (project.youAreCreator === 'true' || project.users[row.index].canEdit === true)">
+              <span class="fa fa-times"></span>
+            </button>
           </template>
-
-          <!-- <template slot="new" slot-scope="row">
-            <span class="badge badge-warning" v-if="project.users[row.index].new === true">New</span> -->
-          <!-- v-if="(project.youAreCreator === 'true' && project.users[row.index].isyou === 'false') || (project.youAreAdmin === 'true' && project.users[row.index].admin === false && project.users[row.index].isyou === 'false')" -->
-          <!-- </template> -->
-
-
         </b-table>
       </div>
     </div>
@@ -74,18 +58,16 @@
     <div class='usersModal'>
 
     </div>
-    <!-- <multiselect id='users' v-model='project.users' :options="options" :preserveSearch="true" :multiple="true" :taggable="true"
-        track-by='email' @tag="addTag" :close-on-select="false" :clear-on-select="false" :hide-selected="true" class="" :custom-label='CustomPersonLabel'
-        placeholder="Enter email of people"></multiselect> -->
-
 
     <div class='project-action'>
-      <button @click="projectCancel" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+      <button @click="projectCancel" class="btn btn-danger">
+        <span class="fa fa-ban"></span> Cancel</button>
       <button v-if='itemEditButton!==undefined' @click="projectEdit" class="btn btn-primary">
         <span class="fa fa-save"></span> Save changes</button>
 
-    <button v-else @click="projectCreate" class="btn btn-success">
-      <span class="fa fa-plus-square"></span> Create project</button>   </div>
+      <button v-else @click="projectCreate" class="btn btn-success">
+        <span class="fa fa-plus-square"></span> Create project</button>
+    </div>
   </div>
   <!-- </div> -->
 </template>
@@ -119,7 +101,6 @@ export default {
         users: []
       },
       config: {
-        // wrap: true, // set wrap to true only when using 'input-group'
         enableTime: true,
         time_24hr: true,
         dateFormat: "Y-m-d H:i:S",
@@ -127,10 +108,20 @@ export default {
         altInput: true,
         minDate: "today"
       },
-      usersField: ["email", "name", "surname", "admin", "remove"],
+      usersField: [
+        { email: {} },
+        { name: {} },
+        { surname: {} },
+        { admin: {} },
+        {
+          remove: {
+            thClass: "text-center",
+            tdClass: "text-center"
+          }
+        }
+      ],
       email: undefined,
       isAdmin: false
-      // options: []
     };
   },
   watch: {
@@ -147,36 +138,21 @@ export default {
   },
   methods: {
     confirmation() {
-      // if(this.editProjectData.title !== this.project.title || this.editProjectData.description !== this.project.description || this.editProjectData.deadline !== this.project.deadline){
       if (confirm("Are you sure? You might have unsaved changes!")) {
         this.resetProjectView();
       }
-      // }else{
-      //   this.resetProjectView();
-      // }
     },
-    // clickedRow(item, index, event){
-    //   // console.log('index ' + item);
-    //   // return item;
-    //   // console.log('item ' + item.id);
-    //   // console.log('index' + index);
-    //   // console.log('event' + event);
-    //   // this.deleteUserID = item.id;
-    //   // return item.id;
-    //   // console.log(this.deleteUserID);
-    //   console.log('clicked row funkcija')
-    // },
 
     changeDeleted(rowIndex) {
-      this.project.users[rowIndex].delete = !this.project.users[rowIndex]
-        .delete;
-      // this.usersWorking;
-      this.project.users.splice(rowIndex, 1);
+      if (confirm("Are you sure?")) {
+        this.project.users[rowIndex].delete = !this.project.users[rowIndex]
+          .delete;
+        this.project.users.splice(rowIndex, 1);
+      }
     },
 
     changeAdmin(rowIndex) {
       this.project.users[rowIndex].admin = !this.project.users[rowIndex].admin;
-      // this.usersWorking;
     },
 
     submitEmail() {
@@ -324,11 +300,10 @@ export default {
     },
 
     projectCancel() {
-      if(this.somethingChanged === true){
-        if(confirm("Are you sure? You might have unsaved changes!"))
-          store.commit('resetProjectView');
-      }else
-        store.commit('resetProjectView');      
+      if (this.somethingChanged === true) {
+        if (confirm("Are you sure? You might have unsaved changes!"))
+          store.commit("resetProjectView");
+      } else store.commit("resetProjectView");
     },
 
     resetProjectView() {
@@ -412,6 +387,7 @@ export default {
       currentTabData: "currentTabData"
     }),
     ...mapState({
+      darkTheme: "darkTheme",
       tabIndex: "currentTabIndex",
       itemEditButton: state => state.itemAction.edit
     })
@@ -437,13 +413,6 @@ export default {
 }
 
 .header {
-  /* background: var(--success); */
-  /* border-radius: 5px;
-  display: flex;
-  padding: 7px 20px;
-  justify-content: space-between;
-  color: initial; */
-
   position: absolute;
   user-select: none;
   position: relative;
@@ -466,9 +435,6 @@ export default {
 
 #users {
   width: 100% !important;
-  /* border: 1px solid #aaaaaa; */
-  /* box-shadow: 5px auto #888888; */
-  /* padding: 30px; */
   margin-bottom: 30px;
 }
 
@@ -484,11 +450,11 @@ h4 {
   color: white;
 }
 
-.project-action{
+.project-action {
   margin-left: auto;
 }
 
-.project-action .fa{
+.project-action .fa {
   margin-right: 10px;
 }
 

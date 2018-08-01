@@ -59,7 +59,7 @@
             <tr v-if="this.taskGeneralInfo.tags !== null">
               <td class="align-top">Tags:</td>
               <td>
-                <span class="badge badge-success" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span>
+                <span class="badge badge-orange" v-for="(tag,index) in this.taskGeneralInfo.tags" :key='index'>{{ tag.text }}</span>
               </td>
             </tr>
 
@@ -249,20 +249,6 @@
                 </div>
               </td>
             </tr>
-
-            <!-- <tr v-if="stepInfo[0].pri_text !== null">
-              <td class="align-top">Priority:</td>
-              <td>
-                <span class="badge" :class="stepInfo[0].pri_badge">{{stepInfo[0].pri_text}}</span>
-              </td>
-            </tr> -->
-
-            <!-- <tr v-if="stepInfo[0].tags.length > 0">
-              <td class="align-top">Tags:</td>
-              <td>
-                <span class="badge badge-success" v-for="(tag,index) in stepInfo[0].tags" :key='index'>{{ tag.text }}</span>
-              </td>
-            </tr> -->
 
             <tr v-if="stepInfo[0].tsk_deadline !== ''">
               <td class="align-top">Deadline:</td>

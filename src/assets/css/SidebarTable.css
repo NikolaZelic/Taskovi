@@ -98,10 +98,16 @@
    flex: 1;
  }
 
+ .user-table .table-dark {
+   background-color: #191a1d;
+ }
+
  .item-list tr>input {
    /* flex: 1; */
    line-height: initial;
  }
+
+ /* TD COLORS */
 
  .td-icons {
    cursor: pointer;

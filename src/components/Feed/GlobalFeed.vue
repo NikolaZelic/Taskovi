@@ -26,7 +26,7 @@ export default {
     refreshGlobalFeed(newVal, old){
       // console.log('watcher');
       if(newVal){
-        firstLoadData = true;
+        this.firstLoadData = true;
         this.readeFeeds();
         store.commit('setRefreshGlobalFeed', false );
       }

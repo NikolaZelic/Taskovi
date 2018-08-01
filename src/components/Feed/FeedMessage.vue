@@ -8,7 +8,6 @@
     <div class='img-placeholder'>
 
       <avatar v-if='this.mess.fed_type==="message"' :username="name+ ' '+surname" :src="getAvatar" :rounded="false" :size="40" class='picture'></avatar>
-      <!-- <img :src="getAvatar" v-if='this.mess.fed_type==="message"' /> -->
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
@@ -69,20 +68,24 @@ export default {
       return this.mess.fed_important;
     },
     getAvatar() {
+      let netIcon = "";
       if (this.mess.usrimg !== undefined && this.mess.usrimg !== null) {
-        let netIcon = baseURL + this.mess.usrimg + "?sid=" + localStorage.sid;
-        axios.get(netIcon).then(r => {
-          if (r.data["unset key"] === null) {
-            return "";
-          } else {
-            return netIcon;
+        netIcon = baseURL + this.mess.usrimg + "?sid=" + localStorage.sid;
+        this.checkAvatarIsValid(netIcon).then(r => {
+          let k = r.data["unset key"];
+          if (k !== undefined && k === null) {
+            netIcon = "";
           }
         });
       }
-      return "";
+      return netIcon;
     }
   },
   methods: {
+    checkAvatarIsValid(netIcon) {
+      return axios.get(netIcon);
+    },
+
     selectStep() {
       store.commit("setSelectedStep", this.mess);
     },

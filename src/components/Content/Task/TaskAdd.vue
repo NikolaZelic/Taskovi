@@ -25,7 +25,7 @@
               <!-- <span class="calender-icon" @click='calendarIconClicked'> -->
                 <i class="far fa-calendar-alt" @click='calendarIconClicked'></i>
               <!-- </span> -->
-              <span class="calender-wrapper" >
+              <!-- <span class="calender-wrapper" > -->
                 <flat-pickr ref='datepicker' v-model="deadline" :onChange="somethingChanged = true" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
                   name="date" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
                 </flat-pickr>
@@ -33,7 +33,7 @@
                   @click='deadline=null'>
                   <i class="fas fa-times-circle"></i>
                 </div>
-              </span>
+              <!-- </span> -->
             </div>
 
             <!-- ADDING WORKERS -->
@@ -210,13 +210,11 @@ export default {
   },
 
   methods: {
-
     taskCancel() {
-      if(this.somethingChanged === true){
-        if(confirm("Are you sure? You might have unsaved changes!"))
-          store.commit('resetProjectView');
-      }else
-        store.commit('resetProjectView');
+      if (this.somethingChanged === true) {
+        if (confirm("Are you sure? You might have unsaved changes!"))
+          store.commit("resetProjectView");
+      } else store.commit("resetProjectView");
     },
 
     resetProjectView() {
@@ -747,6 +745,7 @@ export default {
   margin: 3px;
   padding: 3px;
   cursor: pointer;
+  width: 50px;
 }
 
 .icon-sizes {
@@ -821,16 +820,11 @@ div.form-group {
 
 .task-modal-input {
   width: 100%;
-  padding-left: 10px;
 }
 
 .content select,
 .content .tmp-content .deadline,
 .content .multiselect {
   width: 100%;
-}
-
-select.form-control:not([size]):not([multiple]) {
-  margin-left: 10px;
 }
 </style>

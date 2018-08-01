@@ -42,6 +42,7 @@
       </div>
 
       <div class='feed-wrap' v-if='!tableShow'>
+        <!-- <router-view name="a"></router-view> -->
         <global-feed v-if='globalFeed' />
         <!-- <project-config v-if='checkShow(2) && !globalFeed' /> -->
       </div>
@@ -130,7 +131,12 @@ export default {
     },
     itemAddButton(val) {
       this.addBtn = val !== undefined;
-    }
+    },
+    // globalFeed(val) {
+    //   if (val) {
+    //     this.$router.push("/feeds");
+    //   } else thir.$router.push("/");
+    // }
   },
   computed: {
     ...mapState({
@@ -259,7 +265,7 @@ export default {
 }
 
 #wrapper.darkMain {
-  background: #1b1c1d;
+  background: var(--sec-bg-color);
 }
 
 .flex-head-data {
@@ -402,7 +408,7 @@ export default {
     height: 100vh;
     width: 37%;
   }
-   #wrapper aside.max {
+  #wrapper aside.max {
     width: 100%;
   }
 

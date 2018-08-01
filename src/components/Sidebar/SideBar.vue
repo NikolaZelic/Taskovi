@@ -174,13 +174,18 @@
             <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
           </template>
 
+          <!-- TASK TAGS -->
+          <template slot="tags" slot-scope="data">
+            <span class='badge badge-orange' v-if="data.item.tags.length > 0">{{data.item.tags[0].tag_text}}</span>
+              <span v-if='data.item.tags.length > 1'>...</span>
+          </template>
+
           <!-- TASK STATUS -->
           <template slot="HEAD_sta_text" slot-scope="data">
             <span class='fas fa-sync-alt' title="Status"></span>
           </template>
 
           <template slot="sta_text" slot-scope="data">
-            <!-- <span><span class='fa fa-hourglass'></span> </span> -->
             <span :class="convertStatus(data.item.sta_text)"></span>
           </template>
 
@@ -218,7 +223,7 @@
     </div>
     <!-- </div> -->
 
-    <user-tasks v-if='showTaskPeople'></user-tasks>
+    <!-- <user-tasks v-if='showTaskPeople'></user-tasks> -->
 
   </aside>
 </template>
@@ -228,13 +233,13 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
 import { instance as axios } from "@/api/config.js";
-import UserTasks from "./UserTasks";
+// import UserTasks from "./UserTasks";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
 export default {
   components: {
-    UserTasks,
+    // UserTasks,
     Multiselect,
     GlobalFeed
   },
@@ -387,6 +392,12 @@ export default {
           label: "Due Date",
           sortable: true,
           class: "text-center",
+          thClass: "td-blue"
+        },
+        {
+          key: "tags",
+          label: "Tag",
+          // sortable: true,
           thClass: "td-blue"
         },
         {
@@ -597,13 +608,14 @@ export default {
       // EVERY 20 SECONDS
       // REFRESH TAB DATA
       // BREAKS THE UX FLOW - RESETS VIEW
-      if (this.getTabIndex === 0) {
-        this.actionTabDataProject();
-      } else if (this.getTabIndex === 1) {
-        this.getTaskFilterData();
-      } else {
-        store.dispatch("getFeedCount");
+      if (!this.globalFeed) {
+        if (this.getTabIndex === 0) {
+          this.actionTabDataProject();
+        } else if (this.getTabIndex === 1) {
+          this.getTaskFilterData();
+        }
       }
+      store.dispatch("getFeedCount");
     },
     showSubFilter() {
       let i = this.getTabIndex;
@@ -1134,11 +1146,6 @@ h2 {
 .item-filter {
   display: flex;
   justify-content: space-around;
-}
-
-.badge-purple {
-  background: #bf6cd6;
-  color: #fff;
 }
 
 .table-time {
