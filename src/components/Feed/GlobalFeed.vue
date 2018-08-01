@@ -26,7 +26,7 @@ export default {
     refreshGlobalFeed(newVal, old){
       // console.log('watcher');
       if(newVal){
-        firstLoadData = true;
+        this.firstLoadData = true;
         this.readeFeeds();
         store.commit('setRefreshGlobalFeed', false );
       }
@@ -90,8 +90,12 @@ export default {
     },
     scrollAfterDown(responseLength) {
       var a = document.querySelectorAll(".selector");
-      a = a[this.messages.length - responseLength];
-      a.scrollIntoView(true);
+      console.log(a);
+      console.log('messages '+ this.messages.length);
+      console.log('response '+ responseLength);
+      a = a[this.messages.length - responseLength-1];
+      console.log(a);
+      a.scrollIntoView(false);
     }
   },
   destroyed() {
