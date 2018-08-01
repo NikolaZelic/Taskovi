@@ -124,20 +124,36 @@ export default {
   },
   computed: {
     ...mapState({
-      messages: state => state.modulefeed.messages,
+      // messages: state => state.modulefeed.messages,
       darkTheme: state => state.darkTheme,
       // searchFeedsParams: state => state.modulefeed.searchFeedsParams,
       selectedStep: state => state.modulefeed.selectedStep,
       pro_id: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
-      taskid: "selectedItemID"
+      taskid: "selectedItemID",
     }),
     searchOn() {
       if (this.searchType !== "all") return true;
       if (this.searchImportant) return true;
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
+    },
+    messages(){
+      return this.$store.state.modulefeed.messages.map( el =>{
+        return {
+          "fed_important": el.fed_important,
+          "fed_islabel": el.fed_islabel,
+          "taskID": el.taskID,
+          "fed_id": el.fed_id,
+          "usrimg": el.usrimg,
+          "usr_name": el.usr_name,
+          "usr_surname": el.usr_surname,
+          "fed_text": el.fed_text,
+          "fed_time": this.utcToLocal(el.fed_time),
+          "fed_type": el.fed_type,
+        }
+      } );
     }
     // timestamps(){
     //   return this.messages.filter( el => el.fed_islabel==1 );
@@ -291,10 +307,13 @@ export default {
       var time = this.selectedStep.fed_time;
       time = this.$moment(time).subtract(-1, "secounds");
       time.seconds(time.seconds() - 1);
+      time = this.localToUTC(time);
+      // console.log(time);
       api
         .createTimestamps(
           this.taskid,
-          time.format("YYYY-MM-DD HH:mm:ss"),
+          // time.format("YYYY-MM-DD HH:mm:ss"),
+          time,
           this.newStep
         )
         .then(result => {
@@ -376,6 +395,7 @@ export default {
         });
     },
     writeMessageFeed() {
+      // console.log('Write message feed');
       if (this.taskid === -1) return;
       var text = this.feed.trim();
       if (text === "") {
