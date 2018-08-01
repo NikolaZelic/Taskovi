@@ -25,13 +25,12 @@
 .darkTheme .multiselect__input,
 .darkTheme .multiselect__single,
 .darkTheme .multiselect__spinner,
+.darkTheme .multiselect__content-wrapper,
 .darkTheme .feed-back,
 .darkTheme .flex-chat-body,
 .card.darkTheme {
   background: #23272b !important;
   color: #eee !important;
-  /* border: 1; */
-  /* border-radius: 0; */
 }
 
 .darkTheme,

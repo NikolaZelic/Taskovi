@@ -16,6 +16,10 @@
   /* color: var(--sec-bg-color) !important; */
 }
 
+.multiselect__content-wrapper {
+  border: 1px solid #e8e8e82e !important;
+}
+
 .multiselect__tags {
   display: block;
   width: 100%;
@@ -84,6 +88,7 @@ textarea.custom-modern::placeholder {
 }
 
 /* BADGE COLORS */
+
 .badge-purple {
   background: #bf6cd6;
   color: #fff;
