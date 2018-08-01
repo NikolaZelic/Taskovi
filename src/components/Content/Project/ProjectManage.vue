@@ -109,10 +109,18 @@ export default {
         minDate: "today"
       },
       usersField: [
-        { email: {} },
-        { name: {} },
-        { surname: {} },
-        { admin: {} },
+        {
+          email: {}
+        },
+        {
+          name: {}
+        },
+        {
+          surname: {}
+        },
+        {
+          admin: {}
+        },
         {
           remove: {
             thClass: "text-center",
@@ -175,7 +183,7 @@ export default {
         if (this.itemEditButton === ctd.id) {
           // PASS BY VALUE, NOT BY REF - DON'T CHANGE
           this.project.title = ctd.title;
-          this.project.deadline = ctd.deadline;
+          this.project.deadline = this.utcToLocal(ctd.deadline);
           this.project.users_count = ctd.users_count;
         }
       }
@@ -233,7 +241,7 @@ export default {
         .post("projects", {
           name: this.project.title,
           description: this.project.description,
-          deadline: this.project.deadline,
+          deadline: this.localToUTC(this.project.deadline),
           usersarray: this.usersString,
           sid: localStorage.sid
         })
@@ -268,7 +276,7 @@ export default {
         .put("projects/:proid", {
           name: this.project.title,
           description: this.project.description,
-          deadline: this.project.deadline,
+          deadline: this.localToUTC(this.project.deadline),
           usersarray: this.usersString, //usersWorking,
           proid: store.getters.selectedItemID,
           sid: localStorage.sid

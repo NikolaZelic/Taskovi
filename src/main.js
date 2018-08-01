@@ -21,6 +21,25 @@ Vue.prototype.$moment = moment;
 
 Vue.config.productionTip = false;
 
+Vue.mixin({
+  methods: {
+    localToUTC(date){
+      let offset = new Date().getTimezoneOffset();
+      return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+    },
+
+    utcToLocal(date){
+      let offset = "" + new Date().getTimezoneOffset();
+      if(offset.startsWith('-'))
+        offset = offset.replace("-", "+");
+      else if(offset.startsWith('+'))
+        offset = offset.replace("+", "-");
+      return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+    }
+  }
+})
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

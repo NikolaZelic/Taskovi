@@ -47,12 +47,12 @@
             </tr>
             <tr>
               <td>Time created:</td>
-              <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</td>
+              <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{this.utcToLocal(this.taskGeneralInfo.tsk_timecreated)}}</td>
             </tr>
             <tr>
               <td>Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span>{{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</span>
+                <span>{{ this.utcToLocal(this.taskGeneralInfo.tsk_deadline) }}</span>
               </td>
             </tr>
 
@@ -1006,17 +1006,20 @@ export default {
     },
 
     deadlineDate() {
-      return this.$moment(
-        this.taskInfo.deadline,
-        "YYYY-MM-DD HH:mm:ss.S"
-      ).format("DD/MM/YYYY (HH:mm)");
+      return this.utcToLocal(this.taskInfo.deadline);
+      // return this.$moment(
+      //   this.taskInfo.deadline,
+      //   "YYYY-MM-DD HH:mm:ss.S"
+      // ).format("DD/MM/YYYY (HH:mm)");
     },
 
     createdDate() {
-      return this.$moment(
-        this.taskInfo.createdDate,
-        "YYYY-MM-DD HH:mm:ss.S"
-      ).format("DD/MM/YYYY (HH:mm)");
+      return this.utcToLocal(this.taskInfo.createdDate);
+
+      // return this.$moment(
+      //   this.taskInfo.createdDate,
+      //   "YYYY-MM-DD HH:mm:ss.S"
+      // ).format("DD/MM/YYYY (HH:mm)");
     },
 
     ...mapState({
@@ -1027,7 +1030,6 @@ export default {
   },
 
   mounted() {
-    date(this.deadline);
     // if (this.selectedItemID !== 0) {
     // this.getTaskInfo(this.selectedItemID);
     this.getGeneralInfo(this.selectedItemID);
