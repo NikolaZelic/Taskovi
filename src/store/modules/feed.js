@@ -104,7 +104,6 @@ const mutations = {
   },
 }
 const getters = {
-
 }
 
 const state = {
