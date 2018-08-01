@@ -271,9 +271,8 @@ export default {
           }
           // console.log(response);
         })
-    }
-  },
-
+      }
+    },
     changeSelectedTask() {
       // console.log('changeSelectedTask');
       store.commit("clearFeed");
@@ -390,11 +389,16 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
+        // console.log(result);
         if (result.data.status != "OK") {
           alert("Problem durning sending the message");
           return;
         }
-        this.addDown(true);
+        // console.log(this.messages.length);
+        if(this.messages.length>0)
+          this.addDown(true);
+        else
+          this.readeFeeds();
       });
       // setTimeout(() => {
       //   var a = document.querySelectorAll(".selector");
@@ -456,6 +460,7 @@ export default {
         });
     },
     newMessages() {
+      // console.log('new messages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -627,6 +632,7 @@ export default {
     }
   },
   mounted() {
+    // console.log('mounted');
     this.dragAndDrop();
 
     if (!this.global) {
