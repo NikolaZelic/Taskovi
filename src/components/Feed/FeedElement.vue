@@ -71,6 +71,8 @@ import FeedMessage from "./FeedMessage";
 import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
+import axios from "axios";
+
 
 export default {
   components: {
@@ -240,51 +242,32 @@ export default {
 
       function uploadFile(file, i) {
         var task = store.state.sidebarItemSelection[1];
-        // console.log('task je' + store.state.sidebarItemSelection[1]);
-        var url =
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-          task +
-          "/feeds";
-        var xhr = new XMLHttpRequest();
+        var url = 'http://695u121.mars-t.mars-hosting.com/mngapi/tasks/' + task + '/feeds';
         var formData = new FormData();
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-        // Update progress (can be used to show progress indicator)
-        // xhr.upload.addEventListener("progress", function(e) {
-        //   updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
-        // })
+        formData.append('file', file)
+        formData.append('sid', localStorage.sid)
+        formData.append('type', 'file')
 
-        xhr.addEventListener("readystatechange", function(e) {
-          if (xhr.readyState == 4 && xhr.status == 200) {
+        axios.post(url, formData, {
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        }).then(response => {
+          if(response.data.status === 'OK'){
             store.commit("modalStatus", {
               ok: true,
               message: "Successfully sent attachment."
             });
-
             self.readeFeeds();
-            // console.log('uspesno');
-            // alert("uspesno");
-            // updateProgress(i, 100) // <- Add this
-          } else if (xhr.readyState == 4 && xhr.status != 200) {
-            // Error. Inform the user
-            // console.log('nesto nije dobro');
+          }else{
             store.commit("modalStatus", {
               ok: false,
               message: "Something went wrong. Try again."
             });
           }
-        });
-
-        // formData.append('upload_preset', 'YOU')
-        formData.append("file", file);
-        formData.append("sid", localStorage.sid);
-        formData.append("type", "file");
-
-        xhr.send(formData);
+          // console.log(response);
+        })
       }
     },
-
     changeSelectedTask() {
       // console.log('changeSelectedTask');
       store.commit("clearFeed");
@@ -401,11 +384,16 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
+        // console.log(result);
         if (result.data.status != "OK") {
           alert("Problem durning sending the message");
           return;
         }
-        this.addDown(true);
+        // console.log(this.messages.length);
+        if(this.messages.length>0)
+          this.addDown(true);
+        else
+          this.readeFeeds();
       });
       // setTimeout(() => {
       //   var a = document.querySelectorAll(".selector");
@@ -467,6 +455,7 @@ export default {
         });
     },
     newMessages() {
+      // console.log('new messages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -638,6 +627,7 @@ export default {
     }
   },
   mounted() {
+    // console.log('mounted');
     this.dragAndDrop();
 
     if (!this.global) {
