@@ -14,12 +14,14 @@ export default {
       dataFromBegining: 0,
       firstLoadData: true,
       searchType: 'all',
+      notificationToBeMarkde: 0,
     };
   },
 
   computed: {
     ...mapState({
       refreshGlobalFeed: state => state.refreshGlobalFeed,
+      notifCount: "notificationCount",
     }),
   },
   watch: {
@@ -34,7 +36,9 @@ export default {
   },
   methods: {
     readeFeeds() {
-      // console.log('reade feeds');
+      console.log('reade feeds');
+      // console.log(this.notifCount);
+      this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
       this.offset = 0;
       store
@@ -45,7 +49,9 @@ export default {
           fed_important: this.searchImportant
         })
         .then(response => {
-          this.offset += response.data.data.length;
+          var length = response.data.data.length
+          this.offset += length;
+
           store.commit("addMessages", {
             direction: "down",
             data: response.data.data
@@ -74,6 +80,23 @@ export default {
         .then(response => {
           var length = response.data.data.length;
           this.offset += length;
+          // Seting up unseen messges
+          console.log(this.notificationToBeMarkde);
+          if(this.notificationToBeMarkde >= this.offset ){ // All messages should be marked
+            // console.log('Sve su postavljene');
+            for(var i=0; i<length; i++){
+              response.data.data[i].unseen = 1;
+            }
+          }
+          else if( this.notificationToBeMarkde > this.offset - length ){ // Just some messages should be marked
+            // console.log('Neke su postavljene');
+            for(var i=0; i<=this.notificationToBeMarkde%length && i<=length; i++){
+              response.data.data[i].unseen = 1;
+            }
+          }
+          // else
+          //   console.log('Nista nije postavljeno');
+          
           store.commit("addMessages", {
             direction: "down",
             data: response.data.data
@@ -90,13 +113,21 @@ export default {
     },
     scrollAfterDown(responseLength) {
       var a = document.querySelectorAll(".selector");
-      a = a[this.messages.length - responseLength];
-      a.scrollIntoView(true);
+      // console.log(a);
+      // console.log('messages '+ this.messages.length);
+      // console.log('response '+ responseLength);
+      a = a[this.messages.length - responseLength-1];
+      // console.log(a);
+      a.scrollIntoView(false);
     }
   },
   destroyed() {
     // store.commit("notificationCount", 0);
     store.dispatch("getFeedCount");
-  }
+    this.notificationToBeMarkde = 0;
+  },
+  // mounted(){
+  //   console.log(this.notifCount);
+  // }
 };
 </script>
