@@ -126,12 +126,8 @@
           <template slot="timecreated" slot-scope="data">
             <span v-if='data.item.timecreated!==null'>
 
-              {{ this.localToUTC(data.item.timecreated) }}
-
-              {{$moment(data.item.timecreated).format('YYYY-MM-DD')}}
-              <span class='table-time'>{{$moment(data.item.timecreated).format('HH:mm')}}</span>
-
-
+              {{$moment(utcToLocal(data.item.timecreated)).format('YYYY-MM-DD')}}
+              <span class='table-time'>{{$moment(utcToLocal(data.item.timecreated)).format('HH:mm')}}</span>
 
             </span>
           </template>
@@ -140,12 +136,8 @@
           <template slot="deadline" slot-scope="data">
             <span v-if='data.item.deadline!==null'>
 
-
-
-              <!-- {{$moment(data.item.deadline).format('YYYY-MM-DD')}}
-              <span class='table-time'>{{$moment(data.item.deadline).format('HH:mm')}}</span> -->
-
-
+              {{$moment(utcToLocal(data.item.deadline)).format('YYYY-MM-DD')}}
+              <span class='table-time'>{{$moment(utcToLocal(data.item.deadline)).format('HH:mm')}}</span>
 
             </span>
           </template>

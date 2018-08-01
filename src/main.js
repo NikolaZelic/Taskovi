@@ -34,7 +34,7 @@ Vue.mixin({
         offset = offset.replace("-", "+");
       else if(offset.startsWith('+'))
         offset = offset.replace("+", "-");
-      return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm');
+      return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
     }
   }
 })
