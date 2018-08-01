@@ -79,7 +79,6 @@ export default {
   },
   data() {
     return {
-
       global: false,
       showFeeds: true,
       count: 0,
@@ -156,55 +155,51 @@ export default {
     }
   },
   methods: {
-    dragAndDrop(){
+    dragAndDrop() {
       var self = this;
 
       // ************************ Drag and drop ***************** //
-      let dropArea = document.getElementById("drop-area")
+      let dropArea = document.getElementById("drop-area");
 
       // Prevent default drag behaviors
-      ;
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false)
-        document.body.addEventListener(eventName, preventDefaults, false)
-      })
+      ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+      });
 
       // Highlight drop area when item is dragged over it
-      ;
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false)
-      })
-
-      ;
-      ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false)
-      })
+      ["dragenter", "dragover"].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      ["dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
 
       // Handle dropped files
-      dropArea.addEventListener('drop', handleDrop, false)
+      dropArea.addEventListener("drop", handleDrop, false);
 
       function preventDefaults(e) {
-        e.preventDefault()
-        e.stopPropagation()
+        e.preventDefault();
+        e.stopPropagation();
       }
 
       function highlight(e) {
-        dropArea.classList.add('highlight');
-        document.getElementById("text").classList.add('displayBlock');
-        document.getElementById("text").classList.remove('displayNone');
+        dropArea.classList.add("highlight");
+        document.getElementById("text").classList.add("displayBlock");
+        document.getElementById("text").classList.remove("displayNone");
       }
 
       function unhighlight(e) {
-        dropArea.classList.remove('highlight')
-        document.getElementById("text").classList.remove('displayBlock');
-        document.getElementById("text").classList.add('displayNone');
+        dropArea.classList.remove("highlight");
+        document.getElementById("text").classList.remove("displayBlock");
+        document.getElementById("text").classList.add("displayNone");
       }
 
       function handleDrop(e) {
-        var dt = e.dataTransfer
-        var files = dt.files
+        var dt = e.dataTransfer;
+        var files = dt.files;
 
-        handleFiles(files)
+        handleFiles(files);
       }
 
       // let uploadProgress = []
@@ -227,9 +222,9 @@ export default {
       // }
 
       function handleFiles(files) {
-        files = [...files]
+        files = [...files];
         // initializeProgress(files.length)
-        files.forEach(uploadFile)
+        files.forEach(uploadFile);
         // files.forEach(previewFile)
       }
 
@@ -246,18 +241,21 @@ export default {
       function uploadFile(file, i) {
         var task = store.state.sidebarItemSelection[1];
         // console.log('task je' + store.state.sidebarItemSelection[1]);
-        var url = 'http://695u121.mars-t.mars-hosting.com/mngapi/tasks/' + task + '/feeds';
-        var xhr = new XMLHttpRequest()
-        var formData = new FormData()
-        xhr.open('POST', url, true)
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        var url =
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+          task +
+          "/feeds";
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         // Update progress (can be used to show progress indicator)
         // xhr.upload.addEventListener("progress", function(e) {
         //   updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
         // })
 
-        xhr.addEventListener('readystatechange', function(e) {
+        xhr.addEventListener("readystatechange", function(e) {
           if (xhr.readyState == 4 && xhr.status == 200) {
             store.commit("modalStatus", {
               ok: true,
@@ -276,14 +274,14 @@ export default {
               message: "Something went wrong. Try again."
             });
           }
-        })
+        });
 
         // formData.append('upload_preset', 'YOU')
-        formData.append('file', file)
-        formData.append('sid', localStorage.sid)
-        formData.append('type', 'file')
+        formData.append("file", file);
+        formData.append("sid", localStorage.sid);
+        formData.append("type", "file");
 
-        xhr.send(formData)
+        xhr.send(formData);
       }
     },
 
@@ -857,7 +855,8 @@ export default {
 }
 
 .input textarea:focus {
-  height: 140px;
+  height: 20vh;
+  /* height: 140px; */
 }
 
 /* .attach:after {
@@ -965,22 +964,21 @@ export default {
   display: none;
 }
 
-#text{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: red;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+#text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: red;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 }
 
-.displayBlock{
+.displayBlock {
   display: block;
 }
 
-.displayNone{
+.displayNone {
   display: none;
 }
-
 </style>
