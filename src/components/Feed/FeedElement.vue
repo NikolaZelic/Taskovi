@@ -5,7 +5,7 @@
     <div id="text" class="displayNone">Drop to upload</div>
 
     <div class="search-inputs">
-      <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
+      <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
         <b-form-checkbox v-model="searchImportant">Important</b-form-checkbox>
@@ -170,7 +170,12 @@ export default {
     },
     newStep(newVal, old) {
       if (this.stepErr && newVal.length > 0) this.stepErr = false;
-    }
+    },
+    searchText(newVal, oldVal){
+      console.log(newVal);
+      if( oldVal.length>0 && newVal.length==0 )
+        this.readeFeeds();
+    },
   },
   methods: {
     dragAndDrop() {
