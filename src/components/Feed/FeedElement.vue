@@ -5,7 +5,7 @@
     <div id="text" class="displayNone">Drop to upload</div>
 
     <div class="search-inputs">
-      <input @blur="textInputBlur" v-model="searchText" type='text' placeholder="Search Feed" class='search' />
+      <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
         <b-form-checkbox v-model="searchImportant">Important</b-form-checkbox>
@@ -153,7 +153,8 @@ export default {
           pro_id: el.pro_id,
           pro_name: el.pro_name,
           tsk_id: el.tsk_id,
-          tsk_title: el.tsk_title
+          tsk_title: el.tsk_title,
+          usrimg: el.usrimg,
         };
       });
     }
@@ -169,7 +170,12 @@ export default {
     },
     newStep(newVal, old) {
       if (this.stepErr && newVal.length > 0) this.stepErr = false;
-    }
+    },
+    searchText(newVal, oldVal){
+      console.log(newVal);
+      if( oldVal.length>0 && newVal.length==0 )
+        this.readeFeeds();
+    },
   },
   methods: {
     dragAndDrop() {
@@ -290,8 +296,8 @@ export default {
             }
           });
       }
-    }
-  },
+      }
+    },
     changeSelectedTask() {
       store.commit("clearFeed");
       this.refreshSearchParams();
@@ -523,14 +529,16 @@ export default {
     handleScroll(e) {
       if (!this.global) this.processStepSelection();
       if (
-        parseInt(!this.dataFromBegining && e.target.offsetHeight) +
+        parseInt(e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
+        // console.log("it's down now");
         this.addDown();
         return;
       }
       if (e.target.scrollTop === 0) {
+        // console.log("it's on the top");
         this.addUp();
       }
     },
