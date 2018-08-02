@@ -578,7 +578,7 @@ export default {
       if (a !== undefined) a.scrollIntoView(true);
     },
     scrollToBegining() {
-      console.log('scrollTOBegining');
+      // console.log('scrollTOBegining');
       var a = document.querySelectorAll(".selector");
       if (a === undefined || a === null || a.length == 0) return;
       if (a.length == 0) a = a[0];
@@ -586,7 +586,7 @@ export default {
         a = a[a.length - 1];
       }
       // console.log(a);
-      if (a !== undefined) a.scrollIntoView({block: "start"});
+      if (a !== undefined) a.scrollIntoView(false);
     },
     scrollAfterUp(responseLength) {
       // console.log('scroll after up');
