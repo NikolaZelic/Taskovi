@@ -51,7 +51,7 @@
               <span class='fas fa-tags' title='Tags'></span>
               <multiselect v-model="selectedTags" id="tags-component" class='task-modal-input' label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
                 @change="somethingChanged = true" :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true"
+                :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :taggable="true"
                 :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
               </multiselect>
             </div>
