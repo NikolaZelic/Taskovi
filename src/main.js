@@ -25,6 +25,8 @@ Vue.mixin({
   methods: {
     localToUTC(date){
       let offset = new Date().getTimezoneOffset();
+      if(date === null || date === undefined || date === "")
+        return undefined;
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
     },
 
@@ -34,6 +36,9 @@ Vue.mixin({
         offset = offset.replace("-", "+");
       else if(offset.startsWith('+'))
         offset = offset.replace("+", "-");
+
+      if(date === null || date === undefined || date === "")
+        return undefined;
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm');
     },
 
@@ -43,6 +48,9 @@ Vue.mixin({
         offset = offset.replace("-", "+");
       else if(offset.startsWith('+'))
         offset = offset.replace("+", "-");
+
+      if(date === null || date === undefined || date === "")
+        return undefined;    
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
     }
   }
