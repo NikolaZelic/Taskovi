@@ -73,7 +73,6 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import axios from "axios";
 
-
 export default {
   components: {
     FeedMessage,
@@ -131,7 +130,7 @@ export default {
       pro_id: state => state.sidebarItemSelection[0]
     }),
     ...mapGetters({
-      taskid: "selectedItemID",
+      taskid: "selectedItemID"
     }),
     searchOn() {
       if (this.searchType !== "all") return true;
@@ -139,21 +138,21 @@ export default {
       if (this.searchText !== null && this.searchText.length > 0) return true;
       return false;
     },
-    messages(){
-      return this.$store.state.modulefeed.messages.map( el =>{
+    messages() {
+      return this.$store.state.modulefeed.messages.map(el => {
         return {
-          "fed_important": el.fed_important,
-          "fed_islabel": el.fed_islabel,
-          "taskID": el.taskID,
-          "fed_id": el.fed_id,
-          "usrimg": el.usrimg,
-          "usr_name": el.usr_name,
-          "usr_surname": el.usr_surname,
-          "fed_text": el.fed_text,
-          "fed_time": this.utcToLocal(el.fed_time),
-          "fed_type": el.fed_type,
-        }
-      } );
+          fed_important: el.fed_important,
+          fed_islabel: el.fed_islabel,
+          taskID: el.taskID,
+          fed_id: el.fed_id,
+          usrimg: el.usrimg,
+          usr_name: el.usr_name,
+          usr_surname: el.usr_surname,
+          fed_text: el.fed_text,
+          fed_time: this.utcToLocal(el.fed_time),
+          fed_type: el.fed_type
+        };
+      });
     }
     // timestamps(){
     //   return this.messages.filter( el => el.fed_islabel==1 );
@@ -258,29 +257,34 @@ export default {
 
       function uploadFile(file, i) {
         var task = store.state.sidebarItemSelection[1];
-        var url = 'http://695u121.mars-t.mars-hosting.com/mngapi/tasks/' + task + '/feeds';
+        var url =
+          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+          task +
+          "/feeds";
         var formData = new FormData();
 
-        formData.append('file', file)
-        formData.append('sid', localStorage.sid)
-        formData.append('type', 'file')
+        formData.append("file", file);
+        formData.append("sid", localStorage.sid);
+        formData.append("type", "file");
 
-        axios.post(url, formData, {
-          headers: { "X-Requested-With": "XMLHttpRequest" }
-        }).then(response => {
-          if(response.data.status === 'OK'){
-            store.commit("modalStatus", {
-              ok: true,
-              message: "Successfully sent attachment."
-            });
-            self.readeFeeds();
-          }else{
-            store.commit("modalStatus", {
-              ok: false,
-              message: "Something went wrong. Try again."
-            });
-          }
-        })
+        axios
+          .post(url, formData, {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+          })
+          .then(response => {
+            if (response.data.status === "OK") {
+              store.commit("modalStatus", {
+                ok: true,
+                message: "Successfully sent attachment."
+              });
+              self.readeFeeds();
+            } else {
+              store.commit("modalStatus", {
+                ok: false,
+                message: "Something went wrong. Try again."
+              });
+            }
+          });
       }
     },
     changeSelectedTask() {
@@ -409,10 +413,8 @@ export default {
           return;
         }
         // console.log(this.messages.length);
-        if(this.messages.length>0)
-          this.addDown(true);
-        else
-          this.readeFeeds();
+        if (this.messages.length > 0) this.addDown(true);
+        else this.readeFeeds();
       });
       // setTimeout(() => {
       //   var a = document.querySelectorAll(".selector");
@@ -857,7 +859,7 @@ export default {
   font-size: 16px;
   resize: none;
   border-radius: 5px;
-  box-shadow: inset 0 3px 10px 0 #00000026;
+  box-shadow: inset 0 1px 10px 0 #00000026;
   height: 60px;
   transition: height 0.2s;
   transition-timing-function: ease;

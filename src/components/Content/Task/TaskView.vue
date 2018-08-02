@@ -68,8 +68,6 @@
               <td>{{this.taskGeneralInfo.sta_text}}</td>
             </tr>
 
-
-
             <tr>
               <td class="align-top">Working:</td>
               <td>
@@ -87,7 +85,6 @@
                         <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.name}}
                           <small> -- {{user.usr_email}}</small>
                         </h5>
-                        <!-- <span>Worked on this task for {{user.timespent}} minutes</span> -->
                       </div>
                     </div>
 
@@ -98,12 +95,9 @@
               </td>
             </tr>
 
-
           </table>
-
           <div class="text-right">
-
-            <div class="dropdown save">
+            <div class="dropdown save" v-if="taskGeneralInfo.can_mark === 1">
               <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" v-if="taskStatusBtn">
                 Mark this task as...
               </button>
@@ -114,92 +108,15 @@
               </div>
             </div>
 
-            <button type="button" class="btn btn-success save" @click="editTaskBtn()">
+            <button v-if="taskGeneralInfo.can_edit === 1" type="button" class="btn btn-success save" @click="editTaskBtn()">
               Edit
               <span class="fa fa-chevron-right"></span>
             </button>
-
-
-
           </div>
-
-
         </div>
-
-        <!-- <div class="card-body">
-          <p>Project: {{this.taskGeneralInfo.pro_name}}</p>
-          <p>Description: {{this.taskGeneralInfo.description}}</p>
-          <p>Created by: {{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</p>
-          <p>Time created: {{$moment(this.taskGeneralInfo.tsk_timecreated).format('YYYY-MM-DD HH:mm')}}</p>
-          <p>Deadline: {{$moment(this.taskGeneralInfo.tsk_deadline).format('YYYY-MM-DD HH:mm')}}</p>
-          <p>Status: {{this.taskGeneralInfo.sta_text}}</p>  </div> -->
-
       </div>
 
-      <!-- TAB Steps -->
-      <!--<div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.steps">
-
-
-        <div class="card-body">
-          <table class="table table-borderless table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Go to messages</th>
-                <th scope="col">Task Events</th>
-                <th scope="col">Title</th>
-                <th scope="col">Deadline</th>
-
-                <th scope="col">Working</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr v-for="(task, index) in taskInfo" :key='index' @click='getStepInfo(task.tsk_id); stepInfoToggle(); tabs.steps = false'>
-                <td @click.stop='jumpToFeed(task)' title="Go to messages for this step">
-                  <i class="far fa-hand-point-right link-feed"></i>
-                  <i class="far fa-envelope"></i>
-                </td>
-
-                <td :title="task.sta_text">
-                  <i class="fas fa-check-circle text-success" v-if="task.sta_text === 'Completed'"></i>
-                  <i class="far fa-hourglass text-info" v-if="task.sta_text === 'In Progress' || task.sta_text === 'Assigned'"></i>
-                  <i class="fas fa-exclamation-triangle text-danger" v-if="task.sta_text === 'Failed' || task.sta_text === 'Rejected' || task.sta_text === 'Cancelled'"></i>
-                </td>
-
-                <td>
-                  {{ task.tsk_title}}
-                </td>
-
-                <td>
-                  {{ task.tsk_deadline }}
-                </td>
-
-
-                <td>
-                  <span v-if="task.you_are_worker === 1">
-                    <i class="fas fa-user-cog" title="You are working on this step"></i> + {{task.usrworking - 1}} </span>
-                  <span v-else>{{task.usrworking}}</span>
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-
-          <button type="button" class="btn btn-primary save" @click="itemAddStep" :disabled="inProgressExists">
-            <span class="fa fa-plus"></span> New Step...</button>
-        </div>
-
-      </div>-->
-
-      <!-- TAB Feeds -->
-      <!-- <div class="card chat-box" :class='{darkTheme: darkTheme}' v-if="tabs.messages"> -->
       <feed-element ref='feed' :class='{darkTheme: darkTheme}' v-if="tabs.messages" />
-      <!-- </div> -->
-
-
-      <!-- STEP data -->
-
-      <!-- Showing data about selected step -->
       <div class="card mt-5" :class='{darkTheme: darkTheme}' v-if="stepInfo.length > 0 &&  stepInfoShow">
 
         <div class="card-header" :class='{darkTheme: darkTheme}'>

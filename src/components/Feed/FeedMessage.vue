@@ -1,13 +1,13 @@
 <template>
-  <!-- mojaPoruka()?'right-con': -->
-  <div class='cont selector left-con' :class="{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)}" :id="mess.fed_id">
-    <!-- <div class='unseen-feed' v-if='mess.fed_type!="header" && global && mess.unseen==1' ></div> -->
+  <div class='cont selector left-con' :class="[{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)},'msg-'+this.mess.fed_type]"
+    :id="mess.fed_id">
     <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
       <i class="fas fa-plus"></i>
     </div>
     <div class='img-placeholder'>
 
-      <avatar v-if='this.mess.fed_type==="message"' :username="name+ ' '+surname" :src="getAvatar" :rounded="false" :size="40" class='picture'></avatar>
+      <avatar v-if='this.mess.fed_type==="message"' :username="mess.usr_name +' '+ mess.usr_surname" :src="getAvatar" :rounded="false"
+        :size="40" class='picture'></avatar>
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
@@ -19,9 +19,10 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}'>{{mess.fed_text}} </pre>
-      <div class="attachment"></div>
-      <a target="_blank" :href='showFile()' class="attach show" v-if="mess.fed_type==='attachment'&&!isImage()">Show file</a>
+      <pre class="message" width="100">
+         <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
+         <template v-if="!(mess.fed_type==='attachment'&&!isImage())">{{mess.fed_text}}</template> 
+        </pre>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1'></i>
@@ -58,12 +59,6 @@ export default {
     ...mapGetters({
       taskid: "selectedItemID"
     }),
-    name() {
-      return this.user.name;
-    },
-    surname() {
-      return this.user.surname;
-    },
     isImportant() {
       return this.mess.fed_important;
     },
@@ -71,21 +66,11 @@ export default {
       let netIcon = "";
       if (this.mess.usrimg !== undefined && this.mess.usrimg !== null) {
         netIcon = baseURL + this.mess.usrimg + "?sid=" + localStorage.sid;
-        this.checkAvatarIsValid(netIcon).then(r => {
-          let k = r.data["unset key"];
-          if (k !== undefined && k === null) {
-            netIcon = "";
-          }
-        });
       }
       return netIcon;
     }
   },
   methods: {
-    checkAvatarIsValid(netIcon) {
-      return axios.get(netIcon);
-    },
-
     selectStep() {
       store.commit("setSelectedStep", this.mess);
     },
@@ -130,8 +115,6 @@ export default {
       var id = document.getElementById("all");
       if (id !== undefined && id !== null) id.scrollTop = id.scrollHeight;
     }
-    // this.getAvatar();
-    // console.log('WHEN')
   }
 };
 </script>
@@ -146,7 +129,7 @@ export default {
   color: #007bff;
   cursor: pointer;
   margin: 15px;
-  align-self: flex-start;
+  align-self: center;
 }
 
 pre {
@@ -300,7 +283,7 @@ pre {
   border-left: 6px solid #ecec14;
 }
 
-.status {
+.msg-status pre {
   font-size: 70%;
 }
 
