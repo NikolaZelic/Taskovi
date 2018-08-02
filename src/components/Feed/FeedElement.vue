@@ -291,8 +291,8 @@ export default {
             }
           });
       }
-    }
-  },
+      }
+    },
     changeSelectedTask() {
       store.commit("clearFeed");
       this.refreshSearchParams();
@@ -524,14 +524,16 @@ export default {
     handleScroll(e) {
       if (!this.global) this.processStepSelection();
       if (
-        parseInt(!this.dataFromBegining && e.target.offsetHeight) +
+        parseInt(e.target.offsetHeight) +
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
+        console.log("it's down now");
         this.addDown();
         return;
       }
       if (e.target.scrollTop === 0) {
+        console.log("it's on the top");
         this.addUp();
       }
     },
