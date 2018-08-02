@@ -12,7 +12,7 @@ export default {
     return {
       title: undefined,
       description: undefined,
-      selectedPriorety: undefined,
+      selectedPriority: undefined,
       selectedTags: [],
       selectedUSers: [],
       task: true,
@@ -69,7 +69,7 @@ export default {
         this.deadline = undefined;
       }
 
-        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriorety)
+        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriority)
         .then(response => {
           if (response.data.status === "OK") {
 
@@ -99,7 +99,7 @@ export default {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
           this.deadline = this.utcToLocal(response.data.data[0].tsk_deadline);
-          this.selectedPriorety = response.data.data[0].pri_id;
+          this.selectedPriority = "" + response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
         });

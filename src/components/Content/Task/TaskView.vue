@@ -40,6 +40,13 @@
               </td>
             </tr>
 
+            <tr>
+              <td>Priority:</td>
+              <td>
+                {{this.taskGeneralInfo.pri_text}}
+              </td>
+            </tr>
+
             <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
             <tr>
               <td>Created by:</td>
