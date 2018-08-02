@@ -386,8 +386,6 @@ export default {
 
   data() {
     return {
-      // youWorkedFor: 0,
-      // inProgress: false,
       tabParam: undefined,
       editFields: false,
 
@@ -398,23 +396,15 @@ export default {
       },
 
       taskGeneralInfo: [],
-
       stepInfoShow: false,
       stepEditShow: false,
-
       showInactive: false,
       inactiveUsers: [],
-
-      // valueTag: [],
-      // optionsTag: [],
-
-      // editDescription: false,
 
       edit: {
         name: undefined,
         description: undefined,
         status: undefined,
-        // priority: undefined,
         deadline: undefined,
         estTime: undefined,
         timespent: undefined,
@@ -579,48 +569,6 @@ export default {
           }
         });
     },
-
-    // saveDescription() {
-    //   console.log("saved desc edit");
-    // },
-
-    // saveChanges() {
-    //   axios
-    //     .put(
-    //       "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/steps/:stepid",
-    //       {
-    //         tasid: this.selectedItemID,
-    //         stepid: this.stepInfo[0].tsk_id,
-    //         sid: localStorage.sid,
-    //
-    //         title: this.edit.name,
-    //         description: this.edit.description,
-    //         deadline: this.edit.deadline,
-    //         // priority: this.edit.priority,
-    //         status: this.edit.status,
-    //         progress: this.edit.progress,
-    //         timespent: this.edit.timespent,
-    //         estimateddate: this.edit.estTime,
-    //         usersarray: this.userStringArray
-    //         // tagarray: this.tagStringArray
-    //       }
-    //     )
-    //     .then(response => {
-    //       this.getTaskInfo(this.selectedItemID);
-    //       this.getStepInfo(this.stepInfo[0].tsk_id);
-    //
-    //       (this.edit.name = undefined),
-    //         (this.edit.description = undefined),
-    //         (this.edit.deadline = undefined),
-    //         // (this.edit.priority = undefined),
-    //         (this.edit.status = undefined),
-    //         (this.edit.progress = undefined),
-    //         (this.edit.timespent = undefined),
-    //         (this.edit.estTime = undefined);
-    //
-    //       this.reportWritingToDB(response);
-    //     });
-    // },
 
     reportWritingToDB(result) {
       if (result.data.status === "OK") {

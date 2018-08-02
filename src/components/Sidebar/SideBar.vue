@@ -117,7 +117,7 @@
           :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
-            <span class='td-bold'>{{data.item.title}} </span>
+            <span class='td-bold'>{{max50Char(data.item.title)}}</span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
               title="Edit Item"></span>
           </template>
@@ -199,9 +199,9 @@
           </template>
 
           <template slot="priority" slot-scope="data">
-            <span class='badge' :class='{"badge-danger": data.item.priority===1,
+            <span class='badge' :class='{"badge-danger": data.item.priority===3,
             "badge-warning": data.item.priority===2,
-            "badge-success": data.item.priority===3}' v-if='data.item.priority !== 0'>{{convertPriority(data.item.priority)}}</span>
+            "badge-success": data.item.priority===1}' v-if='data.item.priority !== null'>{{convertPriority(data.item.priority)}}</span>
           </template>
 
           <!-- FEEDS -->
@@ -472,6 +472,12 @@ export default {
     }
   },
   methods: {
+    max50Char(val){
+      if(val.length > 50){
+        return val.substring(0,50) + '...'
+      }
+      return val
+    },
     showGlobalFeed() {
       if (this.globalFeed) {
         store.commit("setRefreshGlobalFeed", true);
@@ -660,11 +666,11 @@ export default {
     convertPriority(priNum) {
       switch (priNum) {
         case 1:
-          return "High";
+          return "Low";
         case 2:
           return "Med";
         case 3:
-          return "Low";
+          return "High";
       }
       return "";
     },

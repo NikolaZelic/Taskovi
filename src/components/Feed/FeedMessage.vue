@@ -1,10 +1,10 @@
 <template>
   <div class='cont selector left-con' :class="[{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)},'msg-'+this.mess.fed_type]"
     :id="mess.fed_id">
-    <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
+    <div class='new-step' v-if='!global&&mess.fed_islabel!==1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
       <i class="fas fa-plus"></i>
     </div>
-    <div class='img-placeholder'>
+    <div class='img-placeholder' v-if='mess.fed_islabel!==1'>
 
       <avatar v-if='this.mess.fed_type==="message"' :username="mess.usr_name +' '+ mess.usr_surname" :src="getAvatar" :rounded="false"
         :size="40" class='avatar'></avatar>
@@ -14,10 +14,10 @@
 
     <div class="message-body" :class='{"header-type": mess.fed_islabel==1}'>
       <div class="message-body-header">
-        <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
+        <span class="name" v-if='mess.fed_islabel!==1'>{{mess.usr_name +' '+ mess.usr_surname}}</span>
         <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
-        <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
+        <span class='time-right' v-if='mess.fed_islabel!==1'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
       <pre class="message" width="100"><a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a><span v-else>{{mess.fed_text}}</span></pre>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
@@ -200,7 +200,7 @@ pre {
 #attachment-image {
   height: initial;
   /* max-height: 250px; */
-  max-width: 400px;
+  max-width: 60%;
   border-radius: 5px;
   cursor: pointer;
 }

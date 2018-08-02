@@ -12,7 +12,6 @@ export default {
     return {
       title: undefined,
       description: undefined,
-      // deadline: undefined,
       selectedPriorety: undefined,
       selectedTags: [],
       selectedUSers: [],
@@ -69,7 +68,6 @@ export default {
         api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriorety)
         .then(response => {
           if (response.data.status === "OK") {
-            // console.log("tasks/:tasid poziv iz taskEdita");
 
             store.dispatch("getTasks", {
               index: 1,

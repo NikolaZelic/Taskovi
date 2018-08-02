@@ -359,6 +359,11 @@ export default {
         }
         if (result.data.data !== undefined && result.data.data.length > 0) {
           this.timestamps = result.data.data;
+          for (let i = 0; i < this.timestamps.length; i++) {
+            this.timestamps[i].fed_time = this.utcToLocalSeconds(
+              this.timestamps[i].fed_time
+            );
+          }
           this.deselectTimestemps();
         }
       });
