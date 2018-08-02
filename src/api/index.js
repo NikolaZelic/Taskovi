@@ -11,28 +11,30 @@ import router from '../router/index.js';
 export const api = {
 
   //#region Zelic
-  checkNewwMessages(tsk_id){
-    return axios.get('tasks/'+tsk_id+'/unseenfeeds',{
+  checkNewwMessages(tsk_id) {
+    return axios.get('tasks/' + tsk_id + '/unseenfeeds', {
       params: {
         sid: window.localStorage.sid,
       }
     });
   },
 
-  searchStepFeeds(tsk_id, stp_time_created, type){
-    return axios.get('tasks/'+tsk_id+'/feeds',  {params: {
-      sid: window.localStorage.sid,
-      time: stp_time_created,
-      pravac: "start",
-      type: type,
-    }});
+  searchStepFeeds(tsk_id, stp_time_created, type) {
+    return axios.get('tasks/' + tsk_id + '/feeds', {
+      params: {
+        sid: window.localStorage.sid,
+        time: stp_time_created,
+        pravac: "start",
+        type: type,
+      }
+    });
   },
 
-  setFeedImportant(fed_id, important){
-    return axios.post('feeds/'+fed_id, {
+  setFeedImportant(fed_id, important) {
+    return axios.post('feeds/' + fed_id, {
       important: important,
       sid: window.localStorage.sid,
-    } );
+    });
   },
   createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags) {
     return axios.post('tasks', {
@@ -63,8 +65,8 @@ export const api = {
       priority: priorety,
     });
   },
-  createTimestamps(tsk_id, time_created, title ){
-    return axios.post( 'tasks/'+tsk_id+'/feeds', {
+  createTimestamps(tsk_id, time_created, title) {
+    return axios.post('tasks/' + tsk_id + '/feeds', {
       sid: window.localStorage.sid,
       timecreated: time_created,
       text: title,
@@ -109,10 +111,12 @@ export const api = {
   //#endregion
   //#region Feeds
 
-  readeTimestemps(tsk_id){
-    return axios.get('tasks/'+tsk_id+"/labels", {params: {
-      sid: window.localStorage.sid,
-    }});
+  readeTimestemps(tsk_id) {
+    return axios.get('tasks/' + tsk_id + "/labels", {
+      params: {
+        sid: window.localStorage.sid,
+      }
+    });
   },
   readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time) {
     return axios.get('/tasks/' + tasid + '/feeds', {
@@ -127,15 +131,17 @@ export const api = {
       }
     });
   },
-  readeGloablFeeds(offset, type, searchingstring, fed_important){
-    return axios.get('users/feeds', {params: {
-      sid: window.localStorage.sid,
-      type: type,
-      searchstring: searchingstring,
-      fed_important: fed_important,
-      offset: offset,
-      count: false,
-    }});
+  readeGloablFeeds(offset, type, searchingstring, fed_important) {
+    return axios.get('users/feeds', {
+      params: {
+        sid: window.localStorage.sid,
+        type: type,
+        searchstring: searchingstring,
+        fed_important: fed_important,
+        offset: offset,
+        count: false,
+      }
+    });
   },
   postMessage(tasid, mess) {
     // var msg = store.state.messages;
@@ -171,7 +177,8 @@ export const api = {
           surname: localStorage.surname,
           email: localStorage.email
         });
-        router.push('/');
+        if (window.location.pathname === '/auth')
+          router.push('/');
       } else {
         router.push('/auth');
       }
@@ -235,7 +242,7 @@ export const api = {
 
 
   //Pocetak Milosevih API-ja
-  editTask(sid, tasid, title, description, deadline, tagarray, userarray, priority){
+  editTask(sid, tasid, title, description, deadline, tagarray, userarray, priority) {
     return axios.put("tasks/:tasid", {
       sid: sid,
       tasid: tasid,
@@ -248,7 +255,7 @@ export const api = {
     });
   },
 
-  loadTaskInfo(sid, tasid){
+  loadTaskInfo(sid, tasid) {
     return axios.get("tasks/:tasid", {
       params: {
         sid: sid,
@@ -257,16 +264,16 @@ export const api = {
     })
   },
 
-  loadAllProjectUsers(sid, projectID){
+  loadAllProjectUsers(sid, projectID) {
     return axios.get("projects/:proid", {
-        params: {
-          proid: projectID,
-          sid: sid
-        }
-      })
+      params: {
+        proid: projectID,
+        sid: sid
+      }
+    })
   },
 
-  loadTags(proid, searchstring, sid){
+  loadTags(proid, searchstring, sid) {
     return axios.get("projects/:proid/tags", {
       params: {
         proid: proid,
