@@ -146,12 +146,16 @@ export default {
           "fed_islabel": el.fed_islabel,
           "taskID": el.taskID,
           "fed_id": el.fed_id,
-          "usrimg": el.usrimg,
+          "unseen": el.unseen,
           "usr_name": el.usr_name,
           "usr_surname": el.usr_surname,
           "fed_text": el.fed_text,
-          "fed_time": this.utcToLocal(el.fed_time),
+          "fed_time": this.utcToLocalSeconds(el.fed_time),
           "fed_type": el.fed_type,
+          "pro_id": el.pro_id,
+          "pro_name": el.pro_name,
+          "tsk_id": el.tsk_id,
+          "tsk_title": el.tsk_title
         }
       } );
     }
@@ -307,7 +311,7 @@ export default {
       var time = this.selectedStep.fed_time;
       time = this.$moment(time).subtract(-1, "secounds");
       time.seconds(time.seconds() - 1);
-      time = this.localToUTC(time);
+      time = this.localToUTCSeconds(time);
       // console.log(time);
       api
         .createTimestamps(

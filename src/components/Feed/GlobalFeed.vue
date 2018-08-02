@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     readeFeeds() {
-      console.log('reade feeds');
+      // console.log('reade feeds');
       // console.log(this.notifCount);
       this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
