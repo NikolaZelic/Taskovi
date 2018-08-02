@@ -60,7 +60,7 @@
             <div v-show='task' class="form-group">
               <span class='fas fa-exclamation-circle' title='Priority'></span>
               <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' class='task-modal-input' @change="somethingChanged = true">
-                <option value=null>Priority: None</option>
+                <!-- <option value=null>Priority: None</option> -->
                 <option value='1'>Low</option>
                 <option value='2'>Medium</option>
                 <option value='3'>High</option>
@@ -232,12 +232,13 @@ export default {
       // Dodavanje novog taga
       var tag = this.tagSearchStr;
       if (
-        this.suggestedTags.length > 0 ||
+        // this.suggestedTags.length > 0 ||
         tag == undefined ||
         tag == null ||
         tag.length == 0
       )
         return;
+
       for (var i in this.selectedTags)
         if (this.selectedTags[i].text == tag) return;
       this.selectedTags.push({
