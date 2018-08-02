@@ -531,6 +531,15 @@ export default {
     resetTaskView() {
       store.commit("itemActionReset");
       store.commit("resetTaskView");
+      store.dispatch("getTasks", {
+        index: 1,
+        pro_id: store.state.sidebarItemSelection[0],
+        created: false,
+        assigned: false,
+        archived: false,
+        tagarray: []
+      });
+
     },
 
     removeUser(removedOption) {
