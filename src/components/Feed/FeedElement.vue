@@ -368,6 +368,9 @@ export default {
         }
         if (result.data.data !== undefined && result.data.data.length > 0) {
           this.timestamps = result.data.data;
+          for(let i=0; i<this.timestamps.length; i++){
+            this.timestamps[i].fed_time = this.utcToLocalSeconds(this.timestamps[i].fed_time);
+          }
           this.deselectTimestemps();
         }
       });
@@ -568,6 +571,7 @@ export default {
       for (var i in messages) {
         var message = messages[i];
         if (this.isInViewport(message)) {
+          // console.log(message);
           this.selectTimestemp(this.messages[i].fed_time);
           return;
         }
