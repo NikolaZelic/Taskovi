@@ -64,9 +64,10 @@
 
       <div class="flex-form-action">
 
-        <button id="addItem" class="btn btn-block btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> Add
-          <span>{{tabs[getTabIndex].single}}</span>
+        <button id="addItem" class="btn btn-success" @click="addItemButton">
+          <span class="fas fa-plus-circle"></span> 
+          <!-- Add -->
+          <!-- <span>{{tabs[getTabIndex].single}}</span> -->
         </button>
 
         <!-- <div class="form-filter"> -->
