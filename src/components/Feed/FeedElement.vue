@@ -528,12 +528,12 @@ export default {
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
-        console.log("it's down now");
+        // console.log("it's down now");
         this.addDown();
         return;
       }
       if (e.target.scrollTop === 0) {
-        console.log("it's on the top");
+        // console.log("it's on the top");
         this.addUp();
       }
     },
