@@ -572,10 +572,10 @@ export default {
           return;
         }
       }
-      console.log("Nista nije selektovano");
+      // console.log("Nista nije selektovano");
     },
     selectTimestemp(time) {
-      console.log("selectTimestemp");
+      // console.log("selectTimestemp");
       this.deselectTimestemps();
       time = this.$moment(time);
       var length = this.timestamps.length;

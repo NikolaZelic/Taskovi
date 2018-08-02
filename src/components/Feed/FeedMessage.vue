@@ -5,19 +5,19 @@
     <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
       <i class="fas fa-plus"></i>
     </div>
-    <div class='img-placeholder'>
+    <div class='img-placeholder' v-if='this.mess.fed_type==="message" && mess.fed_islabel==0' >
 
-      <avatar v-if='this.mess.fed_type==="message"' :username="name+ ' '+surname" :src="getAvatar" :rounded="false" :size="40" class='picture'></avatar>
+      <avatar :username="name+ ' '+surname" :src="getAvatar" :rounded="false" :size="40" class='picture'></avatar>
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
     <div class="message-body" :class='{"header-type": mess.fed_islabel==1}'>
       <div class="message-body-header">
-        <span class="name">{{mess.usr_name +' '+ mess.usr_surname}}</span>
+        <span class="name" v-if='mess.fed_islabel==0' >{{mess.usr_name +' '+ mess.usr_surname}}</span>
         <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
-        <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
+        <span class='time-right' v-if='mess.fed_islabel==0'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
       <pre class="message" width="100" :class='{"status": mess.fed_type=="status"}'>{{mess.fed_text}} </pre>
       <div class="attachment"></div>
