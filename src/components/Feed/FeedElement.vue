@@ -153,7 +153,8 @@ export default {
           pro_id: el.pro_id,
           pro_name: el.pro_name,
           tsk_id: el.tsk_id,
-          tsk_title: el.tsk_title
+          tsk_title: el.tsk_title,
+          usrimg: el.usrimg,
         };
       });
     }
