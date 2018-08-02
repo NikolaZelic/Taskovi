@@ -61,6 +61,7 @@
   color: #999 !important;
 }
 
+.maincontent.darkTheme input:hover
 .maincontent.darkTheme textarea:hover,
 .darkTheme .multiselect__tags:hover {
   border: 1px solid var(--ac-color) !important;

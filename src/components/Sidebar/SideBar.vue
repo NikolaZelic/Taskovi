@@ -181,7 +181,7 @@
           <!-- TASK TAGS -->
           <template slot="tags" slot-scope="data">
             <span class='badge badge-orange' v-if="data.item.tags.length > 0">{{data.item.tags[0].tag_text}}</span>
-              <span v-if='data.item.tags.length > 1'>...</span>
+              <span v-if='data.item.tags.length > 1'> + {{data.item.tags.length-1}}</span>
           </template>
 
           <!-- TASK STATUS -->
