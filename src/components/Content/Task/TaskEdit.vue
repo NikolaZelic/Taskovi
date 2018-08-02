@@ -12,7 +12,7 @@ export default {
     return {
       title: undefined,
       description: undefined,
-      deadline: undefined,
+      // deadline: undefined,
       selectedPriorety: undefined,
       selectedTags: [],
       selectedUSers: [],
@@ -60,8 +60,10 @@ export default {
       this.waitNet = true;
       var userarray = this.selectedUSers.map( e => e.id );
 
-      if(this.deadline !== null){
+      if(this.deadline !== "" || this.deadline !== null || this.deadline !== undefined){
         this.deadline = this.localToUTC(this.deadline);
+      }else{
+        this.deadline = undefined;
       }
 
         api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriorety)

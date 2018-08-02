@@ -406,15 +406,17 @@ export default {
       var tagarray = this.selectedTags.map(e => e.text);
       var userarray = this.selectedUSers.map(e => e.id);
 
-      if(this.deadline !== null){
+      if(this.deadline !== "" || this.deadline !== null || this.deadline !== undefined){
         this.deadline = this.localToUTC(this.deadline);
+      }else{
+        this.deadline = undefined;
       }
 
       api
         .createTask(
           this.title,
           this.description,
-          this.deadline,
+          this.localToUTC(this.deadline),
           tagarray,
           userarray,
           this.selectedPriority,

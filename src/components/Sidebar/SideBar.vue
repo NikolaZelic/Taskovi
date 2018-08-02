@@ -1195,6 +1195,7 @@ label {
 }
 
 .tab-container .count {
+  color: black !important;
   position: absolute;
   top: 8px;
   left: 37px;
