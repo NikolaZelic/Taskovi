@@ -381,14 +381,16 @@ export default {
           fed_important: this.searchImportant
         })
         .then(() => {
-          this.scrollToBegining();
+          setTimeout( ()=>{
+            this.scrollToBegining();
+          }, 250 ) ;
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
           if (this.firstLoad) {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
           }
-          this.processStepSelection();
+          // this.processStepSelection();
         })
         .catch(err => {
           this.loadingData = false;
@@ -569,21 +571,25 @@ export default {
       }
     },
     scrollTOTop() {
+      // console.log('scroll to top');
       var a = document.querySelectorAll(".selector");
       if (a === undefined || a === null || a.length == 0) return;
       a = a[0];
       if (a !== undefined) a.scrollIntoView(true);
     },
     scrollToBegining() {
+      console.log('scrollTOBegining');
       var a = document.querySelectorAll(".selector");
       if (a === undefined || a === null || a.length == 0) return;
       if (a.length == 0) a = a[0];
       else {
         a = a[a.length - 1];
       }
-      if (a !== undefined) a.scrollIntoView(true);
+      // console.log(a);
+      if (a !== undefined) a.scrollIntoView({block: "start"});
     },
     scrollAfterUp(responseLength) {
+      // console.log('scroll after up');
       var a = document.querySelectorAll(".selector");
       a = a[responseLength];
       a.scrollIntoView(true);
