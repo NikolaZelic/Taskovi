@@ -172,7 +172,7 @@ export default {
       if (this.stepErr && newVal.length > 0) this.stepErr = false;
     },
     searchText(newVal, oldVal){
-      console.log(newVal);
+      // console.log(newVal);
       if( oldVal.length>0 && newVal.length==0 )
         this.readeFeeds();
     },
@@ -378,6 +378,7 @@ export default {
       });
     },
     readeFeeds() {
+      // console.log('reade feeds');
       store.commit("clearFeed");
       this.loadingData = true;
       store
@@ -415,6 +416,10 @@ export default {
       api.postMessage(this.taskid, text).then(result => {
         if (result.data.status != "OK") {
           alert("Problem during sending the message");
+          return;
+        }
+        if(this.searchType=='statuses'){
+          this.searchType = 'messages';
           return;
         }
         if (this.messages.length > 0) this.addDown(true);
@@ -465,6 +470,7 @@ export default {
         });
     },
     newMessages() {
+      // console.log('new messages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -476,6 +482,10 @@ export default {
           if (result.data.data > 0) {
             this.countNumber = 1;
             this.count = 0;
+            if(this.messages.length==0){
+              this.readeFeeds();
+              return;
+            }
             var e = document.getElementById("all-messages");
             if (
               parseInt(e.offsetHeight) + parseInt(e.scrollTop) ==
@@ -492,6 +502,7 @@ export default {
         });
     },
     addDown(scrollDown) {
+      console.log('add down');
       if (this.loadingData) return;
       var message = this.messages[this.messages.length - 1];
       if (message === undefined || message === null) return;
@@ -533,7 +544,7 @@ export default {
           parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
-        // console.log("it's down now");
+        console.log("it's down now");
         this.addDown();
         return;
       }
@@ -650,9 +661,10 @@ export default {
         this.taskid != -1
         // && !this.searchOn
       ) {
-        if (this.messages.length > 0) {
-          this.newMessages();
-        }
+        // if (this.messages.length > 0) {
+        //   this.newMessages();
+        // }
+        this.newMessages();
       }
       this.count++;
       if (this.count == 10) {
