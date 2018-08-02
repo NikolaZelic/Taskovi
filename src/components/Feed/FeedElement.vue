@@ -173,6 +173,8 @@ export default {
   },
   methods: {
     dragAndDrop() {
+      if(this.global === false){
+
       var self = this;
 
       // ************************ Drag and drop ***************** //
@@ -288,7 +290,8 @@ export default {
             }
           });
       }
-    },
+    }
+  },
     changeSelectedTask() {
       store.commit("clearFeed");
       this.refreshSearchParams();
