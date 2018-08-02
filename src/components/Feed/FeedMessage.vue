@@ -2,7 +2,7 @@
   <div class='cont selector left-con' :class="[{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)},'msg-'+this.mess.fed_type]"
     :id="mess.fed_id">
     <div class='new-step' v-if='!global&&mess.fed_islabel!==1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
-      <i class="fas fa-plus"></i>
+      <i class="fas fa-plus-circle"></i>
     </div>
     <div class='img-placeholder' v-if='mess.fed_islabel!==1'>
 
@@ -19,7 +19,10 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right' v-if='mess.fed_islabel!==1'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100"><a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a><span v-else>{{mess.fed_text}}</span></pre>
+      <span class="message" width="100">
+        <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
+        <span v-else>{{mess.fed_text}}</span>
+      </span>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1'></i>
@@ -129,16 +132,16 @@ export default {
   align-self: center;
 }
 
-pre {
+.message {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 90%;
-  font-family: "TitilliumWeb";
+  /* font-family: "TitilliumWeb"; */
 }
 
-.darkTheme pre {
+/* .darkTheme .message {
   color: var(--sec-color);
-}
+} */
 
 .important {
   color: #199686 !important;
@@ -274,7 +277,7 @@ pre {
   border-left: 6px solid #ecec14;
 }
 
-.msg-status pre {
+.msg-status .message {
   font-size: 70%;
 }
 

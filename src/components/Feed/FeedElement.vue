@@ -403,7 +403,7 @@ export default {
       }
       api.postMessage(this.taskid, text).then(result => {
         if (result.data.status != "OK") {
-          alert("Problem durning sending the message");
+          alert("Problem during sending the message");
           return;
         }
         if (this.messages.length > 0) this.addDown(true);
