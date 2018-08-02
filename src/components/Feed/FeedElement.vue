@@ -312,11 +312,7 @@ export default {
       time.seconds(time.seconds() - 1);
       time = this.localToUTC(time);
       api
-        .createTimestamps(
-          this.taskid,
-          time,
-          this.newStep
-        )
+        .createTimestamps(this.taskid, time, this.newStep)
         .then(result => {
           // this.readeSteps();
           this.readeTimestemps();
@@ -779,6 +775,7 @@ export default {
   flex: 1;
   display: flex;
   background: #fff;
+  width: 100%;
 }
 
 .feed-back .load {

@@ -7,7 +7,7 @@
     <div class='img-placeholder'>
 
       <avatar v-if='this.mess.fed_type==="message"' :username="mess.usr_name +' '+ mess.usr_surname" :src="getAvatar" :rounded="false"
-        :size="40" class='picture'></avatar>
+        :size="40" class='avatar'></avatar>
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
@@ -19,10 +19,7 @@
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
         <span class='time-right'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100">
-         <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
-         <template v-if="!(mess.fed_type==='attachment'&&!isImage())">{{mess.fed_text}}</template> 
-        </pre>
+      <pre class="message" width="100"><a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a><span v-else>{{mess.fed_text}}</span></pre>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1'></i>
@@ -189,12 +186,6 @@ pre {
   color: #6c7284;
 }
 
-.cont img {
-  height: 40px;
-  width: 40px;
-  border-radius: 5px;
-}
-
 .cont .name {
   font-size: 12px;
   font-weight: bold;
@@ -287,7 +278,7 @@ pre {
   font-size: 70%;
 }
 
-.picture {
+.avatar {
   border-radius: 5px !important;
 }
 </style>
