@@ -99,6 +99,7 @@ const mutations = {
   },
 
   resetTaskView: () => {
+    // console.log("usao u store");
     store.state.sidebarItemSelection[1] = undefined;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
