@@ -37,8 +37,6 @@
         <span class="fas fa-paperclip"></span>
       </button>
       <input type="file" id="file" @change="changeFile" style="display:none;" />
-      <!-- ATTACHMENT SYMBOL &#x1f4ce; -->
-      <!-- <div class='message-input'> -->
       <textarea v-model="feed" placeholder="New Message..." @keyup='processKeyUp'></textarea>
       <button class="btn btn-success send" v-on:click="writeMessageFeed">
         <span class="fas fa-paper-plane"></span>
@@ -65,6 +63,7 @@
 
   </div>
 </template>
+
 <script>
 import { mapState, mapGetters } from "vuex";
 import FeedMessage from "./FeedMessage";
@@ -145,18 +144,19 @@ export default {
           fed_islabel: el.fed_islabel,
           taskID: el.taskID,
           fed_id: el.fed_id,
-          usrimg: el.usrimg,
+          unseen: el.unseen,
           usr_name: el.usr_name,
           usr_surname: el.usr_surname,
           fed_text: el.fed_text,
-          fed_time: this.utcToLocal(el.fed_time),
-          fed_type: el.fed_type
+          fed_time: this.utcToLocalSeconds(el.fed_time),
+          fed_type: el.fed_type,
+          pro_id: el.pro_id,
+          pro_name: el.pro_name,
+          tsk_id: el.tsk_id,
+          tsk_title: el.tsk_title
         };
       });
     }
-    // timestamps(){
-    //   return this.messages.filter( el => el.fed_islabel==1 );
-    // },
   },
   watch: {
     searchType() {
@@ -269,7 +269,9 @@ export default {
 
         axios
           .post(url, formData, {
-            headers: { "X-Requested-With": "XMLHttpRequest" }
+            headers: {
+              "X-Requested-With": "XMLHttpRequest"
+            }
           })
           .then(response => {
             if (response.data.status === "OK") {
@@ -288,15 +290,12 @@ export default {
       }
     },
     changeSelectedTask() {
-      // console.log('changeSelectedTask');
       store.commit("clearFeed");
       this.refreshSearchParams();
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
-      // this.readeSteps();
       this.readeTimestemps();
       this.readeFeeds();
-      // store.commit("setSearchFeedParams", null);
     },
     clearStepCreateContent() {
       this.newStep = "";
@@ -312,11 +311,9 @@ export default {
       time = this.$moment(time).subtract(-1, "secounds");
       time.seconds(time.seconds() - 1);
       time = this.localToUTC(time);
-      // console.log(time);
       api
         .createTimestamps(
           this.taskid,
-          // time.format("YYYY-MM-DD HH:mm:ss"),
           time,
           this.newStep
         )
@@ -346,7 +343,6 @@ export default {
       this.dataFromBegining = 1;
       this.haveNewMessage = false;
       this.readeFeeds();
-      // store.commit("setSearchFeedParams", null);
     },
     refreshSearchParams() {
       this.searchType = "messages";
@@ -372,7 +368,6 @@ export default {
       });
     },
     readeFeeds() {
-      // console.log('Reade feeds');
       store.commit("clearFeed");
       this.loadingData = true;
       store
@@ -399,7 +394,6 @@ export default {
         });
     },
     writeMessageFeed() {
-      // console.log('Write message feed');
       if (this.taskid === -1) return;
       var text = this.feed.trim();
       if (text === "") {
@@ -407,20 +401,13 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
-        // console.log(result);
         if (result.data.status != "OK") {
           alert("Problem durning sending the message");
           return;
         }
-        // console.log(this.messages.length);
         if (this.messages.length > 0) this.addDown(true);
         else this.readeFeeds();
       });
-      // setTimeout(() => {
-      //   var a = document.querySelectorAll(".selector");
-      //   a = a[a.length - 1];
-      //   a.scrollIntoView(true);
-      // }, 500);
       this.feed = "";
     },
     uploadFile() {
@@ -429,10 +416,8 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      store.dispatch("sendAttach", {
-        type: "file",
-        file: f,
-        taskid: this.taskid
+      api.sendAttach(this.taskid, f).then(r => {
+        this.addDown(true);
       });
     },
     addUp() {
@@ -441,14 +426,6 @@ export default {
       if (this.messages == null || this.messages.length == 0) return;
 
       // Dodato zbog hedera za stepove
-      // var message = this.messages[0];
-      // var i = 0;
-      // while (message.fed_type == "header") {
-      //   message = this.messages[i++];
-      //   if (message === undefined || message === null)
-      //     // Znaci da su sve poruke do kraja zapravo hederi
-      //     return;
-      // }
       var message = this.messages[0];
 
       this.loadingData = true;
@@ -460,7 +437,7 @@ export default {
           type: this.searchType,
           searchingstring: this.searchText,
           fed_important: this.searchImportant,
-          fedtime: message.fed_time
+          fedtime: this.localToUTC(message.fed_time)
         })
         .then(response => {
           if (
@@ -476,7 +453,6 @@ export default {
         });
     },
     newMessages() {
-      // console.log('new messages');
       if (this.loadingData) return;
       api
         .checkNewwMessages(this.taskid)
@@ -504,11 +480,9 @@ export default {
         });
     },
     addDown(scrollDown) {
-      // console.log('AddDown');
       if (this.loadingData) return;
       var message = this.messages[this.messages.length - 1];
       if (message === undefined || message === null) return;
-      // console.log(message);
       api
         .readeFeeds(
           this.taskid,
@@ -517,7 +491,7 @@ export default {
           undefined,
           undefined,
           undefined,
-          message.fed_time
+          this.localToUTC(message.fed_time)
         )
         .then(result => {
           this.loadingData = false;
@@ -566,10 +540,8 @@ export default {
           return;
         }
       }
-      console.log("Nista nije selektovano");
     },
     selectTimestemp(time) {
-      console.log("selectTimestemp");
       this.deselectTimestemps();
       time = this.$moment(time);
       var length = this.timestamps.length;
@@ -631,10 +603,6 @@ export default {
     },
     isInViewport(el) {
       if (el == null) return;
-      // if( !el.hasOwnProperty('getBoundingClientRect') ){
-      //   console.log('Nema funkciju');
-      //   return;
-      // }
 
       const rect = el.getBoundingClientRect();
       const windowHeight =
@@ -648,26 +616,12 @@ export default {
     }
   },
   mounted() {
-    // console.log('mounted');
     this.dragAndDrop();
 
     if (!this.global) {
       this.readeTimestemps();
     }
     this.readeFeeds();
-
-    // if (this.searchFeedsParams === null) {
-    //   this.readeFeeds();
-    // }
-    // else {
-    //   this.dataFromBegining = 0;
-    //   var tsk_id = this.searchFeedsParams.tsk_id;
-    //   var stp_time_created = this.searchFeedsParams.stp_time_created;
-    //   this.jumpToStepFeed(tsk_id, stp_time_created);
-    // }
-
-    // ZX - POZIVA REFRESH NOTIFA
-    // store.dispatch("getFeedCount");
 
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
@@ -798,7 +752,6 @@ export default {
 }
 
 .modal-table {
-  /* background-color: var(--main-bg-color); */
   color: var(--main-color);
 }
 
@@ -828,11 +781,6 @@ export default {
   background: #fff;
 }
 
-/* .darkTheme .feed-back,
-.darkTheme .flex-chat-body {
-  background: var(--sec-bg-color);
-} */
-
 .feed-back .load {
   margin: auto;
   display: block;
@@ -845,10 +793,6 @@ export default {
   margin-bottom: 10px;
   position: relative;
 }
-
-/* .input > * {
-  margin: 0 0 0 5px;
-} */
 
 .input textarea {
   color: black;
@@ -867,26 +811,7 @@ export default {
 
 .input textarea:focus {
   height: 20vh;
-  /* height: 140px; */
 }
-
-/* .attach:after {
-  content: "";
-  position: absolute;
-  right: -11px;
-  top: -10px;
-  bottom: -10px;
-  width: 1px;
-  opacity: 0.5;
-  background-color: rgba(212, 212, 212, 0);
-  background-image: linear-gradient(
-    to top,
-    rgba(212, 212, 212, 0) 0,
-    #d4d4d4 30%,
-    #d4d4d4 70%,
-    rgba(212, 212, 212, 0) 100%
-  );
-} */
 
 .input .input button {
   position: relative;
@@ -964,6 +889,7 @@ export default {
 }
 
 /* Za drag&drop */
+
 #drop-area.highlight {
   filter: brightness(20%);
   -moz-transition: all 1s;
