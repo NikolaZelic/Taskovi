@@ -65,6 +65,7 @@
 
   </div>
 </template>
+
 <script>
 import { mapState, mapGetters } from "vuex";
 import FeedMessage from "./FeedMessage";
@@ -311,7 +312,7 @@ export default {
       var time = this.selectedStep.fed_time;
       time = this.$moment(time).subtract(-1, "secounds");
       time.seconds(time.seconds() - 1);
-      time = this.localToUTCSeconds(time);
+      time = this.localToUTC(time);
       // console.log(time);
       api
         .createTimestamps(
@@ -431,10 +432,13 @@ export default {
     },
     changeFile(e) {
       var f = e.target.files[0];
-      store.dispatch("sendAttach", {
-        type: "file",
-        file: f,
-        taskid: this.taskid
+      // store.dispatch("sendAttach", {
+      //   type: "file",
+      //   file: f,
+      //   taskid: this.taskid
+      // })
+      api.sendAttach(this.taskid, f).then( r =>{
+        this.addDown(true);
       });
     },
     addUp() {
@@ -462,7 +466,7 @@ export default {
           type: this.searchType,
           searchingstring: this.searchText,
           fed_important: this.searchImportant,
-          fedtime: message.fed_time
+          fedtime: this.localToUTC(message.fed_time)
         })
         .then(response => {
           if (
@@ -519,7 +523,7 @@ export default {
           undefined,
           undefined,
           undefined,
-          message.fed_time
+          this.localToUTC(message.fed_time)
         )
         .then(result => {
           this.loadingData = false;
