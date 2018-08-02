@@ -55,6 +55,10 @@ export default {
   },
 
   methods: {
+    fullName ({ name }) {
+      return name;
+    },
+
     createTask() {
       this.waitNet = true;
       var userarray = this.selectedUSers.map( e => e.id );

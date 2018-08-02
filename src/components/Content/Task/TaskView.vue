@@ -103,7 +103,7 @@
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" @click.prevent="taskStatus(3)">Completed</a>
-                <a class="dropdown-item" @click.prevent="taskStatus(4)">Failed</a>
+                <a class="dropdown-item" v-if="taskGeneralInfo.can_edit !== 1" @click.prevent="taskStatus(4)">Failed</a>
                 <a class="dropdown-item" v-if="taskGeneralInfo.can_edit === 1" @click.prevent="taskStatus(6)">Cancelled</a>
               </div>
             </div>
