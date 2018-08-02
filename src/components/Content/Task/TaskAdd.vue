@@ -232,12 +232,13 @@ export default {
       // Dodavanje novog taga
       var tag = this.tagSearchStr;
       if (
-        this.suggestedTags.length > 0 ||
+        // this.suggestedTags.length > 0 ||
         tag == undefined ||
         tag == null ||
         tag.length == 0
       )
         return;
+
       for (var i in this.selectedTags)
         if (this.selectedTags[i].text == tag) return;
       this.selectedTags.push({
