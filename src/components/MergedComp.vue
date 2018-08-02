@@ -6,17 +6,16 @@
 
           <div v-if='currentTabIndex===1'>
             <strong>
-              <span class='fa fa-chevron-left' @click='backToProjectList'></span>
-              <span>
-                {{ projectInfo.title }}
-              </span>
-              <span class='fa fa-edit' @click='editProject'></span>
+              <span title='Back to project list' class='fa fa-chevron-left' @click='backToProjectList'></span>
+              <span>{{ projectInfo.title }}</span>
+              <span title='Edit current project' class='fa fa-edit' @click='editProject'></span>
             </strong>
           </div>
+
           <div v-if='currentTabIndex===0'>
             <strong> Project List</strong>
           </div>
-          <!-- <span v-if='currentTabIndex !== 0'> / Tasks</span> -->
+
         </div>
         <div class='task-tabs'>
         </div>
@@ -131,7 +130,7 @@ export default {
     },
     itemAddButton(val) {
       this.addBtn = val !== undefined;
-    },
+    }
     // globalFeed(val) {
     //   if (val) {
     //     this.$router.push("/feeds");
@@ -380,6 +379,7 @@ export default {
   left: 0;
   top: 0;
 }
+
 #wrapper aside.max {
   width: 100%;
 }
@@ -397,7 +397,6 @@ export default {
   /* .sidebar-body {
       margin-left: 70px;
   } */
-
   #wrapper {
     flex-direction: row;
     min-height: 100vh;

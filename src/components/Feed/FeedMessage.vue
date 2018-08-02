@@ -1,28 +1,28 @@
 <template>
   <div class='cont selector left-con' :class="[{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)},'msg-'+this.mess.fed_type]"
     :id="mess.fed_id">
-    <div class='new-step' v-if='!global&&mess.fed_islabel!=1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
-      <i class="fas fa-plus"></i>
+    <div class='new-step' v-if='!global&&mess.fed_islabel!==1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
+      <i class="fas fa-plus-circle"></i>
     </div>
-    <div class='img-placeholder' v-if='this.mess.fed_type==="message" && mess.fed_islabel==0' >
+    <div class='img-placeholder' v-if='mess.fed_islabel!==1'>
 
       <avatar v-if='this.mess.fed_type==="message"' :username="mess.usr_name +' '+ mess.usr_surname" :src="getAvatar" :rounded="false"
-        :size="40" class='picture'></avatar>
+        :size="40" class='avatar'></avatar>
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
 
     <div class="message-body" :class='{"header-type": mess.fed_islabel==1}'>
       <div class="message-body-header">
-        <span class="name" v-if='mess.fed_islabel==0' >{{mess.usr_name +' '+ mess.usr_surname}}</span>
+        <span class="name" v-if='mess.fed_islabel!==1'>{{mess.usr_name +' '+ mess.usr_surname}}</span>
         <span class='time-right' v-if='global'>Project:&nbsp;{{mess.pro_name}}</span>
         <span class='time-right' v-if='global'>Task:&nbsp;{{mess.tsk_title}}</span>
-        <span class='time-right' v-if='mess.fed_islabel==0'>{{mess.fed_time.substring(0,19)}}</span>
+        <span class='time-right' v-if='mess.fed_islabel!==1'>{{mess.fed_time.substring(0,19)}}</span>
       </div>
-      <pre class="message" width="100">
-         <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
-         <template v-if="!(mess.fed_type==='attachment'&&!isImage())">{{mess.fed_text}}</template> 
-        </pre>
+      <span class="message" width="100">
+        <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
+        <span v-else>{{mess.fed_text}}</span>
+      </span>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
     <i @click='importantFeed' class="fas fa-star" :class="{ important: isImportant }" v-if='mess.fed_islabel!=1'></i>
@@ -132,16 +132,16 @@ export default {
   align-self: center;
 }
 
-pre {
+.message {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 90%;
-  font-family: "TitilliumWeb";
+  /* font-family: "TitilliumWeb"; */
 }
 
-.darkTheme pre {
+/* .darkTheme .message {
   color: var(--sec-color);
-}
+} */
 
 .important {
   color: #199686 !important;
@@ -189,12 +189,6 @@ pre {
   color: #6c7284;
 }
 
-.cont img {
-  height: 40px;
-  width: 40px;
-  border-radius: 5px;
-}
-
 .cont .name {
   font-size: 12px;
   font-weight: bold;
@@ -209,7 +203,7 @@ pre {
 #attachment-image {
   height: initial;
   /* max-height: 250px; */
-  max-width: 400px;
+  max-width: 60%;
   border-radius: 5px;
   cursor: pointer;
 }
@@ -283,11 +277,11 @@ pre {
   border-left: 6px solid #ecec14;
 }
 
-.msg-status pre {
+.msg-status .message {
   font-size: 70%;
 }
 
-.picture {
+.avatar {
   border-radius: 5px !important;
 }
 </style>

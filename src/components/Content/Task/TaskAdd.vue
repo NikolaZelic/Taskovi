@@ -61,9 +61,9 @@
               <span class='fas fa-exclamation-circle' title='Priority'></span>
               <select v-model="selectedPriority" v-bind:class='selectedPriorityClass' class='task-modal-input' @change="somethingChanged = true">
                 <option value=null>Priority: None</option>
-                <option value='3'>Low</option>
+                <option value='1'>Low</option>
                 <option value='2'>Medium</option>
-                <option value='1'>High</option>
+                <option value='3'>High</option>
               </select>
             </div>
 

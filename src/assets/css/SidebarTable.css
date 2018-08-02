@@ -21,17 +21,16 @@
 
  .item-list thead th {
    border-bottom: none !important;
+   border-top: none !important;
    /* font-weight: normal; */
  }
 
  .item-list thead tr {
-   /* border-bottom: 2px solid #dee2e6a1; */
    background: white;
    color: #222;
  }
 
  .darkTheme .item-list thead tr {
-   /* border-bottom: 2px solid #dee2e633; */
    background: #191b1d;
    color: #eee;
  }
@@ -48,16 +47,6 @@
    height: 100%;
    padding: 0 7px !important;
  }
-
- /* .item-list td:first-child,
- .item-list th:first-child {
-   border-left: none;
- }
-
- .item-list td:last-child,
- .item-list th:last-child {
-   border-right: none;
- } */
 
  .item-list tr {
    line-height: 30px;

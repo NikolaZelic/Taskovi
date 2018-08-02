@@ -312,11 +312,7 @@ export default {
       time.seconds(time.seconds() - 1);
       time = this.localToUTC(time);
       api
-        .createTimestamps(
-          this.taskid,
-          time,
-          this.newStep
-        )
+        .createTimestamps(this.taskid, time, this.newStep)
         .then(result => {
           // this.readeSteps();
           this.readeTimestemps();
@@ -363,8 +359,10 @@ export default {
         }
         if (result.data.data !== undefined && result.data.data.length > 0) {
           this.timestamps = result.data.data;
-          for(let i=0; i<this.timestamps.length; i++){
-            this.timestamps[i].fed_time = this.utcToLocalSeconds(this.timestamps[i].fed_time);
+          for (let i = 0; i < this.timestamps.length; i++) {
+            this.timestamps[i].fed_time = this.utcToLocalSeconds(
+              this.timestamps[i].fed_time
+            );
           }
           this.deselectTimestemps();
         }
@@ -405,7 +403,7 @@ export default {
       }
       api.postMessage(this.taskid, text).then(result => {
         if (result.data.status != "OK") {
-          alert("Problem durning sending the message");
+          alert("Problem during sending the message");
           return;
         }
         if (this.messages.length > 0) this.addDown(true);
@@ -783,6 +781,7 @@ export default {
   flex: 1;
   display: flex;
   background: #fff;
+  width: 100%;
 }
 
 .feed-back .load {
