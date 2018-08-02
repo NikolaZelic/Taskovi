@@ -87,7 +87,7 @@ textarea.custom-modern::placeholder {
 
 .form-control:hover,
 .form-control:focus {
-  border-color: var(--ac-color);
+  border-color: var(--ac-color) !important;
   box-shadow: unset;
 }
 

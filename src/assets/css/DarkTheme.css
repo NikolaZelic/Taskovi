@@ -50,7 +50,7 @@
 .darkTheme .multiselect__option,
 .darkTheme .form-control {
   box-shadow: inset 0 3px 10px 0 #00000026;
-  border: 1px solid #eee5 !important;
+  border: 1px solid #eee5;
 }
 
 .maincontent.darkTheme input::placeholder,
