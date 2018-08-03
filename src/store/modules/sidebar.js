@@ -55,10 +55,6 @@ const actions = {
   }
 };
 const mutations = {
-  setRefreshGlobalFeed: (state, params) => {
-    store.state.refreshGlobalFeed = params;
-  },
-
   setSidebarData: (state, params) => {
     if (params.data !== undefined) {
       store.state.sidebarTabData[params.tabIndex] = params.data;
@@ -119,12 +115,12 @@ const mutations = {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.mainFocused = false;
-    // let ci = store.state.currentTabIndex;
-    // store.state.currentTabIndex = -1;
-    // store.state.currentTabIndex = ci;
   },
   showGlobalFeed: (state, params) => {
     store.state.globalFeed = params;
+  },
+  setRefreshGlobalFeed: (state, params) => {
+    store.state.refreshGlobalFeed = params;
   },
   darkTheme: (state, params) => {
     store.state.darkTheme = params;

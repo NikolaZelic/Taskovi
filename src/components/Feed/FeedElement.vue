@@ -107,7 +107,7 @@ export default {
           value: "important"
         },
         {
-          text: "Importnat by Others",
+          text: "Important by Others",
           value: "impbyoth"
         }
       ],

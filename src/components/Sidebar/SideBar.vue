@@ -14,15 +14,15 @@
           </transition-group>
         </div>
 
-        <div class="tab-container" @click='showGlobalFeed(),notifSelected=true' :class="{active:notifSelected}">
+        <div class="tab-container" @click='showGlobalFeed()' :class="{active:globalFeed}">
           <span class="fas fa-bell"></span>
           <span class="badge badge-warning count">{{notifDisplay}}</span>
           <span class='left-al'>Notifications</span>
         </div>
 
         <div v-for="(tab, index) in tabs" v-if="index === 0 || projectRefItem.id !== undefined" :key="index" class="tablinks tab-container"
-          :class="{active:getTabIndex === index && !notifSelected}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true), notifSelected=false"
-          :disabled="tab.disabled">
+          :class="{active:getTabIndex === index && !globalFeed}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true)"        
+            :disabled="tab.disabled">
           <span :class='tab.icon'></span>
           <span class='left-al'>{{tab.name}}</span>
         </div>
@@ -114,7 +114,7 @@
 
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
-        <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
+        <b-table responsive :items="currentTabData" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
           :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
@@ -258,7 +258,6 @@ export default {
       showTaskPeople: true,
       activePopup: false,
       intervalNotification: null,
-      notifSelected: false,
       selectedFilter: [],
       sideHover: false,
       userOptionsVisible: false,
@@ -697,7 +696,8 @@ export default {
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
-      selectedItemID: "selectedItemID"
+      selectedItemID: "selectedItemID",
+      currentTabData: "currentTabData"
     }),
     notifDisplay() {
       return this.notifCount === 0
@@ -710,9 +710,6 @@ export default {
         this.itemAction.add !== undefined ||
         (this.getTabIndex === 1 && this.selectedItemID !== undefined)
       );
-    },
-    activeArray() {
-      return store.getters.currentTabData;
     },
     fieldsToShow() {
       if (this.getTabIndex === 0) {
