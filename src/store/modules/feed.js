@@ -6,7 +6,7 @@ import {
 } from '../index';
 const actions = {
   readeFeeds(commit, params) {
-    return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important, params.fedtime ).then(response => {
+    return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important, params.fedtime, params.impbyoth ).then(response => {
       store.commit('addMessages', {
         'direction': params.direction,
         'data': response.data.data
@@ -15,7 +15,7 @@ const actions = {
     });
   },
   readeGloablFeeds(commit, params) {
-    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important );
+    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important, params.impbyoth);
   },
 
   // postMessage(commit, params) {

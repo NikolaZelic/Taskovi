@@ -118,7 +118,7 @@ export const api = {
       }
     });
   },
-  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time) {
+  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time, impbyoth) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {
         fedid: fedid,
@@ -128,10 +128,11 @@ export const api = {
         fed_important: fed_important,
         fedtime: fed_time,
         sid: window.localStorage.sid,
+        impbyoth: impbyoth
       }
     });
   },
-  readeGloablFeeds(offset, type, searchingstring, fed_important) {
+  readeGloablFeeds(offset, type, searchingstring, fed_important, impbyoth) {
     return axios.get('users/feeds', {
       params: {
         sid: window.localStorage.sid,
@@ -140,6 +141,7 @@ export const api = {
         fed_important: fed_important,
         offset: offset,
         count: false,
+        impbyoth: impbyoth,
       }
     });
   },

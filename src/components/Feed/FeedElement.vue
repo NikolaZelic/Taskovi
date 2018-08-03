@@ -8,7 +8,9 @@
       <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
-        <b-form-checkbox v-model="searchImportant">Important</b-form-checkbox>
+        <b-form-checkbox-group class='radio-group' v-model="searchImportant" :options="importantFilter"></b-form-checkbox-group>
+        <!-- <b-form-checkbox @click='important' v-model="searchImportant" >Important</b-form-checkbox>
+        <b-form-checkbox @click='impByOth' v-model="searchImpByOth" >Important by Others</b-form-checkbox> -->
       </form>
     </div>
 
@@ -88,7 +90,7 @@ export default {
       uploadProgress: 50,
       inProgress: false,
       searchText: "",
-      searchImportant: false,
+      searchImportant: [],
       dataFromBegining: 1,
       numOfMessages: null,
       loadingData: false,
@@ -99,6 +101,16 @@ export default {
       haveNewMessage: false,
       firstLoad: true,
       searchType: "messages",
+      importantFilter: [
+        {
+          text: "Important",
+          value: "important"
+        },
+        {
+          text: "Importnat by Others",
+          value: "impbyoth"
+        }
+      ],
       radioFilter: [
         {
           text: "Messages",
@@ -131,12 +143,6 @@ export default {
     ...mapGetters({
       taskid: "selectedItemID"
     }),
-    searchOn() {
-      if (this.searchType !== "all") return true;
-      if (this.searchImportant) return true;
-      if (this.searchText !== null && this.searchText.length > 0) return true;
-      return false;
-    },
     messages() {
       return this.$store.state.modulefeed.messages.map(el => {
         return {
@@ -266,7 +272,7 @@ export default {
               "X-Requested-With": "XMLHttpRequest"
             }
           })
-*/
+          */
 
           api
             .dragAndDropUpload(store.state.sidebarItemSelection[1], formData)
@@ -341,7 +347,7 @@ export default {
     refreshSearchParams() {
       this.searchType = "messages";
       this.searchText = "";
-      this.searchImportant = false;
+      this.searchImportant = [];
     },
     processKeyUp(event) {
       if (event.key == "Enter" && event.ctrlKey) {
@@ -366,19 +372,31 @@ export default {
         }
       });
     },
+    addImportantToParams(params){
+      if(this.searchImportant.length>0){
+        for(let i=0; i<this.searchImportant.length; i++){
+          if(this.searchImportant[i]=='important')
+            params.fed_important = true;
+          else if(this.searchImportant[i]=='impbyoth')
+            params.impbyoth = true;
+        }
+      }
+      return params;
+    },
     readeFeeds() {
       // console.log('reade feeds');
       store.commit("clearFeed");
       this.loadingData = true;
-      store
-        .dispatch("readeFeeds", {
+      let params = {
           taskid: this.taskid,
           fedid: 0,
           direction: "start",
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
-        })
+      };
+      this.addImportantToParams(params);
+      store
+        .dispatch("readeFeeds", params)
         .then(() => {
           setTimeout(() => {
             this.scrollToBegining();
@@ -434,9 +452,7 @@ export default {
       // Dodato zbog hedera za stepove
       var message = this.messages[0];
 
-      this.loadingData = true;
-      store
-        .dispatch("readeFeeds", {
+      let params = {
           taskid: this.taskid,
           fedid: message.fed_id,
           direction: "up",
@@ -444,7 +460,11 @@ export default {
           searchingstring: this.searchText,
           fed_important: this.searchImportant,
           fedtime: this.localToUTC(message.fed_time)
-        })
+      };
+      this.addImportantToParams(params);
+      this.loadingData = true;
+      store
+        .dispatch("readeFeeds", params)
         .then(response => {
           if (
             response.data.data !== undefined &&

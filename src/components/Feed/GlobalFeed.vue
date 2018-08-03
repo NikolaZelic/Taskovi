@@ -38,13 +38,14 @@ export default {
       this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
       this.offset = 0;
-      store
-        .dispatch("readeGloablFeeds", {
+      let params = {
           offset: this.offset,
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
-        })
+      };
+      this.addImportantToParams(params);
+      store
+        .dispatch("readeGloablFeeds", params)
         .then(response => {
           var length = response.data.data.length
           this.offset += length;
@@ -66,13 +67,14 @@ export default {
     },
     addDown() {
       if (this.messages == null || this.messages.length == 0) return;
-      store
-        .dispatch("readeGloablFeeds", {
+      let params = {
           offset: this.offset,
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
-        })
+      };
+      this.addImportantToParams(params);
+      store
+        .dispatch("readeGloablFeeds", params)
         .then(response => {
           var length = response.data.data.length;
           this.offset += length;
