@@ -1019,7 +1019,8 @@ export default {
   border-radius: 5px !important;
   display: block;
   margin-top: 3px;
-  padding: 0
+  padding: 0;
+  float: left;
 }
 
 #btn-pocetak {
