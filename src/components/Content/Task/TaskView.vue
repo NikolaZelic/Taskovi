@@ -26,23 +26,22 @@
           <table id="task-table">
 
             <tr>
-              <td>Task Title:</td>
+              <td class="align-top">Task Title:</td>
               <td>
-                {{this.taskGeneralInfo.tsk_title}}
+                  {{this.taskGeneralInfo.tsk_title}}
                 <!-- <input class="form-control" type="text" :value="this.taskGeneralInfo.tsk_title"> -->
               </td>
             </tr>
 
             <tr>
-              <td>Description:</td>
+              <td class="align-top">Description:</td>
               <td>
-                {{this.taskGeneralInfo.description}}
-                <!-- <textarea class="form-control" type="text" :value="this.taskGeneralInfo.description"></textarea> -->
+                <pre>{{this.taskGeneralInfo.description}}</pre>
               </td>
             </tr>
 
             <tr>
-              <td>Priority:</td>
+              <td class="align-top">Priority:</td>
               <td>
                 {{this.taskGeneralInfo.pri_text}}
               </td>
@@ -50,15 +49,15 @@
 
             <!-- <tr><td>Description:</td><td>{{this.taskGeneralInfo.description}}</td></tr> -->
             <tr>
-              <td>Created by:</td>
+              <td class="align-top">Created by:</td>
               <td>{{this.taskGeneralInfo.usr_creator_name}} {{this.taskGeneralInfo.usr_creator_surname}}</td>
             </tr>
             <tr>
-              <td>Time created:</td>
+              <td class="align-top">Time created:</td>
               <td v-if='this.taskGeneralInfo.tsk_timecreated !== null'>{{this.utcToLocal(this.taskGeneralInfo.tsk_timecreated)}}</td>
             </tr>
             <tr>
-              <td>Deadline:</td>
+              <td class="align-top">Deadline:</td>
               <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
                 <span>{{ this.utcToLocal(this.taskGeneralInfo.tsk_deadline) }}</span>
               </td>
@@ -72,7 +71,7 @@
             </tr>
 
             <tr>
-              <td>Task events:</td>
+              <td class="align-top">Task events:</td>
               <td>{{this.taskGeneralInfo.sta_text}}</td>
             </tr>
 
@@ -1144,5 +1143,14 @@ td .form-control {
 
 .fa-hand-point-right {
   cursor: pointer;
+}
+
+pre{
+  margin: 0 !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
+  font-family: "TitilliumWeb" !important;
 }
 </style>
