@@ -250,16 +250,43 @@ export default {
           store.commit("itemActionReset");
 
           if (r.data.status === "OK") {
+
             store.commit("modalStatus", {
+              active: true,
               ok: true,
               message:
                 "Project '" +
                 this.project.title +
                 "' has been created succesfully"
             });
+
+            //Ako postoje mejlovi koji nisu u sistemu
+            let errors = r.data.data.errors;
+            if(errors.length > 0){
+              for (var i = 0; i < errors.length; i++) {
+
+                this.$toasted.show(errors[i], {
+                  position: "bottom-right",
+                  duration: 8000,
+                  className: "alert-danger",
+                  icon: {
+                    name: "exclamation-triangle"
+                  },
+                  action: {
+                    class: "fas fa-times",
+                    onClick: (e, toastObject) => {
+                      toastObject.goAway(0);
+                    }
+                  }
+                });
+
+              }
+            }
+
             store.dispatch("getProjects", {
               index: this.tabIndex
             });
+
           } else {
             store.commit("modalStatus", {
               ok: false,
@@ -291,6 +318,30 @@ export default {
                 this.project.title +
                 "' has been edited succesfully"
             });
+
+            //Ako postoje mejlovi koji nisu u sistemu
+            let errors = r.data.data.errors;
+            if(errors.length > 0){
+              for (var i = 0; i < errors.length; i++) {
+
+                this.$toasted.show(errors[i], {
+                  position: "bottom-right",
+                  duration: 8000,
+                  className: "alert-danger",
+                  icon: {
+                    name: "exclamation-triangle"
+                  },
+                  action: {
+                    class: "fas fa-times",
+                    onClick: (e, toastObject) => {
+                      toastObject.goAway(0);
+                    }
+                  }
+                });
+
+              }
+            }
+            
             store.dispatch("getProjects", {
               index: this.tabIndex
             });
