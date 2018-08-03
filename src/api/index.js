@@ -110,6 +110,11 @@ export const api = {
   },
   //#endregion
   //#region Feeds
+  deleteTImestamp(tsk_id, stm_id){
+    return axios.delete( "tasks/"+tsk_id+"/labels/"+stm_id, {params:{
+      sid: window.localStorage.sid,
+    }});
+  },
 
   readeTimestemps(tsk_id) {
     return axios.get('tasks/' + tsk_id + "/labels", {

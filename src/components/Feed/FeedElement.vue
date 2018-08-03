@@ -16,11 +16,17 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&timestamps.length>0'>
-        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' @click='stepCicked(timestamp)'
-          :title='timestamp.fed_time'>
-          {{timestamp.fed_text}}
+        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' >
+          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
+            <b-btn v-b-modal.deleteTimestempId><i class="fas fa-minus"></i></b-btn>
+          </span>
+          <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_time' >{{timestamp.fed_text}}</span>
         </b-list-group-item>
       </b-list-group>
+      
+      <b-modal id="deleteTimestempId" title="Bootstrap-Vue" @ok='confirmDelete' v-if='!global' >
+        <p class="my-4" v-if='choosenTimestemp!=null' >{{choosenTimestemp.fed_text}} will be deleted</p>
+      </b-modal>
 
       <div id="all-messages" @scroll="handleScroll" class="feed-back">
         <div id='all2' class="messages">
@@ -95,7 +101,6 @@ export default {
       numOfMessages: null,
       loadingData: false,
       test: true,
-      steps: [],
       newStep: "",
       stepErr: false,
       haveNewMessage: false,
@@ -129,7 +134,8 @@ export default {
           value: "all"
         }
       ],
-      timestamps: []
+      timestamps: [],
+      choosenTimestemp: null,
     };
   },
   computed: {
@@ -600,6 +606,27 @@ export default {
         this.timestamps[i].selected = false;
       }
     },
+    deleteTimestemp(timestemp){
+      this.choosenTimestemp = timestemp;
+    },
+    confirmDelete(){
+      if(this.choosenTimestemp === null)
+        return;
+      api.deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id).then( response=>{
+        if(response.data.status!='OK'){
+          alert('Error happen wile delitin timestemp');
+          this.choosenTimestemp = null;
+          return;
+        }
+        this.readeTimestemps();
+        this.readeFeeds();
+        this.choosenTimestemp = null;
+      }).catch( ()=>{
+        alert('Error happen wile delitin timestemp');
+        this.choosenTimestemp = null;
+        return;
+      });
+    },
     scrollTOTop() {
       // console.log('scroll to top');
       var a = document.querySelectorAll(".selector");
@@ -685,12 +712,19 @@ export default {
   destroyed() {
     clearInterval(this.fInterval);
     store.commit("clearFeed");
+    this.timestamps = [];
     // store.commit("setSearchFeedParams", null);
     this.dataFromBegining = 1;
   }
 };
 </script>
 <style scoped>
+
+.delete-timestemp{
+  font-size: 110%;
+  padding: 5px;
+  color: red;
+}
 .step-err {
   border: 2px solid red;
 }

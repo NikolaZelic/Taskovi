@@ -1,7 +1,7 @@
 <template>
   <div class='cont selector left-con' :class="[{unseenFeed : (mess.fed_type!=='header' && global && mess.unseen==1)},'msg-'+this.mess.fed_type]"
     :id="mess.fed_id">
-    <div class='new-step' v-if='!global&&mess.fed_islabel!==1' title='Create new step' v-b-modal='"creating-step"' @click='selectStep'>
+    <div class='new-step' v-if='!global&&mess.fed_islabel!==1' title='Create new timestemp' v-b-modal='"creating-step"' @click='selectStep'>
       <i class="fas fa-plus-circle"></i>
     </div>
     <div class='img-placeholder' v-if='mess.fed_islabel!==1'>
