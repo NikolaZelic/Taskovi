@@ -6,7 +6,7 @@ import {
 } from '../index';
 const actions = {
   // API
-  getProjects(commit, params) {
+  getProjectList(commit, params) {
     api.getProjects(params).then(r => {
       store.commit('setSidebarData', {
         tabIndex: params.index,
@@ -19,7 +19,7 @@ const actions = {
     });
   },
 
-  getTasks(commit, params) {
+  getTaskList(commit, params) {
     api.getTasks(params).then(r => {
       store.commit('setSidebarData', {
         tabIndex: params.index,
@@ -74,7 +74,7 @@ const mutations = {
 
   setTabIndex: (state, params) => {
     store.state.currentTabIndex = -1; // MAYBE NOT NEEDED IF ALWAYS INVOKED FROM OTHER TAB ?
-    store.state.currentTabIndex = params.tabIndex;
+    store.state.currentTabIndex = params;
   },
 
   itemEditClick: (state, params) => {
@@ -104,11 +104,8 @@ const mutations = {
     // store.state.currentTabIndex = -1;
     // store.state.currentTabIndex = ci;
   },
-  resetProjectView: () => {
-    store.state.sidebarItemSelection[0] = undefined;
-    store.state.itemAction.edit = undefined;
-    store.state.itemAction.add = undefined;
-    store.state.mainFocused = false;
+  incDirtyCounter: () => {
+    store.state.dirtyCounterForSidebar++;
   },
   resetGlobalView: () => {
     store.state.sidebarItemSelection = [];
@@ -116,6 +113,12 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.mainFocused = false;
   },
+  // refreshTabIndex: () => {
+  //   let i = store.state.currentTabIndex;
+  //   store.state.currentTabIndex = -1;
+  //   store.state.currentTabIndex = i;
+  //   // store.commit('refreshTabIndex');
+  // },
   showGlobalFeed: (state, params) => {
     store.state.globalFeed = params;
   },

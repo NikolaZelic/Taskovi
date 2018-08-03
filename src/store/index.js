@@ -38,6 +38,7 @@ export const store = new Vuex.Store({
     sidebarTabData: [],
     sidebarItemSelection: [],
     darkTheme: false,
+    dirtyCounterForSidebar: 0,
     notificationCount: undefined,
     modalStatus: {
       active: false,

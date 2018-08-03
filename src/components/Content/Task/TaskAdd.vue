@@ -186,6 +186,7 @@ export default {
 
   computed: {
     ...mapState({
+      tabIndex: "currentTabIndex",
       suggestedWorker: state => store.getters.getSuggestedUsers,
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
@@ -236,11 +237,9 @@ export default {
   },
 
   methods: {
-
-    fullName ({ name, surname }) {
+    fullName({ name, surname }) {
       return name + " " + surname;
     },
-
 
     taskCancel() {
       if (this.somethingChanged === true) {
@@ -255,13 +254,12 @@ export default {
 
     usersOut() {},
 
-    addTag (newTag) {
+    addTag(newTag) {
       const tag = {
-        text: newTag,
-      }
-      this.selectedTags.push(tag)
+        text: newTag
+      };
+      this.selectedTags.push(tag);
     },
-
 
     multiselectOut() {
       // Dodavanje novog taga
@@ -280,7 +278,6 @@ export default {
       this.selectedTags.push({
         text: tag
       });
-
     },
     selectUser() {
       this.teamSelect = false;
@@ -450,9 +447,13 @@ export default {
       var tagarray = this.selectedTags.map(e => e.text);
       var userarray = this.selectedUSers.map(e => e.id);
 
-      if(this.deadline !== "" || this.deadline !== null || this.deadline !== undefined){
+      if (
+        this.deadline !== "" ||
+        this.deadline !== null ||
+        this.deadline !== undefined
+      ) {
         this.deadline = this.localToUTC(this.deadline);
-      }else{
+      } else {
         this.deadline = undefined;
       }
 
@@ -471,10 +472,14 @@ export default {
           store.commit("resetTaskView");
           // console.log("tasks/:tasid poziv iz taskadd");
 
-          store.dispatch("getTasks", {
-            index: 1,
-            pro_id: this.proId
-          });
+          store.commit("incDirtyCounter");
+          // let ti = this.tabIndex;
+          // store.commit("setTabIndex", -1);
+          // store.commit("setTabIndex", ti);
+          // store.dispatch("getTasks", {
+          //   index: 1,
+          //   pro_id: this.proId
+          // });
 
           this.reportWritingToDB(result);
           this.waitNet = false;

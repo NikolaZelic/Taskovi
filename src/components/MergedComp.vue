@@ -130,18 +130,12 @@ export default {
       let l = this.lastLink;
       if (val) this.$router.push("feeds");
       else this.$router.push(l === undefined ? "/" : l);
-      // TEST THIS!
     },
     $route(to, from) {
       this.lastLink = from.path;
-      // console.log(to);
       store.commit("lastLink", from.path);
     }
   },
-  // beforeRouteUpdate(to, from, next) {
-  //   console.log(to);
-  //   next();
-  // },
   computed: {
     ...mapState({
       currentTabIndex: "currentTabIndex",
@@ -205,15 +199,11 @@ export default {
       );
     },
     backToProjectList() {
-      store.commit("setTabIndex", {
-        tabIndex: 0
-      });
+      store.commit("setTabIndex", 0);
     },
     editProject() {
       let proID = this.projectInfo.id;
-      store.commit("setTabIndex", {
-        tabIndex: 0
-      });
+      store.commit("setTabIndex", 0);
       store.commit("itemEditClick", {
         id: proID
       });

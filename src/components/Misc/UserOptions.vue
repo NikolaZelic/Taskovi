@@ -22,7 +22,7 @@
                     <input :type='inputType(t)' v-model.trim="t.value" />
                   </td>
                 </tr>
-                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>                
+                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
               </tbody>
             </table>
 
@@ -137,7 +137,9 @@ export default {
           if (r.data.status === "OK") {
             this.getAvatar();
           } else {
-            alert("Avatar not uploaded properly");
+            store.commit("modalError", {
+              message: "Avatar not uploaded properly"
+            });
           }
         })
         .catch(e => {

@@ -5,7 +5,8 @@
     <div id="text" class="displayNone">Drop to upload</div>
 
     <div class="search-inputs">
-      <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search' />
+      <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search'
+      />
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
         <b-form-checkbox-group class='radio-group' v-model="searchImportant" :options="importantFilter"></b-form-checkbox-group>
@@ -16,16 +17,18 @@
 
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&timestamps.length>0'>
-        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' >
-          <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_time' >{{timestamp.fed_text}}</span>
-          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
-            <span v-b-modal.deleteTimestempId><i class="fas fa-times-circle"></i></span>
+        <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected'>
+          <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_time'>{{timestamp.fed_text}}</span>
+          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp">
+            <span v-b-modal.deleteTimestempId>
+              <i class="fas fa-times-circle"></i>
+            </span>
           </span>
         </b-list-group-item>
       </b-list-group>
-      
-      <b-modal id="deleteTimestempId" title="Delete timestamp" @ok='confirmDelete' v-if='!global' >
-        <p class="my-4" v-if='choosenTimestemp!=null' >"{{choosenTimestemp.fed_text}}" will be deleted</p>
+
+      <b-modal id="deleteTimestempId" title="Delete timestamp" @ok='confirmDelete' v-if='!global'>
+        <p class="my-4" v-if='choosenTimestemp!=null'>"{{choosenTimestemp.fed_text}}" will be deleted</p>
       </b-modal>
 
       <div id="all-messages" @scroll="handleScroll" class="feed-back">
@@ -365,7 +368,9 @@ export default {
       this.timestamps = [];
       api.readeTimestemps(this.taskid).then(result => {
         if (result.data.status != "OK") {
-          alert("Eror happen while trying to get timestemps");
+          store.commit("modalError", {
+            message: "Error happened while trying to get timestemps"
+          });
           return;
         }
         if (result.data.data !== undefined && result.data.data.length > 0) {
@@ -429,7 +434,9 @@ export default {
       }
       api.postMessage(this.taskid, text).then(result => {
         if (result.data.status != "OK") {
-          alert("Problem during sending the message");
+          store.commit("modalError", {
+            message: "Problem during sending the message"
+          });
           return;
         }
         if (this.searchType == "statuses") {
@@ -616,7 +623,9 @@ export default {
         .deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id)
         .then(response => {
           if (response.data.status != "OK") {
-            alert("Error happen wile delitin timestemp");
+            store.commit("modalError", {
+              message: "Error happened while deleting timestamp"
+            });
             this.choosenTimestemp = null;
             return;
           }
@@ -625,7 +634,9 @@ export default {
           this.choosenTimestemp = null;
         })
         .catch(() => {
-          alert("Error happen wile delitin timestemp");
+          store.commit("modalError", {
+            message: "Error happened while deleting timestemps"
+          });
           this.choosenTimestemp = null;
           return;
         });
@@ -659,7 +670,9 @@ export default {
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
         .then(result => {
           if (result.data.status != "OK") {
-            alert("Failed to load data");
+            store.commit("modalError", {
+              message: "Failed to load data"
+            });
             return;
           }
           store.commit("addMessages", {
@@ -728,6 +741,7 @@ export default {
   float: right;
   color: #ff0000;
 }
+
 .step-err {
   border: 2px solid #ff0000;
 }

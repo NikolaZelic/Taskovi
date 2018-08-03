@@ -64,7 +64,7 @@
 
       <div class="flex-form-action">
 
-        <button id="addItem" class="btn btn-success" @click="addItemButton">
+        <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span>
           <!-- Add -->
           <!-- <span>{{tabs[getTabIndex].single}}</span> -->
@@ -150,7 +150,7 @@
         </b-modal>
         <!-- Project info modal end-->
 
-        <b-table responsive :items="currentTabData" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
+        <b-table responsive :items="currentTabData" thead-class='sidebar-table-head' tbody-class='sidebar-table-body' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
           :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
@@ -185,7 +185,7 @@
 
           <!-- IN PROGRESS TASKS | FOR PROJECTS -->
           <template slot="HEAD_inprogress_tasks" slot-scope="data">
-            <span class='fas fa-ellipsis-h' title="InProgress Tasks"></span>
+            <span class='fas fa-ellipsis-h' title="Tasks in progress"></span>
           </template>
 
           <template slot="inprogress_tasks" slot-scope="data">
@@ -220,6 +220,10 @@
           </template>
 
           <!-- TASK TAGS -->
+          <template slot="HEAD_tags" slot-scope="data">
+            <span class='fas fa-tags' title="Tags"></span>
+          </template>
+
           <template slot="tags" slot-scope="data">
             <span class='badge badge-orange' v-if="data.item.tags.length > 0">{{data.item.tags[0].tag_text}}</span>
             <span v-if='data.item.tags.length > 1'> +{{data.item.tags.length-1}}</span>
@@ -291,7 +295,6 @@ export default {
   data() {
     return {
       projectInfoModal: {},
-
       tagsNet: [],
       taskSearchTag: [],
       taskSearchText: undefined,
@@ -434,7 +437,7 @@ export default {
           key: "tags",
           label: "Tag",
           sortable: true,
-          thClass: "td-blue"
+          thClass: "td-orange text-center"
         },
         {
           key: "sta_text",
@@ -454,21 +457,12 @@ export default {
           class: "text-center td-icon-width",
           thClass: "td-yellow"
         }
-        // {
-        //   key: "users",
-        //   class: "text-center td-icon-width",
-        //   thClass: "td-purple"
-        // }
-        // {
-        //   key: "edit_item",
-        //   label: "Edit",
-        //   class: "text-center td-icon-width"
-        // }
       ]
     };
   },
   watch: {
     getTabIndex(val, oldVal) {
+      // console.log('TAB INDEX WATCH');
       if (val === 0) {
         this.taskSearchText = "";
         this.selectedFilter = [];
@@ -478,11 +472,28 @@ export default {
           tabIndex: 1,
           id: undefined
         });
-        // store.commit("resetProjectView");
       }
       if (val < 0) return;
       if (val === 1) {
-        this.removeActiveClass(null);
+        this.getTaskFilterData();
+        store.commit("resetTaskView");
+      }
+    },
+    dirtyCounterForSidebar() {
+      let ti = this.getTabIndex;
+      if (ti === 0) {
+        // this.taskSearchText = "";
+        // this.selectedFilter = [];
+        // MOZDA BAGUJE SELEKCIJA!!! FIX
+        store.state.sidebarItemSelection[0] = undefined;
+        this.projectRefItem = {}; // SETS UNDEFINED PROJECT TO REF STORE TO REMOVE TASKS TAB
+        store.commit("setSidebarItemSelection", {
+          tabIndex: 1,
+          id: undefined
+        });
+      }
+      if (ti === 1) {
+        store.state.sidebarItemSelection[1] = undefined;
         this.getTaskFilterData();
         store.commit("resetTaskView");
       }
@@ -509,7 +520,6 @@ export default {
         this.projectInfoModal = response.data.data;
       });
     },
-
     max50Char(val) {
       if (val.length > 50) {
         return val.substring(0, 50) + "...";
@@ -526,7 +536,7 @@ export default {
     tableScroll(event) {
       let sp = event.target.scrollTop;
       this.$refs.tabdata.getElementsByClassName(
-        "head-resp"
+        "sidebar-table-head"
       )[0].style.transform =
         sp !== 0 ? "translate(0," + sp + "px)" : "";
     },
@@ -554,11 +564,7 @@ export default {
     },
     removeActiveClass(e, elParentID) {
       if (elParentID === undefined) {
-        let tableEl = document.getElementsByTagName("table")[0];
-        if (tableEl !== undefined) {
-          let trEl = tableEl.getElementsByTagName("tbody")[0];
-          elParentID = trEl;
-        }
+        elParentID = document.getElementsByClassName("sidebar-table-body")[0];
       }
       if (elParentID === undefined) return;
       let chNodes = elParentID.childNodes;
@@ -578,10 +584,7 @@ export default {
       this.selectItem(item.id);
       if (this.getTabIndex === 0) {
         this.projectRefItem = item;
-        store.commit("setTabIndex", {
-          tabIndex: 1
-        });
-        // this.getTabData(); // WHAT IS THIS?
+        store.commit("setTabIndex", 1);
       } else if (this.getTabIndex === 1) {
         // ADD ACTIVE CLASS IF TASKS
         tableRow.classList.add("active");
@@ -590,15 +593,12 @@ export default {
     },
     getTabData() {
       let index = this.localTabIndex;
-      store.commit("setTabIndex", {
-        tabIndex: index
-      });
+      store.commit("setTabIndex", index);
       store.commit("showGlobalFeed", false);
       this.removeActiveClass(null);
       switch (index) {
         case 0:
           store.commit("resetGlobalView");
-          // store.commit("resetProjectView"); // RETEST
           this.actionTabDataProject();
           break;
         case 1:
@@ -622,6 +622,7 @@ export default {
       });
     },
     getTaskFilterData() {
+      this.removeActiveClass(null);
       let cr = this.selectedFilter.includes("cr");
       let as = this.selectedFilter.includes("as");
       let ar = this.selectedFilter.includes("ar");
@@ -629,7 +630,7 @@ export default {
     },
     actionTabDataProject() {
       clearInterval(this.intervalNotification);
-      store.dispatch("getProjects", {
+      store.dispatch("getProjectList", {
         index: this.getTabIndex
       });
       store.dispatch("getFeedCount");
@@ -642,7 +643,7 @@ export default {
     },
     actionTabDataTask(cr, as, ar) {
       clearInterval(this.intervalNotification);
-      store.dispatch("getTasks", {
+      store.dispatch("getTaskList", {
         index: this.getTabIndex,
         pro_id: this.projectRefItem.id,
         created: cr,
@@ -741,6 +742,7 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       globalFeed: "globalFeed",
+      dirtyCounterForSidebar: "dirtyCounterForSidebar",
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({

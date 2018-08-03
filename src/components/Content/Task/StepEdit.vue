@@ -35,7 +35,7 @@ export default {
     }),
 
     blankTitle() {
-      if(this.title !== undefined){
+      if (this.title !== undefined) {
         return this.title.length === 0;
       }
     }
@@ -44,19 +44,33 @@ export default {
   methods: {
     createTask() {
       this.waitNet = true;
-      var userarray = this.selectedUSers.map( e => e.id );
+      var userarray = this.selectedUSers.map(e => e.id);
 
-
-          // api.editTask(sid, tasid, title, description, deadline, tagarray, usersarray, priority)
-          api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), SON.stringify(userarray), this.selectedPriorety)
-          .then(response => {
-
+      // api.editTask(sid, tasid, title, description, deadline, tagarray, usersarray, priority)
+      api
+        .editTask(
+          localStorage.sid,
+          this.taskID,
+          this.title,
+          this.description,
+          this.deadline,
+          JSON.stringify(this.tags),
+          SON.stringify(userarray),
+          this.selectedPriorety
+        )
+        .then(response => {
           if (response.data.status === "OK") {
             // console.log("tasks/:tasid poziv iz StepEdita");
-            store.dispatch("getTasks", {
-              index: 1,
-              pro_id: this.proId
-            });
+
+            store.commit("incDirtyCounter");
+            // let ti = this.tabIndex;
+            // store.commit("setTabIndex", -1);
+            // store.commit("setTabIndex", ti);
+            // store.commit("refreshTabIndex");
+            // store.dispatch("getTasks", {
+            //   index: 1,
+            //   pro_id: this.proId
+            // });
             store.commit("modalStatus", {
               message: "Task has been edited succesfully"
             });
@@ -75,8 +89,9 @@ export default {
     },
 
     loadInfo() {
-
-        api.loadTaskInfo(localStorage.sid, store.state.itemAction.edit).then(response => {
+      api
+        .loadTaskInfo(localStorage.sid, store.state.itemAction.edit)
+        .then(response => {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
           this.deadline = response.data.data[0].tsk_deadline;

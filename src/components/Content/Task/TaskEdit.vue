@@ -32,6 +32,7 @@ export default {
     }),
 
     ...mapState({
+      tabIndex: "currentTabIndex",
       suggestedWorker: state => store.getters.getSuggestedUsers,
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
@@ -39,7 +40,7 @@ export default {
     }),
 
     blankTitle() {
-      if(this.title !== undefined){
+      if (this.title !== undefined) {
         return this.title.length === 0;
       }
     },
@@ -55,28 +56,46 @@ export default {
   },
 
   methods: {
-    fullName ({ name }) {
+    fullName({ name }) {
       return name;
     },
 
     createTask() {
       this.waitNet = true;
-      var userarray = this.selectedUSers.map( e => e.id );
+      var userarray = this.selectedUSers.map(e => e.id);
 
-      if(this.deadline !== "" || this.deadline !== null || this.deadline !== undefined){
+      if (
+        this.deadline !== "" ||
+        this.deadline !== null ||
+        this.deadline !== undefined
+      ) {
         this.deadline = this.localToUTC(this.deadline);
-      }else{
+      } else {
         this.deadline = undefined;
       }
 
-        api.editTask(localStorage.sid, this.taskID, this.title, this.description, this.deadline, JSON.stringify(this.tags), JSON.stringify(userarray), this.selectedPriority)
+      api
+        .editTask(
+          localStorage.sid,
+          this.taskID,
+          this.title,
+          this.description,
+          this.deadline,
+          JSON.stringify(this.tags),
+          JSON.stringify(userarray),
+          this.selectedPriority
+        )
         .then(response => {
           if (response.data.status === "OK") {
-
-            store.dispatch("getTasks", {
-              index: 1,
-              pro_id: this.proId
-            });
+            
+            store.commit("incDirtyCounter");
+            // let ti = this.tabIndex;
+            // store.commit("setTabIndex", -1);
+            // store.commit("setTabIndex", ti);
+            // store.dispatch("getTasks", {
+            //   index: 1,
+            //   pro_id: this.proId
+            // });
             store.commit("modalStatus", {
               message: "Task has been edited succesfully"
             });
@@ -95,7 +114,9 @@ export default {
     },
 
     loadInfo() {
-        api.loadTaskInfo(localStorage.sid, store.state.itemAction.edit).then(response => {
+      api
+        .loadTaskInfo(localStorage.sid, store.state.itemAction.edit)
+        .then(response => {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
           this.deadline = this.utcToLocal(response.data.data[0].tsk_deadline);

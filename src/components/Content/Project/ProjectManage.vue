@@ -250,7 +250,6 @@ export default {
           store.commit("itemActionReset");
 
           if (r.data.status === "OK") {
-
             store.commit("modalStatus", {
               active: true,
               ok: true,
@@ -262,9 +261,8 @@ export default {
 
             //Ako postoje mejlovi koji nisu u sistemu
             let errors = r.data.data.errors;
-            if(errors.length > 0){
+            if (errors.length > 0) {
               for (var i = 0; i < errors.length; i++) {
-
                 this.$toasted.show(errors[i], {
                   position: "bottom-right",
                   duration: 8000,
@@ -279,14 +277,12 @@ export default {
                     }
                   }
                 });
-
               }
             }
-
-            store.dispatch("getProjects", {
-              index: this.tabIndex
-            });
-
+            // let ti = this.tabIndex;
+            // store.commit("setTabIndex", -1);
+            // store.commit("setTabIndex", ti);
+            store.commit("incDirtyCounter");
           } else {
             store.commit("modalStatus", {
               ok: false,
@@ -321,9 +317,8 @@ export default {
 
             //Ako postoje mejlovi koji nisu u sistemu
             let errors = r.data.data.errors;
-            if(errors.length > 0){
+            if (errors.length > 0) {
               for (var i = 0; i < errors.length; i++) {
-
                 this.$toasted.show(errors[i], {
                   position: "bottom-right",
                   duration: 8000,
@@ -338,13 +333,13 @@ export default {
                     }
                   }
                 });
-
               }
             }
-            
-            store.dispatch("getProjects", {
-              index: this.tabIndex
-            });
+
+            store.commit("incDirtyCounter");
+            // let ti = this.tabIndex;
+            // store.commit("setTabIndex", -1);
+            // store.commit("setTabIndex", ti);
           } else {
             store.commit("modalStatus", {
               ok: false,

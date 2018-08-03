@@ -459,7 +459,6 @@ export default {
   },
 
   methods: {
-
     getAvatar(image) {
       let netIcon = "";
       if (image !== undefined && image !== null) {
@@ -469,7 +468,9 @@ export default {
     },
 
     taskStatus(parameter) {
-      api.changeTaskStatus(parameter, localStorage.sid, this.selectedItemID).then(response => {
+      api
+        .changeTaskStatus(parameter, localStorage.sid, this.selectedItemID)
+        .then(response => {
           this.resetTaskView();
         });
     },
@@ -538,15 +539,19 @@ export default {
     resetTaskView() {
       store.commit("itemActionReset");
       store.commit("resetTaskView");
-      store.dispatch("getTasks", {
-        index: 1,
-        pro_id: store.state.sidebarItemSelection[0],
-        created: false,
-        assigned: false,
-        archived: false,
-        tagarray: []
-      });
+      // store.dispatch("getTasks", {
+      //   index: 1,
+      //   pro_id: store.state.sidebarItemSelection[0],
+      //   created: false,
+      //   assigned: false,
+      //   archived: false,
+      //   tagarray: []
+      // });
 
+      store.commit("incDirtyCounter");
+      // let ti = this.tabIndex;
+      // store.commit("setTabIndex", -1);
+      // store.commit("setTabIndex", ti);
     },
 
     removeUser(removedOption) {
@@ -860,7 +865,6 @@ export default {
       }
       return JSON.stringify(niz);
     },
-
     selectedItemID() {
       var a = store.getters.selectedItemID;
       // console.log(a);
@@ -873,37 +877,24 @@ export default {
       if (a === undefined) return 0;
       else return a;
     },
-
     selectedTaskID() {
       // var a = store.getters.selectedTaskID;
       // // console.log(a);
       // if (a === undefined) return 0;
       // else return a;
     },
-
     showSteps() {
       this.stepShow = this.selectedItemID === 0;
       return;
     },
-
     deadlineDate() {
       return this.utcToLocal(this.taskInfo.deadline);
-      // return this.$moment(
-      //   this.taskInfo.deadline,
-      //   "YYYY-MM-DD HH:mm:ss.S"
-      // ).format("DD/MM/YYYY (HH:mm)");
     },
-
     createdDate() {
       return this.utcToLocal(this.taskInfo.createdDate);
-
-      // return this.$moment(
-      //   this.taskInfo.createdDate,
-      //   "YYYY-MM-DD HH:mm:ss.S"
-      // ).format("DD/MM/YYYY (HH:mm)");
     },
-
     ...mapState({
+      tabIndex: "currentTabIndex",
       itemEditClick: "itemEditClick",
       addStep: state => state.itemAction.addStep,
       darkTheme: state => state.darkTheme
@@ -1141,7 +1132,7 @@ textarea:disabled {
   padding: 5px 10px;
 }
 
-#task-table{
+#task-table {
   width: 100%;
 }
 
