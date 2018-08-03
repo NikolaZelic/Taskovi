@@ -21,8 +21,8 @@
         </div>
 
         <div v-for="(tab, index) in tabs" v-if="index === 0 || projectRefItem.id !== undefined" :key="index" class="tablinks tab-container"
-          :class="{active:getTabIndex === index && !globalFeed}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true)"        
-            :disabled="tab.disabled">
+          :class="{active:getTabIndex === index && !globalFeed}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true)"
+          :disabled="tab.disabled">
           <span :class='tab.icon'></span>
           <span class='left-al'>{{tab.name}}</span>
         </div>
@@ -114,10 +114,50 @@
 
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
+        <!-- Project info modal start-->
+        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'">
+          <table>
+
+            <!-- Description -->
+            <tr v-if="projectInfoModal.description !== null">
+              <td class="wid30 align-top">Description: </td>
+              <td>{{ projectInfoModal.description }}</td>
+            </tr>
+
+            <!-- Deadline -->
+            <tr v-if="projectInfoModal.deadline !== null">
+              <td class="wid30 align-top">Deadline:</td>
+              <td>{{ this.utcToLocal(projectInfoModal.deadline) }}</td>
+            </tr>
+
+            <!-- Tags -->
+            <tr v-if="projectInfoModal.tags !== undefined && projectInfoModal.tags.length > 0">
+              <td class="wid30 align-top">Tags:</td>
+              <td>
+                <span class="badge badge-orange mr-1" v-for="(tag,index) in this.projectInfoModal.tags" :key='index'>{{ tag.tag_text }}</span>
+              </td>
+            </tr>
+
+            <!-- Users -->
+            <tr>
+              <td class="wid30 align-top">Users:</td>
+              <td>
+                <span class="badge badge-success mr-1" v-for="(user,index) in this.projectInfoModal.users" :key='index'>{{ user.name }} {{ user.surname }}</span>
+              </td>
+            </tr>
+
+          </table>
+        </b-modal>
+        <!-- Project info modal end-->
+
         <b-table responsive :items="currentTabData" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
           :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
+
+            <span v-if="getTabIndex === 0" class='fas fa-info-circle text-primary mr-3' title="Project info" @click.stop="getProjectInfo(data.item.id)"
+              v-b-modal.modalInfo></span>
+
             <span class='td-bold'>{{max50Char(data.item.title)}}</span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
               title="Edit Item"></span>
@@ -220,8 +260,8 @@
           </template>
 
           <template slot="users" slot-scope="data">
-            <avatar :title='usr.name' v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
-              :size="24" class='avatar' :class='{"float-left":index===0,"float-left":index!==0}'>
+            <avatar :title='usr.name' v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)"
+              :rounded="false" :size="24" class='avatar' :class='{"float-left":index===0,"float-left":index!==0}'>
             </avatar>
             <span v-if='data.item.usrworking.length>2'> +{{data.item.usrworking.length-2}}</span>
           </template>
@@ -229,7 +269,7 @@
         </b-table>
       </div>
     </div>
-    <user-options v-if='userOptionsVisible' @userOptionsVisible='changeUserOptionsBool'/>
+    <user-options v-if='userOptionsVisible' @userOptionsVisible='changeUserOptionsBool' />
   </aside>
 </template>
 
@@ -250,6 +290,8 @@ export default {
   },
   data() {
     return {
+      projectInfoModal: {},
+
       tagsNet: [],
       taskSearchTag: [],
       taskSearchText: undefined,
@@ -462,6 +504,12 @@ export default {
     }
   },
   methods: {
+    getProjectInfo(proID) {
+      api.getSingleProjectInfo(proID, localStorage.sid).then(response => {
+        this.projectInfoModal = response.data.data;
+      });
+    },
+
     max50Char(val) {
       if (val.length > 50) {
         return val.substring(0, 50) + "...";
@@ -1254,5 +1302,9 @@ label {
   .flex-form-action {
     justify-content: center;
   }
+}
+
+.wid30 {
+  width: 30%;
 }
 </style>

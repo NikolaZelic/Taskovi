@@ -306,6 +306,15 @@ export const api = {
         "X-Requested-With": "XMLHttpRequest"
       }
     });
+  },
+
+  getSingleProjectInfo(proid, sid){
+    return axios.get("projects/:proid",{
+      params: {
+        proid: proid,
+        sid: sid
+      }
+    })
   }
 
   //Kraj Milosevih API-ja
