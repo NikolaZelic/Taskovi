@@ -458,18 +458,9 @@ export default {
   },
 
   methods: {
+
     taskStatus(parameter) {
-      axios
-        .put(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/status",
-          {
-            sid: localStorage.sid,
-            status: parameter,
-            tasid: this.selectedItemID
-          }
-        )
-        .then(response => {
-          // console.log('ovde')
+      api.changeTaskStatus(parameter, localStorage.sid, this.selectedItemID).then(response => {
           this.resetTaskView();
         });
     },

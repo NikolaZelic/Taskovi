@@ -264,24 +264,27 @@ export default {
       // }
 
       function uploadFile(file, i) {
-        var task = store.state.sidebarItemSelection[1];
-        var url =
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-          task +
-          "/feeds";
+        // var task = store.state.sidebarItemSelection[1];
+        // var url =
+        //   "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+        //   task +
+        //   "/feeds";
         var formData = new FormData();
 
         formData.append("file", file);
         formData.append("sid", localStorage.sid);
         formData.append("type", "file");
 
+/*
         axios
           .post(url, formData, {
             headers: {
               "X-Requested-With": "XMLHttpRequest"
             }
           })
-          .then(response => {
+*/
+
+          api.dragAndDropUpload(store.state.sidebarItemSelection[1], formData).then(response => {
             if (response.data.status === "OK") {
               store.commit("modalStatus", {
                 ok: true,
