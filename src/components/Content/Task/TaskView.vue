@@ -1140,6 +1140,10 @@ textarea:disabled {
   padding: 5px 10px;
 }
 
+#task-table{
+  width: 100%;
+}
+
 td .form-control {
   border: none;
   border-bottom: 1px solid #a09e9e57;
