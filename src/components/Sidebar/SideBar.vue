@@ -35,7 +35,7 @@
 
       <div class="user-sidebar">
 
-        <div class='tab-container' @click="userOptions">
+        <div class='tab-container' @click="userOptionsVisible=true">
           <span class='fa fa-user'>
           </span>
           <span class='left-al'>Profile</span>
@@ -229,6 +229,7 @@
         </b-table>
       </div>
     </div>
+    <user-options v-if='userOptionsVisible' @userOptionsVisible='changeUserOptionsBool'/>
   </aside>
 </template>
 
@@ -237,16 +238,14 @@ import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
 import { instance as axios } from "@/api/config.js";
-// import UserTasks from "./UserTasks";
-import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
+import UserOptions from "@/components/Misc/UserOptions";
 import { baseURL } from "@/api/config.js";
 import Avatar from "vue-avatar";
 export default {
   components: {
-    // UserTasks,
     Multiselect,
-    GlobalFeed,
+    UserOptions,
     Avatar
   },
   data() {
@@ -262,6 +261,7 @@ export default {
       notifSelected: false,
       selectedFilter: [],
       sideHover: false,
+      userOptionsVisible: false,
       projectRefItem: {},
       radioFilter: [
         {
@@ -655,8 +655,8 @@ export default {
     focusSearch() {
       this.$refs.search.$el.focus();
     },
-    userOptions() {
-      this.$router.push("user");
+    changeUserOptionsBool(val) {
+      this.userOptionsVisible = val;
     },
     setSidebarBoolean(val) {
       store.commit("mainFocused", !val);

@@ -40,12 +40,13 @@
         </div>
       </div>
 
-      <div class='feed-global' v-if='!tableShow'>
-        <router-view name="gf"></router-view>
-        <!-- <global-feed v-if='globalFeed' /> -->
+      <div class="feed-global-wrap" v-if='!tableShow'>
+        <div class='feed-global'>
+          <router-view name="gf"></router-view>
+          <!-- <global-feed v-if='globalFeed' /> -->
+        </div>
       </div>
     </div>
-    <router-view name='uo'></router-view>
     <modal-error v-if="modalErrorActive" />
   </div>
 </template>
@@ -64,10 +65,9 @@ import TaskAdd from "@/components/Content/Task/TaskAdd";
 import ProjectManage from "@/components/Content/Project/ProjectManage";
 // import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
-import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
+// import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 
 import ModalError from "@/components/Misc/ModalError";
-import UserOptions from "@/components/Misc/UserOptions";
 
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
@@ -80,16 +80,14 @@ export default {
     TaskEdit,
     ProjectManage,
     TaskAdd,
-    UserOptions,
-    ModalError,
-    GlobalFeed
-    // ProjectConfig
+    ModalError
   },
   data() {
     return {
       editBtn: false,
       addBtn: false,
-      intervalSession: null
+      intervalSession: null,
+      lastLink: undefined
     };
   },
   watch: {
@@ -129,9 +127,13 @@ export default {
       this.addBtn = val !== undefined;
     },
     globalFeed(val) {
-      if (val) {
-        this.$router.push("/feeds");
-      } else this.$router.push("/");
+      if (val) this.$router.push("/feeds");
+      else this.$router.push(this.lastLink);
+      // TEST THIS!
+    },
+    $route(to, from) {
+      this.lastLink = from.path;
+      store.commit("lastLink", from.path);
     }
   },
   computed: {
@@ -329,13 +331,19 @@ export default {
   text-align: center;
 }
 
+.feed-global-wrap {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-left: 70px;
+  position: fixed;
+}
+
 .feed-global {
   max-width: 700px;
-  margin: 0 20px 0 40px;
-  position: fixed;
-  height: 100vh;
-  align-self: end;
-  z-index: 1;
+  margin: auto;
+  height: 100%;
 }
 
 .darkMain .feed-global pre {
@@ -392,9 +400,9 @@ export default {
 }
 
 @media only screen and (min-width: 960px) {
-  .feed-global {
+  /* .feed-global {
     align-self: center;
-  }
+  } */
   #wrapper {
     flex-direction: row;
     min-height: 100vh;
@@ -428,9 +436,9 @@ export default {
 }
 
 @media only screen and (min-width: 600px) {
-  .feed-global {
+  /* .feed-global {
     margin-left: 35px;
-    /* align-self: center; */
-  }
+    align-self: center;
+  } */
 }
 </style>

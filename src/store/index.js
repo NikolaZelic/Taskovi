@@ -54,5 +54,6 @@ export const store = new Vuex.Store({
       addStep: false
     },
     refreshGlobalFeed: false,
+    lastLink: undefined,
   },
 });

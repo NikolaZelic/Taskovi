@@ -46,13 +46,11 @@ import { mapState } from "vuex";
 import { baseURL } from "@/api/config.js";
 import Avatar from "vue-avatar";
 
-// import VueCoreImageUpload from "vue-core-image-upload";
-
 export default {
   components: {
-    // VueCoreImageUpload,
     Avatar
   },
+  props: ["userOptionsVisible"],
   data() {
     return {
       avatarUrl: "",
@@ -150,8 +148,10 @@ export default {
     },
     closeModal(val) {
       if (val === "cm" || val.target.id === "cm") {
-        // fIX
-        this.$router.push("/");
+        this.$emit("userOptionsVisible", false);
+        // this.userOptionsVisible = false;
+        // let l = this.lastLink;
+        // this.$router.push(l === undefined ? "/" : l);
       }
     },
     getAvatar() {
@@ -184,7 +184,8 @@ export default {
   computed: {
     ...mapState({
       darkTheme: "darkTheme",
-      userStorage: "userStorage"
+      userStorage: "userStorage",
+      lastLink: "lastLink"
     }),
     avatarUploadUrl() {
       return baseURL + "auth/users/img?sid=" + window.localStorage.sid;
@@ -211,10 +212,12 @@ export default {
 
 <style scoped>
 .modal-mask {
-  height: 100%;
-  width: 100%;
   background: #101010c2;
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
   display: flex;
   justify-content: center;
