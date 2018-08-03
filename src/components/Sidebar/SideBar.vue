@@ -220,7 +220,7 @@
           </template>
 
           <template slot="users" slot-scope="data">
-            <avatar v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
+            <avatar :title='usr.name' v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
               :size="24" class='avatar' :class='{"float-left":index===0,"float-left":index!==0}'>
             </avatar>
             <span v-if='data.item.usrworking.length>2'> +{{data.item.usrworking.length-2}}</span>
@@ -1019,7 +1019,8 @@ export default {
   border-radius: 5px !important;
   display: block;
   margin-top: 3px;
-  padding: 0
+  padding: 0;
+  float: left;
 }
 
 #btn-pocetak {

@@ -244,29 +244,29 @@ export default {
         //   }
         // }
 
-      // function previewFile(file) {
-      //   let reader = new FileReader()
-      //   reader.readAsDataURL(file)
-      //   reader.onloadend = function() {
-      //     let img = document.createElement('img')
-      //     img.src = reader.result
-      //     document.getElementById('gallery').appendChild(img)
-      //   }
-      // }
+        // function previewFile(file) {
+        //   let reader = new FileReader()
+        //   reader.readAsDataURL(file)
+        //   reader.onloadend = function() {
+        //     let img = document.createElement('img')
+        //     img.src = reader.result
+        //     document.getElementById('gallery').appendChild(img)
+        //   }
+        // }
 
-      function uploadFile(file, i) {
-        // var task = store.state.sidebarItemSelection[1];
-        // var url =
-        //   "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-        //   task +
-        //   "/feeds";
-        var formData = new FormData();
+        function uploadFile(file, i) {
+          // var task = store.state.sidebarItemSelection[1];
+          // var url =
+          //   "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+          //   task +
+          //   "/feeds";
+          var formData = new FormData();
 
-        formData.append("file", file);
-        formData.append("sid", localStorage.sid);
-        formData.append("type", "file");
+          formData.append("file", file);
+          formData.append("sid", localStorage.sid);
+          formData.append("type", "file");
 
-/*
+          /*
         axios
           .post(url, formData, {
             headers: {
@@ -275,21 +275,23 @@ export default {
           })
 */
 
-          api.dragAndDropUpload(store.state.sidebarItemSelection[1], formData).then(response => {
-            if (response.data.status === "OK") {
-              store.commit("modalStatus", {
-                ok: true,
-                message: "Successfully sent attachment."
-              });
-              self.readeFeeds();
-            } else {
-              store.commit("modalStatus", {
-                ok: false,
-                message: "Something went wrong. Try again."
-              });
-            }
-          });
-      }
+          api
+            .dragAndDropUpload(store.state.sidebarItemSelection[1], formData)
+            .then(response => {
+              if (response.data.status === "OK") {
+                store.commit("modalStatus", {
+                  ok: true,
+                  message: "Successfully sent attachment."
+                });
+                self.readeFeeds();
+              } else {
+                store.commit("modalStatus", {
+                  ok: false,
+                  message: "Something went wrong. Try again."
+                });
+              }
+            });
+        }
       }
     },
     changeSelectedTask() {
@@ -792,9 +794,8 @@ export default {
   display: flex;
   margin-bottom: 10px;
   height: 0;
-  flex: 1 auto; 
-  border: 1px solid #8a888866;
-  border-radius: 5px;
+  flex: 1 auto;
+  border: 1px solid #8c8c8c38;
   background: #fff;
 }
 
@@ -825,7 +826,7 @@ export default {
   padding: 5px 65px 5px;
   flex: 1;
   background-color: #fff;
-  border: 1px solid #dfdfdf;
+  border: 1px solid #8c8c8c38;
   font-size: 16px;
   resize: none;
   border-radius: 5px;

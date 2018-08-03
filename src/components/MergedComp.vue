@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class='feed-wrap' v-if='!tableShow'>
+      <div class='feed-global' v-if='!tableShow'>
         <router-view name="gf"></router-view>
         <!-- <global-feed v-if='globalFeed' /> -->
       </div>
@@ -70,7 +70,7 @@ import ModalError from "@/components/Misc/ModalError";
 import UserOptions from "@/components/Misc/UserOptions";
 
 import { api } from "@/api/index.js";
-import { mapGetters,mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -272,7 +272,7 @@ export default {
 
 .flex-data-row {
   display: flex;
-  /* height: 100%; */
+  height: 100%;
   background: var(--main-bg-color);
 }
 
@@ -329,15 +329,16 @@ export default {
   text-align: center;
 }
 
-.feed-wrap {
-  width: 60%;
-  margin-left: 70px;
+.feed-global {
+  max-width: 700px;
+  margin: 0 20px 0 40px;
+  position: fixed;
   height: 100vh;
-  align-self: center;
+  align-self: end;
   z-index: 1;
 }
 
-.darkMain .feed-wrap pre {
+.darkMain .feed-global pre {
   color: whitesmoke;
 }
 
@@ -391,9 +392,9 @@ export default {
 }
 
 @media only screen and (min-width: 960px) {
-  /* .sidebar-body {
-      margin-left: 70px;
-  } */
+  .feed-global {
+    align-self: center;
+  }
   #wrapper {
     flex-direction: row;
     min-height: 100vh;
@@ -423,6 +424,13 @@ export default {
   #wrapper .rightside.focus {
     margin-left: 70px;
     transition: all 0.8s ease;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .feed-global {
+    margin-left: 35px;
+    /* align-self: center; */
   }
 }
 </style>
