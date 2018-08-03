@@ -77,6 +77,7 @@ export default {
               index: 1,
               pro_id: this.proId
             });
+
             store.commit("modalStatus", {
               message: "Task has been edited succesfully"
             });
