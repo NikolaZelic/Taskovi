@@ -53,7 +53,7 @@
     <b-alert variant="success" :show="haveNewMessage" class='message-notificaton'>
       <span @click='reload' style='display:flex'>You have a new message!</span>
     </b-alert>
-    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new step'>
+    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new timestamp'>
       <table class='modal-table'>
         <tr v-if='selectedStep!=null'>
           <td>Time:</td>
@@ -520,6 +520,9 @@ export default {
     addDown(scrollDown) {
       // console.log("add down");
       if (this.loadingData) return;
+      // tasid, fedid, direction, type, searchingstring, fed_important, fed_time, impbyoth
+      let params = {};
+      this.addImportantToParams(params);
       var message = this.messages[this.messages.length - 1];
       if (message === undefined || message === null) return;
       api
@@ -527,10 +530,11 @@ export default {
           this.taskid,
           message.fed_id,
           "down",
+          this.searchType,
           undefined,
-          undefined,
-          undefined,
-          this.localToUTC(message.fed_time)
+          params.fed_important,
+          this.localToUTC(message.fed_time),
+          params.impbyoth,
         )
         .then(result => {
           this.loadingData = false;
@@ -662,6 +666,7 @@ export default {
     jumpToStepFeed(tsk_id, stp_time_created) {
       // console.log('jump to step feed');
       // console.log(stp_time_created);
+      this.searchText = '';
       stp_time_created = this.localToUTC(stp_time_created);
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
