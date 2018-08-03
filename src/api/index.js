@@ -118,7 +118,7 @@ export const api = {
       }
     });
   },
-  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time) {
+  readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time, impbyoth) {
     return axios.get('/tasks/' + tasid + '/feeds', {
       params: {
         fedid: fedid,
@@ -128,6 +128,7 @@ export const api = {
         fed_important: fed_important,
         fedtime: fed_time,
         sid: window.localStorage.sid,
+        impbyoth: impbyoth
       }
     });
   },

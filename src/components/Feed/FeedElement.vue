@@ -8,7 +8,8 @@
       <input @blur="textInputBlur" @keyup.enter='textInputBlur' v-model="searchText" type='text' placeholder="Search Feed" class='search' />
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
-        <b-form-checkbox v-model="searchImportant">Important</b-form-checkbox>
+        <b-form-checkbox v-model="searchImportant" >Important</b-form-checkbox>
+        <b-form-checkbox v-model="searchImpByOth" >Important by Others</b-form-checkbox>
       </form>
     </div>
 
@@ -89,6 +90,7 @@ export default {
       inProgress: false,
       searchText: "",
       searchImportant: false,
+      searchImpByOth: false,
       dataFromBegining: 1,
       numOfMessages: null,
       loadingData: false,
@@ -166,6 +168,11 @@ export default {
       this.readeFeeds();
     },
     searchImportant() {
+      this.searchImpByOth = false;
+      this.readeFeeds();
+    },
+    searchImpByOth(){
+      this.searchImportant = false;
       this.readeFeeds();
     },
     newStep(newVal, old) {
@@ -375,7 +382,8 @@ export default {
           direction: "start",
           type: this.searchType,
           searchingstring: this.searchText,
-          fed_important: this.searchImportant
+          fed_important: this.searchImportant,
+          impbyoth: this.searchImpByOth,
         })
         .then(() => {
           setTimeout(() => {
