@@ -268,7 +268,7 @@ export const api = {
         sid: sid,
         tasid: tasid
       }
-    })
+    });
   },
 
   loadAllProjectUsers(sid, projectID) {
@@ -277,7 +277,7 @@ export const api = {
         proid: projectID,
         sid: sid
       }
-    })
+    });
   },
 
   loadTags(proid, searchstring, sid) {
@@ -291,21 +291,30 @@ export const api = {
     });
   },
 
-  changeTaskStatus(parameter, sid, tasid){
+  changeTaskStatus(parameter, sid, tasid) {
     return axios.put("tasks/:tasid/status", {
-        sid: sid,
-        status: parameter,
-        tasid: tasid
+      sid: sid,
+      status: parameter,
+      tasid: tasid
     });
   },
 
-  dragAndDropUpload(task, formData){
+  dragAndDropUpload(task, formData) {
     let url = 'tasks/' + task + '/feeds';
     return axios.post(url, formData, {
       headers: {
         "X-Requested-With": "XMLHttpRequest"
       }
     });
+  },
+
+  getSingleProjectInfo(proid, sid){
+    return axios.get("projects/:proid",{
+      params: {
+        proid: proid,
+        sid: sid
+      }
+    })
   }
 
   //Kraj Milosevih API-ja

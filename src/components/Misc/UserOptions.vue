@@ -149,9 +149,6 @@ export default {
     closeModal(val) {
       if (val === "cm" || val.target.id === "cm") {
         this.$emit("userOptionsVisible", false);
-        // this.userOptionsVisible = false;
-        // let l = this.lastLink;
-        // this.$router.push(l === undefined ? "/" : l);
       }
     },
     getAvatar() {

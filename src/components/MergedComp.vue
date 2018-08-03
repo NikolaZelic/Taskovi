@@ -53,6 +53,7 @@
 
 <script>
 import { store } from "@/store/index.js";
+import { routejs } from "@/router/routemanage.js";
 import SideBar from "@/components/Sidebar/SideBar";
 
 import TaskView from "@/components/Content/Task/TaskView";
@@ -63,7 +64,6 @@ import TaskEdit from "@/components/Content/Task/TaskEdit";
 import TaskAdd from "@/components/Content/Task/TaskAdd";
 
 import ProjectManage from "@/components/Content/Project/ProjectManage";
-// import ProjectConfig from "@/components/Content/Project/ProjectConfig";
 
 // import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 
@@ -127,15 +127,21 @@ export default {
       this.addBtn = val !== undefined;
     },
     globalFeed(val) {
-      if (val) this.$router.push("/feeds");
-      else this.$router.push(this.lastLink);
+      let l = this.lastLink;
+      if (val) this.$router.push("feeds");
+      else this.$router.push(l === undefined ? "/" : l);
       // TEST THIS!
     },
     $route(to, from) {
       this.lastLink = from.path;
+      // console.log(to);
       store.commit("lastLink", from.path);
     }
   },
+  // beforeRouteUpdate(to, from, next) {
+  //   console.log(to);
+  //   next();
+  // },
   computed: {
     ...mapState({
       currentTabIndex: "currentTabIndex",
@@ -236,7 +242,10 @@ export default {
       store.commit("darkTheme", true);
     }
   },
+  created() {},
   mounted() {
+    routejs.check(); // ROUTER REDIRECT
+
     this.intervalSession = setInterval(
       function() {
         this.refreshSession();
