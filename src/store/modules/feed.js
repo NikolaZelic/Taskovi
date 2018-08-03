@@ -15,7 +15,7 @@ const actions = {
     });
   },
   readeGloablFeeds(commit, params) {
-    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important );
+    return api.readeGloablFeeds(params.offset, params.type, params.searchingstring, params.fed_important, params.impbyoth);
   },
 
   // postMessage(commit, params) {

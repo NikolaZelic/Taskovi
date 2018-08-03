@@ -132,7 +132,7 @@ export const api = {
       }
     });
   },
-  readeGloablFeeds(offset, type, searchingstring, fed_important) {
+  readeGloablFeeds(offset, type, searchingstring, fed_important, impbyoth) {
     return axios.get('users/feeds', {
       params: {
         sid: window.localStorage.sid,
@@ -141,6 +141,7 @@ export const api = {
         fed_important: fed_important,
         offset: offset,
         count: false,
+        impbyoth: impbyoth,
       }
     });
   },
