@@ -282,6 +282,23 @@ export const api = {
         sid: sid
       }
     });
+  },
+
+  changeTaskStatus(parameter, sid, tasid){
+    return axios.put("tasks/:tasid/status", {
+        sid: sid,
+        status: parameter,
+        tasid: tasid
+    });
+  },
+
+  dragAndDropUpload(task, formData){
+    let url = 'tasks/' + task + '/feeds';
+    return axios.post(url, formData, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    });
   }
 
   //Kraj Milosevih API-ja

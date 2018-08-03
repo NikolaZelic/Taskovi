@@ -423,7 +423,7 @@ export default {
         .createTask(
           this.title,
           this.description,
-          this.localToUTC(this.deadline),
+          this.deadline,
           tagarray,
           userarray,
           this.selectedPriority,

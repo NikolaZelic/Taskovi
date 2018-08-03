@@ -220,11 +220,9 @@
           </template>
 
           <template slot="users" slot-scope="data">
-            <!-- <div> -->
             <avatar v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
               :size="24" class='avatar' :class='{"float-left":index===0,"float-right":index!==0}'>
             </avatar>
-            <!-- </div> -->
           </template>
 
         </b-table>

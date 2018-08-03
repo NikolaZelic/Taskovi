@@ -71,7 +71,7 @@
             </tr>
 
             <tr>
-              <td>Task Events:</td>
+              <td>Task events:</td>
               <td>{{this.taskGeneralInfo.sta_text}}</td>
             </tr>
 
@@ -82,10 +82,9 @@
                   <li class="media mt-2" style="align-items: center;" v-for="(user,index) in taskGeneralInfo.usrworking" :key='index'>
 
 
-                    <avatar v-if='user.usr_picture === null' :username="user.name" :rounded="true" :size="50">
-                    </avatar>
-                    <avatar v-else :src="'data:image/jpeg;base64,' + user.usr_picture" :rounded="true" :size="50">
-                    </avatar>
+                    <avatar v-if='user.usrimg === null' :username="user.name" :rounded="true" :size="50"></avatar>
+                    <avatar v-else :src="getAvatar(user.usrimg)" :rounded="true" :size="50"></avatar>
+
 
                     <div class="media-body">
                       <div class="media-body">
@@ -366,6 +365,7 @@
 </template>
 
 <script>
+import { baseURL } from "@/api/config.js";
 import axios from "axios";
 import { store } from "@/store/index.js";
 import { mapGetters } from "vuex";
@@ -458,18 +458,17 @@ export default {
   },
 
   methods: {
+
+    getAvatar(image) {
+      let netIcon = "";
+      if (image !== undefined && image !== null) {
+        netIcon = baseURL + image + "?sid=" + localStorage.sid;
+      }
+      return netIcon;
+    },
+
     taskStatus(parameter) {
-      axios
-        .put(
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/:tasid/status",
-          {
-            sid: localStorage.sid,
-            status: parameter,
-            tasid: this.selectedItemID
-          }
-        )
-        .then(response => {
-          // console.log('ovde')
+      api.changeTaskStatus(parameter, localStorage.sid, this.selectedItemID).then(response => {
           this.resetTaskView();
         });
     },

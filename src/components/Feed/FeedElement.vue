@@ -237,63 +237,52 @@ export default {
         //   }
         // }
 
-        // function updateProgress(fileNumber, percent) {
-        //   uploadProgress[fileNumber] = percent
-        //   let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
-        //   console.debug('update', fileNumber, percent, total)
-        //   progressBar.value = total
-        // }
+      // function previewFile(file) {
+      //   let reader = new FileReader()
+      //   reader.readAsDataURL(file)
+      //   reader.onloadend = function() {
+      //     let img = document.createElement('img')
+      //     img.src = reader.result
+      //     document.getElementById('gallery').appendChild(img)
+      //   }
+      // }
 
-        function handleFiles(files) {
-          files = [...files];
-          // initializeProgress(files.length)
-          files.forEach(uploadFile);
-          // files.forEach(previewFile)
-        }
+      function uploadFile(file, i) {
+        // var task = store.state.sidebarItemSelection[1];
+        // var url =
+        //   "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+        //   task +
+        //   "/feeds";
+        var formData = new FormData();
 
-        // function previewFile(file) {
-        //   let reader = new FileReader()
-        //   reader.readAsDataURL(file)
-        //   reader.onloadend = function() {
-        //     let img = document.createElement('img')
-        //     img.src = reader.result
-        //     document.getElementById('gallery').appendChild(img)
-        //   }
-        // }
+        formData.append("file", file);
+        formData.append("sid", localStorage.sid);
+        formData.append("type", "file");
 
-        function uploadFile(file, i) {
-          var task = store.state.sidebarItemSelection[1];
-          var url =
-            "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-            task +
-            "/feeds";
-          var formData = new FormData();
+/*
+        axios
+          .post(url, formData, {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest"
+            }
+          })
+*/
 
-          formData.append("file", file);
-          formData.append("sid", localStorage.sid);
-          formData.append("type", "file");
-
-          axios
-            .post(url, formData, {
-              headers: {
-                "X-Requested-With": "XMLHttpRequest"
-              }
-            })
-            .then(response => {
-              if (response.data.status === "OK") {
-                store.commit("modalStatus", {
-                  ok: true,
-                  message: "Successfully sent attachment."
-                });
-                self.readeFeeds();
-              } else {
-                store.commit("modalStatus", {
-                  ok: false,
-                  message: "Something went wrong. Try again."
-                });
-              }
-            });
-        }
+          api.dragAndDropUpload(store.state.sidebarItemSelection[1], formData).then(response => {
+            if (response.data.status === "OK") {
+              store.commit("modalStatus", {
+                ok: true,
+                message: "Successfully sent attachment."
+              });
+              self.readeFeeds();
+            } else {
+              store.commit("modalStatus", {
+                ok: false,
+                message: "Something went wrong. Try again."
+              });
+            }
+          });
+      }
       }
     },
     changeSelectedTask() {
