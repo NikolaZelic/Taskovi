@@ -119,7 +119,7 @@
 
           <template slot="title" slot-scope="data">
             <span class='td-bold'>{{max50Char(data.item.title)}}</span>
-            <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons fas fa-edit"
+            <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
               title="Edit Item"></span>
           </template>
 
@@ -191,7 +191,7 @@
           </template>
 
           <template slot="sta_text" slot-scope="data">
-            <span :class="convertStatus(data.item.sta_text)"></span>
+            <span :title='data.item.sta_text' :class="convertStatus(data.item.sta_text)"></span>
           </template>
 
           <!-- PRIORITY -->
@@ -214,14 +214,14 @@
             <span class='badge badge-warning' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
           </template>
 
-          <!-- TASK USERS -->
+          <!-- TASK USERS WORKING ON -->
           <template slot="HEAD_users" slot-scope="data">
-            <span class='fas fa-users' title="View users on task"></span>
+            <span class='fas fa-users' title="Users working on task"></span>
           </template>
 
-          <template slot='users' slot-scope="data">
-            <span @click.stop="editPeopleButton(data.item)" class="td-icons fas fa-user" title="Manage people"></span>
-          </template>
+          <!-- <template slot="users" slot-scope="data">
+            <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
+          </template> -->
 
         </b-table>
       </div>
@@ -301,7 +301,7 @@ export default {
           key: "title",
           label: "Projects",
           sortable: true,
-          class: "flex-td",
+          // class: "flex-td",
           thClass: "td-blue"
         },
         {
@@ -311,12 +311,6 @@ export default {
           class: "text-center",
           thClass: "td-blue"
         },
-        // {
-        //   key: "created_time",
-        //   label: "Created Time",
-        //   class: "text-left",
-        //   thClass: "td-blue"
-        // },
         {
           key: "deadline",
           label: "Due Date",
@@ -324,12 +318,6 @@ export default {
           class: "text-center",
           thClass: "td-blue"
         },
-        // {
-        //   key: "due_time",
-        //   label: "Due Time",
-        //   class: "text-left",
-        //   thClass: "td-blue"
-        // },
         {
           key: "users_count",
           label: "Users",
@@ -360,16 +348,10 @@ export default {
         },
         {
           key: "unseen_feed",
-          // label: "N",
           sortable: true,
           class: "text-center td-icon-width ",
           thClass: "td-yellow"
         }
-        // {
-        //   key: "edit_item",
-        //   label: "Edit",
-        //   class: "text-center td-icon-width"
-        // }
       ],
       taskFields: [
         {
@@ -382,7 +364,7 @@ export default {
           key: "title",
           label: "Tasks",
           sortable: true,
-          class: "flex-td",
+          // class: "flex-td",
           thClass: "td-blue"
         },
         {
@@ -400,9 +382,15 @@ export default {
           thClass: "td-blue"
         },
         {
+          key: "users",
+          label: "Users Working",
+          // sortable: true,
+          thClass: "td-purple"
+        },
+        {
           key: "tags",
           label: "Tag",
-          // sortable: true,
+          sortable: true,
           thClass: "td-blue"
         },
         {
@@ -473,11 +461,11 @@ export default {
     }
   },
   methods: {
-    max50Char(val){
-      if(val.length > 50){
-        return val.substring(0,50) + '...'
+    max50Char(val) {
+      if (val.length > 50) {
+        return val.substring(0, 50) + "...";
       }
-      return val
+      return val;
     },
     showGlobalFeed() {
       if (this.globalFeed) {

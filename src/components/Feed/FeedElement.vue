@@ -154,7 +154,7 @@ export default {
           pro_name: el.pro_name,
           tsk_id: el.tsk_id,
           tsk_title: el.tsk_title,
-          usrimg: el.usrimg,
+          usrimg: el.usrimg
         };
       });
     }
@@ -171,131 +171,129 @@ export default {
     newStep(newVal, old) {
       if (this.stepErr && newVal.length > 0) this.stepErr = false;
     },
-    searchText(newVal, oldVal){
+    searchText(newVal, oldVal) {
       // console.log(newVal);
-      if( oldVal.length>0 && newVal.length==0 )
-        this.readeFeeds();
-    },
+      if (oldVal.length > 0 && newVal.length == 0) this.readeFeeds();
+    }
   },
   methods: {
     dragAndDrop() {
-      if(this.global === false){
+      if (this.global === false) {
+        var self = this;
 
-      var self = this;
+        // ************************ Drag and drop ***************** //
+        let dropArea = document.getElementById("drop-area");
 
-      // ************************ Drag and drop ***************** //
-      let dropArea = document.getElementById("drop-area");
+        // Prevent default drag behaviors
+        ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+          dropArea.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+        });
 
-      // Prevent default drag behaviors
-      ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-        document.body.addEventListener(eventName, preventDefaults, false);
-      });
+        // Highlight drop area when item is dragged over it
+        ["dragenter", "dragover"].forEach(eventName => {
+          dropArea.addEventListener(eventName, highlight, false);
+        });
+        ["dragleave", "drop"].forEach(eventName => {
+          dropArea.addEventListener(eventName, unhighlight, false);
+        });
 
-      // Highlight drop area when item is dragged over it
-      ["dragenter", "dragover"].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false);
-      });
-      ["dragleave", "drop"].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false);
-      });
+        // Handle dropped files
+        dropArea.addEventListener("drop", handleDrop, false);
 
-      // Handle dropped files
-      dropArea.addEventListener("drop", handleDrop, false);
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
 
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+        function highlight(e) {
+          dropArea.classList.add("highlight");
+          document.getElementById("text").classList.add("displayBlock");
+          document.getElementById("text").classList.remove("displayNone");
+        }
 
-      function highlight(e) {
-        dropArea.classList.add("highlight");
-        document.getElementById("text").classList.add("displayBlock");
-        document.getElementById("text").classList.remove("displayNone");
-      }
+        function unhighlight(e) {
+          dropArea.classList.remove("highlight");
+          document.getElementById("text").classList.remove("displayBlock");
+          document.getElementById("text").classList.add("displayNone");
+        }
 
-      function unhighlight(e) {
-        dropArea.classList.remove("highlight");
-        document.getElementById("text").classList.remove("displayBlock");
-        document.getElementById("text").classList.add("displayNone");
-      }
+        function handleDrop(e) {
+          var dt = e.dataTransfer;
+          var files = dt.files;
 
-      function handleDrop(e) {
-        var dt = e.dataTransfer;
-        var files = dt.files;
+          handleFiles(files);
+        }
 
-        handleFiles(files);
-      }
+        // let uploadProgress = []
+        // let progressBar = document.getElementById('progress-bar')
 
-      // let uploadProgress = []
-      // let progressBar = document.getElementById('progress-bar')
+        // function initializeProgress(numFiles) {
+        //   progressBar.value = 0
+        //   uploadProgress = []
+        //
+        //   for (let i = numFiles; i > 0; i--) {
+        //     uploadProgress.push(0)
+        //   }
+        // }
 
-      // function initializeProgress(numFiles) {
-      //   progressBar.value = 0
-      //   uploadProgress = []
-      //
-      //   for (let i = numFiles; i > 0; i--) {
-      //     uploadProgress.push(0)
-      //   }
-      // }
+        // function updateProgress(fileNumber, percent) {
+        //   uploadProgress[fileNumber] = percent
+        //   let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
+        //   console.debug('update', fileNumber, percent, total)
+        //   progressBar.value = total
+        // }
 
-      // function updateProgress(fileNumber, percent) {
-      //   uploadProgress[fileNumber] = percent
-      //   let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
-      //   console.debug('update', fileNumber, percent, total)
-      //   progressBar.value = total
-      // }
+        function handleFiles(files) {
+          files = [...files];
+          // initializeProgress(files.length)
+          files.forEach(uploadFile);
+          // files.forEach(previewFile)
+        }
 
-      function handleFiles(files) {
-        files = [...files];
-        // initializeProgress(files.length)
-        files.forEach(uploadFile);
-        // files.forEach(previewFile)
-      }
+        // function previewFile(file) {
+        //   let reader = new FileReader()
+        //   reader.readAsDataURL(file)
+        //   reader.onloadend = function() {
+        //     let img = document.createElement('img')
+        //     img.src = reader.result
+        //     document.getElementById('gallery').appendChild(img)
+        //   }
+        // }
 
-      // function previewFile(file) {
-      //   let reader = new FileReader()
-      //   reader.readAsDataURL(file)
-      //   reader.onloadend = function() {
-      //     let img = document.createElement('img')
-      //     img.src = reader.result
-      //     document.getElementById('gallery').appendChild(img)
-      //   }
-      // }
+        function uploadFile(file, i) {
+          var task = store.state.sidebarItemSelection[1];
+          var url =
+            "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
+            task +
+            "/feeds";
+          var formData = new FormData();
 
-      function uploadFile(file, i) {
-        var task = store.state.sidebarItemSelection[1];
-        var url =
-          "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-          task +
-          "/feeds";
-        var formData = new FormData();
+          formData.append("file", file);
+          formData.append("sid", localStorage.sid);
+          formData.append("type", "file");
 
-        formData.append("file", file);
-        formData.append("sid", localStorage.sid);
-        formData.append("type", "file");
-
-        axios
-          .post(url, formData, {
-            headers: {
-              "X-Requested-With": "XMLHttpRequest"
-            }
-          })
-          .then(response => {
-            if (response.data.status === "OK") {
-              store.commit("modalStatus", {
-                ok: true,
-                message: "Successfully sent attachment."
-              });
-              self.readeFeeds();
-            } else {
-              store.commit("modalStatus", {
-                ok: false,
-                message: "Something went wrong. Try again."
-              });
-            }
-          });
-      }
+          axios
+            .post(url, formData, {
+              headers: {
+                "X-Requested-With": "XMLHttpRequest"
+              }
+            })
+            .then(response => {
+              if (response.data.status === "OK") {
+                store.commit("modalStatus", {
+                  ok: true,
+                  message: "Successfully sent attachment."
+                });
+                self.readeFeeds();
+              } else {
+                store.commit("modalStatus", {
+                  ok: false,
+                  message: "Something went wrong. Try again."
+                });
+              }
+            });
+        }
       }
     },
     changeSelectedTask() {
@@ -391,9 +389,9 @@ export default {
           fed_important: this.searchImportant
         })
         .then(() => {
-          setTimeout( ()=>{
+          setTimeout(() => {
             this.scrollToBegining();
-          }, 250 ) ;
+          }, 250);
           this.numOfMessages = this.messages.length;
           this.loadingData = false;
           if (this.firstLoad) {
@@ -418,8 +416,8 @@ export default {
           alert("Problem during sending the message");
           return;
         }
-        if(this.searchType=='statuses'){
-          this.searchType = 'messages';
+        if (this.searchType == "statuses") {
+          this.searchType = "messages";
           return;
         }
         if (this.messages.length > 0) this.addDown(true);
@@ -482,7 +480,7 @@ export default {
           if (result.data.data > 0) {
             this.countNumber = 1;
             this.count = 0;
-            if(this.messages.length==0){
+            if (this.messages.length == 0) {
               this.readeFeeds();
               return;
             }
@@ -502,7 +500,7 @@ export default {
         });
     },
     addDown(scrollDown) {
-      console.log('add down');
+      console.log("add down");
       if (this.loadingData) return;
       var message = this.messages[this.messages.length - 1];
       if (message === undefined || message === null) return;
@@ -540,8 +538,7 @@ export default {
     handleScroll(e) {
       if (!this.global) this.processStepSelection();
       if (
-        parseInt(e.target.offsetHeight) +
-          parseInt(e.target.scrollTop) ==
+        parseInt(e.target.offsetHeight) + parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
         console.log("it's down now");
@@ -798,7 +795,7 @@ export default {
   display: flex;
   margin-bottom: 10px;
   height: 0;
-  flex: 1;
+  flex: 1 auto; 
   border: 1px solid #8a888866;
   border-radius: 5px;
   background: #fff;
@@ -831,11 +828,11 @@ export default {
   padding: 5px 65px 5px;
   flex: 1;
   background-color: #fff;
-  border-color: #8a888866;
+  border: 1px solid #dfdfdf;
   font-size: 16px;
   resize: none;
   border-radius: 5px;
-  box-shadow: inset 0 1px 10px 0 #00000026;
+  box-shadow: inset 0 1px 5px 0 #0000001a;
   height: 60px;
   transition: height 0.2s;
   transition-timing-function: ease;

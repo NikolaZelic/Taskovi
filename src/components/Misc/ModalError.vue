@@ -2,11 +2,11 @@
   <transition name="modal">
     <div class="modal-mask" @click="closeModal" id='cm'>
       <div class="modal-content">
-        <p>
-          <i class="fas fa-exclamation-triangle"></i>
-          Error requesting data or internet not detected.</p>
-        <p>{{ message }}</p>
-        <button class='btn btn-danger' id='cm'>Dismiss</button>
+        <!-- <p>
+          ></i>
+          Error requesting data or internet not detected.</p> -->
+        <p><i class="fas fa-exclamation-triangle" ></i> {{ message }}</p>
+        <button class='btn btn-danger dismiss' id='cm'>Dismiss</button>
         </div>
     </div>
   </transition>
@@ -73,5 +73,11 @@ p {
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
   transform: scale(1.1);
+}
+
+.dismiss {
+  margin: 0 auto;
+  width: 50%;
+  min-width: 100px;
 }
 </style>

@@ -37,5 +37,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: "TitilliumWeb" !important;
+  overflow: hidden !important;
 }
 </style>

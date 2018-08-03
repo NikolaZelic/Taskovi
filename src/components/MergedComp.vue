@@ -70,8 +70,7 @@ import ModalError from "@/components/Misc/ModalError";
 import UserOptions from "@/components/Misc/UserOptions";
 
 import { api } from "@/api/index.js";
-import { mapGetters } from "vuex";
-import { mapState } from "vuex";
+import { mapGetters,mapState } from "vuex";
 
 export default {
   components: {
@@ -257,7 +256,7 @@ export default {
   display: flex;
   align-items: stretch;
   flex-direction: column;
-  background-color: #d0d0d0;
+  background-color: var(--main-bg-color);
   min-height: 100vh;
 }
 
@@ -273,7 +272,7 @@ export default {
 
 .flex-data-row {
   display: flex;
-  height: 100%;
+  /* height: 100%; */
   background: var(--main-bg-color);
 }
 

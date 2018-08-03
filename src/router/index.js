@@ -8,14 +8,13 @@ import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
-// import TaskView2 from '@/components/Content/Task/TaskView2';
 
 import TestForm from '@/components/TEST_COMPS/TestForm';
-
+import SideBar from "@/components/Sidebar/SideBar";
 
 Vue.use(Router);
 Vue.use(Meta);
-export default new Router({
+const router = new Router({
   routes: [{
       path: '/',
       name: 'MergedComp',
@@ -32,7 +31,11 @@ export default new Router({
         components: {
           gf: GlobalFeed
         }
-      }, ]
+      }, {
+        path: 'tasks',
+        name: 'Tasks',
+        component: SideBar
+      }]
     }, {
       path: '/auth',
       name: 'StartPage',
@@ -49,8 +52,14 @@ export default new Router({
     },
     {
       path: '*',
-      component: StartPage
+      component: MergedComp
     }
   ],
   mode: 'history',
 });
+
+export default router;
+// router.afterEach((to, from) => {
+//   console.log(to)
+//   console.log(from)
+// })

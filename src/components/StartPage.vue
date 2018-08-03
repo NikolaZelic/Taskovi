@@ -15,12 +15,14 @@
               <form class="login-form" novalidate>
                 <div class="form-group">
                   <span class='fas fa-envelope'></span>
-                  <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3" id="email"/>
+                  <input v-model="user.email" type="email" name='email' placeholder="Email address" class="form-control" required minlength="3"
+                    id="email" />
                 </div>
 
                 <div class="form-group">
                   <span class='fas fa-lock'></span>
-                  <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3" id="pass"/>
+                  <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
+                    id="pass" />
                 </div>
                 <button @click.prevent="login" class='btn btn-warning'>login</button>
                 <p class="message">Not registered?
@@ -45,7 +47,7 @@
           <div class="form-auth" :key='2'>
             <div class="register">
               <h2>Sign up for free</h2>
-              <vue-form :state="formstate" @submit.prevent="onSubmit">
+              <vue-form :state="formstate">
 
                 <validate class="form-group">
                   <span class='fas fa-user'></span>
@@ -92,6 +94,7 @@
       <div id="creators" title='Created By: Nikola Zelic, Zeljko Milinkovic, Danilo Pusic, Milos Paunovic'></div>
 
     </div>
+    <modal-error v-if="modalErrorActive" />
   </div>
 
 </template>
@@ -100,8 +103,13 @@
 import { api } from "@/api/index.js";
 import { store } from "@/store/index.js";
 import VueForm from "vue-form";
+import ModalError from "@/components/Misc/ModalError";
+import { mapState } from "vuex";
 export default {
   mixins: [new VueForm({})],
+  components: {
+    ModalError
+  },
   data() {
     return {
       loginVisible: true,
@@ -152,15 +160,15 @@ export default {
       let mail = this.user.email;
       let pass = this.user.pass;
       if (mail === undefined || mail.length < 4) {
-        alert("Email is not valid");
-        //document.getElementById("email").style.color = "red";
-        //this.user.email = "Email is not valid";
+        store.commit("modalError", {
+          message: "Email is not valid"
+        });
         return;
       }
       if (pass === undefined || pass.length < 2) {
-        //document.getElementById("pass").style.color = "red";
-        //this.user.pass = "Password cannot be less then two characters";
-        alert("Password cannot be less than two characters");
+        store.commit("modalError", {
+          message: "Password cannot be less than two characters"
+        });
         return;
       }
       api
@@ -178,9 +186,9 @@ export default {
               this.$router.push("/");
             }
           } else {
-            //document.getElementById("email").style.color = "red";
-            //this.user.email = "Login failed. Please check your username or password.";
-            alert("Login failed. Please check your username or password.");
+            store.commit("modalError", {
+              message: "Login failed. Please check your username or password."
+            });
           }
         })
         .catch(e => {
@@ -196,7 +204,12 @@ export default {
           .register(this.user)
           .then(r => {
             if (r.data.registration === "Success") {
+              console.log(r.data);
               this.loginVisible = true;
+            } else if (r.data.status === "ERR") {
+              store.commit("modalError", {
+                message: r.data.message
+              });
             }
           })
           .catch(e => {
@@ -205,19 +218,13 @@ export default {
             });
           });
       }
-    },
-    onSubmit() {
-      // if (this.formstate.$invalid) {
-      //   alert("invalid");
-      //   // alert user and exit early
-      //   return;
-      // }
-      // alert("submit");
-      // // otherwise submit form
     }
   },
 
   computed: {
+    ...mapState({
+      modalErrorActive: state => state.modalError.active
+    }),
     href() {
       var loc = window.location.href;
       if (loc.startsWith("http://localhost:8080")) {
@@ -406,5 +413,11 @@ h2 {
 .slide-to-right-leave-to {
   opacity: 0;
   transform: translateX(-200px);
+}
+
+@media screen and (min-width: 650px) {
+  .form-auth {
+    min-width: 400px;
+  }
 }
 </style>

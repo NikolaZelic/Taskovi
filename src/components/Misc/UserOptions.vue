@@ -22,11 +22,7 @@
                     <input :type='inputType(t)' v-model.trim="t.value" />
                   </td>
                 </tr>
-                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
-                <tr class='td-flex'>
-                  <td colspan="2">
-                  </td>
-                </tr>
+                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>                
               </tbody>
             </table>
 
@@ -300,10 +296,6 @@ export default {
 
 .op-edit td {
   padding-bottom: 7px;
-}
-
-.td-flex {
-  display: flex;
 }
 
 .op-edit input {

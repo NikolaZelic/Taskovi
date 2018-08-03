@@ -17,7 +17,7 @@
 
  .item-list thead th {
    border-bottom: none !important;
-   border-top: none !important;
+   /* border-top: none !important; */
    /* font-weight: normal; */
  }
 
@@ -77,10 +77,6 @@
  .item-list tbody tr.active {
    border-left: 6px solid var(--ac-color);
    color: var(--ac-color);
- }
-
- .td-flex {
-   flex: 1;
  }
 
  .user-table .table-dark {
