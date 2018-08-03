@@ -150,6 +150,7 @@ export default {
     },
     closeModal(val) {
       if (val === "cm" || val.target.id === "cm") {
+        // fIX
         this.$router.push("/");
       }
     },
