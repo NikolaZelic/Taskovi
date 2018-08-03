@@ -88,6 +88,10 @@
    line-height: initial;
  }
 
+ .tc-avatar {
+   min-width: 60px;
+ }
+
  /* TD COLORS */
 
  .td-icons {

@@ -65,7 +65,7 @@
       <div class="flex-form-action">
 
         <button id="addItem" class="btn btn-success" @click="addItemButton">
-          <span class="fas fa-plus-circle"></span> 
+          <span class="fas fa-plus-circle"></span>
           <!-- Add -->
           <!-- <span>{{tabs[getTabIndex].single}}</span> -->
         </button>
@@ -182,7 +182,7 @@
           <!-- TASK TAGS -->
           <template slot="tags" slot-scope="data">
             <span class='badge badge-orange' v-if="data.item.tags.length > 0">{{data.item.tags[0].tag_text}}</span>
-              <span v-if='data.item.tags.length > 1'> + {{data.item.tags.length-1}}</span>
+            <span v-if='data.item.tags.length > 1'> + {{data.item.tags.length-1}}</span>
           </template>
 
           <!-- TASK STATUS -->
@@ -214,22 +214,22 @@
             <span class='badge badge-warning' v-if='data.item.unseen_feed !== 0'>{{data.item.unseen_feed}}</span>
           </template>
 
-          <!-- TASK USERS WORKING ON -->
+          <!-- TASK AVATAR WORKING ON -->
           <template slot="HEAD_users" slot-scope="data">
             <span class='fas fa-users' title="Users working on task"></span>
           </template>
 
-          <!-- <template slot="users" slot-scope="data">
-            <span class='badge badge-purple' v-if='data.item.users_count !== 0'>{{data.item.users_count}}</span>
-          </template> -->
+          <template slot="users" slot-scope="data">
+            <!-- <div> -->
+            <avatar v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
+              :size="24" class='avatar' :class='{"float-left":index===0,"float-right":index!==0}'>
+            </avatar>
+            <!-- </div> -->
+          </template>
 
         </b-table>
       </div>
     </div>
-    <!-- </div> -->
-
-    <!-- <user-tasks v-if='showTaskPeople'></user-tasks> -->
-
   </aside>
 </template>
 
@@ -242,11 +242,13 @@ import { instance as axios } from "@/api/config.js";
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 import Multiselect from "vue-multiselect";
 import { baseURL } from "@/api/config.js";
+import Avatar from "vue-avatar";
 export default {
   components: {
     // UserTasks,
     Multiselect,
-    GlobalFeed
+    GlobalFeed,
+    Avatar
   },
   data() {
     return {
@@ -385,7 +387,8 @@ export default {
           key: "users",
           label: "Users Working",
           // sortable: true,
-          thClass: "td-purple"
+          class: "text-center",
+          thClass: "td-purple tc-avatar"
         },
         {
           key: "tags",
@@ -557,6 +560,13 @@ export default {
           this.getTaskFilterData();
           break;
       }
+    },
+    getAvatar(netVal) {
+      let netIcon = "";
+      if (netVal.usrimg !== undefined && netVal.usrimg !== null) {
+        netIcon = baseURL + netVal.usrimg + "?sid=" + localStorage.sid;
+      }
+      return netIcon;
     },
     selectItem(itemID) {
       this.tabs[this.getTabIndex].itemIndex = itemID;
@@ -1005,6 +1015,13 @@ export default {
 }
 
 /* TASK LIST END */
+
+.avatar {
+  border-radius: 5px !important;
+  display: block;
+  margin-top: 3px;
+  padding: 0
+}
 
 #btn-pocetak {
   position: relative;
