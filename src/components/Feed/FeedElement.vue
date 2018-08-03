@@ -17,7 +17,9 @@
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&timestamps.length>0'>
         <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' >
-          <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_time' >{{timestamp.fed_text}}</span>
+          <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_text +" "+timestamp.fed_time' >
+            {{formatTimestampTitle(timestamp.fed_text)}}
+          </span>
           <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
             <span v-b-modal.deleteTimestempId><i class="fas fa-times-circle"></i></span>
           </span>
@@ -586,6 +588,11 @@ export default {
           // return;
         }
       }
+    },
+    formatTimestampTitle(title){
+      if(title.length>15)
+        return title.substring(0, 20)+"...";
+      return title;
     },
     selectTimestemp(time) {
       time = this.$moment(time);
