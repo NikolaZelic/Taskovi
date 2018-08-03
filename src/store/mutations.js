@@ -8,7 +8,7 @@ const mutations = {
     store.state.userStorage = {};
     // store.state.darkTheme = undefined;
   },
-  
+
   modalError(state, params) {
     store.state.modalError.active = params.active !== false;
     if (params.message !== undefined)
@@ -45,6 +45,10 @@ const mutations = {
 
   notificationCount(state, params) {
     store.state.notificationCount = params;
+  },
+
+  lastLink(state, params) {
+    store.state.lastLink = params;
   }
 };
 export default {

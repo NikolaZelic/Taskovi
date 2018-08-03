@@ -761,6 +761,8 @@ export default {
   max-width: 400px;
   width: 100%;
   border-radius: 5px;
+  height: 30px;
+  font-size: 90%;
 }
 
 .darkTheme .search {

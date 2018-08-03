@@ -49,11 +49,37 @@
             <!-- TAGS -->
             <div class="form-group" v-if="task">
               <span class='fas fa-tags' title='Tags'></span>
-              <multiselect v-model="selectedTags" id="tags-component" class='task-modal-input' label="text" track-by="text" placeholder="Enter Tags" open-direction="bottom"
-                @change="somethingChanged = true" :options="suggestedTags" :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true"
-                :close-on-select="true" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :taggable="true"
-                :allow-empty="true" @search-change="searchTags" @close="multiselectOut">
-              </multiselect>
+
+
+        <multiselect
+          v-model="selectedTags"
+          id="tags-component"
+          class='task-modal-input'
+          label="text"
+          track-by="text"
+          placeholder="Enter Tags"
+          open-direction="bottom"
+          :options="suggestedTags"
+          :multiple="true"
+          :searchable="true"
+          :internal-search="false"
+          :clear-on-select="true"
+          :close-on-select="true"
+          :max-height="600"
+          :show-no-results="false"
+          :hide-selected="true"
+          :taggable="true"
+          :allow-empty="true"
+          @search-change="searchTags"
+          @tag="addTag"
+          @change="somethingChanged = true">
+        </multiselect>
+<!-- +ovo je bilo deo multiselcta/ -->
+<!-- @close="multiselectOut" -->
+
+
+
+
             </div>
 
             <!-- PRIORITY -->
@@ -228,11 +254,21 @@ export default {
     },
 
     usersOut() {},
+
+    addTag (newTag) {
+      const tag = {
+        text: newTag,
+      }
+      this.selectedTags.push(tag)
+    },
+
+
     multiselectOut() {
       // Dodavanje novog taga
       var tag = this.tagSearchStr;
+
       if (
-        // this.suggestedTags.length > 0 ||
+        this.suggestedTags.length > 0 ||
         tag == undefined ||
         tag == null ||
         tag.length == 0
@@ -244,6 +280,7 @@ export default {
       this.selectedTags.push({
         text: tag
       });
+
     },
     selectUser() {
       this.teamSelect = false;

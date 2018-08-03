@@ -20,12 +20,6 @@ const router = new Router({
       name: 'MergedComp',
       component: MergedComp,
       children: [{
-        path: 'user',
-        name: 'UserOptions',
-        components: {
-          uo: UserOptions
-        },
-      }, {
         path: 'feeds',
         name: 'GlobalFeed',
         components: {
