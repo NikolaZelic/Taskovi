@@ -9,6 +9,7 @@
       <avatar v-if='this.mess.fed_type==="message"' :username="mess.usr_name +' '+ mess.usr_surname" :src="getAvatar" :rounded="false"
         :size="40" class='avatar'>
       </avatar>
+      </avatar>
       <i class="fas fa-paperclip" v-if='this.mess.fed_type==="attachment"'></i>
       <i class="fas fa-info-circle" v-if='this.mess.fed_type==="status"'></i>
     </div>
