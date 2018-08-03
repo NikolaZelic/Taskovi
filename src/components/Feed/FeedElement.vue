@@ -413,7 +413,7 @@ export default {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
           }
-          // this.processStepSelection();
+          this.processStepSelection();  // Ovo je neophodno kada ima mali broj poruka, tj. ne pojavi se skrol
         })
         .catch(err => {
           this.loadingData = false;
@@ -517,7 +517,7 @@ export default {
         });
     },
     addDown(scrollDown) {
-      console.log("add down");
+      // console.log("add down");
       if (this.loadingData) return;
       var message = this.messages[this.messages.length - 1];
       if (message === undefined || message === null) return;
@@ -558,7 +558,7 @@ export default {
         parseInt(e.target.offsetHeight) + parseInt(e.target.scrollTop) ==
         parseInt(e.target.scrollHeight)
       ) {
-        console.log("it's down now");
+        // console.log("it's down now");
         this.addDown();
         return;
       }
@@ -568,6 +568,7 @@ export default {
       }
     },
     processStepSelection() {
+      this.deselectTimestemps();
       if (this.timestamps == null || this.timestamps.length === 0) return;
       var messages = document.querySelectorAll(".selector");
       if (messages === undefined || messages === null || messages.length === 0)
@@ -577,12 +578,11 @@ export default {
         if (this.isInViewport(message)) {
           // console.log(message);
           this.selectTimestemp(this.messages[i].fed_time);
-          return;
+          // return;
         }
       }
     },
     selectTimestemp(time) {
-      this.deselectTimestemps();
       time = this.$moment(time);
       var length = this.timestamps.length;
       for (var i = 0; i < length; i++) {
@@ -593,6 +593,7 @@ export default {
             time <= this.$moment(this.timestamps[i + 1].fed_time))
         ) {
           // taj step treba da se selektuje
+          // console.log(this.timestamps[i]);
           this.timestamps[i].selected = true;
           var timestamps = this.timestamps;
           this.timestamps = [];
@@ -602,9 +603,13 @@ export default {
       }
     },
     deselectTimestemps() {
+      // console.log('deselect timestemps');
       for (var i in this.timestamps) {
         this.timestamps[i].selected = false;
       }
+      let temp = this.timestamps;
+      this.timestamps = [];
+      this.timestamps = temp;
     },
     deleteTimestemp(timestemp){
       this.choosenTimestemp = timestemp;
@@ -652,6 +657,9 @@ export default {
       a.scrollIntoView(true);
     },
     jumpToStepFeed(tsk_id, stp_time_created) {
+      // console.log('jump to step feed');
+      // console.log(stp_time_created);
+      stp_time_created = this.localToUTC(stp_time_created);
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
         .then(result => {
@@ -663,22 +671,30 @@ export default {
             direction: "start",
             data: result.data.data
           });
-          this.scrollTOTop();
+          if(this.chatHasScroll())
+            this.scrollTOTop();
+          else
+            this.addUp();
         });
     },
     isInViewport(el) {
-      if (el == null) return;
-
+      if (el == null || el.getBoundingClientRect===undefined ) return;
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
       var wrapperTop = document.getElementById("all2").offsetTop + 50;
       const vertInView =
-        rect.top <= windowHeight &&
+        rect.top <= windowHeight-50 &&
         rect.top + rect.height >= 0 &&
         rect.top >= wrapperTop;
       return vertInView;
-    }
+    },
+    chatHasScroll(){
+      var element = document.getElementById('all2');
+      if(element==null||element==undefined||element.scrollHeight==undefined||element.clientHeight==undefined)
+        return false;
+      return element.scrollHeight > element.clientHeight;
+    },
   },
   mounted() {
     this.dragAndDrop();
@@ -690,6 +706,7 @@ export default {
 
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
+    /*
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
@@ -708,6 +725,7 @@ export default {
         this.countNumber = 30;
       }
     }, 1000);
+    */
   },
   destroyed() {
     clearInterval(this.fInterval);
