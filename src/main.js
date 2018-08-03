@@ -23,38 +23,38 @@ Vue.config.productionTip = false;
 
 Vue.mixin({
   methods: {
-    localToUTC(date){
+    localToUTC(date) {
       let offset = new Date().getTimezoneOffset();
-      if(date === null || date === undefined || date === "")
+      if (date === null || date === undefined || date === "")
         return undefined;
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
     },
-    utcToLocal(date){
+    utcToLocal(date) {
       let offset = "" + new Date().getTimezoneOffset();
-      if(offset.startsWith('-'))
+      if (offset.startsWith('-'))
         offset = offset.replace("-", "+");
-      else if(offset.startsWith('+'))
+      else if (offset.startsWith('+'))
         offset = offset.replace("+", "-");
 
-      if(date === null || date === undefined || date === "")
+      if (date === null || date === undefined || date === "")
         return undefined;
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm');
     },
 
-    utcToLocalSeconds(date){
+    utcToLocalSeconds(date) {
       let offset = "" + new Date().getTimezoneOffset();
-      if(offset.startsWith('-'))
+      if (offset.startsWith('-'))
         offset = offset.replace("-", "+");
-      else if(offset.startsWith('+'))
+      else if (offset.startsWith('+'))
         offset = offset.replace("+", "-");
 
-      if(date === null || date === undefined || date === "")
-        return undefined;    
+      if (date === null || date === undefined || date === "")
+        return undefined;
       return this.$moment(date).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss');
     },
 
   }
-})
+});
 
 
 /* eslint-disable no-new */

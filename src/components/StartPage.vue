@@ -160,7 +160,7 @@ export default {
       if (pass === undefined || pass.length < 2) {
         //document.getElementById("pass").style.color = "red";
         //this.user.pass = "Password cannot be less then two characters";
-        alert("Password cannot be less then two characters");
+        alert("Password cannot be less than two characters");
         return;
       }
       api

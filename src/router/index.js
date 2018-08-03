@@ -20,26 +20,22 @@ export default new Router({
       path: '/',
       name: 'MergedComp',
       component: MergedComp,
-      // components: {
-      //   a: UserOptions,
-      //   b: GlobalFeed,
-      // },
-
       children: [{
         path: 'user',
         name: 'UserOptions',
-        component: UserOptions,
+        components: {
+          uo: UserOptions
+        },
       }, {
         path: 'feeds',
         name: 'GlobalFeed',
-        component: GlobalFeed
-      }]
+        components: {
+          gf: GlobalFeed
+        }
+      }, ]
     }, {
       path: '/auth',
       name: 'StartPage',
-      component: StartPage
-    }, {
-      path: '*',
       component: StartPage
     }, {
       path: '/taskadd',
@@ -51,10 +47,10 @@ export default new Router({
       path: '/testform',
       component: TestForm
     },
-    // {
-    //   path: '/tasks/:id',
-    //   component: TaskView2
-    // }
+    {
+      path: '*',
+      component: StartPage
+    }
   ],
   mode: 'history',
 });

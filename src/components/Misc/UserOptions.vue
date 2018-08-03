@@ -159,7 +159,6 @@ export default {
     },
     getAvatar() {
       let link = "auth/users/img";
-      // let localImg = "static/img/user.png";
       axios
         .get(link, {
           params: {

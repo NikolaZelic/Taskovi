@@ -41,13 +41,11 @@
       </div>
 
       <div class='feed-wrap' v-if='!tableShow'>
-        <!-- <router-view name="a"></router-view> -->
-        <global-feed v-if='globalFeed' />
-        <!-- <project-config v-if='checkShow(2) && !globalFeed' /> -->
+        <router-view name="gf"></router-view>
+        <!-- <global-feed v-if='globalFeed' /> -->
       </div>
     </div>
-    <!-- <router-link to="/user"></router-link> -->
-    <router-view></router-view>
+    <router-view name='uo'></router-view>
     <modal-error v-if="modalErrorActive" />
   </div>
 </template>
@@ -130,12 +128,12 @@ export default {
     },
     itemAddButton(val) {
       this.addBtn = val !== undefined;
+    },
+    globalFeed(val) {
+      if (val) {
+        this.$router.push("/feeds");
+      } else this.$router.push("/");
     }
-    // globalFeed(val) {
-    //   if (val) {
-    //     this.$router.push("/feeds");
-    //   } else thir.$router.push("/");
-    // }
   },
   computed: {
     ...mapState({
