@@ -182,7 +182,7 @@
           <!-- TASK TAGS -->
           <template slot="tags" slot-scope="data">
             <span class='badge badge-orange' v-if="data.item.tags.length > 0">{{data.item.tags[0].tag_text}}</span>
-            <span v-if='data.item.tags.length > 1'> + {{data.item.tags.length-1}}</span>
+            <span v-if='data.item.tags.length > 1'> +{{data.item.tags.length-1}}</span>
           </template>
 
           <!-- TASK STATUS -->
@@ -221,8 +221,9 @@
 
           <template slot="users" slot-scope="data">
             <avatar v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)" :rounded="false"
-              :size="24" class='avatar' :class='{"float-left":index===0,"float-right":index!==0}'>
+              :size="24" class='avatar' :class='{"float-left":index===0,"float-left":index!==0}'>
             </avatar>
+            <span v-if='data.item.usrworking.length>2'> +{{data.item.usrworking.length-2}}</span>
           </template>
 
         </b-table>
