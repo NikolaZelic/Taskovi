@@ -114,10 +114,45 @@
 
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
+        <!-- Project info modal start-->
+        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'">
+          <table>
+
+            <!-- Description -->
+            <tr v-if="projectInfoModal.description !== null">
+              <td class="wid30 align-top">Description: </td>
+              <td>{{ projectInfoModal.description }}</td>
+            </tr>
+
+            <!-- Deadline -->
+            <tr v-if="projectInfoModal.deadline !== null">
+              <td class="wid30 align-top">Deadline:</td>
+              <td>{{ this.utcToLocal(projectInfoModal.deadline) }}</td>
+            </tr>
+
+            <!-- Tags -->
+            <tr v-if="projectInfoModal.tags !== undefined && projectInfoModal.tags.length > 0">
+              <td class="wid30 align-top">Tags:</td>
+              <td><span class="badge badge-orange mr-1" v-for="tag in this.projectInfoModal.tags" >{{ tag.tag_text }}</span></td>
+            </tr>
+
+            <!-- Users -->
+            <tr>
+              <td class="wid30 align-top">Users:</td>
+              <td><span class="badge badge-success mr-1" v-for="user in this.projectInfoModal.users" >{{ user.name }} {{ user.surname }}</span></td>
+            </tr>
+
+          </table>
+        </b-modal>
+        <!-- Project info modal end-->
+
         <b-table responsive :items="activeArray" thead-class='head-resp' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
           :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
+
+            <span v-if="getTabIndex === 0" class='fas fa-info-circle text-primary mr-3' title="Project info" @click.stop="getProjectInfo(data.item.id)" v-b-modal.modalInfo></span>
+
             <span class='td-bold'>{{max50Char(data.item.title)}}</span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
               title="Edit Item"></span>
@@ -251,6 +286,8 @@ export default {
   },
   data() {
     return {
+      projectInfoModal: {},
+
       tagsNet: [],
       taskSearchTag: [],
       taskSearchText: undefined,
@@ -463,6 +500,12 @@ export default {
     }
   },
   methods: {
+    getProjectInfo(proID){
+      api.getSingleProjectInfo(proID, localStorage.sid).then( response => {
+        this.projectInfoModal = response.data.data;
+      })
+    },
+
     max50Char(val) {
       if (val.length > 50) {
         return val.substring(0, 50) + "...";
@@ -1257,5 +1300,9 @@ label {
   .flex-form-action {
     justify-content: center;
   }
+}
+
+.wid30{
+  width: 30%;
 }
 </style>
