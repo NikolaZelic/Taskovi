@@ -16,7 +16,7 @@
   /* color: var(--sec-bg-color) !important; */
 }
 
-.multiselect__tag-icon:after{
+.multiselect__tag-icon:after {
   color: #fff !important;
 }
 
@@ -136,17 +136,17 @@ textarea.custom-modern::placeholder {
   color: var(--ac-color);
 }
 
-.task-tabs .tabs .nav-item .active.nav-link:after {
-  border-bottom: solid 2px var(--ac-color);
-  transform: scaleX(1.6);
-}
-
 .task-tabs .tabs .nav-item .nav-link:after {
   display: block;
   content: '';
   border-bottom: solid 2px #4c9af3;
   transform: scaleX(0);
   transition: transform 250ms ease-in-out;
+}
+
+.task-tabs .tabs .nav-item .active.nav-link:after {
+  border-bottom: solid 2px var(--ac-color);
+  transform: scaleX(1.6);
 }
 
 .task-tabs .tabs .nav-item .active.nav-link:hover:after {

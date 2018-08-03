@@ -17,15 +17,15 @@
     <div class='flex-chat-body'>
       <b-list-group v-if='!global&&timestamps.length>0'>
         <b-list-group-item v-for='(timestamp, index) in timestamps' :key='index' :active='timestamp.selected' >
-          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
-            <b-btn v-b-modal.deleteTimestempId><i class="fas fa-minus"></i></b-btn>
-          </span>
           <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_time' >{{timestamp.fed_text}}</span>
+          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
+            <span v-b-modal.deleteTimestempId><i class="fas fa-times-circle"></i></span>
+          </span>
         </b-list-group-item>
       </b-list-group>
       
-      <b-modal id="deleteTimestempId" title="Bootstrap-Vue" @ok='confirmDelete' v-if='!global' >
-        <p class="my-4" v-if='choosenTimestemp!=null' >{{choosenTimestemp.fed_text}} will be deleted</p>
+      <b-modal id="deleteTimestempId" title="Delete timestamp" @ok='confirmDelete' v-if='!global' >
+        <p class="my-4" v-if='choosenTimestemp!=null' >"{{choosenTimestemp.fed_text}}" will be deleted</p>
       </b-modal>
 
       <div id="all-messages" @scroll="handleScroll" class="feed-back">
@@ -104,6 +104,7 @@ export default {
       newStep: "",
       stepErr: false,
       haveNewMessage: false,
+      // timestampHover: false,
       firstLoad: true,
       searchType: "messages",
       importantFilter: [
@@ -135,7 +136,7 @@ export default {
         }
       ],
       timestamps: [],
-      choosenTimestemp: null,
+      choosenTimestemp: null
     };
   },
   computed: {
@@ -378,12 +379,12 @@ export default {
         }
       });
     },
-    addImportantToParams(params){
-      if(this.searchImportant.length>0){
-        for(let i=0; i<this.searchImportant.length; i++){
-          if(this.searchImportant[i]=='important')
+    addImportantToParams(params) {
+      if (this.searchImportant.length > 0) {
+        for (let i = 0; i < this.searchImportant.length; i++) {
+          if (this.searchImportant[i] == "important")
             params.fed_important = true;
-          else if(this.searchImportant[i]=='impbyoth')
+          else if (this.searchImportant[i] == "impbyoth")
             params.impbyoth = true;
         }
       }
@@ -394,11 +395,11 @@ export default {
       store.commit("clearFeed");
       this.loadingData = true;
       let params = {
-          taskid: this.taskid,
-          fedid: 0,
-          direction: "start",
-          type: this.searchType,
-          searchingstring: this.searchText,
+        taskid: this.taskid,
+        fedid: 0,
+        direction: "start",
+        type: this.searchType,
+        searchingstring: this.searchText
       };
       this.addImportantToParams(params);
       store
@@ -459,13 +460,13 @@ export default {
       var message = this.messages[0];
 
       let params = {
-          taskid: this.taskid,
-          fedid: message.fed_id,
-          direction: "up",
-          type: this.searchType,
-          searchingstring: this.searchText,
-          fed_important: this.searchImportant,
-          fedtime: this.localToUTC(message.fed_time)
+        taskid: this.taskid,
+        fedid: message.fed_id,
+        direction: "up",
+        type: this.searchType,
+        searchingstring: this.searchText,
+        fed_important: this.searchImportant,
+        fedtime: this.localToUTC(message.fed_time)
       };
       this.addImportantToParams(params);
       this.loadingData = true;
@@ -606,26 +607,28 @@ export default {
         this.timestamps[i].selected = false;
       }
     },
-    deleteTimestemp(timestemp){
+    deleteTimestemp(timestemp) {
       this.choosenTimestemp = timestemp;
     },
-    confirmDelete(){
-      if(this.choosenTimestemp === null)
-        return;
-      api.deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id).then( response=>{
-        if(response.data.status!='OK'){
-          alert('Error happen wile delitin timestemp');
+    confirmDelete() {
+      if (this.choosenTimestemp === null) return;
+      api
+        .deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id)
+        .then(response => {
+          if (response.data.status != "OK") {
+            alert("Error happen wile delitin timestemp");
+            this.choosenTimestemp = null;
+            return;
+          }
+          this.readeTimestemps();
+          this.readeFeeds();
+          this.choosenTimestemp = null;
+        })
+        .catch(() => {
+          alert("Error happen wile delitin timestemp");
           this.choosenTimestemp = null;
           return;
-        }
-        this.readeTimestemps();
-        this.readeFeeds();
-        this.choosenTimestemp = null;
-      }).catch( ()=>{
-        alert('Error happen wile delitin timestemp');
-        this.choosenTimestemp = null;
-        return;
-      });
+        });
     },
     scrollTOTop() {
       // console.log('scroll to top');
@@ -719,14 +722,14 @@ export default {
 };
 </script>
 <style scoped>
-
-.delete-timestemp{
-  font-size: 110%;
-  padding: 5px;
-  color: red;
+.delete-timestemp {
+  font-size: 105%;
+  margin-left: 15px;
+  float: right;
+  color: #ff0000;
 }
 .step-err {
-  border: 2px solid red;
+  border: 2px solid #ff0000;
 }
 
 .search-inputs {
@@ -790,6 +793,26 @@ export default {
 
 .list-group-item:last-child {
   border: none;
+}
+
+.list-group-item.active {
+  z-index: 2;
+  background-color: #ececec;
+  color: black;
+  border-radius: 0;
+  border: none;
+  /* border-left: 4px solid var(--ac-color) !important; */
+}
+
+.list-group-item.active:before {
+  display: inline-block;
+  content: "";
+  width: 4px;
+  height: 10px;
+  background: var(--ac-color) !important;
+  transform: scaleY(4);
+  position: relative;
+  right: 15px;
 }
 
 .list-group-item:hover {
