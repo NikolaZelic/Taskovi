@@ -105,7 +105,7 @@
               <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
-              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet || !timeBeforeNow'>
+              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'>
                   <span class='fa fa-edit'></span>
                   Edit</span>
@@ -203,9 +203,11 @@ export default {
     }),
 
     timeBeforeNow(){
-      var now = this.parseTime(new Date());
-      if(this.deadline < now) return false;
-      return true;
+      if(this.deadline !== null || this.deadline !== undefined){
+        var now = this.parseTime(new Date());
+        if(this.deadline < now) return false;
+        return true;
+      }
     },
 
     blankTitle() {
@@ -508,7 +510,7 @@ export default {
       if (status === "OK") {
         store.commit("modalStatus", {
           ok: true,
-          message: "Task successfully created"
+          message: "Task '" + this.title + "' has been created successfully."
         });
       } else {
         store.commit("modalStatus", {
