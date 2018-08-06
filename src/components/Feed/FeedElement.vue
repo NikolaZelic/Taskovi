@@ -82,6 +82,7 @@ import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import axios from "axios";
+import { routejs } from "@/router/routemanage.js";
 
 export default {
   components: {
@@ -737,7 +738,7 @@ export default {
 
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
-    /*
+    
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
@@ -756,7 +757,7 @@ export default {
         this.countNumber = 30;
       }
     }, 1000);
-    */
+    
   },
   destroyed() {
     clearInterval(this.fInterval);
