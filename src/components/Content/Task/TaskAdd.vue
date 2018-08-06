@@ -48,7 +48,7 @@
               <multiselect v-model="selectedUSers" onchange="somethingChanged = true" class="task-modal-input" label="name" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
-                @search-change="searchUsers" @close="usersOut">
+                @search-change="searchUsers">
               </multiselect>
             </div>
 
