@@ -45,10 +45,10 @@
             <!-- ADDING WORKERS -->
             <div class="form-group mt-3" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" onchange="somethingChanged = true" class="task-modal-input" label="name" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
+              <multiselect v-model="selectedUSers" @change="somethingChanged = true" class="task-modal-input" label="name" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
                 :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
-                @search-change="searchUsers" @close="usersOut">
+                @search-change="searchUsers">
               </multiselect>
             </div>
 
