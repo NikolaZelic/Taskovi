@@ -4,6 +4,8 @@ import {
 import {
   store
 } from '../index';
+import {library} from "@/assets/js/library.js";
+
 const actions = {
   readeFeeds(commit, params) {
     return api.readeFeeds(params.taskid, params.fedid, params.direction, params.type, params.searchingstring, params.fed_important, params.fedtime, params.impbyoth ).then(response => {
@@ -77,12 +79,16 @@ const mutations = {
         state.scrollDownMess = false;
         // params.data.forEach(e => state.messages.unshift(e) ); 
         for(var i = params.data.length-1; i>=0; i--){
-          state.messages.unshift(params.data[i]);
+          if( !library.messagesHaveFeed(state.messages, params.data[i]) )
+            state.messages.unshift(params.data[i]);
         }
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
-          params.data.forEach(e => state.messages.push(e));
+          params.data.forEach(e => {
+            if( !library.messagesHaveFeed(state.messages, params.data[i]) )
+              state.messages.push(e);
+          });
       }
     }
   },
