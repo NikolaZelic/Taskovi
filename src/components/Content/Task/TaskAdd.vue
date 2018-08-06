@@ -26,7 +26,7 @@
                 <i class="far fa-calendar-alt" @click='calendarIconClicked'></i>
               <!-- </span> -->
               <!-- <span class="calender-wrapper" > -->
-                <flat-pickr ref='datepicker' v-model="deadline" :onChange="somethingChanged = true" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
+                <flat-pickr ref='datepicker' v-model="deadline" :onValueUpdate="somethingChanged = true" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
                   name="date" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
                 </flat-pickr>
 
@@ -142,8 +142,10 @@ export default {
     Multiselect
   },
 
+
   data() {
     return {
+      // a: false,
       somethingChanged: false,
       title: "",
       description: "",
@@ -215,6 +217,11 @@ export default {
       else return a;
     }
   },
+
+
+    mounted(){
+      this.somethingChanged = false
+    },
 
   created: function() {
     interval = setInterval(() => {
