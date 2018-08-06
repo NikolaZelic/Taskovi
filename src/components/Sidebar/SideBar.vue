@@ -175,9 +175,9 @@
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
             <span class='due-date' v-if='data.item.deadline!==null' 
-            :style='{color:dateColor(data.item.timecritical,data.item.deadlinebreached)}'>
-            <i :class='{"fa fa-times":data.item.deadlinebreached===1,"fa fa-exclamation-triangle":data.item.timecritical===1}'
-            :title='{"Expired":data.item.deadlinebreached===1,"Deadline close":data.item.timecritical===1}'></i>
+            :style='{color:timeCriticalColor(data.item.timecritical)}'>
+            <i :class='timeCriticalIcon(data.item.timecritical)'
+            :title='timeCriticalTitle(data.item.timecritical)'></i>
               {{$moment(utcToLocal(data.item.deadline)).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(utcToLocal(data.item.deadline)).format('HH:mm')}}</span>
             </span>
@@ -306,6 +306,7 @@ export default {
       selectedFilter: [],
       sideHover: false,
       userOptionsVisible: false,
+      oneProjectEnter: true,
       projectRefItem: {},
       radioFilter: [
         {
@@ -479,6 +480,15 @@ export default {
         store.commit("resetTaskView");
       }
     },
+    currentTabData(val) {
+      // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
+      if (this.oneProjectEnter && this.getTabIndex === 0 && val.length === 1) {
+        this.selectAndSet(val[0]);
+        this.oneProjectEnter = false;
+        this.localTabIndex = 1; // IS IT NECESSARY?
+        store.commit("setTabIndex", 1);
+      }
+    },
     dirtyCounterForSidebar() {
       let ti = this.getTabIndex;
       if (ti === 0) {
@@ -519,10 +529,6 @@ export default {
       api.getSingleProjectInfo(proID, localStorage.sid).then(response => {
         this.projectInfoModal = response.data.data;
       });
-    },
-    dateColor(critical, breached) {
-      if (critical === 1) return "yellow";
-      if (breached === 1) return "red";
     },
     max50Char(val) {
       if (val.length > 50) {
@@ -577,14 +583,16 @@ export default {
           chNodes[index].classList.remove("active");
       }
     },
-    selectAndSet(item, i, event) {
-      let tagName = event.target.tagName;
-      let tableRow =
-        tagName === "TD"
-          ? event.target.parentElement // TD Element
-          : event.target.parentElement.parentElement; // SPAN Element
-      this.removeActiveClass(null, tableRow.parentElement);
+    selectAndSet(item, index, event) {
+      if (event !== undefined) {
+        let tagName = event.target.tagName;
+        let tableRow =
+          tagName === "TD"
+            ? event.target.parentElement // TD Element
+            : event.target.parentElement.parentElement; // SPAN Element
 
+        this.removeActiveClass(null, tableRow.parentElement);
+      }
       this.selectItem(item.id);
       if (this.getTabIndex === 0) {
         this.projectRefItem = item;
@@ -737,6 +745,18 @@ export default {
         default:
           return "NO IMPLEMENT";
       }
+    },
+    timeCriticalTitle(t_cr) {
+      if (t_cr < 0.2) return "Deadline close";
+      if (t_cr <= 0) return "Expired";
+    },
+    timeCriticalIcon(t_cr) {
+      if (t_cr < 0.2) return "fa fa-exclamation-triangle";
+      if (t_cr <= 0) return "fa fa-times";
+    },
+    timeCriticalColor(t_cr) {
+      if (t_cr < 0.2) return "yellow";
+      if (t_cr <= 0) return "red";
     }
   },
   computed: {
@@ -817,21 +837,6 @@ export default {
     });
     // MAKE REQUEST TO SERVER FOR TAB DATA
     this.getTabData();
-    // TEST VER
-    // if (this.itemsFiltered !== undefined)
-    // console.log("cr " + this.itemsFiltered.length);
-  },
-  mounted() {
-    // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
-    // if (this.itemsFiltered !== undefined)
-    //   console.log("mn" + this.itemsFiltered.length);
-
-    if (this.itemsFiltered !== undefined && this.itemsFiltered.length === 1) {
-      // console.log(
-      //   "Entering single project = " + this.itemsFiltered[0].title
-      // );
-      this.selectAndSet(this.itemsFiltered[0]);
-    }
   },
   beforeDestroy() {
     clearInterval(this.intervalNotification);
@@ -1205,6 +1210,7 @@ h2 {
 }
 
 .tag-filter {
+  height: 38px;
   flex: 1;
   margin-bottom: 10px;
   max-width: 200px;
