@@ -5,7 +5,6 @@ import MergedComp from '@/components/MergedComp';
 import StartPage from '@/components/StartPage';
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 // REMOVE BELOW IN FINAL
-import UserOptions from '@/components/Misc/UserOptions.vue';
 import TaskAdd from '@/components/Content/Task/TaskAdd';
 import StepAdd from '@/components/Content/Task/StepAdd';
 

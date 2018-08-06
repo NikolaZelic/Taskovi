@@ -48,6 +48,10 @@
    line-height: 30px;
  }
 
+ .item-list tbody tr{
+   cursor: pointer;
+ }
+
  .flex-td {
    display: flex;
    justify-content: space-between;
@@ -84,7 +88,6 @@
  }
 
  .item-list tr>input {
-   /* flex: 1; */
    line-height: initial;
  }
 

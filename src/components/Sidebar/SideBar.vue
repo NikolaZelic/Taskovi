@@ -150,8 +150,9 @@
         </b-modal>
         <!-- Project info modal end-->
 
-        <b-table responsive :items="currentTabData" thead-class='sidebar-table-head' tbody-class='sidebar-table-body' :dark='darkTheme' :small='false' :bordered='false' :outlined='false'
-          :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass' @row-clicked="selectAndSet">
+        <b-table responsive :items="currentTabData" thead-class='sidebar-table-head' tbody-class='sidebar-table-body' :dark='darkTheme'
+          :small='false' :bordered='false' :outlined='false' :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass'
+          @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
 
@@ -166,20 +167,19 @@
           <!-- CREATED DATE -->
           <template slot="timecreated" slot-scope="data">
             <span v-if='data.item.timecreated!==null'>
-
               {{$moment(utcToLocal(data.item.timecreated)).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(utcToLocal(data.item.timecreated)).format('HH:mm')}}</span>
-
             </span>
           </template>
 
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
-            <span v-if='data.item.deadline!==null'>
-
+            <span class='due-date' v-if='data.item.deadline!==null' 
+            :style='{color:dateColor(data.item.timecritical,data.item.deadlinebreached)}'>
+            <i :class='{"fa fa-times":data.item.deadlinebreached===1,"fa fa-exclamation-triangle":data.item.timecritical===1}'
+            :title='{"Expired":data.item.deadlinebreached===1,"Deadline close":data.item.timecritical===1}'></i>
               {{$moment(utcToLocal(data.item.deadline)).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(utcToLocal(data.item.deadline)).format('HH:mm')}}</span>
-
             </span>
           </template>
 
@@ -520,6 +520,10 @@ export default {
         this.projectInfoModal = response.data.data;
       });
     },
+    dateColor(critical, breached) {
+      if (critical === 1) return "yellow";
+      if (breached === 1) return "red";
+    },
     max50Char(val) {
       if (val.length > 50) {
         return val.substring(0, 50) + "...";
@@ -622,7 +626,7 @@ export default {
       });
     },
     getTaskFilterData() {
-      this.removeActiveClass(null);
+      if (this.selectedItemID === undefined) this.removeActiveClass(null);
       let cr = this.selectedFilter.includes("cr");
       let as = this.selectedFilter.includes("as");
       let ar = this.selectedFilter.includes("ar");
@@ -1235,6 +1239,14 @@ label {
 .left-al {
   text-align: left !important;
   margin-left: 5px;
+}
+
+#modalInfo *:not(.badge) {
+  color: black;
+}
+
+.due-date i {
+  margin-right: 10px;
 }
 
 #enon-img {

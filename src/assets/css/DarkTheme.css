@@ -112,3 +112,7 @@ input.darkTheme::placeholder {
 .top_padding {
   padding-top: 30px;
 }
+
+.darkTheme pre {
+  color: white;
+}

@@ -419,7 +419,7 @@ export default {
             this.firstLoad = false;
             store.dispatch("getFeedCount");
           }
-          this.processStepSelection();  // Ovo je neophodno kada ima mali broj poruka, tj. ne pojavi se skrol
+          this.processStepSelection(); // Ovo je neophodno kada ima mali broj poruka, tj. ne pojavi se skrol
         })
         .catch(err => {
           this.loadingData = false;
@@ -541,7 +541,7 @@ export default {
           undefined,
           params.fed_important,
           this.localToUTC(message.fed_time),
-          params.impbyoth,
+          params.impbyoth
         )
         .then(result => {
           this.loadingData = false;
@@ -594,9 +594,8 @@ export default {
         }
       }
     },
-    formatTimestampTitle(title){
-      if(title.length>15)
-        return title.substring(0, 20)+"...";
+    formatTimestampTitle(title) {
+      if (title.length > 15) return title.substring(0, 20) + "...";
       return title;
     },
     selectTimestemp(time) {
@@ -682,7 +681,7 @@ export default {
     jumpToStepFeed(tsk_id, stp_time_created) {
       // console.log('jump to step feed');
       // console.log(stp_time_created);
-      this.searchText = '';
+      this.searchText = "";
       stp_time_created = this.localToUTC(stp_time_created);
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
@@ -697,30 +696,33 @@ export default {
             direction: "start",
             data: result.data.data
           });
-          if(this.chatHasScroll())
-            this.scrollTOTop();
-          else
-            this.addUp();
+          if (this.chatHasScroll()) this.scrollTOTop();
+          else this.addUp();
         });
     },
     isInViewport(el) {
-      if (el == null || el.getBoundingClientRect===undefined ) return;
+      if (el == null || el.getBoundingClientRect === undefined) return;
       const rect = el.getBoundingClientRect();
       const windowHeight =
         window.innerHeight || document.documentElement.clientHeight;
       var wrapperTop = document.getElementById("all2").offsetTop + 50;
       const vertInView =
-        rect.top <= windowHeight-50 &&
+        rect.top <= windowHeight - 50 &&
         rect.top + rect.height >= 0 &&
         rect.top >= wrapperTop;
       return vertInView;
     },
-    chatHasScroll(){
-      var element = document.getElementById('all2');
-      if(element==null||element==undefined||element.scrollHeight==undefined||element.clientHeight==undefined)
+    chatHasScroll() {
+      var element = document.getElementById("all2");
+      if (
+        element == null ||
+        element == undefined ||
+        element.scrollHeight == undefined ||
+        element.clientHeight == undefined
+      )
         return false;
       return element.scrollHeight > element.clientHeight;
-    },
+    }
   },
   mounted() {
     this.dragAndDrop();
@@ -838,12 +840,11 @@ export default {
 }
 
 .list-group-item.active {
-  z-index: 2;
+  z-index: 0;
   background-color: #ececec;
   color: black;
   border-radius: 0;
   border: none;
-  /* border-left: 4px solid var(--ac-color) !important; */
 }
 
 .list-group-item.active:before {
@@ -851,6 +852,7 @@ export default {
   content: "";
   width: 4px;
   height: 10px;
+  bottom: 3px;
   background: var(--ac-color) !important;
   transform: scaleY(4);
   position: relative;
