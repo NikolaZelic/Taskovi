@@ -455,7 +455,10 @@ export default {
     changeFile(e) {
       var f = e.target.files[0];
       api.sendAttach(this.taskid, f).then(r => {
-        this.addDown(true);
+        if(this.messages.length>0)
+          this.addDown(true);
+        else
+          this.readeFeeds();
       });
     },
     addUp() {
