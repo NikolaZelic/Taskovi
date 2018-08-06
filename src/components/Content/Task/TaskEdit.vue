@@ -125,7 +125,7 @@ export default {
           this.selectedPriority = "" + response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
-        }).then(response => {
+        }).then(response => {          
           this.somethingChanged = false;
         });
     }
