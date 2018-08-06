@@ -1,9 +1,16 @@
-import {api} from '@/api/index.js';
-import {store} from './index';
+import {
+  api
+} from '@/api/index.js';
+import {
+  store
+} from './index';
 const actions = {
   getFeedCount() {
     api.getFeedCount().then(r => {
-      store.commit('notificationCount',r.data.data);
+      if (r.data !== undefined)
+        store.commit('notificationCount', r.data.data);
+    }).catch(() => {
+      console.log('Notf Error');
     });
   },
 };
