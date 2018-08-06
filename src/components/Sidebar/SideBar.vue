@@ -174,7 +174,7 @@
 
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
-            <span class='due-date' v-if='data.item.deadline!==null' 
+            <span class='due-date' v-if='data.item.deadline!==null'
             :style='{color:timeCriticalColor(data.item.timecritical)}'>
             <i :class='timeCriticalIcon(data.item.timecritical)'
             :title='timeCriticalTitle(data.item.timecritical)'></i>
