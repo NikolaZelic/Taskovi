@@ -93,7 +93,8 @@
 
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search by Tags or Text" placeholder=''></multiselect>
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search"
+                placeholder='Search'></multiselect>
 
             </b-input-group>
           </div>
@@ -151,7 +152,7 @@
         <!-- Project info modal end-->
 
         <b-table responsive :items="currentTabData" thead-class='sidebar-table-head' tbody-class='sidebar-table-body' :dark='darkTheme'
-          :small='false' :bordered='false' :outlined='false' :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='removeActiveClass'
+          :small='false' :bordered='false' :outlined='false' :fields="fieldsToShow" :filter="tabs[getTabIndex].search" @filtered='updateActiveClass'
           @row-clicked="selectAndSet">
 
           <template slot="title" slot-scope="data">
@@ -172,12 +173,18 @@
             </span>
           </template>
 
+          <!-- FINISHED DATE -->
+          <template slot="timecompleted" slot-scope="data">
+            <span v-if='data.item.timecompleted!==null'>
+              {{$moment(utcToLocal(data.item.timecompleted)).format('YYYY-MM-DD')}}
+              <span class='table-time'>{{$moment(utcToLocal(data.item.timecompleted)).format('HH:mm')}}</span>
+            </span>
+          </template>
+
           <!-- DUE DATE -->
           <template slot="deadline" slot-scope="data">
-            <span class='due-date' v-if='data.item.deadline!==null' 
-            :style='{color:timeCriticalColor(data.item.timecritical)}'>
-            <i :class='timeCriticalIcon(data.item.timecritical)'
-            :title='timeCriticalTitle(data.item.timecritical)'></i>
+            <span class='due-date' v-if='data.item.deadline!==null' :style='{color:timeCriticalColor(data.item.timecritical)}'>
+              <i :class='timeCriticalIcon(data.item.timecritical)' :title='timeCriticalTitle(data.item.timecritical)'></i>
               {{$moment(utcToLocal(data.item.deadline)).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(utcToLocal(data.item.deadline)).format('HH:mm')}}</span>
             </span>
@@ -421,6 +428,13 @@ export default {
           thClass: "td-blue"
         },
         {
+          key: "timecompleted",
+          label: "Finished Date",
+          sortable: true,
+          class: "text-center",
+          thClass: "td-blue"
+        },
+        {
           key: "deadline",
           label: "Due Date",
           sortable: true,
@@ -463,8 +477,9 @@ export default {
   },
   watch: {
     getTabIndex(val, oldVal) {
-      // console.log('TAB INDEX WATCH');
       if (val === 0) {
+        // RESET TASK FILTERS ON PROJECTS
+        this.taskSearchTag = [];
         this.taskSearchText = "";
         this.selectedFilter = [];
         store.state.sidebarItemSelection[1] = undefined;
@@ -482,11 +497,14 @@ export default {
     },
     currentTabData(val) {
       // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
-      if (this.oneProjectEnter && this.getTabIndex === 0 && val.length === 1) {
+      if (
+        val !== undefined &&
+        this.oneProjectEnter &&
+        this.getTabIndex === 0 &&
+        val.length === 1
+      ) {
         this.selectAndSet(val[0]);
         this.oneProjectEnter = false;
-        // this.localTabIndex = 1; // IS IT NECESSARY?
-        // store.commit("setTabIndex", 1);
       }
     },
     dirtyCounterForSidebar() {
@@ -634,8 +652,23 @@ export default {
         id: itemID
       });
     },
+    updateActiveClass() {
+      this.removeActiveClass(null);
+      let trNodes = document.getElementsByClassName("sidebar-table-body")[0]
+        .childNodes;
+      for (let j = 0; j < trNodes.length; j++) {
+        if (trNodes[j].tagName !== "TR") continue;
+        if (trNodes[j].firstChild.innerText == this.selectedItemID) {
+          trNodes[j].classList.add("active");
+          break;
+        }
+      }
+    },
     getTaskFilterData() {
-      if (this.selectedItemID === undefined) this.removeActiveClass(null);
+      if (this.selectedItemID === undefined)
+        // comment when active set implemented
+
+        this.removeActiveClass(null);
       let cr = this.selectedFilter.includes("cr");
       let as = this.selectedFilter.includes("as");
       let ar = this.selectedFilter.includes("ar");
@@ -803,21 +836,28 @@ export default {
           });
         }
         return this.projectFields;
-      } else if (
-        this.itemAction.edit !== undefined ||
-        this.itemAction.add !== undefined ||
-        this.selectedItemID !== undefined
-      ) {
-        let shortTask = ["ID", "Tasks"];
-        return this.taskFields.filter(item => {
-          return shortTask.includes(item.label);
-        });
-      } else if (!this.selectedFilter.includes("ar")) {
-        return this.taskFields.filter(item => {
-          return item.label !== "Status";
-        });
+      } else if (this.getTabIndex === 1) {
+        if (
+          this.itemAction.edit !== undefined ||
+          this.itemAction.add !== undefined ||
+          this.selectedItemID !== undefined
+        ) {
+          let shortTask = ["ID", "Tasks"];
+          return this.taskFields.filter(item => {
+            return shortTask.includes(item.label);
+          });
+        } else if (this.selectedFilter.includes("ar")) {
+          return this.taskFields.filter(item => {
+            return item.label !== "Due Date";
+          });
+        } else if (!this.selectedFilter.includes("ar")) {
+          return this.taskFields.filter(item => {
+            return item.label !== "Status" && item.label !== "Finished Date";
+          });
+        }
+        return this.taskFields;
       }
-      return this.taskFields;
+      return "";
     },
     tagIds() {
       let local = [];
@@ -1334,7 +1374,7 @@ label {
   width: 30%;
 }
 
-.floatLeft{
+.floatLeft {
   float: left;
 }
 </style>

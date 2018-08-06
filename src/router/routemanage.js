@@ -17,7 +17,7 @@ export const routejs = {
   },
 
   redirectToLoginPage(){
-    console.log('Redirected to login page');
+    // console.log('Redirected to login page');
     router.push("/auth");
   },
 
@@ -25,8 +25,8 @@ export const routejs = {
     // message: "You are not logged in."
     // console.log(response);
     if( response.data.message === "You are not logged in." ){
-      console.log('Session run out');
-      console.log(response);
+      // console.log('Session run out');
+      // console.log(response);
       this.redirectToLoginPage();
     }
     else{
