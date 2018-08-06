@@ -44,9 +44,9 @@ const actions = {
   itemActionReset() {
     store.commit('itemActionReset');
   },
-  resetProjectView() {
-    store.commit('resetProjectView');
-  },
+  // resetProjectView() {
+  //   store.commit('resetProjectView');
+  // },
   resetTaskView() {
     store.commit('resetTaskView');
   },

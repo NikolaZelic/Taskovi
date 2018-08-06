@@ -244,15 +244,9 @@ export default {
     taskCancel() {
       if (this.somethingChanged === true) {
         if (confirm("Are you sure? You might have unsaved changes!"))
-          store.commit("resetProjectView");
-      } else store.commit("resetProjectView");
+          store.dispatch("resetTaskView");
+      } else store.dispatch("resetTaskView");
     },
-
-    resetProjectView() {
-      store.commit("itemActionReset");
-    },
-
-    usersOut() {},
 
     addTag(newTag) {
       const tag = {

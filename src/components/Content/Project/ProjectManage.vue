@@ -145,11 +145,11 @@ export default {
     }
   },
   methods: {
-    confirmation() {
-      if (confirm("Are you sure? You might have unsaved changes!")) {
-        this.resetProjectView();
-      }
-    },
+    // confirmation() {
+    //   if (confirm("Are you sure? You might have unsaved changes!")) {
+    //     store.commit("itemActionReset");
+    //   }
+    // },
 
     changeDeleted(rowIndex) {
       if (confirm("Are you sure?")) {
@@ -356,12 +356,8 @@ export default {
     projectCancel() {
       if (this.somethingChanged === true) {
         if (confirm("Are you sure? You might have unsaved changes!"))
-          store.commit("resetProjectView");
-      } else store.commit("resetProjectView");
-    },
-
-    resetProjectView() {
-      store.commit("itemActionReset");
+          store.dispatch("resetGlobalView");
+      } else store.dispatch("resetGlobalView");
     },
     CustomPersonLabel(option) {
       return `${option.email}`;
