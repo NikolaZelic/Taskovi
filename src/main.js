@@ -22,6 +22,9 @@ Vue.config.productionTip = false;
 
 Vue.mixin({
   methods: {
+    parseTime(date){
+      return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
     localToUTC(date) {
       let offset = new Date().getTimezoneOffset();
       if (date === null || date === undefined || date === "")

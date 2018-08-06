@@ -225,13 +225,9 @@ export default {
     ...mapState({
       modalErrorActive: state => state.modalError.active
     }),
+
     href() {
-      var loc = window.location.href;
-      if (loc.startsWith("http://localhost:8080")) {
-        return true;
-      } else {
-        return false;
-      }
+      return window.location.href.startsWith("http://localhost:8080");
     },
 
     passNotSame() {
