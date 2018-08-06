@@ -5,6 +5,8 @@ import {
   store
 } from '@/store/index.js';
 import router from '../router/index.js';
+import { routejs } from "@/router/routemanage.js";
+
 
 // KAD PRAVIS API OBAVEZNO KORISTI 'RETURN' A U AKCIJI 'THEN' I 'CATCH'
 
@@ -12,10 +14,13 @@ export const api = {
 
   //#region Zelic
   checkNewwMessages(tsk_id) {
+    // console.log('checkNewwMessages is called');
     return axios.get('tasks/' + tsk_id + '/unseenfeeds', {
       params: {
         sid: window.localStorage.sid,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -27,6 +32,8 @@ export const api = {
         pravac: "start",
         type: type,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -34,6 +41,8 @@ export const api = {
     return axios.post('feeds/' + fed_id, {
       important: important,
       sid: window.localStorage.sid,
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   createStep(pro_id, tas_id, title, description, deadline, priorety, users, tags) {
@@ -48,10 +57,14 @@ export const api = {
       priorety: priorety,
       usersarray: JSON.stringify(users),
       tagarray: JSON.stringify(tags)
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   getUserInfo() {
-    return axios.get('auth/users?sid=' + window.localStorage.sid);
+    return axios.get('auth/users?sid=' + window.localStorage.sid).then( response =>{
+      return routejs.checkSession(response);
+    });
   },
   createTask(title, description, deadline, tagarray, userarray, priorety, pro_id) {
     return axios.post('tasks?sid=' + window.localStorage.sid, {
@@ -63,6 +76,8 @@ export const api = {
       tagarray: JSON.stringify(tagarray),
       usersarray: JSON.stringify(userarray),
       priority: priorety,
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   createTimestamps(tsk_id, time_created, title) {
@@ -72,6 +87,8 @@ export const api = {
       text: title,
       type: "text",
       islabel: 1,
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   // koristi se u TaskAdd.vue, TaskAdd.vue
@@ -84,6 +101,8 @@ export const api = {
         type: grpType,
         belongs: 'yes'
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   // Koristi se u TaskAdd.vue
@@ -94,6 +113,8 @@ export const api = {
         searchstring: searchStr,
         type: tagFor,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   refreshSuggestions(searchText, pro_id) {
@@ -103,17 +124,23 @@ export const api = {
         searchstring: searchText,
         proid: pro_id,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   selectTask(id) {
-    return axios.get('tasks/' + id);
+    return axios.get('tasks/' + id).then( response =>{
+      return routejs.checkSession(response);
+    });
   },
   //#endregion
   //#region Feeds
   deleteTImestamp(tsk_id, stm_id){
     return axios.delete( "tasks/"+tsk_id+"/labels/"+stm_id, {params:{
       sid: window.localStorage.sid,
-    }});
+    }}).then( response =>{
+      return routejs.checkSession(response);
+    });
   },
 
   readeTimestemps(tsk_id) {
@@ -121,6 +148,8 @@ export const api = {
       params: {
         sid: window.localStorage.sid,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   readeFeeds(tasid, fedid, direction, type, searchingstring, fed_important, fed_time, impbyoth) {
@@ -135,6 +164,8 @@ export const api = {
         sid: window.localStorage.sid,
         impbyoth: impbyoth
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   readeGloablFeeds(offset, type, searchingstring, fed_important, impbyoth) {
@@ -148,6 +179,8 @@ export const api = {
         count: false,
         impbyoth: impbyoth,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   postMessage(tasid, mess) {
@@ -155,7 +188,9 @@ export const api = {
     var fd = new FormData();
     fd.append('type', 'text');
     fd.append('text', mess);
-    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd);
+    return axios.post('/tasks/' + tasid + '/feeds?sid=' + window.localStorage.sid, fd).then( response =>{
+      return routejs.checkSession(response);
+    });
   },
   sendAttach(tasid, file) {
     let fd = new FormData();
@@ -165,6 +200,8 @@ export const api = {
       headers: {
         "content-type": "multipart/form-data"
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   //#endregion
@@ -211,6 +248,8 @@ export const api = {
       params: {
         sid: localStorage.sid,
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   // ZX - GET user tasks based on a project - filter used
@@ -225,6 +264,8 @@ export const api = {
         searchstr: params.searchstr,
         tagarray: JSON.stringify(params.tagarray),
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   getFeedCount() {
@@ -233,6 +274,8 @@ export const api = {
         sid: localStorage.sid,
         count: true
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
   //#endregion
@@ -244,6 +287,8 @@ export const api = {
         tasid: taskID,
         sid: window.localStorage.sid
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -259,6 +304,8 @@ export const api = {
       tagarray: tagarray,
       usersarray: userarray,
       priority: priority
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -268,6 +315,8 @@ export const api = {
         sid: sid,
         tasid: tasid
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -277,6 +326,8 @@ export const api = {
         proid: projectID,
         sid: sid
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -288,6 +339,8 @@ export const api = {
         searchstring: searchstring,
         sid: sid
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -296,6 +349,8 @@ export const api = {
       sid: sid,
       status: parameter,
       tasid: tasid
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -305,6 +360,8 @@ export const api = {
       headers: {
         "X-Requested-With": "XMLHttpRequest"
       }
+    }).then( response =>{
+      return routejs.checkSession(response);
     });
   },
 
@@ -314,7 +371,9 @@ export const api = {
         proid: proid,
         sid: sid
       }
-    })
+    }).then( response =>{
+      return routejs.checkSession(response);
+    });
   }
 
   //Kraj Milosevih API-ja
