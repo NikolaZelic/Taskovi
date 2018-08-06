@@ -93,8 +93,8 @@
 
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search by Tags or Text"
-                placeholder=''></multiselect>
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search"
+                placeholder='Search'></multiselect>
 
             </b-input-group>
           </div>
@@ -170,6 +170,14 @@
             <span v-if='data.item.timecreated!==null'>
               {{$moment(utcToLocal(data.item.timecreated)).format('YYYY-MM-DD')}}
               <span class='table-time'>{{$moment(utcToLocal(data.item.timecreated)).format('HH:mm')}}</span>
+            </span>
+          </template>
+
+          <!-- FINISHED DATE -->
+          <template slot="timecompleted" slot-scope="data">
+            <span v-if='data.item.timecompleted!==null'>
+              {{$moment(utcToLocal(data.item.timecompleted)).format('YYYY-MM-DD')}}
+              <span class='table-time'>{{$moment(utcToLocal(data.item.timecompleted)).format('HH:mm')}}</span>
             </span>
           </template>
 
@@ -420,6 +428,13 @@ export default {
           thClass: "td-blue"
         },
         {
+          key: "timecompleted",
+          label: "Finished Date",
+          sortable: true,
+          class: "text-center",
+          thClass: "td-blue"
+        },
+        {
           key: "deadline",
           label: "Due Date",
           sortable: true,
@@ -463,6 +478,8 @@ export default {
   watch: {
     getTabIndex(val, oldVal) {
       if (val === 0) {
+        // RESET TASK FILTERS ON PROJECTS
+        this.taskSearchTag = [];
         this.taskSearchText = "";
         this.selectedFilter = [];
         store.state.sidebarItemSelection[1] = undefined;
@@ -480,11 +497,14 @@ export default {
     },
     currentTabData(val) {
       // SWITCH TO TASKS VIEW IF ONLY ONE PROJECT
-      if (this.oneProjectEnter && this.getTabIndex === 0 && val.length === 1) {
+      if (
+        val !== undefined &&
+        this.oneProjectEnter &&
+        this.getTabIndex === 0 &&
+        val.length === 1
+      ) {
         this.selectAndSet(val[0]);
         this.oneProjectEnter = false;
-        // this.localTabIndex = 1; // IS IT NECESSARY?
-        // store.commit("setTabIndex", 1);
       }
     },
     dirtyCounterForSidebar() {
@@ -816,21 +836,28 @@ export default {
           });
         }
         return this.projectFields;
-      } else if (
-        this.itemAction.edit !== undefined ||
-        this.itemAction.add !== undefined ||
-        this.selectedItemID !== undefined
-      ) {
-        let shortTask = ["ID", "Tasks"];
-        return this.taskFields.filter(item => {
-          return shortTask.includes(item.label);
-        });
-      } else if (!this.selectedFilter.includes("ar")) {
-        return this.taskFields.filter(item => {
-          return item.label !== "Status";
-        });
+      } else if (this.getTabIndex === 1) {
+        if (
+          this.itemAction.edit !== undefined ||
+          this.itemAction.add !== undefined ||
+          this.selectedItemID !== undefined
+        ) {
+          let shortTask = ["ID", "Tasks"];
+          return this.taskFields.filter(item => {
+            return shortTask.includes(item.label);
+          });
+        } else if (this.selectedFilter.includes("ar")) {
+          return this.taskFields.filter(item => {
+            return item.label !== "Due Date";
+          });
+        } else if (!this.selectedFilter.includes("ar")) {
+          return this.taskFields.filter(item => {
+            return item.label !== "Status" && item.label !== "Finished Date";
+          });
+        }
+        return this.taskFields;
       }
-      return this.taskFields;
+      return "";
     },
     tagIds() {
       let local = [];
