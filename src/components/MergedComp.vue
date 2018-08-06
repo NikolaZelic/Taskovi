@@ -162,8 +162,6 @@ export default {
         }
       }
       return onePro;
-
-      // return store.state.sidebarTabData[0];
     },
     maxBool() {
       return (

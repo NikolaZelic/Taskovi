@@ -505,6 +505,7 @@ export default {
           this.waitNet = false;
         });
     },
+    
     reportWritingToDB(result) {
       var status = result.data.status;
       if (status === "OK") {
@@ -519,12 +520,14 @@ export default {
         });
       }
     },
+
     onInputChangeProject(text, oldText) {
       if (text == null || text.length == 0) {
-        store.dispatch("clleaneSuggestedProjects");
+        store.dispatch("cleanSuggestedProjects");
       }
       this.projectSuggestionHaveChange = 1;
     },
+
     selectMe() {
       // var choosenWorker = this.choosenWorker;
       api.getUserInfo().then(result => {
@@ -557,7 +560,7 @@ export default {
       this.refreshTitleError();
     },
     onProjectSelected() {
-      store.dispatch("clleaneSuggestedProjects");
+      store.dispatch("cleanSuggestedProjects");
     },
     searchUsers(str) {
       if (str === undefined || str === null) return;

@@ -201,7 +201,6 @@ export default {
             let moreInfo = result.data.data;
 
             for (var i = 0; i < moreInfo.users.length; i++) {
-              // console.log(moreInfo.users[i].disabled);
 
               moreInfo.users[i].delete = false;
               moreInfo.users[i].admin = moreInfo.users[i].admin === "true";
@@ -217,10 +216,6 @@ export default {
               ) {
                 moreInfo.users[i].disabled = true;
               }
-
-              // if(moreInfo.users[i].admin === "true"){
-              //   moreInfo.users[i].canEdit = false;
-              // }
             }
 
             if (moreInfo.length !== 0) {
@@ -250,6 +245,7 @@ export default {
           store.commit("itemActionReset");
 
           if (r.data.status === "OK") {
+            store.commit("incDirtyCounter");
             store.commit("modalStatus", {
               active: true,
               ok: true,
@@ -279,10 +275,7 @@ export default {
                 });
               }
             }
-            // let ti = this.tabIndex;
-            // store.commit("setTabIndex", -1);
-            // store.commit("setTabIndex", ti);
-            store.commit("incDirtyCounter");
+            
           } else {
             store.commit("modalStatus", {
               ok: false,
@@ -337,9 +330,6 @@ export default {
             }
 
             store.commit("incDirtyCounter");
-            // let ti = this.tabIndex;
-            // store.commit("setTabIndex", -1);
-            // store.commit("setTabIndex", ti);
           } else {
             store.commit("modalStatus", {
               ok: false,

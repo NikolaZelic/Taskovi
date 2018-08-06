@@ -22,7 +22,7 @@
                     <input :type='inputType(t)' v-model.trim="t.value" />
                   </td>
                 </tr>
-                <tr v-if='passNotMatched' style='color: red'>Passwords do not match.</tr>
+                <tr :style='{visibility:!passNotMatched?"hidden":"visible"}' style='color: red'>Passwords do not match.</tr>
               </tbody>
             </table>
 
