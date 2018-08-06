@@ -36,14 +36,25 @@
             <tr>
               <td class="align-top">Description:</td>
               <td>
-                <pre>{{this.taskGeneralInfo.description}}</pre>
+                <pre :class='{darkTheme: darkTheme}'>{{this.taskGeneralInfo.description}}</pre>
               </td>
             </tr>
 
             <tr>
               <td class="align-top">Priority:</td>
               <td>
-                {{this.taskGeneralInfo.pri_text}}
+                <span class="badge badge-danger" v-if="this.taskGeneralInfo.pri_text === 'High'">{{ this.taskGeneralInfo.pri_text }}</span>
+                <span class="badge badge-warning" v-if="this.taskGeneralInfo.pri_text === 'Medium'">{{ this.taskGeneralInfo.pri_text }}</span>
+                <span class="badge badge-success" v-if="this.taskGeneralInfo.pri_text === 'Low'">{{ this.taskGeneralInfo.pri_text }}</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="align-top">Task events:</td>
+              <td>
+                <span :class="convertStatus(this.taskGeneralInfo.sta_text)"></span>
+
+                {{this.taskGeneralInfo.sta_text}}
               </td>
             </tr>
 
@@ -70,10 +81,7 @@
               </td>
             </tr>
 
-            <tr>
-              <td class="align-top">Task events:</td>
-              <td>{{this.taskGeneralInfo.sta_text}}</td>
-            </tr>
+
 
             <tr>
               <td class="align-top">Working:</td>
@@ -458,6 +466,21 @@ export default {
   },
 
   methods: {
+    convertStatus(sta_text) {
+      switch (sta_text) {
+        case "In Progress":
+          return "td-blue fa fa-hourglass";
+        case "Completed":
+          return "td-green fa fa-check";
+        case "Failed":
+          return "td-red fa fa-times";
+        case "Cancelled":
+          return "td-yellow fa fa-ban";
+        default:
+          return "NO IMPLEMENT";
+      }
+    },
+
     getAvatar(image) {
       let netIcon = "";
       if (image !== undefined && image !== null) {
@@ -1152,5 +1175,10 @@ pre{
   line-height: 1.5 !important;
   text-align: left !important;
   font-family: "TitilliumWeb" !important;
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 </style>

@@ -21,7 +21,7 @@
             </div>
 
             <!-- DEADLINE -->
-            <div class="form-group" id='deadline' title='Deadline'>
+            <div class="form-group mb-0" id='deadline' title='Deadline'>
               <!-- <span class="calender-icon" @click='calendarIconClicked'> -->
                 <i class="far fa-calendar-alt" @click='calendarIconClicked'></i>
               <!-- </span> -->
@@ -29,15 +29,21 @@
                 <flat-pickr ref='datepicker' v-model="deadline" :onChange="somethingChanged = true" :config="config" id='flatPickrId' class="deadline" placeholder="Pick a deadline (optional)"
                   name="date" @mouseover='mouseOverDeadline=1' @mouseleave='mouseOverDeadline=0'>
                 </flat-pickr>
+
+                <!-- <div class="hasError" v-if="!timeBeforeNow">
+                  Please provide a valid state.
+                </div> -->
+
                 <div class="cleane-deadline-wrapper" v-if='mouseOverDeadline && deadline!=null && deadline.length>0 ' title='Clear date'
                   @click='deadline=null'>
                   <i class="fas fa-times-circle"></i>
                 </div>
               <!-- </span> -->
             </div>
+            <small v-if="!timeBeforeNow && edit === false" class="text-danger">Deadline can't be in the past.</small>
 
             <!-- ADDING WORKERS -->
-            <div class="form-group" id='adding-worker'>
+            <div class="form-group mt-3" id='adding-worker'>
               <i class="fas fa-user"></i>
               <multiselect v-model="selectedUSers" onchange="somethingChanged = true" class="task-modal-input" label="name" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
                 :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
@@ -99,7 +105,7 @@
               <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
-              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
+              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet || !timeBeforeNow'>
                 <span v-show='edit'>
                   <span class='fa fa-edit'></span>
                   Edit</span>
@@ -151,6 +157,7 @@ export default {
         altFormat: "M	j, Y H:i",
         altInput: true,
         minDate: "today"
+        // altInputClass: "hasError"
       },
       teamSelect: 0,
       waitNet: false,
@@ -192,6 +199,12 @@ export default {
       suggestedProjects: state => state.modulework.suggestedProjects,
       proId: state => state.sidebarItemSelection[0]
     }),
+
+    timeBeforeNow(){
+      var now = this.parseTime(new Date());
+      if(this.deadline < now) return false;
+      return true;
+    },
 
     blankTitle() {
       return this.title.length === 0;
@@ -237,6 +250,7 @@ export default {
   },
 
   methods: {
+
     fullName({ name, surname }) {
       return name + " " + surname;
     },
@@ -492,10 +506,12 @@ export default {
       var status = result.data.status;
       if (status === "OK") {
         store.commit("modalStatus", {
+          ok: true,
           message: "Task successfully created"
         });
       } else {
         store.commit("modalStatus", {
+          ok: false,
           message: result.data.message //"Error! Task wasn't created."
         });
       }

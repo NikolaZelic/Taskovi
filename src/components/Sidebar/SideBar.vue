@@ -64,7 +64,7 @@
 
       <div class="flex-form-action">
 
-        <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton">
+        <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton" v-if="(getTabIndex === 0 && onLocalhost) || getTabIndex === 1">
           <span class="fas fa-plus-circle"></span>
           <!-- Add -->
           <!-- <span>{{tabs[getTabIndex].single}}</span> -->
@@ -92,7 +92,7 @@
             <b-input-group class='search'>
 
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
-                :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
+                :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="true"
                 :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
 
             </b-input-group>
@@ -267,7 +267,7 @@
             <avatar :title='usr.name' v-for='(usr,index) in data.item.usrworking.slice(0,2)' :key='usr.id' :username="usr.name" :src="getAvatar(usr)"
               :rounded="false" :size="24" class='avatar' :class='{"float-left":index===0,"float-left":index!==0}'>
             </avatar>
-            <span v-if='data.item.usrworking.length>2'> +{{data.item.usrworking.length-2}}</span>
+            <span v-if='data.item.usrworking.length>2' class="floatLeft"> +{{data.item.usrworking.length-2}}</span>
           </template>
 
         </b-table>
@@ -749,6 +749,11 @@ export default {
       selectedItemID: "selectedItemID",
       currentTabData: "currentTabData"
     }),
+
+    onLocalhost() {
+      return window.location.href.startsWith("http://localhost:8080");
+    },
+
     notifDisplay() {
       return this.notifCount === 0
         ? ""
@@ -1308,5 +1313,9 @@ label {
 
 .wid30 {
   width: 30%;
+}
+
+.floatLeft{
+  float: left;
 }
 </style>

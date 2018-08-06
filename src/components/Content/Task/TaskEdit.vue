@@ -87,7 +87,7 @@ export default {
         )
         .then(response => {
           if (response.data.status === "OK") {
-            
+
             store.commit("incDirtyCounter");
             // let ti = this.tabIndex;
             // store.commit("setTabIndex", -1);
@@ -97,6 +97,7 @@ export default {
             //   pro_id: this.proId
             // });
             store.commit("modalStatus", {
+              ok: true,
               message: "Task has been edited succesfully"
             });
           } else {
