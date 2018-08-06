@@ -4,7 +4,6 @@ import TaskView from "@/components/Content/Task/TaskView";
 import { api } from "@/api/index";
 import { store } from "@/store/index";
 import { mapState, mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
   mixins: [TaskAdd],

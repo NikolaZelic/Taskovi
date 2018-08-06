@@ -81,7 +81,6 @@ import FeedMessage from "./FeedMessage";
 import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
-import axios from "axios";
 import { routejs } from "@/router/routemanage.js";
 
 export default {
@@ -108,7 +107,6 @@ export default {
       newStep: "",
       stepErr: false,
       haveNewMessage: false,
-      // timestampHover: false,
       firstLoad: true,
       searchType: "messages",
       importantFilter: [

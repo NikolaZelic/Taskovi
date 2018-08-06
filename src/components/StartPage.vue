@@ -24,7 +24,7 @@
                   <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
                     id="pass" />
                 </div>
-                <button @click.prevent="login" class='btn btn-warning'>login</button>
+                <button @click.prevent="login" class='btn btn-primary'>login</button>
                 <p class="message">Not registered?
                   <strong>
                     <a @click='loginVisible = !loginVisible'>Create an account</a>
@@ -33,7 +33,7 @@
               </form>
               <!-- REMOVE IN FINAL -->
               <div class="preset" v-if="href">
-                <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-warning'>{{p.email}}</button>
+                <button v-for="p in presets" :key='p.email' @click.prevent="autologin(p)" class='btn btn-primary'>{{p.email}}</button>
               </div>
             </div>
 
@@ -78,7 +78,7 @@
                     placeholder="Confirm password" required minlength="3">
                 </validate>
 
-                <button type="submit" class="btn btn-warning" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
+                <button type="submit" class="btn btn-primary" @click.prevent='register' :disabled='registerDisabled'>Submit</button>
 
               </vue-form>
               <p class="message">Already have an account?
@@ -263,7 +263,8 @@ export default {
   justify-content: center;
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(to top, #f46b45, #eea849);
+  background: linear-gradient(to top, #4e54c8, #8f94fb);
+  /* background: linear-gradient(to top, #f46b45, #eea849); */
 }
 
 h1 {
@@ -285,10 +286,10 @@ h2 {
 
 #creators {
   position: absolute;
-  background: var(--ac-bg-light-color);
+  background: var(--ac-color);
   height: 30px;
   width: 30px;
-  opacity: 0.2;
+  opacity: 0.1;
   border-radius: 5px;
   bottom: 5%;
   right: 5%;
