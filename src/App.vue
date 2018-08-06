@@ -9,7 +9,7 @@ export default {
   name: "App",
   metaInfo() {
     return {
-      title: "Task Master"
+      title: "Omni Tasker"
     };
   }
 };

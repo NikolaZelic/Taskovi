@@ -6,7 +6,7 @@ import StartPage from '@/components/StartPage';
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 // REMOVE BELOW IN FINAL
 import TaskAdd from '@/components/Content/Task/TaskAdd';
-import StepAdd from '@/components/Content/Task/StepAdd';
+// import StepAdd from '@/components/Content/Task/StepAdd';
 
 import TestForm from '@/components/TEST_COMPS/TestForm';
 import SideBar from "@/components/Sidebar/SideBar";
@@ -36,10 +36,12 @@ const router = new Router({
     }, {
       path: '/taskadd',
       component: TaskAdd
-    }, {
-      path: '/stepadd',
-      component: StepAdd
-    }, {
+    },
+    // {
+    //   path: '/stepadd',
+    //   component: StepAdd
+    // }, 
+    {
       path: '/testform',
       component: TestForm
     },

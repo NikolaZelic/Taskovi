@@ -375,7 +375,7 @@ import { mapState } from "vuex";
 import FeedElement from "@/components/Feed/FeedElement";
 import Avatar from "vue-avatar";
 
-import StepEdit from "@/components/Content/Task/StepEdit";
+// import StepEdit from "@/components/Content/Task/StepEdit";
 
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -387,7 +387,7 @@ export default {
     flatPickr,
     Multiselect,
     FeedElement,
-    StepEdit,
+    // StepEdit,
     Avatar
   },
 

@@ -2,7 +2,7 @@
   <div class="start">
     <div id='main'>
       <h1>
-        <strong>Task Master</strong>
+        <strong>Omni Tasker</strong>
       </h1>
 
       <template v-if='loginVisible'>

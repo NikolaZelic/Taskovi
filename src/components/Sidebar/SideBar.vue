@@ -66,8 +66,8 @@
 
         <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton">
           <span class="fas fa-plus-circle"></span>
-          <!-- Add -->
-          <!-- <span>{{tabs[getTabIndex].single}}</span> -->
+          Add
+          <span>{{tabs[getTabIndex].single}}</span>
         </button>
 
         <!-- <div class="form-filter"> -->
@@ -93,7 +93,7 @@
 
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder="Search by Tags or Text"></multiselect>
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search by Tags or Text" placeholder=''></multiselect>
 
             </b-input-group>
           </div>
@@ -485,8 +485,8 @@ export default {
       if (this.oneProjectEnter && this.getTabIndex === 0 && val.length === 1) {
         this.selectAndSet(val[0]);
         this.oneProjectEnter = false;
-        this.localTabIndex = 1; // IS IT NECESSARY?
-        store.commit("setTabIndex", 1);
+        // this.localTabIndex = 1; // IS IT NECESSARY?
+        // store.commit("setTabIndex", 1);
       }
     },
     dirtyCounterForSidebar() {
@@ -584,22 +584,23 @@ export default {
       }
     },
     selectAndSet(item, index, event) {
+      let tableRow = undefined;
       if (event !== undefined) {
         let tagName = event.target.tagName;
-        let tableRow =
+        tableRow =
           tagName === "TD"
             ? event.target.parentElement // TD Element
             : event.target.parentElement.parentElement; // SPAN Element
 
         this.removeActiveClass(null, tableRow.parentElement);
       }
-      this.selectItem(item.id);
+      this.setItemSelection(item.id);
       if (this.getTabIndex === 0) {
         this.projectRefItem = item;
         store.commit("setTabIndex", 1);
       } else if (this.getTabIndex === 1) {
         // ADD ACTIVE CLASS IF TASKS
-        tableRow.classList.add("active");
+        if (tableRow !== undefined) tableRow.classList.add("active");
         store.commit("resetActionAdd");
       }
     },
@@ -626,7 +627,7 @@ export default {
       }
       return netIcon;
     },
-    selectItem(itemID) {
+    setItemSelection(itemID) {
       this.tabs[this.getTabIndex].itemIndex = itemID;
       store.commit("setSidebarItemSelection", {
         tabIndex: this.getTabIndex,
@@ -697,7 +698,7 @@ export default {
       this.showTaskPeople = true;
     },
     editItemButton(item) {
-      this.selectItem(item.id);
+      this.setItemSelection(item.id);
       store.dispatch("itemEditClick", item.id);
     },
     deadlineSplit(dateTime) {
@@ -747,16 +748,16 @@ export default {
       }
     },
     timeCriticalTitle(t_cr) {
-      if (t_cr < 0.2) return "Deadline close";
       if (t_cr <= 0) return "Expired";
+      if (t_cr < 0.2) return "Deadline close";
     },
     timeCriticalIcon(t_cr) {
-      if (t_cr < 0.2) return "fa fa-exclamation-triangle";
       if (t_cr <= 0) return "fa fa-times";
+      if (t_cr < 0.2) return "fa fa-exclamation-triangle";
     },
     timeCriticalColor(t_cr) {
-      if (t_cr < 0.2) return "yellow";
-      if (t_cr <= 0) return "red";
+      if (t_cr <= 0) return "#de4c4c"; // RED
+      if (t_cr < 0.2) return "#a79923"; // YELLOW
     }
   },
   computed: {

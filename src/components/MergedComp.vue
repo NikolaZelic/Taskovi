@@ -54,29 +54,19 @@
 <script>
 import { store } from "@/store/index.js";
 import { routejs } from "@/router/routemanage.js";
-import SideBar from "@/components/Sidebar/SideBar";
-
-import TaskView from "@/components/Content/Task/TaskView";
-
-import StepAdd from "@/components/Content/Task/StepAdd";
-import TaskEdit from "@/components/Content/Task/TaskEdit";
-
-import TaskAdd from "@/components/Content/Task/TaskAdd";
-
-import ProjectManage from "@/components/Content/Project/ProjectManage";
-
-// import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
-
-import ModalError from "@/components/Misc/ModalError";
-
 import { api } from "@/api/index.js";
 import { mapGetters, mapState } from "vuex";
+import SideBar from "@/components/Sidebar/SideBar";
+import TaskView from "@/components/Content/Task/TaskView";
+import TaskEdit from "@/components/Content/Task/TaskEdit";
+import TaskAdd from "@/components/Content/Task/TaskAdd";
+import ProjectManage from "@/components/Content/Project/ProjectManage";
+import ModalError from "@/components/Misc/ModalError";
 
 export default {
   components: {
     SideBar,
     TaskView,
-    StepAdd,
     TaskEdit,
     ProjectManage,
     TaskAdd,
@@ -215,7 +205,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: "Task Master",
+      title: "Omni Tasker",
       titleTemplate: this.notifTitle + " %s"
     };
   },
