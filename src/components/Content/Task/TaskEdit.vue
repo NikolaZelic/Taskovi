@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       somethingChanged: false,
-
+      timecritical: undefined,
       title: undefined,
       description: undefined,
       selectedPriority: undefined,
@@ -127,6 +127,7 @@ export default {
           this.selectedPriority = "" + response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
+          this.timecritical =  response.data.data[0].timecritical;
         }).then(response => {
           this.somethingChanged = false;
         });

@@ -203,6 +203,8 @@ export default {
     }),
 
     timeBeforeNow(){
+      if(this.timecritical < 0) return true;
+
       if(this.deadline !== null || this.deadline !== undefined){
         var now = this.parseTime(new Date());
         if(this.deadline < now) return false;
@@ -505,7 +507,7 @@ export default {
           this.waitNet = false;
         });
     },
-    
+
     reportWritingToDB(result) {
       var status = result.data.status;
       if (status === "OK") {
