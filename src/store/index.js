@@ -5,6 +5,7 @@ import actions from './actions';
 import getters from './getters';
 import modulesidebar from './modules/sidebar';
 import modulefeed from './modules/feed';
+import modulework from "./modules/work";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export const store = new Vuex.Store({
     getters,
     modulesidebar,
     modulefeed,
+    modulework
   },
   strict: true,
   state: {
