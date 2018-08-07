@@ -21,7 +21,7 @@
         </div>
 
         <div v-for="(tab, index) in tabs" v-if="index === 0 || projectRefItem.id !== undefined" :key="index" class="tablinks tab-container"
-          :class="{active:getTabIndex === index && !globalFeed}" @click="getTabData(localTabIndex = index), setSidebarBoolean(true)"
+          :class="{active:getTabIndex === index && !globalFeed}" @click="clickTabData(localTabIndex = index), setSidebarBoolean(true)"
           :disabled="tab.disabled">
           <span :class='tab.icon'></span>
           <span class='left-al'>{{tab.name}}</span>
@@ -478,6 +478,7 @@ export default {
   watch: {
     getTabIndex(val, oldVal) {
       if (val === 0) {
+        // this.$router.push("/");
         // RESET TASK FILTERS ON PROJECTS
         this.taskSearchTag = [];
         this.taskSearchText = "";
@@ -491,6 +492,8 @@ export default {
       }
       if (val < 0) return;
       if (val === 1) {
+      console.log('TASKZ')
+        this.$router.push("/tasks");
         this.getTaskFilterData();
         store.commit("resetTaskView");
       }
@@ -620,20 +623,24 @@ export default {
       } else if (this.getTabIndex === 1) {
         // ADD ACTIVE CLASS IF TASKS
         if (tableRow !== undefined) tableRow.classList.add("active");
+        const taskID = item.id;
+        this.$router.push({ path: `/tasks/${taskID}` });
         store.commit("resetActionAdd");
       }
     },
-    getTabData() {
+    clickTabData() {
       let index = this.localTabIndex;
       store.commit("setTabIndex", index);
       store.commit("showGlobalFeed", false);
       this.removeActiveClass(null);
       switch (index) {
         case 0:
+        // this.$router.push("/");
           store.commit("resetGlobalView");
           this.actionTabDataProject();
           break;
         case 1:
+        this.$router.push("/tasks");
           store.commit("resetTaskView");
           this.getTaskFilterData();
           break;
@@ -678,7 +685,7 @@ export default {
     actionTabDataProject() {
       clearInterval(this.intervalNotification);
       store.dispatch("getProjectList", {
-        index: this.getTabIndex
+        index: 0
       });
       store.dispatch("getFeedCount");
       this.intervalNotification = setInterval(
@@ -801,18 +808,18 @@ export default {
       darkTheme: "darkTheme",
       notifCount: "notificationCount",
       globalFeed: "globalFeed",
+      taskLinked: "taskLinked",
       dirtyCounterForSidebar: "dirtyCounterForSidebar",
+      projectArray: state=> state.sidebarTabData[0],
       sidebarActive: state => !state.mainFocused
     }),
     ...mapGetters({
       selectedItemID: "selectedItemID",
-      currentTabData: "currentTabData"
+      currentTabData: "currentTabData",
     }),
-
     onLocalhost() {
       return window.location.href.startsWith("http://localhost:8080");
     },
-
     notifDisplay() {
       return this.notifCount === 0
         ? ""
@@ -879,11 +886,27 @@ export default {
     );
     document.addEventListener("scroll", this.handleScroll);
     // WRITE CURRENT TAB DATA TO STORE
-    store.commit("setSidebarData", {
-      tabIndex: this.getTabIndex
-    });
-    // MAKE REQUEST TO SERVER FOR TAB DATA
-    this.getTabData();
+    store.commit('setTabIndex',this.getTabIndex);
+    // store.commit("setSidebarData", {
+    //   tabIndex: this.getTabIndex
+    // });
+    // MAKE REQUEST TO SERVER FOR TAB DATA OR TASK LINK
+
+    
+   if(this.taskLinked) {
+      store.dispatch('getProjectFromTaskID',this.selectedItemID);
+      
+      // console.log(this.projectArray)
+      if(this.projectArray !== undefined && this.projectArray.length === 1)
+      {
+        this.projectRefItem = this.projectArray[0];
+        this.getTaskFilterData();
+      }
+    // console.log('task linkkkkd')
+    }else{
+      //  console.log('clicked start')
+      this.clickTabData();}
+    
   },
   beforeDestroy() {
     clearInterval(this.intervalNotification);

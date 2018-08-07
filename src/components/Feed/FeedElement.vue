@@ -240,48 +240,12 @@ export default {
           handleFiles(files);
         }
 
-        // let uploadProgress = []
-        // let progressBar = document.getElementById('progress-bar')
-
-        // function initializeProgress(numFiles) {
-        //   progressBar.value = 0
-        //   uploadProgress = []
-        //
-        //   for (let i = numFiles; i > 0; i--) {
-        //     uploadProgress.push(0)
-        //   }
-        // }
-
-        // function previewFile(file) {
-        //   let reader = new FileReader()
-        //   reader.readAsDataURL(file)
-        //   reader.onloadend = function() {
-        //     let img = document.createElement('img')
-        //     img.src = reader.result
-        //     document.getElementById('gallery').appendChild(img)
-        //   }
-        // }
-
         function uploadFile(file, i) {
-          // var task = store.state.sidebarItemSelection[1];
-          // var url =
-          //   "http://695u121.mars-t.mars-hosting.com/mngapi/tasks/" +
-          //   task +
-          //   "/feeds";
           var formData = new FormData();
 
           formData.append("file", file);
           formData.append("sid", localStorage.sid);
           formData.append("type", "file");
-
-          /*
-        axios
-          .post(url, formData, {
-            headers: {
-              "X-Requested-With": "XMLHttpRequest"
-            }
-          })
-          */
 
           api
             .dragAndDropUpload(store.state.sidebarItemSelection[1], formData)

@@ -6,6 +6,20 @@ import {
 } from '../index';
 const actions = {
   // API
+  getProjectFromTaskID(commit, params){
+    api.getProjectFromTaskID(params).then(r=>{
+      if(r.data.data.length !== 1) return;
+      store.commit('setSidebarData', {
+        tabIndex: 0,
+        data: r.data.data
+      });
+      store.commit("setSidebarItemSelection", {
+        tabIndex: 0,
+        id: r.data.data[0].id
+      });
+    });
+  },
+
   getProjectList(commit, params) {
     api.getProjects(params).then(r => {
       store.commit('setSidebarData', {
@@ -20,6 +34,10 @@ const actions = {
   },
 
   getTaskList(commit, params) {
+    if(params.pro_id === undefined){
+      if(store.state.sidebarTabData[0][0].id !== undefined)
+      params.pro_id = store.state.sidebarTabData[0][0].id;
+    }
     api.getTasks(params).then(r => {
       store.commit('setSidebarData', {
         tabIndex: params.index,
@@ -95,7 +113,6 @@ const mutations = {
   },
 
   resetTaskView: () => {
-    // console.log("usao u store");
     store.state.sidebarItemSelection[1] = undefined;
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;

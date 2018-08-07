@@ -259,18 +259,30 @@ export default {
   justify-content: center;
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(to top, #4e54c8, #8f94fb);
-  /* background: linear-gradient(to top, #f46b45, #eea849); */
+  /* background: linear-gradient(to bottom, #1e4bd4, #1a43c0); */
+  /* background:
+radial-gradient(black 15%, transparent 16%) 0 0,
+radial-gradient(black 15%, transparent 16%) 8px 8px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+background-color:#1e4bd4;
+background-size:16px 16px; */
+  background: linear-gradient(135deg, #4a68ff 25%, transparent 25%) -50px 0,
+    linear-gradient(225deg, #4a68ff 25%, transparent 25%) -50px 0,
+    linear-gradient(315deg, #4a68ff 25%, transparent 25%),
+    linear-gradient(45deg, #4a68ff 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: #3a55e0;
 }
 
 h1 {
-  margin-bottom: 50px;
-  color: #000b;
+  margin-bottom: 30px;
+  color: #f9f9f9;
 }
 
 h2 {
   margin-bottom: 25px;
-  color: #000b;
+  color: #1e4fe0;
 }
 
 #main {
@@ -347,7 +359,7 @@ h2 {
 }
 
 .form-auth .message a {
-  color: #111;
+  color: #1e4fe0;
   text-decoration: none;
   cursor: pointer;
 }

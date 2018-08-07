@@ -32,6 +32,7 @@ export const store = new Vuex.Store({
     darkTheme: false,
     dirtyCounterForSidebar: 0,
     notificationCount: undefined,
+    taskLinked: false,
     modalStatus: {
       active: false,
       ok: true,

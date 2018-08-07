@@ -304,7 +304,7 @@ export default {
 .op-edit input {
   border: none;
   border-bottom: 1px solid #7777;
-  background: white;
+  background: #f4f4f4;
   padding: 4px 10px;
 }
 

@@ -48,6 +48,10 @@ const mutations = {
 
   lastLink(state, params) {
     store.state.lastLink = params;
+  },
+
+  taskLinked(state,params){
+    store.state.taskLinked = params;
   }
 };
 export default {
