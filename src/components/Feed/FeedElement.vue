@@ -454,10 +454,8 @@ export default {
     changeFile(e) {
       var f = e.target.files[0];
       api.sendAttach(this.taskid, f).then(r => {
-        if(this.messages.length>0)
-          this.addDown(true);
-        else
-          this.readeFeeds();
+        if (this.messages.length > 0) this.addDown(true);
+        else this.readeFeeds();
       });
     },
     addUp() {
@@ -736,7 +734,7 @@ export default {
 
     //poziva api svaki put kada je count deljiv sa countNumber
     if (this.global) return;
-    
+
     this.fInterval = setInterval(() => {
       if (
         this.count % this.countNumber == 0 &&
@@ -755,7 +753,6 @@ export default {
         this.countNumber = 30;
       }
     }, 1000);
-    
   },
   destroyed() {
     clearInterval(this.fInterval);
@@ -768,14 +765,17 @@ export default {
 </script>
 <style scoped>
 .delete-timestemp {
-  font-size: 105%;
+  font-size: 70%;
+  margin-top: 5px;
+  align-items: center;
+  align-self: center;
   margin-left: 15px;
   float: right;
-  color: #ff0000;
+  color: #0069d9;
 }
 
 .step-err {
-  border: 2px solid #ff0000;
+  border: 2px solid #0069d9;
 }
 
 .search-inputs {
@@ -849,12 +849,20 @@ export default {
   border: none;
 }
 
+.darkTheme .list-group-item.active {
+  z-index: 0;
+  background-color: #3a3a3a;
+  color: #fff;
+  border-radius: 0;
+  border: none;
+}
+
 .list-group-item.active:before {
   display: inline-block;
   content: "";
   width: 4px;
-  height: 10px;
-  bottom: 3px;
+  height: 9px;
+  bottom: 1px;
   background: var(--ac-color) !important;
   transform: scaleY(4);
   position: relative;

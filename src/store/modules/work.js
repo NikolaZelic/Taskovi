@@ -41,7 +41,7 @@ const actions = {
   //     store.commit( 'setUsersCompanies', {r:result.data} );
   //   } );
   // },
-  clleaneSuggestedProjects(commit, params){
+  cleanSuggestedProjects(commit, params){
     store.commit('cleaneSuggestedProjects');
   },
   // by Zelic - poziva se u TeamAdd

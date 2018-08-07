@@ -519,6 +519,7 @@ export default {
           tabIndex: 1,
           id: undefined
         });
+        this.actionTabDataProject();
       }
       if (ti === 1) {
         store.state.sidebarItemSelection[1] = undefined;

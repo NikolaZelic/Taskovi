@@ -978,6 +978,10 @@ td.align-top {
   width: 20%;
 }
 
+.dropdown.save .dropdown-item:hover {
+  background: #868a904f;
+}
+
 .stepInfoShow tr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
@@ -1023,17 +1027,17 @@ td .form-control {
   cursor: pointer;
 }
 
-pre{
+pre {
   margin: 0 !important;
   font-size: 1rem !important;
   font-weight: 400 !important;
   line-height: 1.5 !important;
   text-align: left !important;
   font-family: "TitilliumWeb" !important;
-  white-space: pre-wrap;       /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 </style>
