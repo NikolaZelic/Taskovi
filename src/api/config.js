@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-var baseURL = 'http://695u121.mars-t.mars-hosting.com/mngapi/';
+var baseURL = process.env.API_PATH;
 
 let instance = axios.create({
   baseURL: baseURL
