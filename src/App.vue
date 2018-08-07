@@ -12,17 +12,6 @@ export default {
       title: "Omni Tasker"
     };
   },
-  watch: {
-    $route(to, from) {
-      console.log(this.$route.path);
-      // this.lastLink = from.path;
-      // store.commit("lastLink", from.path);
-    }
-  },
-  created(){
-    
-      console.log(this.$route.fullPath);
-  }
 };
 </script>
 

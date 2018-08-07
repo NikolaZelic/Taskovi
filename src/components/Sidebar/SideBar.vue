@@ -897,14 +897,10 @@
       document.addEventListener("scroll", this.handleScroll);
       // WRITE CURRENT TAB DATA TO STORE
       store.commit("setTabIndex", this.getTabIndex);
-      // store.commit("setSidebarData", {
-      //   tabIndex: this.getTabIndex
-      // });
       // MAKE REQUEST TO SERVER FOR TAB DATA OR TASK LINK
 
       if (this.taskLinked) {
         store.dispatch("getProjectFromTaskID", this.selectedItemID).then(() => {
-          // console.log(store.state.sidebarItemSelection[0]);
           let id = store.state.sidebarItemSelection[0];
           this.projectRefItem = {
             id: id
