@@ -19,14 +19,15 @@ export default {
 
   methods: {
     showFile() {
-      return (
-        baseURL+"tasks/" +
-        this.mess.tsk_id +
-        "/feeds/" +
-        this.mess.fed_id +
-        "?sid=" +
-        localStorage.sid
-      );
+      // return (
+      //   baseURL+"tasks/" +
+      //   this.mess.tsk_id +
+      //   "/feeds/" +
+      //   this.mess.fed_id +
+      //   "?sid=" +
+      //   localStorage.sid
+      // );
+      return baseURL+"feeds/"+this.mess.fed_id+"?sid="+localStorage.sid;
     },
   },
 
