@@ -19,7 +19,7 @@ const router = new Router({
       name: 'MergedComp',
       component: MergedComp,
       children: [{
-        path: 'feeds',
+        path: '',
         name: 'GlobalFeed',
         components: {
           gf: GlobalFeed

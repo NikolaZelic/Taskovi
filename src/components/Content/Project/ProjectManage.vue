@@ -146,14 +146,24 @@ export default {
   },
   methods: {
     changeDeleted(rowIndex) {
-      const options = {title: 'Confirm?', okLabel: 'Keep', cancelLabel: 'Delete', size: 'sm'}
-      this.$dialogs.confirm('Are you sure you want to delete this user? Think twice!', options)
-      .then(res => {
-        if(res.ok === false) {
-          this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
-          this.project.users.splice(rowIndex, 1);
-        }
-      })
+      const options = {
+        title: "Confirm?",
+        okLabel: "Keep",
+        cancelLabel: "Delete",
+        size: "sm"
+      };
+      this.$dialogs
+        .confirm(
+          "Are you sure you want to delete this user? Think twice!",
+          options
+        )
+        .then(res => {
+          if (res.ok === false) {
+            this.project.users[rowIndex].delete = !this.project.users[rowIndex]
+              .delete;
+            this.project.users.splice(rowIndex, 1);
+          }
+        });
     },
 
     changeAdmin(rowIndex) {
@@ -198,7 +208,6 @@ export default {
             let moreInfo = result.data.data;
 
             for (var i = 0; i < moreInfo.users.length; i++) {
-
               moreInfo.users[i].delete = false;
               moreInfo.users[i].admin = moreInfo.users[i].admin === "true";
 
@@ -272,7 +281,6 @@ export default {
                 });
               }
             }
-
           } else {
             store.commit("modalStatus", {
               ok: false,
@@ -342,11 +350,20 @@ export default {
 
     projectCancel() {
       if (this.somethingChanged === true) {
-        const options = {title: 'Confirm?', okLabel: 'Stay on page', cancelLabel: 'Leave', size: 'sm'}
-        this.$dialogs.confirm('Are you sure you want to leave? You might have unsaved changes!', options)
-        .then(res => {
-          if(res.ok === false) store.dispatch("resetGlobalView");
-        })
+        const options = {
+          title: "Confirm?",
+          okLabel: "Stay on page",
+          cancelLabel: "Leave",
+          size: "sm"
+        };
+        this.$dialogs
+          .confirm(
+            "Are you sure you want to leave? You might have unsaved changes!",
+            options
+          )
+          .then(res => {
+            if (res.ok === false) store.dispatch("resetGlobalView");
+          });
       } else store.dispatch("resetGlobalView");
     },
     CustomPersonLabel(option) {
@@ -404,10 +421,7 @@ export default {
         let users = this.project.users;
         if (users !== undefined) {
           let tempUsers = [];
-          // console.log(users.length + " KORISNIKA");
           for (let i = 0; i < users.length; i++) {
-            // console.log('Nesto' + users[i].surname);
-            // console.log("EMAIL KORISNIKA: "+ users[i].email);
             tempUsers.push({
               email: users[i].email,
               admin: "" + this.project.users[i].admin + ""
@@ -417,11 +431,7 @@ export default {
         }
         return undefined;
       },
-      set(val) {
-        // console.log(val);
-        // let splitUsers = val.split(",");
-        // this.project.users = splitUsers;
-      }
+      set(val) {}
     },
     ...mapGetters({
       currentTabData: "currentTabData"

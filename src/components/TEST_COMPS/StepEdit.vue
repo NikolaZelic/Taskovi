@@ -60,17 +60,8 @@ export default {
         )
         .then(response => {
           if (response.data.status === "OK") {
-            // console.log("tasks/:tasid poziv iz StepEdita");
 
             store.commit("incDirtyCounter");
-            // let ti = this.tabIndex;
-            // store.commit("setTabIndex", -1);
-            // store.commit("setTabIndex", ti);
-            // store.commit("refreshTabIndex");
-            // store.dispatch("getTasks", {
-            //   index: 1,
-            //   pro_id: this.proId
-            // });
             store.commit("modalStatus", {
               message: "Task has been edited succesfully"
             });

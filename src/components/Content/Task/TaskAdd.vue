@@ -493,16 +493,8 @@ export default {
         .then(result => {
           store.commit("itemActionReset");
           store.commit("resetTaskView");
-          // console.log("tasks/:tasid poziv iz taskadd");
 
           store.commit("incDirtyCounter");
-          // let ti = this.tabIndex;
-          // store.commit("setTabIndex", -1);
-          // store.commit("setTabIndex", ti);
-          // store.dispatch("getTasks", {
-          //   index: 1,
-          //   pro_id: this.proId
-          // });
 
           this.reportWritingToDB(result);
           this.waitNet = false;

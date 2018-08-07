@@ -7,11 +7,11 @@ export const routejs = {
 
   check() {
     let locat = window.location.pathname;
-    // console.log(locat);
-    if (locat.startsWith("/feeds")) {
-      store.commit("showGlobalFeed", true);
-    } 
-    else if (locat.startsWith("/tasks/")) {
+    // if (locat.startsWith("/feeds")) {
+    //   store.commit("showGlobalFeed", true);
+    // } 
+    // else
+     if (locat.startsWith("/tasks/")) {
       let taskID = locat.replace('/tasks/', '');
       // console.log(taskID)
       store.commit('taskLinked',true);  

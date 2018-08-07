@@ -118,13 +118,12 @@ export default {
     },
     globalFeed(val) {
       let l = this.lastLink;
-      if (val) this.$router.push("/feeds");
-      else this.$router.push(l === undefined ? "/" : l);
+      if (val) this.$router.push({name:'GlobalFeed'});
+      else this.$router.push(l === undefined || l ==='/tasks' ? "/" : l);
     },
     $route(to, from) {
       this.lastLink = from.path;
       store.commit("lastLink", from.path);
-      // console.log(this.lastLink);
     }
   },
   computed: {
