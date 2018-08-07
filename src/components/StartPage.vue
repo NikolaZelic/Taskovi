@@ -24,7 +24,7 @@
                   <input v-model="user.pass" type="password" name='pass' placeholder="Password" class="form-control" required minlength="3"
                     id="pass" />
                 </div>
-                <button @click.prevent="login" class='btn btn-primary'>login</button>
+                <button @click.prevent="login" class='btn btn-primary' :disabled='!(isValidEmail && isValidPassword)'>login</button>
                 <p class="message">Not registered?
                   <strong>
                     <a @click='loginVisible = !loginVisible'>Create an account</a>
@@ -159,22 +159,17 @@ export default {
     login() {
       let mail = this.user.email;
       let pass = this.user.pass;
-      if (mail === undefined || mail.length < 4) {
-        // store.commit("modalError", {
-        //   message: "Email is not valid"
-        // });
+      if (
+        mail === undefined ||
+        mail.length < 4 ||
+        pass === undefined ||
+        pass.length === 0
+      )
         return;
-      }
-      if (pass === undefined || pass.length < 2) {
-        // store.commit("modalError", {
-        //   message: "Password cannot be less than two characters"
-        // });
-        return;
-      }
       api
         .login(mail, pass)
         .then(r => {
-          if (r.data.login !== "failed") {
+          if (r.data.status !== "ERR" && r.data.login !== "failed") {
             let sid = r.data.sid;
             if (sid !== undefined || sid !== null) {
               store.commit("localStorage", {
@@ -186,16 +181,16 @@ export default {
               this.$router.push("/");
             }
           } else {
-            // store.commit("modalError", {
-            //   message: "Login failed. Please check your username or password."
-            // });
+            store.commit("modalError", {
+              message: "Login failed. Please check your username or password."
+            });
           }
+        })
+        .catch(e => {
+          store.commit("modalError", {
+            message: "" + e
+          });
         });
-        // .catch(e => {
-        //   store.commit("modalError", {
-        //     message: "" + e
-        //   });
-        // });
     },
     register() {
       let valid = this.formstate.$valid;
@@ -204,19 +199,18 @@ export default {
           .register(this.user)
           .then(r => {
             if (r.data.registration === "Success") {
-              console.log(r.data);
               this.loginVisible = true;
             } else if (r.data.status === "ERR") {
-              // store.commit("modalError", {
-              //   message: r.data.message
-              // });
+              store.commit("modalError", {
+                message: r.data.message
+              });
             }
+          })
+          .catch(e => {
+            store.commit("modalError", {
+              message: "" + e
+            });
           });
-          // .catch(e => {
-          //   store.commit("modalError", {
-          //     message: "" + e
-          //   });
-          // });
       }
     }
   },
@@ -225,11 +219,19 @@ export default {
     ...mapState({
       modalErrorActive: state => state.modalError.active
     }),
-
+    isValidEmail() {
+      let email = this.user.email;
+      if (email === undefined || email === "") return false;
+      let pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return email.match(pattern);
+    },
+    isValidPassword() {
+      let pass = this.user.pass;
+      return pass !== undefined && pass !== "";
+    },
     href() {
       return window.location.href.startsWith("http://localhost:8080");
     },
-
     passNotSame() {
       var undef =
         this.user.password === undefined || this.user.confirmpass === undefined;

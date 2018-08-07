@@ -1,5 +1,5 @@
-'use strict'
+'use strict';
 module.exports = {
   NODE_ENV: '"production"',
-  API_PATH: '"/mngapi"'
-}
+  API_PATH: '"/mngapi/"'
+};
