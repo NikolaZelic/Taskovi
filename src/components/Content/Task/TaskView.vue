@@ -522,7 +522,16 @@ export default {
 
     getGeneralInfo(taskID) {
       api.loadTaskInfo(localStorage.sid, taskID).then(response => {
-        this.taskGeneralInfo = response.data.data[0];
+        // console.log('resp ' + response);
+        if(response !== undefined){
+          if(taskID !== undefined)
+            this.taskGeneralInfo = response.data.data[0];
+        }else{
+          store.commit("setSidebarItemSelection", {
+            tabIndex: 1,
+            id: undefined
+          })
+        }
         // console.log(response.data.data[0]);
       });
     },
@@ -620,6 +629,11 @@ export default {
           message: "Step is edited successfully"
         });
       } else {
+        // store.commit("setSidebarItemSelection", {
+        //   tabIndex: 1,
+        //   id: undefined
+        // });
+
         store.commit("modalStatus", {
           ok: false,
           message: result.data.message
