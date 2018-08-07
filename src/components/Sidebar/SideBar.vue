@@ -116,7 +116,7 @@
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
         <!-- Project info modal start-->
-        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'">
+        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'" size="lg">
           <table>
 
             <!-- Description -->
@@ -143,7 +143,36 @@
             <tr>
               <td class="wid30 align-top">Users:</td>
               <td>
-                <span class="badge badge-success mr-1" v-for="(user,index) in this.projectInfoModal.users" :key='index'>{{ user.name }} {{ user.surname }}</span>
+
+
+                <!-- <span class="badge badge-success mr-1" v-for="(user,index) in this.projectInfoModal.users" :key='index'>{{ user.name }} {{ user.surname }}</span> -->
+
+
+                <ul class="list-unstyled">
+                  <li class="media mt-2" style="align-items: center;" v-for="(user,index) in this.projectInfoModal.users" :key='index'>
+
+
+                    <avatar v-if='user.usrimg === null' :username="user.name + ' ' + user.surname" :rounded="true" :size="50"></avatar>
+                    <avatar v-else :src="getAvatar(user)" :rounded="true" :size="50"></avatar>
+
+
+                    <div class="media-body">
+                      <div class="media-body">
+                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.name}} {{user.surname}}
+                          <small> -- {{user.email}}</small>
+                        </h5>
+                      </div>
+                    </div>
+
+                  </li>
+
+
+                </ul>
+
+
+
+
+
               </td>
             </tr>
 
@@ -892,10 +921,10 @@ export default {
     // });
     // MAKE REQUEST TO SERVER FOR TAB DATA OR TASK LINK
 
-    
+
    if(this.taskLinked) {
       store.dispatch('getProjectFromTaskID',this.selectedItemID);
-      
+
       // console.log(this.projectArray)
       if(this.projectArray !== undefined && this.projectArray.length === 1)
       {
@@ -906,7 +935,7 @@ export default {
     }else{
       //  console.log('clicked start')
       this.clickTabData();}
-    
+
   },
   beforeDestroy() {
     clearInterval(this.intervalNotification);
