@@ -7,7 +7,7 @@ import {
 const actions = {
   // API
   getProjectFromTaskID(commit, params){
-    api.getProjectFromTaskID(params).then(r=>{
+   return api.getProjectFromTaskID(params).then(r=>{
       if(r.data.data.length !== 1) return;
       store.commit('setSidebarData', {
         tabIndex: 0,
@@ -35,9 +35,11 @@ const actions = {
   },
 
   getTaskList(commit, params) {
+    // console.log("PRO ID "+ params.pro_id);
     if(params.pro_id === undefined){
       if(store.state.sidebarTabData[0][0].id !== undefined)
       params.pro_id = store.state.sidebarTabData[0][0].id;
+      // console.log("PRO ID 2 "+ params.pro_id);
     }
     api.getTasks(params).then(r => {
       store.commit('setSidebarData', {

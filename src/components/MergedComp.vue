@@ -118,14 +118,13 @@ export default {
     },
     globalFeed(val) {
       let l = this.lastLink;
-      console.log("FIDZ");
       if (val) this.$router.push("/feeds");
       else this.$router.push(l === undefined ? "/" : l);
     },
     $route(to, from) {
       this.lastLink = from.path;
       store.commit("lastLink", from.path);
-      console.log(this.lastLink);
+      // console.log(this.lastLink);
     }
   },
   computed: {
@@ -222,8 +221,7 @@ export default {
       store.commit("darkTheme", true);
     }
   },
-  created() {
-    console.log("merged");
+  created() {    
     routejs.check(); // ROUTER REDIRECT},
   },
   mounted() {
