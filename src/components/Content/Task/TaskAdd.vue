@@ -272,9 +272,9 @@ export default {
         const options = {title: 'Confirm?', okLabel: 'Stay on page', cancelLabel: 'Leave', size: 'sm'}
         this.$dialogs.confirm('Are you sure you want to leave? You might have unsaved changes!', options)
         .then(res => {
-          if(res.ok === false) store.dispatch("resetTaskView");
+          if(res.ok === false) store.dispatch("itemActionReset");
         })
-      } else store.dispatch("resetTaskView");
+      } else store.dispatch("itemActionReset");
     },
 
     addTag(newTag) {

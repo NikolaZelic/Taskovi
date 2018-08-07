@@ -59,7 +59,6 @@
         </span>
       </span> -->
 
-
     <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || getTabIndex === 2, darkTheme: darkTheme }">
 
       <div class="flex-form-action">
@@ -929,9 +928,7 @@
       // MAKE REQUEST TO SERVER FOR TAB DATA OR TASK LINK
 
       if (this.taskLinked) {
-          // console.log('pre-dispach')
         store.dispatch("getProjectFromTaskID", this.selectedItemID).then(() => {
-          // console.log('dispach')
           let id = store.state.sidebarItemSelection[0];
           this.projectRefItem = {
             id: id
