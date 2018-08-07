@@ -1,5 +1,6 @@
 <template>
   <div id="drop-area" class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
+    <moon-loader :loading="loadingData" class="spiner-loader" ></moon-loader>
     <input type="file" id="fileElem" onchange="handleFiles(this.files)" />
 
     <div id="text" class="displayNone">Drop to upload</div>
@@ -82,11 +83,13 @@ import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { routejs } from "@/router/routemanage.js";
+import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 
 export default {
   components: {
     FeedMessage,
-    GlobalFeedMessage
+    GlobalFeedMessage,
+    MoonLoader
   },
   data() {
     return {
@@ -764,6 +767,10 @@ export default {
 };
 </script>
 <style scoped>
+.spiner-loader{
+  display: block;
+  margin: auto;
+}
 .delete-timestemp {
   font-size: 70%;
   margin-top: 5px;
