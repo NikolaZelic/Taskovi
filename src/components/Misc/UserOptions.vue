@@ -136,17 +136,18 @@ export default {
         .then(r => {
           if (r.data.status === "OK") {
             this.getAvatar();
-          } else {
-            store.commit("modalError", {
-              message: "Avatar not uploaded properly"
-            });
-          }
-        })
-        .catch(e => {
-          store.commit("modalError", {
-            message: "" + e
-          });
+          } 
+          // else {
+          //   store.commit("modalError", {
+          //     message: "Avatar not uploaded properly"
+          //   });
+          // }
         });
+        // .catch(e => {
+        //   store.commit("modalError", {
+        //     message: "" + e
+        //   });
+        // });
     },
     closeModal(val) {
       if (val === "cm" || val.target.id === "cm") {

@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     readeFeeds() {
+      this.loadingData = true;
       this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
       this.offset = 0;
@@ -47,6 +48,7 @@ export default {
       store
         .dispatch("readeGloablFeeds", params)
         .then(response => {
+          this.loadingData = false;
           var length = response.data.data.length
           this.offset += length;
 
@@ -66,6 +68,7 @@ export default {
         });
     },
     addDown() {
+      this.loadingData = true;
       if (this.messages == null || this.messages.length == 0) return;
       let params = {
           offset: this.offset,
@@ -78,6 +81,8 @@ export default {
         .then(response => {
           var length = response.data.data.length;
           this.offset += length;
+          this.loadingData = false;
+
           // Seting up unseen messges
           if(this.notificationToBeMarkde >= this.offset ){ // All messages should be marked
             for(var i=0; i<length; i++){

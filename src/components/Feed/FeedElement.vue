@@ -1,5 +1,6 @@
 <template>
   <div id="drop-area" class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
+    <moon-loader :loading="loadingData" class="spiner-loader" ></moon-loader>
     <input type="file" id="fileElem" onchange="handleFiles(this.files)" />
 
     <div id="text" class="displayNone">Drop to upload</div>
@@ -82,11 +83,13 @@ import GlobalFeedMessage from "./GlobalFeedMessage";
 import { store } from "@/store/index.js";
 import { api } from "@/api/index.js";
 import { routejs } from "@/router/routemanage.js";
+import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
 
 export default {
   components: {
     FeedMessage,
-    GlobalFeedMessage
+    GlobalFeedMessage,
+    MoonLoader
   },
   data() {
     return {
@@ -330,12 +333,12 @@ export default {
     readeTimestemps() {
       this.timestamps = [];
       api.readeTimestemps(this.taskid).then(result => {
-        if (result.data.status != "OK") {
-          store.commit("modalError", {
-            message: "Error happened while trying to get timestemps"
-          });
-          return;
-        }
+        // if (result.data.status != "OK") {
+        //   store.commit("modalError", {
+        //     message: "Error happened while trying to get timestemps"
+        //   });
+        //   return;
+        // }
         if (result.data.data !== undefined && result.data.data.length > 0) {
           this.timestamps = result.data.data;
           for (let i = 0; i < this.timestamps.length; i++) {
@@ -396,12 +399,12 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
-        if (result.data.status != "OK") {
-          store.commit("modalError", {
-            message: "Problem during sending the message"
-          });
-          return;
-        }
+        // if (result.data.status != "OK") {
+        //   store.commit("modalError", {
+        //     message: "Problem during sending the message"
+        //   });
+        //   return;
+        // }
         if (this.searchType == "statuses") {
           this.searchType = "messages";
           return;
@@ -599,21 +602,21 @@ export default {
       api
         .deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id)
         .then(response => {
-          if (response.data.status != "OK") {
-            store.commit("modalError", {
-              message: "Error happened while deleting timestamp"
-            });
-            this.choosenTimestemp = null;
-            return;
-          }
+          // if (response.data.status != "OK") {
+          //   store.commit("modalError", {
+          //     message: "Error happened while deleting timestamp"
+          //   });
+          //   this.choosenTimestemp = null;
+          //   return;
+          // }
           this.readeTimestemps();
           this.readeFeeds();
           this.choosenTimestemp = null;
         })
         .catch(() => {
-          store.commit("modalError", {
-            message: "Error happened while deleting timestemps"
-          });
+          // store.commit("modalError", {
+          //   message: "Error happened while deleting timestemps"
+          // });
           this.choosenTimestemp = null;
           return;
         });
@@ -650,12 +653,12 @@ export default {
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
         .then(result => {
-          if (result.data.status != "OK") {
-            store.commit("modalError", {
-              message: "Failed to load data"
-            });
-            return;
-          }
+          // if (result.data.status != "OK") {
+          //   store.commit("modalError", {
+          //     message: "Failed to load data"
+          //   });
+          //   return;
+          // }
           store.commit("addMessages", {
             direction: "start",
             data: result.data.data
@@ -728,6 +731,10 @@ export default {
 };
 </script>
 <style scoped>
+.spiner-loader{
+  display: block;
+  margin: auto;
+}
 .delete-timestemp {
   font-size: 70%;
   margin-top: 5px;
