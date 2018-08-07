@@ -145,18 +145,15 @@ export default {
     }
   },
   methods: {
-    // confirmation() {
-    //   if (confirm("Are you sure? You might have unsaved changes!")) {
-    //     store.commit("itemActionReset");
-    //   }
-    // },
-
     changeDeleted(rowIndex) {
-      if (confirm("Are you sure?")) {
-        this.project.users[rowIndex].delete = !this.project.users[rowIndex]
-          .delete;
-        this.project.users.splice(rowIndex, 1);
-      }
+      const options = {title: 'Confirm?', okLabel: 'Keep', cancelLabel: 'Delete', size: 'sm'}
+      this.$dialogs.confirm('Are you sure you want to delete this user? Think twice!', options)
+      .then(res => {
+        if(res.ok === false) {
+          this.project.users[rowIndex].delete = !this.project.users[rowIndex].delete;
+          this.project.users.splice(rowIndex, 1);
+        }
+      })
     },
 
     changeAdmin(rowIndex) {
@@ -275,7 +272,7 @@ export default {
                 });
               }
             }
-            
+
           } else {
             store.commit("modalStatus", {
               ok: false,
@@ -345,8 +342,11 @@ export default {
 
     projectCancel() {
       if (this.somethingChanged === true) {
-        if (confirm("Are you sure? You might have unsaved changes!"))
-          store.dispatch("resetGlobalView");
+        const options = {title: 'Confirm?', okLabel: 'Stay on page', cancelLabel: 'Leave', size: 'sm'}
+        this.$dialogs.confirm('Are you sure you want to leave? You might have unsaved changes!', options)
+        .then(res => {
+          if(res.ok === false) store.dispatch("resetGlobalView");
+        })
       } else store.dispatch("resetGlobalView");
     },
     CustomPersonLabel(option) {

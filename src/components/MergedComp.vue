@@ -260,6 +260,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  /* position: fixed; */
 }
 
 .flex-data-row {
@@ -305,6 +306,7 @@ export default {
   background-color: var(--main-bg-color);
   color: var(--main-color);
   height: 100%;
+  /* overflow-y: scroll; */
   /* z-index: 0; */
 }
 
@@ -351,6 +353,7 @@ export default {
   font-size: 120%;
   padding: 20px 0 5px;
   color: var(--ac-color);
+  /* position: fixed; */
 }
 
 .app-header > * {
