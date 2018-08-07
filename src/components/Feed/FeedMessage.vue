@@ -22,7 +22,7 @@
       </div>
       <span class="message" width="100">
         <a target="_blank" :href='showFile()' v-if="mess.fed_type==='attachment'&&!isImage()" class="attach show">{{mess.fed_text}}</a>
-        <span v-else>{{mess.fed_text}}</span>
+        <span v-else class="image-title">{{mess.fed_text}}</span><!-- Naslov slike samo u globalnima -->
       </span>
       <img @click='openImage' id='attachment-image' v-if="mess.fed_type==='attachment'&&isImage()" :src="showFile()">
     </div>
@@ -121,6 +121,12 @@ export default {
 </script>
 
 <style scoped>
+.message a{
+  display: block;
+}
+.image-title{
+  display: block;
+}
 .header-type {
   font-size: 200%;
   text-align: center;

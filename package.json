@@ -31,6 +31,7 @@
     "vue-multiselect": "^2.1.0",
     "vue-observe-visibility": "^0.4.1",
     "vue-router": "^3.0.1",
+    "vue-spinner": "^1.0.3",
     "vue-tabs-component": "^1.4.0",
     "vue-toasted": "^1.1.24",
     "vue-upload-component": "^2.8.10",

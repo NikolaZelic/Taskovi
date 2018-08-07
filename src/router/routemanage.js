@@ -29,6 +29,14 @@ export const routejs = {
       // console.log(response);
       this.redirectToLoginPage();
     }
+    else if( response.data.status === "ERR" ){
+      let message = response.data.message;
+      if(message===undefined||message===null||message.length===0)
+        message = "Error happen on server";
+      store.commit("modalError", {  // Ovaj je
+        message: '' + message,
+      });
+    }
     else{
       return response;
     }
