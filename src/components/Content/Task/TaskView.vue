@@ -776,7 +776,8 @@ export default {
       tabIndex: "currentTabIndex",
       itemEditClick: "itemEditClick",
       addStep: state => state.itemAction.addStep,
-      darkTheme: state => state.darkTheme
+      darkTheme: state => state.darkTheme//,
+      // projID: state => state.sidebarItemSelection
     })
   },
 
@@ -787,7 +788,8 @@ export default {
     // this.getTaskInfo(this.selectedItemID);
     // }
 
-    this.loadAllProjectUsers(this.selectedProjectID);
+    //this.loadAllProjectUsers(this.selectedProjectID);
+    //console.log('projectID je ' + this.selectedProjectID);
   },
 
   watch: {
@@ -797,6 +799,7 @@ export default {
     // addingNewTask: function(val, oldVal){
     //   console.log(val);
     // },
+
 
     addStep: function(val, oldVal) {
       // console.log('val ' + val);
