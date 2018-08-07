@@ -6,7 +6,6 @@ const mutations = {
     store.state.sidebarTabData = [];
     store.state.sidebarItemSelection = [];
     store.state.userStorage = {};
-    // store.state.darkTheme = undefined;
   },
 
   modalError(state, params) {
