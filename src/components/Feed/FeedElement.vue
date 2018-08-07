@@ -366,12 +366,12 @@ export default {
     readeTimestemps() {
       this.timestamps = [];
       api.readeTimestemps(this.taskid).then(result => {
-        if (result.data.status != "OK") {
-          store.commit("modalError", {
-            message: "Error happened while trying to get timestemps"
-          });
-          return;
-        }
+        // if (result.data.status != "OK") {
+        //   store.commit("modalError", {
+        //     message: "Error happened while trying to get timestemps"
+        //   });
+        //   return;
+        // }
         if (result.data.data !== undefined && result.data.data.length > 0) {
           this.timestamps = result.data.data;
           for (let i = 0; i < this.timestamps.length; i++) {
@@ -432,12 +432,12 @@ export default {
         return;
       }
       api.postMessage(this.taskid, text).then(result => {
-        if (result.data.status != "OK") {
-          store.commit("modalError", {
-            message: "Problem during sending the message"
-          });
-          return;
-        }
+        // if (result.data.status != "OK") {
+        //   store.commit("modalError", {
+        //     message: "Problem during sending the message"
+        //   });
+        //   return;
+        // }
         if (this.searchType == "statuses") {
           this.searchType = "messages";
           return;
@@ -635,21 +635,21 @@ export default {
       api
         .deleteTImestamp(this.taskid, this.choosenTimestemp.fed_id)
         .then(response => {
-          if (response.data.status != "OK") {
-            store.commit("modalError", {
-              message: "Error happened while deleting timestamp"
-            });
-            this.choosenTimestemp = null;
-            return;
-          }
+          // if (response.data.status != "OK") {
+          //   store.commit("modalError", {
+          //     message: "Error happened while deleting timestamp"
+          //   });
+          //   this.choosenTimestemp = null;
+          //   return;
+          // }
           this.readeTimestemps();
           this.readeFeeds();
           this.choosenTimestemp = null;
         })
         .catch(() => {
-          store.commit("modalError", {
-            message: "Error happened while deleting timestemps"
-          });
+          // store.commit("modalError", {
+          //   message: "Error happened while deleting timestemps"
+          // });
           this.choosenTimestemp = null;
           return;
         });
@@ -686,12 +686,12 @@ export default {
       api
         .searchStepFeeds(tsk_id, stp_time_created, this.searchType)
         .then(result => {
-          if (result.data.status != "OK") {
-            store.commit("modalError", {
-              message: "Failed to load data"
-            });
-            return;
-          }
+          // if (result.data.status != "OK") {
+          //   store.commit("modalError", {
+          //     message: "Failed to load data"
+          //   });
+          //   return;
+          // }
           store.commit("addMessages", {
             direction: "start",
             data: result.data.data

@@ -58,9 +58,9 @@ const actions = {
         }
       })
       .catch(e => {
-        store.commit("modalError", {
-          message: "Error while sending file: " + e
-        });
+        // store.commit("modalError", {
+        //   message: "Error while sending file: " + e
+        // });
       });
   }
 };

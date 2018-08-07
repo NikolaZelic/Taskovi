@@ -160,15 +160,15 @@ export default {
       let mail = this.user.email;
       let pass = this.user.pass;
       if (mail === undefined || mail.length < 4) {
-        store.commit("modalError", {
-          message: "Email is not valid"
-        });
+        // store.commit("modalError", {
+        //   message: "Email is not valid"
+        // });
         return;
       }
       if (pass === undefined || pass.length < 2) {
-        store.commit("modalError", {
-          message: "Password cannot be less than two characters"
-        });
+        // store.commit("modalError", {
+        //   message: "Password cannot be less than two characters"
+        // });
         return;
       }
       api
@@ -186,16 +186,16 @@ export default {
               this.$router.push("/");
             }
           } else {
-            store.commit("modalError", {
-              message: "Login failed. Please check your username or password."
-            });
+            // store.commit("modalError", {
+            //   message: "Login failed. Please check your username or password."
+            // });
           }
-        })
-        .catch(e => {
-          store.commit("modalError", {
-            message: "" + e
-          });
         });
+        // .catch(e => {
+        //   store.commit("modalError", {
+        //     message: "" + e
+        //   });
+        // });
     },
     register() {
       let valid = this.formstate.$valid;
@@ -207,16 +207,16 @@ export default {
               console.log(r.data);
               this.loginVisible = true;
             } else if (r.data.status === "ERR") {
-              store.commit("modalError", {
-                message: r.data.message
-              });
+              // store.commit("modalError", {
+              //   message: r.data.message
+              // });
             }
-          })
-          .catch(e => {
-            store.commit("modalError", {
-              message: "" + e
-            });
           });
+          // .catch(e => {
+          //   store.commit("modalError", {
+          //     message: "" + e
+          //   });
+          // });
       }
     }
   },

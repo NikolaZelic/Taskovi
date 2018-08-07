@@ -12,11 +12,12 @@ const actions = {
         tabIndex: params.index,
         data: r.data.data
       });
-    }).catch(e => {
-      store.commit("modalError", {
-        message: '' + e,
-      });
     });
+    // .catch(e => {
+    //   store.commit("modalError", {
+    //     message: '' + e,
+    //   });
+    // });
   },
 
   getTaskList(commit, params) {
@@ -25,11 +26,12 @@ const actions = {
         tabIndex: params.index,
         data: r.data.data
       });
-    }).catch(e => {
-      store.commit("modalError", {
-        message: '' + e,
-      });
     });
+    // .catch(e => {
+    //   store.commit("modalError", {  // Ovaj je
+    //     message: '' + e,
+    //   });
+    // });
   },
 
   // STORE
