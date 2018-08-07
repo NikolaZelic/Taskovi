@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       somethingChanged: false,
-
+      timecritical: undefined,
       title: undefined,
       description: undefined,
       selectedPriority: undefined,
@@ -99,7 +99,7 @@ export default {
             // });
             store.commit("modalStatus", {
               ok: true,
-              message: "Task has been edited succesfully"
+              message: "Task '" + this.title + "' has been edited successfully."
             });
           } else {
             store.commit("modalStatus", {
@@ -119,13 +119,16 @@ export default {
       api
         .loadTaskInfo(localStorage.sid, store.state.itemAction.edit)
         .then(response => {
+          // console.log(response.data.data[0].tsk_deadline);
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
-          this.deadline = this.utcToLocal(response.data.data[0].tsk_deadline);
+          this.deadline = response.data.data[0].tsk_deadline
+          console.log(this.deadline);
           this.selectedPriority = "" + response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
-        }).then(response => {          
+          this.timecritical =  response.data.data[0].timecritical;
+        }).then(response => {
           this.somethingChanged = false;
         });
     }
