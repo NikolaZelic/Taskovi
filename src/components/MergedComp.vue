@@ -257,6 +257,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  /* position: fixed; */
 }
 
 .flex-data-row {
@@ -349,6 +350,7 @@ export default {
   font-size: 120%;
   padding: 20px 0 5px;
   color: var(--ac-color);
+  /* position: fixed; */
 }
 
 .app-header > * {

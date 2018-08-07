@@ -19,7 +19,7 @@
       </div>
 
       <!-- TAB OverView -->
-      <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
+      <div class="card mb-3" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
         <div class="card-body">
           <table id="task-table">
@@ -1042,5 +1042,7 @@ pre {
   white-space: -pre-wrap; /* Opera 4-6 */
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
+  overflow: auto;
+  max-height: 200px;
 }
 </style>
