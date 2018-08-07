@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     readeFeeds() {
+      console.log("readeFeeds");
       this.loadingData = true;
       this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
@@ -68,6 +69,7 @@ export default {
         });
     },
     addDown() {
+      console.log("addDown");
       this.loadingData = true;
       if (this.messages == null || this.messages.length == 0) return;
       let params = {
