@@ -101,7 +101,7 @@
 
             <!-- SUBMIT -->
             <div class="form-group button-wrapper float-right">
-              <button @click.once='taskCancel' type="submit" class="btn btn-danger mr-1">
+              <button @click='taskCancel' type="submit" class="btn btn-danger mr-1">
               <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
@@ -268,8 +268,12 @@ export default {
 
     taskCancel() {
       if (this.somethingChanged === true) {
-        if (confirm("Are you sure? You might have unsaved changes!"))
-          store.dispatch("resetTaskView");
+
+        const options = {title: 'Confirm?', okLabel: 'Stay on page', cancelLabel: 'Leave', size: 'sm'}
+        this.$dialogs.confirm('Are you sure you want to leave? You might have unsaved changes!', options)
+        .then(res => {
+          if(res.ok === false) store.dispatch("resetTaskView");
+        })
       } else store.dispatch("resetTaskView");
     },
 

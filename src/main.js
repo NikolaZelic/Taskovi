@@ -9,6 +9,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toasted from "vue-toasted";
 import moment from 'moment';
 
+import 'v-slim-dialog/dist/v-slim-dialog.css'
+import dialogs from 'v-slim-dialog'
+Vue.use(dialogs)
+
 import {
   store
 } from './store/index';

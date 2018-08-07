@@ -1,5 +1,5 @@
 <template>
-  <div class="height100 mh-100" style="display: block" v-if="!addStep">
+  <div class="height100" style="display: block" v-if="!addStep">
 
     <template v-if="this.selectedItemID <= 0">
       <h1>Select task first...</h1>
@@ -17,7 +17,6 @@
           </b-tab>
         </b-tabs>
       </div>
-
 
       <!-- TAB OverView -->
       <div class="card" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
@@ -400,6 +399,8 @@ export default {
 
   data() {
     return {
+      confirmModal: false,
+
       tabParam: undefined,
       editFields: false,
 
@@ -465,6 +466,7 @@ export default {
   },
 
   methods: {
+
     convertStatus(sta_text) {
       switch (sta_text) {
         case "In Progress":
@@ -967,6 +969,7 @@ button.nav-item {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: visible;
 }
 
 .chat-box {

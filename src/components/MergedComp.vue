@@ -302,6 +302,7 @@ export default {
   background-color: var(--main-bg-color);
   color: var(--main-color);
   height: 100%;
+  /* overflow-y: scroll; */
   /* z-index: 0; */
 }
 
