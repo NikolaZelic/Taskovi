@@ -925,11 +925,13 @@
       );
       document.addEventListener("scroll", this.handleScroll);
       // WRITE CURRENT TAB DATA TO STORE
-      store.commit("setTabIndex", this.getTabIndex);
+      // store.commit("setTabIndex", this.getTabIndex); // WHY??
       // MAKE REQUEST TO SERVER FOR TAB DATA OR TASK LINK
 
       if (this.taskLinked) {
+          // console.log('pre-dispach')
         store.dispatch("getProjectFromTaskID", this.selectedItemID).then(() => {
+          // console.log('dispach')
           let id = store.state.sidebarItemSelection[0];
           this.projectRefItem = {
             id: id

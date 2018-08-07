@@ -6,9 +6,11 @@ import {
 } from '../index';
 const actions = {
   // API
-  getProjectFromTaskID(commit, params){
-   return api.getProjectFromTaskID(params).then(r=>{
-      if(r.data.data.length !== 1) return;
+  getProjectFromTaskID(commit, params) {
+    return api.getProjectFromTaskID(params).then(r => {
+
+      //  console.log(r)
+      if (r === undefined || r.data.data.length !== 1) return;
       store.commit('setSidebarData', {
         tabIndex: 0,
         data: r.data.data
@@ -35,17 +37,17 @@ const actions = {
   },
 
   getTaskList(commit, params) {
-    // console.log("PRO ID "+ params.pro_id);
-    if(params.pro_id === undefined){
-      if(store.state.sidebarTabData[0][0].id !== undefined)
-      params.pro_id = store.state.sidebarTabData[0][0].id;
-      // console.log("PRO ID 2 "+ params.pro_id);
+    if (params.pro_id === undefined) {
+      let sideData = store.state.sidebarTabData[0];
+      if (sideData !== undefined && sideData[0].id !== undefined)
+        params.pro_id = store.state.sidebarTabData[0][0].id;
     }
     api.getTasks(params).then(r => {
-      store.commit('setSidebarData', {
-        tabIndex: params.index,
-        data: r.data.data
-      });
+      if (r !== undefined)
+        store.commit('setSidebarData', {
+          tabIndex: params.index,
+          data: r.data.data
+        });
     });
     // .catch(e => {
     //   store.commit("modalError", {  // Ovaj je

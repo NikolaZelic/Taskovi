@@ -252,7 +252,8 @@ export const api = {
         sid: localStorage.sid,
         tasid: id
       }
-    }).then(response => {
+    })
+    .then(response => {
       return routejs.checkSession(response);
     });
   },
