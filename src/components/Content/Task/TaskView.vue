@@ -110,6 +110,11 @@
 
           </table>
           <div class="text-right">
+
+            <button class="btn btn-danger" type="button" v-if="taskGeneralInfo.only_worker === 1" @click.prevent="taskStatus(5)">
+              Reject task
+            </button>
+
             <div class="dropdown save" v-if="taskGeneralInfo.can_mark === 1">
               <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" v-if="taskStatusBtn">
                 Mark this task as...
