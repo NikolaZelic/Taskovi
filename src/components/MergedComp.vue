@@ -117,14 +117,14 @@ export default {
       this.addBtn = val !== undefined;
     },
     globalFeed(val) {
-      let l = this.lastLink;
-      if (val) this.$router.push({name:'GlobalFeed'});
-      else this.$router.push(l === undefined || l ==='/tasks' ? "/" : l);
-    },
-    $route(to, from) {
-      this.lastLink = from.path;
-      store.commit("lastLink", from.path);
+      // let l = this.lastLink;
+      if (val) this.$router.push({ name: "GlobalFeed" });
+      // else this.$router.push(l === undefined || l ==='/tasks' ? "/" : l);
     }
+    // $route(to, from) {
+    //   this.lastLink = from.path;
+    //   store.commit("lastLink", from.path);
+    // }
   },
   computed: {
     ...mapState({
@@ -148,7 +148,6 @@ export default {
     tableShow() {
       return !(this.globalFeed || this.checkShow(2));
     },
-
     projectInfo() {
       let onePro = [];
       if (this.currentTabIndex !== 1) return onePro;
@@ -220,10 +219,11 @@ export default {
       store.commit("darkTheme", true);
     }
   },
-  created() {    
-    routejs.check(); // ROUTER REDIRECT},
+  beforeMount() {
+    routejs.check(2); // /tasks
   },
   mounted() {
+    routejs.check(1); // /feeds
     this.intervalSession = setInterval(
       function() {
         this.refreshSession();

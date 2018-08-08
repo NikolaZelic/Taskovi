@@ -658,7 +658,8 @@ export default {
     },
     clickTabData() {
       if (this.localTabIndex === 0) {
-        store.commit("lastLink", "/");
+        // store.commit("lastLink", "/");
+        console.log('me')
         this.$router.push("/");
       }
       this.getTabData();

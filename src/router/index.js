@@ -5,10 +5,10 @@ import MergedComp from '@/components/MergedComp';
 import StartPage from '@/components/StartPage';
 import GlobalFeed from "@/components/Feed/GlobalFeed.vue";
 // REMOVE BELOW IN FINAL
-import TaskAdd from '@/components/Content/Task/TaskAdd';
+// import TaskAdd from '@/components/Content/Task/TaskAdd';
 // import StepAdd from '@/components/Content/Task/StepAdd';
 
-import TestForm from '@/components/TEST_COMPS/TestForm';
+// import TestForm from '@/components/TEST_COMPS/TestForm';
 import SideBar from "@/components/Sidebar/SideBar";
 
 Vue.use(Router);
@@ -19,32 +19,35 @@ const router = new Router({
       name: 'MergedComp',
       component: MergedComp,
       children: [{
-        path: '',
+        path: 'feeds',
         name: 'GlobalFeed',
         components: {
           gf: GlobalFeed
         }
-      }, {
-        path: 'tasks',
-        name: 'Tasks',
-        component: SideBar
-      }]
+      },
+      //  {
+      //   path: 'tasks/:taskID',
+      //   name: 'Tasks',
+      //   component: SideBar
+      // }
+    ]
     }, {
       path: '/auth',
       name: 'StartPage',
       component: StartPage
-    }, {
-      path: '/taskadd',
-      component: TaskAdd
-    },
+    }, 
+    // {
+    //   path: '/taskadd',
+    //   component: TaskAdd
+    // },
     // {
     //   path: '/stepadd',
     //   component: StepAdd
     // }, 
-    {
-      path: '/testform',
-      component: TestForm
-    },
+    // {
+    //   path: '/testform',
+    //   component: TestForm
+    // },
     {
       path: '*',
       component: MergedComp
