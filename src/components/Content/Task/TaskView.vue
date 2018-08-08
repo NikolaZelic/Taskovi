@@ -550,7 +550,7 @@ export default {
         this.tabs.generalInfo = false;
         this.tabs.steps = true;
         this.tabs.messages = false;
-        this.getTaskInfo(this.selectedItemID);
+        //this.getTaskInfo(this.selectedItemID);
         this.stepInfoShow = false;
         this.stepEditShow = false;
       }
@@ -819,7 +819,7 @@ export default {
       // console.log('val ' + val);
       // console.log('Oldval ' + oldVal);
       if (val === false) {
-        this.getTaskInfo(this.selectedItemID);
+        // this.getTaskInfo(this.selectedItemID);
         //this.getStepInfo(this.stepInfo[0].tsk_id);
       }
       // console.log('addstep iz watch-a');

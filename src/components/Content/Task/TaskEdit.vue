@@ -116,6 +116,7 @@ export default {
     },
 
     loadInfo() {
+      // if(store.state.itemAction.edit !== undefined){}
       api
         .loadTaskInfo(localStorage.sid, store.state.itemAction.edit)
         .then(response => {
