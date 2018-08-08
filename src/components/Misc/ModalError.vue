@@ -2,9 +2,6 @@
   <transition name="modal">
     <div class="modal-mask" @click="closeModal" id='cm'>
       <div class="modal-content">
-        <!-- <p>
-          ></i>
-          Error requesting data or internet not detected.</p> -->
         <p><i class="fas fa-exclamation-triangle" ></i> {{ message }}</p>
         <button class='btn btn-danger dismiss' id='cm'>Dismiss</button>
         </div>

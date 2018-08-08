@@ -778,7 +778,6 @@ export default {
           this.getTaskFilterData();
         }
       }
-      store.dispatch("getFeedCount");
     },
     showSubFilter() {
       let i = this.getTabIndex;
@@ -968,12 +967,8 @@ export default {
 <style scoped>
 #sidebar {
   display: flex;
-  /* flex-direction: column; */
-  /* align-items: stretch; */
   z-index: 1;
   background: var(--main-bg-color);
-  /* MAYBE REMOVE WIDTH? */
-  /* width: 100%; */
 }
 
 .darkMain #sidebar {
@@ -1280,9 +1275,8 @@ h2 {
 .sidebar-body {
   max-width: 100%;
   transition: all 0.5s ease;
-  /* width: 0px; */
+  width: 300px;
   margin-left: 70px;
-  /* FOR USE WHEN STATIC SIDE IS POSITION FIXED */
   background: var(--main-bg-color);
   flex: 1;
   height: 93vh;

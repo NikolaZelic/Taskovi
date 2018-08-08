@@ -258,7 +258,7 @@ export default {
 <style scoped>
 .start {
   text-align: center;
-  justify-content: center;
+  /* justify-content: center; */
   display: flex;
   min-height: 100vh;
   /* background: linear-gradient(to bottom, #1e4bd4, #1a43c0); */
@@ -269,17 +269,26 @@ radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
 radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
 background-color:#1e4bd4;
 background-size:16px 16px; */
-  background: linear-gradient(135deg, #4a68ff 25%, transparent 25%) -50px 0,
+
+  /* background: linear-gradient(135deg, #4a68ff 25%, transparent 25%) -50px 0,
     linear-gradient(225deg, #4a68ff 25%, transparent 25%) -50px 0,
     linear-gradient(315deg, #4a68ff 25%, transparent 25%),
     linear-gradient(45deg, #4a68ff 25%, transparent 25%);
   background-size: 100px 100px;
-  background-color: #3a55e0;
+  background-color: #3a55e0; */
+
+  background-color: #2e5963;
+  /* background-image: url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234697c5' fill-opacity='0.06' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E"); */
+
+  /* background-image:  */
+
+  background: url("https://www.answerunited.com/wp-content/uploads/2015/06/Call-Center-1.jpg");
+  background-size: cover;
 }
 
 h1 {
   margin-bottom: 30px;
-  color: #f9f9f9;
+  color: #000;
 }
 
 h2 {
@@ -292,14 +301,15 @@ h2 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: 60px;
 }
 
 #creators {
   position: absolute;
   background: var(--ac-color);
-  height: 30px;
-  width: 30px;
-  opacity: 0.1;
+  height: 20px;
+  width: 20px;
+  opacity: 0.06;
   border-radius: 5px;
   bottom: 5%;
   right: 5%;
