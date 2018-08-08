@@ -23,7 +23,7 @@
     <div id="users">
       <label for="users">Manage users on this project</label>
 
-      <b-input-group>
+      <b-input-group @keyup.enter="submitEmail(); somethingChanged = true">
         <b-form-input v-model="email" ref="focusThis" placeholder="Type email to add new user" />
         <b-input-group-append>
           <b-btn :disabled="isValidEmail" @click="submitEmail(); somethingChanged = true">Submit</b-btn>

@@ -230,7 +230,7 @@
             <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
           </template>
 
-          
+
           <!-- FAILED TASKS | FOR PROJECTS -->
           <template slot="HEAD_cancelled_tasks" slot-scope="data">
             <span class='fas fa-ban' title="Cancelled Tasks"></span>
@@ -653,6 +653,8 @@ export default {
       }
     },
     selectAndSet(item, index, event) {
+      store.commit("resetActionEdit");
+
       let tableRow = undefined;
       if (event !== undefined) {
         let tagName = event.target.tagName;
