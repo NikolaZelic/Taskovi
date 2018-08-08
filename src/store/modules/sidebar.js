@@ -8,8 +8,6 @@ const actions = {
   // API
   getProjectFromTaskID(commit, params) {
     return api.getProjectFromTaskID(params).then(r => {
-
-      //  console.log(r)
       if (r === undefined || r.data.data.length !== 1) return;
       store.commit('setSidebarData', {
         tabIndex: 0,
@@ -29,11 +27,6 @@ const actions = {
         data: r.data.data
       });
     });
-    // .catch(e => {
-    //   store.commit("modalError", {
-    //     message: '' + e,
-    //   });
-    // });
   },
 
   getTaskList(commit, params) {
@@ -49,11 +42,6 @@ const actions = {
           data: r.data.data
         });
     });
-    // .catch(e => {
-    //   store.commit("modalError", {  // Ovaj je
-    //     message: '' + e,
-    //   });
-    // });
   },
 
   // STORE
@@ -68,9 +56,6 @@ const actions = {
   itemActionReset() {
     store.commit('itemActionReset');
   },
-  // resetProjectView() {
-  //   store.commit('resetProjectView');
-  // },
   resetTaskView() {
     store.commit('resetTaskView');
   },
@@ -123,9 +108,6 @@ const mutations = {
     store.state.itemAction.edit = undefined;
     store.state.itemAction.add = undefined;
     store.state.mainFocused = false;
-    // let ci = store.state.currentTabIndex;
-    // store.state.currentTabIndex = -1;
-    // store.state.currentTabIndex = ci;
   },
   incDirtyCounter: () => {
     store.state.dirtyCounterForSidebar++;
@@ -136,12 +118,6 @@ const mutations = {
     store.state.itemAction.add = undefined;
     store.state.mainFocused = false;
   },
-  // refreshTabIndex: () => {
-  //   let i = store.state.currentTabIndex;
-  //   store.state.currentTabIndex = -1;
-  //   store.state.currentTabIndex = i;
-  //   // store.commit('refreshTabIndex');
-  // },
   showGlobalFeed: (state, params) => {
     store.state.globalFeed = params;
   },

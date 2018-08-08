@@ -9,9 +9,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toasted from "vue-toasted";
 import moment from 'moment';
 
-import 'v-slim-dialog/dist/v-slim-dialog.css'
-import dialogs from 'v-slim-dialog'
-Vue.use(dialogs)
+import 'v-slim-dialog/dist/v-slim-dialog.css';
+import dialogs from 'v-slim-dialog';
+Vue.use(dialogs);
 
 import {
   store
@@ -26,7 +26,7 @@ Vue.config.productionTip = false;
 
 Vue.mixin({
   methods: {
-    parseTime(date){
+    parseTime(date) {
       return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     localToUTC(date) {

@@ -226,6 +226,16 @@
             <span class='badge badge-primary' v-if='data.item.inprogress_tasks !== 0'>{{data.item.inprogress_tasks}}</span>
           </template>
 
+          
+          <!-- FAILED TASKS | FOR PROJECTS -->
+          <template slot="HEAD_cancelled_tasks" slot-scope="data">
+            <span class='fas fa-ban' title="Cancelled Tasks"></span>
+          </template>
+
+          <template slot="cancelled_tasks" slot-scope="data">
+            <span class='badge badge-orange' v-if='data.item.cancelled_tasks !== 0'>{{data.item.cancelled_tasks}}</span>
+          </template>
+
           <!-- FAILED TASKS | FOR PROJECTS -->
           <template slot="HEAD_failed_tasks" slot-scope="data">
             <span class='fas fa-times-circle' title="Failed Tasks"></span>
@@ -411,6 +421,13 @@ export default {
           sortable: true,
           class: "text-center td-icon-width",
           thClass: "td-blue"
+        },
+        {
+          key: "cancelled_tasks",
+          label: "Cancelled",
+          sortable: true,
+          class: "text-center td-icon-width",
+          thClass: "td-orange"
         },
         {
           key: "failed_tasks",
@@ -659,7 +676,7 @@ export default {
     clickTabData() {
       if (this.localTabIndex === 0) {
         // store.commit("lastLink", "/");
-        console.log('me')
+        // console.log("me");
         this.$router.push("/");
       }
       this.getTabData();
@@ -819,7 +836,7 @@ export default {
         case "Failed":
           return "td-red fa fa-times";
         case "Cancelled":
-          return "td-yellow fa fa-ban";
+          return "td-orange fa fa-ban";
         default:
           return "NO IMPLEMENT";
       }
@@ -1263,7 +1280,7 @@ h2 {
 .sidebar-body {
   max-width: 100%;
   transition: all 0.5s ease;
-  width: 0px;
+  /* width: 0px; */
   margin-left: 70px;
   /* FOR USE WHEN STATIC SIDE IS POSITION FIXED */
   background: var(--main-bg-color);
