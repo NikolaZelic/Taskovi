@@ -7,7 +7,7 @@
           <div v-if='currentTabIndex===1'>
             <strong>
               <span title='Back to project list' class='fa fa-chevron-left' @click='backToProjectList'></span>
-              <span>{{ projectInfo.title }}</span>
+              <span class='pro-title' @click='backToProjectList'>{{ projectInfo.title }}</span>
             </strong>
           </div>
 
@@ -366,6 +366,10 @@ export default {
   bottom: 0;
   left: 0;
   top: 0;
+}
+
+.pro-title {
+  cursor: pointer;
 }
 
 #wrapper aside.max {

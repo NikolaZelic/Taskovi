@@ -95,13 +95,11 @@
             <b-input-group class='search'>
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search" placeholder='Search by tags or text'></multiselect>
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder='Search by tags or text'></multiselect>
             </b-input-group>
-            
-          </div>
-        </template>
 
-        <template v-if="showSubFilter()">
+          </div>
+
           <div class="item-filter">
             <b-form-group role="group">
               <b-form-checkbox-group v-model="selectedFilter" :options="radioFilter">
@@ -192,6 +190,10 @@
               v-b-modal.modalInfo></span>
 
             <span class='td-bold'>{{max50Char(data.item.title)}}</span>
+          </template>
+
+          <!-- EDIT BUTTON -->
+          <template slot='edit_item'  slot-scope="data">
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
               title="Edit project"></span>
           </template>
@@ -396,6 +398,12 @@ export default {
           label: "Projects",
           sortable: true,
           // class: "flex-td",
+          thClass: "td-blue"
+        },
+        {
+          key: "edit_item",
+          label: "Edit",
+          class: "text-center td-icon-width",
           thClass: "td-blue"
         },
         {
@@ -1243,7 +1251,7 @@ h2 {
   position: relative;
   width: 100%;
   max-width: 600px;
-  margin: auto;
+  margin: 0;
 }
 
 .darkTheme .input-group-text {
