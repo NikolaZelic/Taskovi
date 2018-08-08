@@ -45,23 +45,24 @@ const actions = {
 const mutations = {
 
   addMessages: (state, params) => {
+    // console.log(params);
     if (params.data) {
       if (params.direction === 'start') {
         state.scrollDownMess = true;
         state.messages = params.data;
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
-        for (var i = params.data.length - 1; i >= 0; i--) {
-          if (!library.messagesHaveFeed(state.messages, params.data[i]))
+        for(var i = params.data.length-1; i>=0; i--){
+          if( !library.messagesHaveFeed(state.messages, params.data[i]) )
             state.messages.unshift(params.data[i]);
         }
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
-          params.data.forEach(e => {
-            if (!library.messagesHaveFeed(state.messages, params.data[i]))
-              state.messages.push(e);
-          });
+          for(let i=0; i<params.data.length; i++){
+            if( !library.messagesHaveFeed(state.messages, params.data[i]) )
+              state.messages.push(params.data[i]);
+          }
       }
     }
   },
