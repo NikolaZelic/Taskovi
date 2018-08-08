@@ -52,14 +52,14 @@ const mutations = {
         state.messages = params.data;
       } else if (params.direction === 'up') {
         state.scrollDownMess = false;
-        for (var i = params.data.length - 1; i >= 0; i--) {
-          if (!library.messagesHaveFeed(state.messages, params.data[i]))
+        for(var i = params.data.length-1; i>=0; i--){
+          if( !library.messagesHaveFeed(state.messages, params.data[i]) )
             state.messages.unshift(params.data[i]);
         }
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
-          for(let i=0; i<params.data,length; i++){
+          for(let i=0; i<params.data.length; i++){
             if( !library.messagesHaveFeed(state.messages, params.data[i]) )
               state.messages.push(params.data[i]);
           }
