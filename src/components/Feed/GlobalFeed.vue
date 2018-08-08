@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     readeFeeds() {
-      console.log("readeFeeds");
+      // console.log("readeFeeds");
       this.loadingData = true;
       this.notificationToBeMarkde = this.notifCount;
       store.commit("clearFeed");
@@ -54,7 +54,7 @@ export default {
           this.offset += length;
 
           store.commit("addMessages", {
-            direction: "down",
+            direction: "start",
             data: response.data.data
           });
           if(this.firstLoadData){
@@ -69,7 +69,7 @@ export default {
         });
     },
     addDown() {
-      console.log("addDown");
+      // console.log("addDown");
       this.loadingData = true;
       if (this.messages == null || this.messages.length == 0) return;
       let params = {

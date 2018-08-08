@@ -3,6 +3,8 @@ export const library = {
         // console.log(feed);
         if(feed==undefined||feed.fed_id==undefined)
             return false;
+        if(messages.length==0)
+            return false;
         for(let i=0; i<messages.length; i++){
             if(messages[i].fed_id==undefined){
                 // console.log('Doesn"t have it it');
