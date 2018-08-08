@@ -258,7 +258,6 @@ export default {
 <style scoped>
 .start {
   text-align: center;
-  /* justify-content: center; */
   display: flex;
   min-height: 100vh;
   /* background: linear-gradient(to bottom, #1e4bd4, #1a43c0); */
@@ -280,9 +279,7 @@ background-size:16px 16px; */
   background-color: #2e5963;
   /* background-image: url("data:image/svg+xml,%3Csvg width='16' height='20' viewBox='0 0 16 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234697c5' fill-opacity='0.06' fill-rule='evenodd'%3E%3Cpath d='M8 0v20L0 10M16 0v10L8 0M16 10v10H8'/%3E%3C/g%3E%3C/svg%3E"); */
 
-  /* background-image:  */
-
-  background: url("https://www.answerunited.com/wp-content/uploads/2015/06/Call-Center-1.jpg");
+  background: url("/static/Background-IMG.jpg");
   background-size: cover;
 }
 
@@ -335,8 +332,7 @@ h2 {
   width: 90%;
   padding: 30px;
   max-width: 550px;
-  /* min-width: 430px; */
-  background-color: #f7f7f2e0;
+  background-color: #f7f7f2c9;
   border-radius: 5px;
 }
 
