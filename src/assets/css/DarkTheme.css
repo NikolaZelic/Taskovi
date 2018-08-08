@@ -4,10 +4,7 @@
 
 .sidebar-body #tags {
   width: auto !important;
-  display: inline-block !important;
-}
-
-.sidebar-body #tags {
+  /* display: inline-block !important; */
   color: black !important;
 }
 

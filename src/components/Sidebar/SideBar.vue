@@ -62,19 +62,19 @@
     <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || getTabIndex === 2, darkTheme: darkTheme }">
 
       <div class="flex-form-action">
-<div class='btn-action'>
-        <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton" v-if="(getTabIndex === 0 && onLocalhost) || getTabIndex === 1">
-          <span class="fas fa-plus-circle"></span>
-          Add
-          <span>{{tabs[getTabIndex].single}}</span>
-        </button>
-        
-        <button id="editItem" title='Edit current project' class="btn btn-success" @click="editProjectButton" v-if="(getTabIndex === 1 && projectRefItem.can_edit === 'true')">
-          <span class="fas fa-edit"></span>
-          Edit
-          <span>{{tabs[getTabIndex-1].single}}</span>
-        </button>
-</div>
+        <div class='btn-action'>
+          <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton" v-if="(getTabIndex === 0 && onLocalhost) || getTabIndex === 1">
+            <span class="fas fa-plus-circle"></span>
+            Add
+            <span>{{tabs[getTabIndex].single}}</span>
+          </button>
+
+          <button id="editItem" title='Edit current project' class="btn btn-success" @click="editProjectButton" v-if="(getTabIndex === 1 && projectRefItem.can_edit === 'true')">
+            <span class="fas fa-edit"></span>
+            Edit
+            <span>{{tabs[getTabIndex-1].single}}</span>
+          </button>
+        </div>
         <template v-if="!showSubFilter()">
           <b-form-group>
             <b-input-group :class='{darkTheme:darkTheme}' class='search'>
@@ -93,12 +93,11 @@
           <div class='tag-filter'>
 
             <b-input-group class='search'>
-
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search" placeholder='Search'></multiselect>
-
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" tag-placeholder="Search" placeholder='Search by tags or text'></multiselect>
             </b-input-group>
+            
           </div>
         </template>
 
@@ -118,7 +117,8 @@
       <div class="item-list" ref='tabdata' @scroll='tableScroll'>
 
         <!-- Project info modal start-->
-        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'" size="lg">
+        <b-modal id="modalInfo" :title="projectInfoModal.title" :header-bg-variant="'dark'" :ok-only="true" :ok-title="'Close'" :ok-variant="'dark'"
+          size="lg">
           <table>
 
             <!-- Description -->
@@ -193,7 +193,7 @@
 
             <span class='td-bold'>{{max50Char(data.item.title)}}</span>
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
-              title="Edit Item"></span>
+              title="Edit project"></span>
           </template>
 
           <!-- CREATED DATE -->
@@ -1182,6 +1182,14 @@ export default {
   line-height: 20px;
   color: #28a745;
   padding: 0 7px;
+  width: 30px;
+  font-size: 110%;
+}
+
+.td-icons.fa-edit:hover:before {
+  /* box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2); */
+  /* box-shadow: 0px 2px 20px 5px rgba(19, 255, 45, 0.38); */
+  content: "\f304";
 }
 
 .td-icon-width {

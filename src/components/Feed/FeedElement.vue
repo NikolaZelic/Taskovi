@@ -11,8 +11,6 @@
       <form class='form-search'>
         <b-form-radio-group class='radio-group' v-model="searchType" :options="radioFilter"></b-form-radio-group>
         <b-form-checkbox-group class='radio-group' v-model="searchImportant" :options="importantFilter"></b-form-checkbox-group>
-        <!-- <b-form-checkbox @click='important' v-model="searchImportant" >Important</b-form-checkbox>
-        <b-form-checkbox @click='impByOth' v-model="searchImpByOth" >Important by Others</b-form-checkbox> -->
       </form>
     </div>
 
@@ -118,7 +116,7 @@ export default {
           value: "important"
         },
         {
-          text: "Important by Others",
+          text: "Important by others",
           value: "impbyoth"
         }
       ],

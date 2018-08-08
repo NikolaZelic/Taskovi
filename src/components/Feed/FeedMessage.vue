@@ -285,7 +285,7 @@ export default {
 }
 
 .msg-status .message {
-  font-size: 70%;
+  font-size: 75%;
 }
 
 .avatar {
