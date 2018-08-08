@@ -95,8 +95,8 @@
 
                     <div class="media-body">
                       <div class="media-body">
-                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.name}}
-                          <small> -- {{user.usr_email}}</small>
+                        <h5 class="mt-0 mb-1 ml-2 inline-block">{{user.name}} {{user.surname}}
+                          <small> -- {{user.email}}</small>
                         </h5>
                       </div>
                     </div>

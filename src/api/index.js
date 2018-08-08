@@ -390,7 +390,20 @@ export const api = {
     }).then(response => {
       return routejs.checkSession(response);
     });
+  },
+
+  getProjectUsers(proid, sid) {
+    return axios.get("projects/:proid/users", {
+      params: {
+        proid: proid,
+        sid: sid
+      }
+    }).then(response => {
+      return routejs.checkSession(response);
+    });
   }
+
+
 
   //Kraj Milosevih API-ja
 

@@ -9,6 +9,8 @@ export default {
   mixins: [TaskAdd],
   data() {
     return {
+      projectUsers: [],
+
       somethingChanged: false,
       timecritical: undefined,
       title: undefined,
@@ -57,9 +59,16 @@ export default {
   },
 
   methods: {
-    fullName({ name }) {
-      return name;
-    },
+    // fullName({ name, surname, email }) {
+    //   return name + ' ' + surname + ' (' + email + ')';
+    // },
+    //
+    // getProjectUsers(){
+    //   api.getProjectUsers(this.proId, localStorage.sid).then(response => {
+    //     this.projectUsers =response.data.data;
+    //     // console.log(response.data.data);
+    //   })
+    // },
 
     createTask() {
       this.waitNet = true;
@@ -135,6 +144,7 @@ export default {
 
   mounted() {
     this.loadInfo();
+    // this.getProjectUsers();
   }
 };
 </script>
