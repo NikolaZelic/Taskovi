@@ -105,7 +105,7 @@
               <i class="fa fa-ban icon-sizes"></i>
               Cancel
               </button>
-              <button @click.once='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
+              <button @click='createTask' type="submit" class="btn btn-success" :disabled='blankTitle || waitNet'>
                 <span v-show='edit'>
                   <span class='fa fa-edit'></span>
                   Edit</span>
