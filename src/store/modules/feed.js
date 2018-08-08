@@ -45,6 +45,7 @@ const actions = {
 const mutations = {
 
   addMessages: (state, params) => {
+    // console.log(params);
     if (params.data) {
       if (params.direction === 'start') {
         state.scrollDownMess = true;
@@ -58,10 +59,10 @@ const mutations = {
       } else if (params.direction === 'down') {
         state.scrollDownMess = true;
         if (params.data != undefined)
-          params.data.forEach(e => {
-            if (!library.messagesHaveFeed(state.messages, params.data[i]))
-              state.messages.push(e);
-          });
+          for(let i=0; i<params.data,length; i++){
+            if( !library.messagesHaveFeed(state.messages, params.data[i]) )
+              state.messages.push(params.data[i]);
+          }
       }
     }
   },
