@@ -194,7 +194,7 @@
 
           <!-- EDIT BUTTON -->
           <template slot='edit_item'  slot-scope="data">
-            <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons float-right py-1 fas fa-edit"
+            <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons py-1 fas fa-edit"
               title="Edit project"></span>
           </template>
 

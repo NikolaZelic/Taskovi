@@ -68,8 +68,12 @@
             </tr>
             <tr>
               <td class="align-top">Deadline:</td>
-              <td v-if='this.taskGeneralInfo.tsk_deadline !== null'>
-                <span>{{ this.utcToLocal(this.taskGeneralInfo.tsk_deadline) }}</span>
+              <td v-if='this.taskGeneralInfo.tsk_deadline !== null' :style='{color:timeCriticalColor(this.taskGeneralInfo.timecritical)}'>
+                <i :class='timeCriticalIcon(this.taskGeneralInfo.timecritical)' :title='timeCriticalTitle(this.taskGeneralInfo.timecritical)'></i>
+                {{$moment(utcToLocal(this.taskGeneralInfo.tsk_deadline)).format('YYYY-MM-DD')}}
+                <span class='table-time'>{{$moment(utcToLocal(this.taskGeneralInfo.tsk_deadline)).format('HH:mm')}}</span>
+
+                <!-- <span>{{ this.utcToLocal(this.taskGeneralInfo.tsk_deadline) }}</span> -->
               </td>
             </tr>
 
@@ -471,6 +475,19 @@ export default {
   },
 
   methods: {
+
+    timeCriticalTitle(t_cr) {
+      if (t_cr <= 0) return "Expired";
+      if (t_cr < 0.2) return "Deadline close";
+    },
+    timeCriticalIcon(t_cr) {
+      if (t_cr <= 0) return "fa fa-times";
+      if (t_cr < 0.2) return "fa fa-exclamation-triangle";
+    },
+    timeCriticalColor(t_cr) {
+      if (t_cr <= 0) return "#de4c4c"; // RED
+      if (t_cr < 0.2) return "#a79923"; // YELLOW
+    },
 
     convertStatus(sta_text) {
       switch (sta_text) {
