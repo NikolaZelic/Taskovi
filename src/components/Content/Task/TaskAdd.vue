@@ -45,10 +45,10 @@
             <!-- ADDING WORKERS -->
             <div class="form-group mt-3" id='adding-worker'>
               <i class="fas fa-user"></i>
-              <multiselect v-model="selectedUSers" @change="somethingChanged = true" class="task-modal-input" label="name" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="suggestedWorker"
-                :multiple="true" :searchable="true" :internal-search="false" :clear-on-select="true" :close-on-select="true"
-                :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true"
-                @search-change="searchUsers">
+              <multiselect v-model="selectedUSers" @change="somethingChanged = true" class="task-modal-input" :custom-label="fullName" track-by="id" placeholder="Assign to..." open-direction="bottom" :options="projectUsers"
+                :multiple="true" :searchable="true" :internal-search="true" :clear-on-select="true" :close-on-select="true"
+                :limit="5" :limit-text="limitText" :max-height="600" :show-no-results="false" :hide-selected="true" :allow-empty="true">
+              <!-- @search-change="searchUsers" -->
               </multiselect>
             </div>
 
@@ -145,6 +145,7 @@ export default {
 
   data() {
     return {
+      projectUsers: [],
       // a: false,
       somethingChanged: false,
       title: "",
@@ -225,6 +226,7 @@ export default {
 
     mounted(){
       this.somethingChanged = false
+      this.getProjectUsers();
     },
 
   created: function() {
@@ -262,8 +264,15 @@ export default {
 
   methods: {
 
-    fullName({ name, surname }) {
-      return name + " " + surname;
+    getProjectUsers(){
+      api.getProjectUsers(this.proId, localStorage.sid).then(response => {
+        this.projectUsers =response.data.data;
+        // console.log(response.data.data);
+      })
+    },
+
+    fullName({ name, surname, email }) {
+      return name + " " + surname + " (" + email + ")";
     },
 
     taskCancel() {
