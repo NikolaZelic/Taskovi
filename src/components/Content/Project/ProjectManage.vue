@@ -81,6 +81,7 @@ import { mapGetters, mapState } from "vuex";
 // import Multiselect from "vue-multiselect";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/themes/material_blue.css");
+import { routejs } from "@/router/routemanage.js";
 export default {
   components: {
     flatPickr
@@ -289,7 +290,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log(e);
+          return routejs.checkSession(e.response);
         });
     },
     projectEdit() {
@@ -344,7 +345,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log(e);
+          return routejs.checkSession(e.response);
         });
     },
 

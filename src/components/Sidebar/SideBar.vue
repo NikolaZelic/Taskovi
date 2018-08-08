@@ -62,15 +62,19 @@
     <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || getTabIndex === 2, darkTheme: darkTheme }">
 
       <div class="flex-form-action">
-
+<div class='btn-action'>
         <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton" v-if="(getTabIndex === 0 && onLocalhost) || getTabIndex === 1">
           <span class="fas fa-plus-circle"></span>
           Add
           <span>{{tabs[getTabIndex].single}}</span>
         </button>
-
-        <!-- <div class="form-filter"> -->
-
+        
+        <button id="editItem" title='Edit current project' class="btn btn-success" @click="editProjectButton" v-if="(getTabIndex === 1 && projectRefItem.can_edit === 'true')">
+          <span class="fas fa-edit"></span>
+          Edit
+          <span>{{tabs[getTabIndex-1].single}}</span>
+        </button>
+</div>
         <template v-if="!showSubFilter()">
           <b-form-group>
             <b-input-group :class='{darkTheme:darkTheme}' class='search'>
@@ -787,6 +791,11 @@ export default {
       this.removeActiveClass();
       store.dispatch("itemAddClick");
     },
+    editProjectButton() {
+      let proID = this.projectRefItem.id;
+      store.commit("setTabIndex", 0);
+      store.dispatch("itemEditClick", proID);
+    },
     editPeopleButton(item) {
       this.showTaskPeople = true;
     },
@@ -1253,15 +1262,31 @@ h2 {
 
 /* SEARCH END*/
 
+.btn-action {
+  margin-right: auto;
+}
+
 /* ADD BUTTON */
 
 #addItem {
   max-width: 130px;
   align-self: center;
-  margin: 0 auto 0.6rem 4px;
+  margin: 0 5px 0.6rem 4px;
 }
 
 #addItem:hover {
+  box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
+}
+
+/* EDIT BUTTON */
+
+#editItem {
+  max-width: 130px;
+  align-self: center;
+  margin: 0 5px 0.6rem 4px;
+}
+
+#editItem:hover {
   box-shadow: 0 0 20px 1px rgba(19, 255, 45, 0.2);
 }
 

@@ -8,7 +8,6 @@
             <strong>
               <span title='Back to project list' class='fa fa-chevron-left' @click='backToProjectList'></span>
               <span>{{ projectInfo.title }}</span>
-              <span title='Edit current project' class='fa fa-edit' @click='editProject'></span>
             </strong>
           </div>
 
@@ -187,13 +186,6 @@ export default {
     },
     backToProjectList() {
       store.commit("setTabIndex", 0);
-    },
-    editProject() {
-      let proID = this.projectInfo.id;
-      store.commit("setTabIndex", 0);
-      store.commit("itemEditClick", {
-        id: proID
-      });
     },
     refreshSession() {
       // EVERY 15 MINUTES
