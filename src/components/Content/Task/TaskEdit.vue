@@ -121,7 +121,7 @@ export default {
         .then(response => {
           this.title = response.data.data[0].tsk_title;
           this.description = response.data.data[0].description;
-          this.deadline = response.data.data[0].tsk_deadline
+          this.deadline = this.utcToLocal(response.data.data[0].tsk_deadline);
           this.selectedPriority = "" + response.data.data[0].pri_id;
           this.selectedTags = response.data.data[0].tags;
           this.selectedUSers = response.data.data[0].usrworking;
