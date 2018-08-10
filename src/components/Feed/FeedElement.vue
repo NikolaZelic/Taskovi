@@ -1,6 +1,7 @@
 <template>
   <div id="drop-area" class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <moon-loader :loading="loadingData" class="spiner-loader" ></moon-loader>
+    <!-- <moon-loader :loading="true" class="spiner-loader" ></moon-loader> -->
     <input type="file" id="fileElem" onchange="handleFiles(this.files)" />
 
     <div id="text" class="displayNone">Drop to upload</div>
@@ -55,7 +56,7 @@
     <b-alert variant="success" :show="haveNewMessage" class='message-notificaton'>
       <span @click='reload' style='display:flex'>You have a new message!</span>
     </b-alert>
-    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new timestamp'>
+    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new bookmark'>
       <table class='modal-table'>
         <tr v-if='selectedStep!=null'>
           <td>Time:</td>
@@ -735,7 +736,9 @@ export default {
 }
 .spiner-loader{
   display: block;
-  margin: auto;
+  position: absolute;
+  left: 47%;
+  top: 10%;
 }
 .delete-timestemp {
   font-size: 70%;
