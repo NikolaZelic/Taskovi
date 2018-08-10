@@ -81,13 +81,14 @@ export const api = {
       return routejs.checkSession(response);
     });
   },
-  createTimestamps(tsk_id, time_created, title) {
+  createTimestamps(tsk_id, time_created, title, order) {
     return axios.post('tasks/' + tsk_id + '/feeds', {
       sid: window.localStorage.sid,
       timecreated: time_created,
       text: title,
       type: "text",
       islabel: 1,
+      fedorder: order,
     }).then(response => {
       return routejs.checkSession(response);
     });

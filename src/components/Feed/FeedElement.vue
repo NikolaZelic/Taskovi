@@ -170,7 +170,8 @@ export default {
           pro_name: el.pro_name,
           tsk_id: el.tsk_id,
           tsk_title: el.tsk_title,
-          usrimg: el.usrimg
+          usrimg: el.usrimg,
+          fed_order: el.fed_order,
         };
       });
     }
@@ -290,7 +291,7 @@ export default {
       time.seconds(time.seconds() - 1);
       time = this.localToUTC(time);
       api
-        .createTimestamps(this.taskid, time, this.newStep)
+        .createTimestamps(this.taskid, time, this.newStep, this.selectedStep.fed_order)
         .then(result => {
           // this.readeSteps();
           this.readeTimestemps();
