@@ -20,13 +20,13 @@
           <span class='timestemp-title' @click='stepCicked(timestamp)' :title='timestamp.fed_text +" "+timestamp.fed_time' >
             {{formatTimestampTitle(timestamp.fed_text)}}
           </span>
-          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete timestemp" >
+          <span class='delete-timestemp' @click='deleteTimestemp(timestamp)' title="Delete bookmark" >
             <span v-b-modal.deleteTimestempId><i class="fas fa-times-circle"></i></span>
           </span>
         </b-list-group-item>
       </b-list-group>
 
-      <b-modal id="deleteTimestempId" title="Delete timestamp" @ok='confirmDelete' v-if='!global'>
+      <b-modal id="deleteTimestempId" title="Delete bookmark" @ok='confirmDelete' v-if='!global'>
         <p class="my-4" v-if='choosenTimestemp!=null'>"{{choosenTimestemp.fed_text}}" will be deleted</p>
       </b-modal>
 
@@ -729,6 +729,9 @@ export default {
 };
 </script>
 <style scoped>
+.timestemp-title{
+  cursor: pointer;
+}
 .spiner-loader{
   display: block;
   margin: auto;
@@ -802,7 +805,7 @@ export default {
 
 .list-group-item {
   border: none;
-  cursor: pointer;
+  /* cursor: pointer; */
   padding: 7px 15px;
 }
 
