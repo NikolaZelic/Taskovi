@@ -86,7 +86,7 @@ export default {
     isImage() {
       if (this.mess.fed_text === undefined || this.mess.fed_text == null)
         return false;
-      var extension = this.mess.fed_text.replace(/.+([.].+)/i, "$1");
+      var extension = this.mess.fed_text.replace(/.+([.].+)/i, "$1").toLowerCase();
       if (extension == ".jpg" || extension == ".png" || extension == ".gif")
         return true;
       return false;

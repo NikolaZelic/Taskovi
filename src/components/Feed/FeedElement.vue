@@ -1,6 +1,7 @@
 <template>
   <div id="drop-area" class="feed" :class='{darkTheme: darkTheme}' v-show="showFeeds">
     <moon-loader :loading="loadingData" class="spiner-loader" ></moon-loader>
+    <!-- <moon-loader :loading="true" class="spiner-loader" ></moon-loader> -->
     <input type="file" id="fileElem" onchange="handleFiles(this.files)" />
 
     <div id="text" class="displayNone">Drop to upload</div>
@@ -55,7 +56,7 @@
     <b-alert variant="success" :show="haveNewMessage" class='message-notificaton'>
       <span @click='reload' style='display:flex'>You have a new message!</span>
     </b-alert>
-    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new timestamp'>
+    <b-modal ref='stepModal' id='creating-step' size="sm" @ok='createNewStep' @shown='clearStepCreateContent' title='Creating new bookmark'>
       <table class='modal-table'>
         <tr v-if='selectedStep!=null'>
           <td>Time:</td>
@@ -170,7 +171,8 @@ export default {
           pro_name: el.pro_name,
           tsk_id: el.tsk_id,
           tsk_title: el.tsk_title,
-          usrimg: el.usrimg
+          usrimg: el.usrimg,
+          fed_order: el.fed_order,
         };
       });
     }
@@ -290,7 +292,7 @@ export default {
       time.seconds(time.seconds() - 1);
       time = this.localToUTC(time);
       api
-        .createTimestamps(this.taskid, time, this.newStep)
+        .createTimestamps(this.taskid, time, this.newStep, this.selectedStep.fed_order)
         .then(result => {
           // this.readeSteps();
           this.readeTimestemps();
@@ -424,6 +426,7 @@ export default {
       });
     },
     addUp() {
+      // console.log('addUp');
       if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
@@ -661,8 +664,10 @@ export default {
             direction: "start",
             data: result.data.data
           });
-          if (this.chatHasScroll()) this.scrollTOTop();
-          else this.addUp();
+          setTimeout( ()=>{
+            if (this.chatHasScroll()) this.scrollTOTop();
+            else this.addUp();
+          }, 100)
         });
     },
     isInViewport(el) {
@@ -734,7 +739,9 @@ export default {
 }
 .spiner-loader{
   display: block;
-  margin: auto;
+  position: absolute;
+  left: 47%;
+  top: 10%;
 }
 .delete-timestemp {
   font-size: 70%;
