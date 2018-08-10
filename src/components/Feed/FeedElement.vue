@@ -426,6 +426,7 @@ export default {
       });
     },
     addUp() {
+      // console.log('addUp');
       if (this.loadingData) return;
       if (this.taskid === -1) return;
       if (this.messages == null || this.messages.length == 0) return;
@@ -663,8 +664,10 @@ export default {
             direction: "start",
             data: result.data.data
           });
-          if (this.chatHasScroll()) this.scrollTOTop();
-          else this.addUp();
+          setTimeout( ()=>{
+            if (this.chatHasScroll()) this.scrollTOTop();
+            else this.addUp();
+          }, 100)
         });
     },
     isInViewport(el) {
