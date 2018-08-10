@@ -48,7 +48,7 @@
    line-height: 30px;
  }
 
- .item-list tbody tr{
+ .item-list tbody tr {
    cursor: pointer;
  }
 
@@ -93,6 +93,10 @@
 
  .tc-avatar {
    min-width: 60px;
+ }
+
+ .table-responsive {
+   height: 100%;
  }
 
  /* TD COLORS */

@@ -62,6 +62,7 @@
     <div class="sidebar-body" ref='sidBody' :class="{ collapsed: !sidebarActive || globalFeed || getTabIndex === 2, darkTheme: darkTheme }">
 
       <div class="flex-form-action">
+
         <div class='btn-action'>
           <button id="addItem" :title='"Add "+tabs[getTabIndex].single' class="btn btn-success" @click="addItemButton" v-if="(getTabIndex === 0 && onLocalhost) || getTabIndex === 1">
             <span class="fas fa-plus-circle"></span>
@@ -75,29 +76,30 @@
             <span>{{tabs[getTabIndex-1].single}}</span>
           </button>
         </div>
-        <template v-if="!showSubFilter()">
-          <b-form-group>
-            <b-input-group :class='{darkTheme:darkTheme}' class='search'>
-              <b-input-group-text slot="prepend" @click='focusSearch'>
-                <span class="fas fa-search"></span>
-              </b-input-group-text>
-              <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
-              <b-input-group-append v-if='tabs[getTabIndex].search'>
-                <b-btn @click="tabs[getTabIndex].search = ''">X</b-btn>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </template>
+
+        <span style='visibility:collapse'></span>
+
+        <b-form-group v-if="!showSubFilter()">
+          <b-input-group :class='{darkTheme:darkTheme}' class='search'>
+            <b-input-group-text slot="prepend" @click='focusSearch'>
+              <span class="fas fa-search"></span>
+            </b-input-group-text>
+            <b-form-input ref='search' v-model.trim="tabs[getTabIndex].search" placeholder="Filter items" />
+            <b-input-group-append v-if='tabs[getTabIndex].search'>
+              <b-btn @click="tabs[getTabIndex].search = ''">X</b-btn>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
 
         <template v-if="showSubFilter()">
           <div class='tag-filter'>
-
             <b-input-group class='search'>
               <multiselect id='tags' @search-change="getTagSuggestions" :loading="tagLoading" v-model='taskSearchTag' :options="tagsNet"
                 :preserveSearch="true" :multiple="true" :taggable="false" track-by='id' :custom-label="showTagRes" :close-on-select="false"
-                :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder='Search by tags or text'></multiselect>
+                :clear-on-select="true" :show-no-results='false' :hide-selected="true" placeholder='Search by tags or text'
+                :limit='3' :limit-text='limitTagText'>
+              </multiselect>
             </b-input-group>
-
           </div>
 
           <div class="item-filter">
@@ -107,8 +109,6 @@
             </b-form-group>
           </div>
         </template>
-
-        <!-- </div> -->
 
       </div>
 
@@ -193,7 +193,7 @@
           </template>
 
           <!-- EDIT BUTTON -->
-          <template slot='edit_item'  slot-scope="data">
+          <template slot='edit_item' slot-scope="data">
             <span v-if='data.item.can_edit === "true" && getTabIndex === 0' @click.stop="editItemButton(data.item)" class="td-icons py-1 fas fa-edit"
               title="Edit project"></span>
           </template>
@@ -602,6 +602,9 @@ export default {
     }
   },
   methods: {
+    limitTagText(count) {
+      return `+${count}`;
+    },
     getProjectInfo(proID) {
       api.getSingleProjectInfo(proID, localStorage.sid).then(response => {
         this.projectInfoModal = response.data.data;
@@ -1281,7 +1284,7 @@ h2 {
 /* SEARCH END*/
 
 .btn-action {
-  margin-right: auto;
+  /* margin-right: auto; */
 }
 
 /* ADD BUTTON */
@@ -1289,7 +1292,7 @@ h2 {
 #addItem {
   max-width: 130px;
   align-self: center;
-  margin: 0 5px 0.6rem 4px;
+  margin: 0 5px 0.6rem 0;
 }
 
 #addItem:hover {
@@ -1301,7 +1304,7 @@ h2 {
 #editItem {
   max-width: 130px;
   align-self: center;
-  margin: 0 5px 0.6rem 4px;
+  margin: 0 5px 0.6rem 0;
 }
 
 #editItem:hover {
@@ -1336,7 +1339,8 @@ h2 {
 .flex-form-action {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  /* justify-content: center; */
+  justify-content: space-between; 
   margin-bottom: 10px;
 }
 
@@ -1367,7 +1371,7 @@ h2 {
   height: 38px;
   flex: 1;
   margin-bottom: 10px;
-  max-width: 200px;
+  max-width: 350px;
 }
 
 .item-filter {

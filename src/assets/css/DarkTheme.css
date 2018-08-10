@@ -3,9 +3,7 @@
 }
 
 .sidebar-body #tags {
-  width: auto !important;
-  /* display: inline-block !important; */
-  color: black !important;
+  display: inline !important;
 }
 
 .sidebar-body.darkTheme #tags,
@@ -58,8 +56,7 @@
   color: #999 !important;
 }
 
-.maincontent.darkTheme input:hover
-.maincontent.darkTheme textarea:hover,
+.maincontent.darkTheme input:hover .maincontent.darkTheme textarea:hover,
 .multiselect__tags:hover {
   border: 1px solid var(--ac-color) !important;
 }
