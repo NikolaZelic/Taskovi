@@ -7,6 +7,10 @@
       <span class="header-title">{{ itemEditButton===undefined ? "Add" : "Edit" }} project</span>
     </div>
 
+    <div class="card" :class='{darkTheme: darkTheme}'>
+      <div class="card-body scroll">
+
+
     <label for="name" class="mt-3">Project name</label>
     <input type="text" id="name" name="projectname" v-model.lazy="project.title" @change="somethingChanged = true" placeholder="Enter project name"
       class="form-control mb-3">
@@ -55,11 +59,11 @@
     </div>
     <!-- </b-modal> -->
 
-    <div class='usersModal'>
+    <!-- <div class='usersModal'>
 
-    </div>
+    </div> -->
 
-    <div class='project-action'>
+    <div class='project-action float-right'>
       <button @click="projectCancel" class="btn btn-danger">
         <span class="fa fa-ban"></span> Cancel</button>
       <button v-if='itemEditButton!==undefined' @click="projectEdit" class="btn btn-primary">
@@ -67,6 +71,10 @@
 
       <button v-else @click="projectCreate" class="btn btn-success">
         <span class="fa fa-plus-square"></span> Create project</button>
+    </div>
+
+  </div>
+
     </div>
   </div>
   <!-- </div> -->
@@ -511,5 +519,12 @@ h4 {
 
 .project-action button {
   margin-left: 10px;
+  /* right: 0; */
+}
+
+
+.scroll{
+    overflow: auto;
+    max-height: 80vh;
 }
 </style>

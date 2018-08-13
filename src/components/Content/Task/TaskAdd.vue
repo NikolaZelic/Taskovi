@@ -7,6 +7,9 @@
             <span class="header-title">{{componentTitle}}</span>
           </div>
 
+<div class="card" :class='{darkTheme: darkTheme}'>
+<div class="card-body scroll">
+
           <div class="content">
 
             <!-- TITLE -->
@@ -116,6 +119,11 @@
             </div>
           </div>
         </div>
+
+
+        </div>
+
+        </div>
       <!-- </div> -->
     </div>
   <!-- </transition> -->
@@ -200,7 +208,9 @@ export default {
       suggestedWorker: state => store.getters.getSuggestedUsers,
       suggestedTags: state => state.modulework.suggestedTags,
       suggestedProjects: state => state.modulework.suggestedProjects,
-      proId: state => state.sidebarItemSelection[0]
+      proId: state => state.sidebarItemSelection[0],
+      darkTheme: state => state.darkTheme//,
+
     }),
 
     timeBeforeNow(){
@@ -910,5 +920,10 @@ div.form-group {
 .content .tmp-content .deadline,
 .content .multiselect {
   width: 100%;
+}
+
+.scroll{
+  overflow: auto;
+  max-height: 80vh;
 }
 </style>

@@ -21,7 +21,7 @@
       <!-- TAB OverView -->
       <div class="card mb-3" :class='{darkTheme: darkTheme}' v-if="tabs.generalInfo">
 
-        <div class="card-body">
+        <div class="card-body scroll">
           <table id="task-table">
 
             <tr>
@@ -1009,6 +1009,7 @@ button.nav-item {
   flex-direction: column;
   position: relative;
   overflow: visible;
+
 }
 
 .chat-box {
@@ -1081,7 +1082,12 @@ pre {
   white-space: -pre-wrap; /* Opera 4-6 */
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
-  overflow: auto;
-  max-height: 200px;
+  /* overflow: auto;
+  max-height: 200px; */
+}
+
+.scroll{
+    overflow: auto;
+    max-height: 80vh;
 }
 </style>
